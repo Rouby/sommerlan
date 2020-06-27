@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "ES2019", // Node 12
+    "lib": ["ES2019", "DOM"],
+    "jsx": "react",
+
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "allowSyntheticDefaultImports": true,
+
+    "sourceMap": true,
+    "removeComments": true,
+
+    "preserveSymlinks": false,
+    "skipLibCheck": true,
+
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true
+  }
+}
