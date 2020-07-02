@@ -1,0 +1,62 @@
+type Boardgame @aws_cognito_user_pools @aws_iam {
+  id: ID!
+  owner: User!
+  name: String!
+  imageUrl: String!
+}
+
+type BoardgameInfo {
+  name: String!
+  image_url: String
+  thumb_url: String
+  url: String
+  min_players: Int
+  max_players: Int
+  min_playtime: Int
+  max_playtime: Int
+  min_age: Int
+}
+
+type PushSubscription @aws_cognito_user_pools @aws_iam {
+  endpoint: ID!
+  owner: User!
+}
+
+type Query {
+  user: User
+  getBoardgames: [Boardgame] @aws_cognito_user_pools @aws_iam
+  searchBoardgames(name: String!, limit: Int, skip: Int): [BoardgameInfo]
+}
+
+type User @aws_cognito_user_pools @aws_iam {
+  id: ID!
+  name: String!
+  preferred_username: String
+  picture: String
+}
+
+input AddBoardgameInput {
+  name: String!
+  imageUrl: String!
+}
+
+input PushSubscriptionInput {
+  endpoint: ID!
+  keys: PushSubscriptionKeysInput!
+}
+
+input PushSubscriptionKeysInput {
+  auth: String!
+  p256dh: String!
+}
+
+type Mutation {
+  addBoardgame(boardgame: AddBoardgameInput!): Boardgame
+  removeBoardgame(id: ID!): Boardgame
+  addPushSubscription(subscription: PushSubscriptionInput!): PushSubscription
+    @aws_cognito_user_pools
+    @aws_iam
+  removePushSubscription(endpoint: ID!): PushSubscription
+    @aws_cognito_user_pools
+    @aws_iam
+}

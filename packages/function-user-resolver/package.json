@@ -1,0 +1,10 @@
+{
+  "name": "@sommerlan/function-user-resolver",
+  "version": "1.0.0",
+  "scripts": {},
+  "main": "src/index",
+  "devDependencies": {
+    "@types/node": "^14.0.14",
+    "aws-sdk": "^2.706.0"
+  }
+}

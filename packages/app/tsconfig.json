@@ -1,0 +1,14 @@
+{
+  "extends": "../../.config/tsconfig.json",
+  "include": [
+    "./src"
+  ],
+  "compilerOptions": {
+    "allowJs": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true
+  }
+}

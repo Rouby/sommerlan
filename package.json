@@ -3,5 +3,9 @@
   "private": true,
   "workspaces": [
     "./packages/*"
-  ]
+  ],
+  "dependencies": {
+    "@yarnpkg/pnpify": "^2.0.0-rc.25",
+    "typescript": "^3.9.5"
+  }
 }

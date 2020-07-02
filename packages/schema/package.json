@@ -1,0 +1,6 @@
+{
+  "name": "@sommerlan/schema",
+  "version": "1.0.0",
+  "scripts": {},
+  "main": "src/schema.graphql"
+}
