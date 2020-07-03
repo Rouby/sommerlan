@@ -4,7 +4,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "build:push": "tsc --outFile ./public/sw-push.js ./sw/sw-push.ts",
+    "build:push": "tsc --outFile ./public/sw-push.js ./serviceWorker/sw-push.ts",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

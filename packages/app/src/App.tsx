@@ -3,7 +3,7 @@ import * as React from 'react';
 import { createUseStyles } from 'react-jss';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { AuthButton } from './components';
-import { Boardgames, Home } from './pages';
+import { Boardgames, Home, SeatClaimatorium } from './pages';
 
 const useStyles = createUseStyles({
   header: {
@@ -38,6 +38,12 @@ export function App(): React.ReactElement {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const menuItems = [
+    <Menu.Item key="/">Übersicht</Menu.Item>,
+    <Menu.Item key="/seats">Sitzplan</Menu.Item>,
+    <Menu.Item key="/boardgames">Brettspiele</Menu.Item>,
+  ];
+
   return (
     <Layout>
       <Layout.Sider
@@ -53,8 +59,7 @@ export function App(): React.ReactElement {
             navigate(selection.key);
           }}
         >
-          <Menu.Item key="/">Übersicht</Menu.Item>
-          <Menu.Item key="/boardgames">Brettspiele</Menu.Item>
+          {menuItems}
         </Menu>
       </Layout.Sider>
       <Layout>
@@ -70,8 +75,7 @@ export function App(): React.ReactElement {
               }}
               className={classes.menu}
             >
-              <Menu.Item key="/">Übersicht</Menu.Item>
-              <Menu.Item key="/boardgames">Brettspiele</Menu.Item>
+              {menuItems}
             </Menu>
           </div>
           <AuthButton />
@@ -80,6 +84,7 @@ export function App(): React.ReactElement {
           <div className={classes.content}>
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/seats" element={<SeatClaimatorium />} />
               <Route path="/boardgames" element={<Boardgames />} />
             </Routes>
           </div>

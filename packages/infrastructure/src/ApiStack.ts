@@ -130,8 +130,8 @@ export class ApiStack extends cdk.NestedStack {
             "query": {
               "client_id": "PC0TlOrMTV",
               "name": $utils.toJson($ctx.args.name),
-              "limit": $utils.toJson($ctx.args.limit),
-              "skip": $utils.toJson($ctx.args.skip)
+              "limit": $utils.toJson($util.defaultIfNullOrEmpty($ctx.args.limit, "10")),
+              "skip": $utils.toJson($util.defaultIfNullOrEmpty($ctx.args.skip, "0"))
             },
             "headers":{
                 "Content-Type": "application/json"

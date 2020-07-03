@@ -1,4 +1,6 @@
 import { Auth } from '@aws-amplify/auth';
+import * as React from 'react';
+import { atom, useRecoilState } from 'recoil';
 import { toResource } from '../util';
 
 Auth.configure({
@@ -20,16 +22,43 @@ Auth.configure({
   identityPoolId: 'eu-central-1:6e1392d2-6e7b-4cab-b1e6-c39d790f5f71',
 });
 
+type User = {
+  email: string;
+  locale: string;
+  name: string;
+  picture: string;
+  preferred_username: string;
+};
+
 export const currentUserInfoResource = toResource(
   Auth.currentUserInfo().then((user) =>
-    user?.attributes
-      ? ({ ...user.attributes } as {
-          email: string;
-          locale: string;
-          name: string;
-          picture: string;
-          preferred_username: string;
-        })
-      : false,
+    user?.attributes ? ({ ...user.attributes } as User) : false,
   ),
 );
+
+const userInfo = atom<User | null>({ key: 'user', default: null });
+
+export function useUser() {
+  const [user, setUser] = useRecoilState(userInfo);
+
+  React.useEffect(() => {
+    let mounted = true;
+    currentUserInfoResource.promise().then(
+      (nextUser) => {
+        if (mounted && user !== nextUser) {
+          setUser(nextUser || null);
+        }
+      },
+      () => {
+        if (user !== null) {
+          setUser(null);
+        }
+      },
+    );
+    return () => {
+      mounted = false;
+    };
+  }, [user, setUser]);
+
+  return user;
+}
