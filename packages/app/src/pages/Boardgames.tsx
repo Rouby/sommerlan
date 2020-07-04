@@ -15,6 +15,7 @@ import {
 } from 'antd';
 import * as React from 'react';
 import { createUseStyles } from 'react-jss';
+import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
 import { mutate, query } from '../api';
 import { useUser } from '../auth';
 import ErrorBoundary from '../ErrorBoundary';
@@ -30,18 +31,31 @@ const useStyles = createUseStyles({
   },
 });
 
-const boardgamesResource = query({
-  query: `{
-  boardgames: getBoardgames {
-    id
-    name
-    imageUrl
-    owner {
+type Boardgame = {
+  id: string;
+  name: string;
+  imageUrl: string;
+  owner: { name: string };
+};
+
+const boardgamesList = atom({
+  key: 'boardgames',
+  default: query<{
+    data: {
+      boardgames: Boardgame[];
+    };
+  }>({
+    query: `{
+    boardgames: getBoardgames {
+      id
       name
+      imageUrl
+      owner {
+        name
+      }
     }
-  }
-}`,
-  authMode: 'iam',
+  }`,
+  }),
 });
 
 export function Boardgames(): React.ReactElement {
@@ -84,11 +98,11 @@ export function Boardgames(): React.ReactElement {
 function BoardgamesList(): React.ReactElement {
   const {
     data: { boardgames },
-  } = boardgamesResource.read();
+  } = useRecoilValue(boardgamesList).read();
 
   return (
     <>
-      {boardgames.filter(Boolean).map((game: any) => (
+      {boardgames.filter(Boolean).map((game) => (
         <Card
           key={game.id}
           hoverable
@@ -117,6 +131,7 @@ function BoardgameSubmit(): React.ReactElement {
   const [search, setSearch] = React.useState('');
   const [options, setOptions] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
+  const setBoardgameList = useSetRecoilState(boardgamesList);
 
   React.useEffect(() => {
     setOptions([]);
@@ -181,10 +196,15 @@ function BoardgameSubmit(): React.ReactElement {
             <Button
               onClick={() => {
                 setSubmitting(true);
-                mutate({
+                mutate<{ data: { boardgame: Boardgame } }>({
                   mutation: `mutation($boardgame: AddBoardgameInput!) {
-  addBoardgame(boardgame: $boardgame) {
+  boardgame: addBoardgame(boardgame: $boardgame) {
     id
+    name
+    imageUrl
+    owner {
+      name
+    }
   }
 }`,
                   variables: {
@@ -195,9 +215,14 @@ function BoardgameSubmit(): React.ReactElement {
                   },
                 })
                   .promise()
-                  .then(() => {
+                  .then(({ data: { boardgame } }) => {
                     setSubmitting(false);
                     setFormVisible(false);
+                    setBoardgameList((list) =>
+                      list.update((v) => ({
+                        data: { boardgames: [...v.data.boardgames, boardgame] },
+                      })),
+                    );
                   });
               }}
               type="primary"

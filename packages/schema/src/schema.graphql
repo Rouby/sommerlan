@@ -22,9 +22,15 @@ type PushSubscription @aws_cognito_user_pools @aws_iam {
   owner: User!
 }
 
+type Seat {
+  id: ID!
+  owner: User
+}
+
 type Query {
   user: User
   getBoardgames: [Boardgame] @aws_cognito_user_pools @aws_iam
+  getSeats: [Seat]
   searchBoardgames(name: String!, limit: Int, skip: Int): [BoardgameInfo]
 }
 
@@ -59,4 +65,6 @@ type Mutation {
   removePushSubscription(endpoint: ID!): PushSubscription
     @aws_cognito_user_pools
     @aws_iam
+  takeSeat(seatId: ID!): Seat
+  giveUpSeat(seatId: ID!): Seat
 }

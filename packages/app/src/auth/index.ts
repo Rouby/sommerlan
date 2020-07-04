@@ -22,7 +22,7 @@ Auth.configure({
   identityPoolId: 'eu-central-1:6e1392d2-6e7b-4cab-b1e6-c39d790f5f71',
 });
 
-type User = {
+export type User = {
   email: string;
   locale: string;
   name: string;

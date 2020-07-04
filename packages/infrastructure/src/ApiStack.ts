@@ -180,6 +180,13 @@ export class ApiStack extends cdk.NestedStack {
     });
 
     userLambda.createResolver({
+      typeName: 'Seat',
+      fieldName: 'owner',
+      requestMappingTemplate: MappingTemplate.lambdaRequest(),
+      responseMappingTemplate: MappingTemplate.lambdaResult(),
+    });
+
+    userLambda.createResolver({
       typeName: 'Query',
       fieldName: 'user',
       requestMappingTemplate: MappingTemplate.lambdaRequest(),
@@ -218,6 +225,47 @@ export class ApiStack extends cdk.NestedStack {
       requestMappingTemplate: MappingTemplate.dynamoDbDeleteItem(
         'id',
         'endpoint',
+      ),
+      responseMappingTemplate: MappingTemplate.dynamoDbResultItem(),
+    });
+
+    const seatsTable = new Table(this, 'SeatsTable', {
+      billingMode: BillingMode.PAY_PER_REQUEST,
+      partitionKey: {
+        name: 'id',
+        type: AttributeType.STRING,
+      },
+    });
+
+    const seatsDynamoDB = api.addDynamoDbDataSource(
+      'SeatsDynamoDB',
+      'The seats data source',
+      seatsTable,
+    );
+
+    seatsDynamoDB.createResolver({
+      typeName: 'Query',
+      fieldName: 'getSeats',
+      requestMappingTemplate: MappingTemplate.dynamoDbScanTable(),
+      responseMappingTemplate: MappingTemplate.dynamoDbResultList(),
+    });
+
+    seatsDynamoDB.createResolver({
+      typeName: 'Mutation',
+      fieldName: 'takeSeat',
+      requestMappingTemplate: MappingTemplate.dynamoDbPutItem(
+        PrimaryKey.partition('id').is('seatId'),
+        Values.attribute('owner').is('$ctx.identity.username'),
+      ),
+      responseMappingTemplate: MappingTemplate.dynamoDbResultItem(),
+    });
+
+    seatsDynamoDB.createResolver({
+      typeName: 'Mutation',
+      fieldName: 'giveUpSeat',
+      requestMappingTemplate: MappingTemplate.dynamoDbDeleteItem(
+        'id',
+        'seatId',
       ),
       responseMappingTemplate: MappingTemplate.dynamoDbResultItem(),
     });

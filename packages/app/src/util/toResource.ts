@@ -1,4 +1,10 @@
-export function toResource<T>(promise: Promise<T>) {
+interface Resource<T> {
+  read(): T;
+  promise(): Promise<T>;
+  update(updater: (v: T) => T): Resource<T>;
+}
+
+export function toResource<T>(promise: Promise<T>): Resource<T> {
   let status = 'pending';
   let result: T;
   let error: Error;
@@ -31,6 +37,10 @@ export function toResource<T>(promise: Promise<T>) {
         throw error;
       }
       return result;
+    },
+    update(updater: (v: T) => T) {
+      result = updater(result);
+      return { ...this };
     },
   };
 }
