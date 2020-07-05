@@ -1,4 +1,5 @@
 import { Auth } from '@aws-amplify/auth';
+import LogRocket from 'logrocket';
 import * as React from 'react';
 import { atom, useRecoilState } from 'recoil';
 import { toResource } from '../util';
@@ -32,17 +33,26 @@ export type User = {
 };
 
 export const currentUserInfoResource = toResource(
-  Auth.currentAuthenticatedUser().then(
-    (user) =>
-      user?.attributes
-        ? ({
-            ...user.attributes,
-            groups:
-              user?.signInUserSession?.accessToken?.payload?.['cognito:groups'],
-          } as User)
-        : (false as const),
-    () => false as const,
-  ),
+  Auth.currentAuthenticatedUser()
+    .then(
+      (user) =>
+        user?.attributes
+          ? ({
+              ...user.attributes,
+              groups:
+                user?.signInUserSession?.accessToken?.payload?.[
+                  'cognito:groups'
+                ],
+            } as User)
+          : (false as const),
+      () => false as const,
+    )
+    .then((user) => {
+      if (user) {
+        LogRocket.identify(user.name);
+      }
+      return user;
+    }),
 );
 
 const userInfo = atom<User | null>({ key: 'user', default: null });

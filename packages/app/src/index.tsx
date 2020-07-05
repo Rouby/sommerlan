@@ -1,4 +1,5 @@
 import 'antd/dist/antd.css';
+import LogRocket from 'logrocket';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { JssProvider } from 'react-jss';
@@ -6,6 +7,13 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { App } from './App';
 import { PushNotifications } from './PushNotifications';
+
+if (
+  process.env.NODE_ENV === 'production' &&
+  process.env.REACT_APP_LOGROCKET_ID
+) {
+  LogRocket.init(process.env.REACT_APP_LOGROCKET_ID);
+}
 
 ReactDOM.render(
   <RecoilRoot>

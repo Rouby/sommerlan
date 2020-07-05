@@ -3199,6 +3199,7 @@ __metadata:
     draftjs-to-html: ^0.9.1
     history: ^5.0.0
     immutable: ^4.0.0-rc.12
+    logrocket: ^1.0.9
     react: ^16.13.1
     react-dom: ^16.13.1
     react-draft-wysiwyg: ^1.14.5
@@ -12316,6 +12317,13 @@ fsevents@~2.1.2:
   version: 1.6.8
   resolution: "loglevel@npm:1.6.8"
   checksum: 847939b08549649a0495e1b0d25ac89cec537a057fbb6deae468a066236ca0295aabce314366c026605537c345ece982d88783c7f44ab3599a40554bb09442ed
+  languageName: node
+  linkType: hard
+
+"logrocket@npm:^1.0.9":
+  version: 1.0.9
+  resolution: "logrocket@npm:1.0.9"
+  checksum: fe1acdec40f6c5bb34811c7031f2754477d8b2a9e11ad9424c519d530cfcc73f839e9204099c5da62e3de6f2d24b7b110c791b0d64393c74cf9bf210d66e5ee3
   languageName: node
   linkType: hard
 

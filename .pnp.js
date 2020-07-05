@@ -4711,6 +4711,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["draftjs-to-html", "npm:0.9.1"],
             ["history", "npm:5.0.0"],
             ["immutable", "npm:4.0.0-rc.12"],
+            ["logrocket", "npm:1.0.9"],
             ["react", "npm:16.13.1"],
             ["react-dom", "virtual:81c4bd62c1cde98e5da773e3ee9629f6ddd07b309341f44d40ca1324ceefc3d195818e95e6f5803f7cca6004416ac611c06cdbc92ff065efe7374198b5077e94#npm:16.13.1"],
             ["react-draft-wysiwyg", "virtual:81c4bd62c1cde98e5da773e3ee9629f6ddd07b309341f44d40ca1324ceefc3d195818e95e6f5803f7cca6004416ac611c06cdbc92ff065efe7374198b5077e94#npm:1.14.5"],
@@ -14849,6 +14850,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/loglevel-npm-1.6.8-b7a37cda5a-847939b085.zip/node_modules/loglevel/",
           "packageDependencies": [
             ["loglevel", "npm:1.6.8"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["logrocket", [
+        ["npm:1.0.9", {
+          "packageLocation": "./.yarn/cache/logrocket-npm-1.0.9-76f47a0a92-fe1acdec40.zip/node_modules/logrocket/",
+          "packageDependencies": [
+            ["logrocket", "npm:1.0.9"]
           ],
           "linkType": "HARD",
         }]
