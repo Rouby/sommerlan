@@ -18,7 +18,6 @@ import { AppStack } from '../';
 import { NodejsFunction } from '../constructs/NodejsFunction';
 import * as Cognito from './Cognito';
 
-console.log('ENV', process.env.DYNAMO_ENDPOINT);
 const dynamoClient = new DynamoDB({
   endpoint: process.env.DYNAMO_ENDPOINT,
   region: 'eu-central-1',

@@ -2,6 +2,7 @@ import {
   CfnIdentityPool,
   CfnIdentityPoolRoleAttachment,
   CfnUserPoolClient,
+  CfnUserPoolGroup,
   UserPool,
   UserPoolClientIdentityProvider,
   UserPoolDomain,
@@ -29,6 +30,16 @@ export class AuthStack extends cdk.NestedStack {
     super(scope, id, props);
 
     this.userPool = new UserPool(this, 'UserPool', {});
+
+    new CfnUserPoolGroup(this, 'Verified', {
+      userPoolId: this.userPool.userPoolId,
+      groupName: 'Verified',
+    });
+
+    new CfnUserPoolGroup(this, 'NewsEditors', {
+      userPoolId: this.userPool.userPoolId,
+      groupName: 'NewsEditors',
+    });
 
     new UserPoolDomain(this, 'UserPoolDomain', {
       userPool: this.userPool,

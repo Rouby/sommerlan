@@ -240,7 +240,13 @@ function BoardgameSubmit(): React.ReactElement {
               <Form.Item
                 name="name"
                 label="Name"
-                rules={[{ required: true, message: 'Please enter boardgame' }]}
+                rules={[
+                  {
+                    required: true,
+                    message:
+                      'Bitte trag einen Namen ein und wähle ein Ergebnis',
+                  },
+                ]}
               >
                 <AutoComplete
                   disabled={isSubmitting}

@@ -22,15 +22,24 @@ type PushSubscription @aws_cognito_user_pools @aws_iam {
   owner: User!
 }
 
-type Seat {
+type Seat @aws_cognito_user_pools @aws_iam {
   id: ID!
   owner: User
 }
 
+type News @aws_cognito_user_pools @aws_iam {
+  id: ID!
+  author: User!
+  title: String!
+  article: String!
+  datetime: AWSDateTime!
+}
+
 type Query {
   user: User
+  getNews: [News] @aws_cognito_user_pools @aws_iam
   getBoardgames: [Boardgame] @aws_cognito_user_pools @aws_iam
-  getSeats: [Seat]
+  getSeats: [Seat] @aws_cognito_user_pools @aws_iam
   searchBoardgames(name: String!, limit: Int, skip: Int): [BoardgameInfo]
 }
 
@@ -56,6 +65,11 @@ input PushSubscriptionKeysInput {
   p256dh: String!
 }
 
+input NewsInput {
+  title: String!
+  article: String!
+}
+
 type Mutation {
   addBoardgame(boardgame: AddBoardgameInput!): Boardgame
   removeBoardgame(id: ID!): Boardgame
@@ -67,4 +81,6 @@ type Mutation {
     @aws_iam
   takeSeat(seatId: ID!): Seat
   giveUpSeat(seatId: ID!): Seat
+  writeNews(news: NewsInput!): News!
+    @aws_cognito_user_pools(cognito_groups: ["NewsEditors"])
 }

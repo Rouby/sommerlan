@@ -1,5 +1,6 @@
 import { Button, Typography } from 'antd';
 import * as React from 'react';
+import { News } from '../components';
 import { usePushNotifications } from '../PushNotifications';
 
 export function Home(): React.ReactElement {
@@ -13,11 +14,13 @@ export function Home(): React.ReactElement {
   return (
     <>
       <Typography.Title>Sommer-LAN</Typography.Title>
+      <News />
       <Button
         onClick={isSubscribed ? unsubscribe : subscribe}
         disabled={!canSubscribe}
+        type={isSubscribed ? 'default' : 'primary'}
       >
-        {isSubscribed ? 'Unsubscribe' : 'Subscribe'}
+        Benachrichtungen {isSubscribed ? 'deaktivieren' : 'aktivieren'}
       </Button>
     </>
   );

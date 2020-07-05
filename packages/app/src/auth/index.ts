@@ -28,11 +28,20 @@ export type User = {
   name: string;
   picture: string;
   preferred_username: string;
+  groups?: string[];
 };
 
 export const currentUserInfoResource = toResource(
-  Auth.currentUserInfo().then((user) =>
-    user?.attributes ? ({ ...user.attributes } as User) : false,
+  Auth.currentAuthenticatedUser().then(
+    (user) =>
+      user?.attributes
+        ? ({
+            ...user.attributes,
+            groups:
+              user?.signInUserSession?.accessToken?.payload?.['cognito:groups'],
+          } as User)
+        : (false as const),
+    () => false as const,
   ),
 );
 

@@ -61,6 +61,8 @@ export class ApiStack extends cdk.NestedStack {
             actions: ['appsync:GraphQL'],
             resources: [
               `${api.arn}/types/Query/fields/getBoardgames`,
+              `${api.arn}/types/Query/fields/getSeats`,
+              `${api.arn}/types/Query/fields/getNews`,
               `${api.arn}/types/Mutation/fields/addPushSubscription`,
               `${api.arn}/types/Mutation/fields/removePushSubscription`,
             ],
@@ -172,26 +174,33 @@ export class ApiStack extends cdk.NestedStack {
       userResolveFunction,
     );
 
-    userLambda.createResolver({
-      typeName: 'Boardgame',
-      fieldName: 'owner',
-      requestMappingTemplate: MappingTemplate.lambdaRequest(),
-      responseMappingTemplate: MappingTemplate.lambdaResult(),
-    });
+    const userFields = [
+      {
+        typeName: 'Boardgame',
+        fieldName: 'owner',
+      },
+      {
+        typeName: 'Seat',
+        fieldName: 'owner',
+      },
+      {
+        typeName: 'News',
+        fieldName: 'author',
+      },
+      {
+        typeName: 'Query',
+        fieldName: 'user',
+      },
+    ];
 
-    userLambda.createResolver({
-      typeName: 'Seat',
-      fieldName: 'owner',
-      requestMappingTemplate: MappingTemplate.lambdaRequest(),
-      responseMappingTemplate: MappingTemplate.lambdaResult(),
-    });
-
-    userLambda.createResolver({
-      typeName: 'Query',
-      fieldName: 'user',
-      requestMappingTemplate: MappingTemplate.lambdaRequest(),
-      responseMappingTemplate: MappingTemplate.lambdaResult(),
-    });
+    userFields.forEach(({ typeName, fieldName }) =>
+      userLambda.createResolver({
+        typeName,
+        fieldName,
+        requestMappingTemplate: MappingTemplate.lambdaRequest(),
+        responseMappingTemplate: MappingTemplate.lambdaResult(),
+      }),
+    );
 
     const subscriptionsTable = new Table(this, 'SubscriptionsTable', {
       billingMode: BillingMode.PAY_PER_REQUEST,
@@ -266,6 +275,37 @@ export class ApiStack extends cdk.NestedStack {
       requestMappingTemplate: MappingTemplate.dynamoDbDeleteItem(
         'id',
         'seatId',
+      ),
+      responseMappingTemplate: MappingTemplate.dynamoDbResultItem(),
+    });
+
+    const newsTable = new Table(this, 'NewsTable', {
+      billingMode: BillingMode.PAY_PER_REQUEST,
+      partitionKey: {
+        name: 'id',
+        type: AttributeType.STRING,
+      },
+    });
+
+    const newsDynamoDB = api.addDynamoDbDataSource(
+      'NewsDynamoDB',
+      'The news data source',
+      newsTable,
+    );
+
+    newsDynamoDB.createResolver({
+      typeName: 'Query',
+      fieldName: 'getNews',
+      requestMappingTemplate: MappingTemplate.dynamoDbScanTable(),
+      responseMappingTemplate: MappingTemplate.dynamoDbResultList(),
+    });
+
+    newsDynamoDB.createResolver({
+      typeName: 'Mutation',
+      fieldName: 'writeNews',
+      requestMappingTemplate: MappingTemplate.dynamoDbPutItem(
+        PrimaryKey.partition('id').auto(),
+        Values.attribute('author').is('$ctx.identity.username'),
       ),
       responseMappingTemplate: MappingTemplate.dynamoDbResultItem(),
     });
