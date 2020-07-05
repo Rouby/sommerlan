@@ -14,7 +14,7 @@ import {
   Spin,
 } from 'antd';
 import * as React from 'react';
-import { atom, useRecoilValue } from 'recoil';
+import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
 import { mutate, query } from '../api';
 import { useUser } from '../auth';
 import { convertToHTML, TextEditor } from './TextEditor';
@@ -142,7 +142,7 @@ function WriteNews() {
   const [isSubmitting, setSubmitting] = React.useState(false);
   const [title, setTitle] = React.useState('');
   const [article, setArticle] = React.useState('');
-  // const setBoardgameList = useSetRecoilState(boardgamesList);
+  const setNewsList = useSetRecoilState(newsList);
 
   const canWriteNews = user?.groups?.includes('NewsEditors');
 
@@ -192,12 +192,11 @@ function WriteNews() {
                   .then(({ data: { news } }) => {
                     setSubmitting(false);
                     setFormVisible(false);
-                    console.log(news);
-                    // setBoardgameList((list) =>
-                    //   list.update((v) => ({
-                    //     data: { boardgames: [...v.data.boardgames, boardgame] },
-                    //   })),
-                    // );
+                    setNewsList((list) =>
+                      list.update((v) => ({
+                        data: { news: [...v.data.news, news] },
+                      })),
+                    );
                   });
               }}
               type="primary"
