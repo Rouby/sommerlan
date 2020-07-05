@@ -15,13 +15,15 @@ export function Home(): React.ReactElement {
     <>
       <Typography.Title>Sommer-LAN</Typography.Title>
       <News />
-      <Button
-        onClick={isSubscribed ? unsubscribe : subscribe}
-        disabled={!canSubscribe}
-        type={isSubscribed ? 'default' : 'primary'}
-      >
-        Benachrichtungen {isSubscribed ? 'deaktivieren' : 'aktivieren'}
-      </Button>
+      {false && (
+        <Button
+          onClick={isSubscribed ? unsubscribe : subscribe}
+          disabled={!canSubscribe}
+          type={isSubscribed ? 'default' : 'primary'}
+        >
+          Benachrichtungen {isSubscribed ? 'deaktivieren' : 'aktivieren'}
+        </Button>
+      )}
     </>
   );
 }

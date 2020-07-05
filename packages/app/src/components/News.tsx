@@ -1,20 +1,138 @@
-import { Button, Col, Drawer, Empty, Form, Input, Row, Spin } from 'antd';
+import { CommentOutlined, LikeOutlined } from '@ant-design/icons';
+import {
+  Avatar,
+  Button,
+  Col,
+  Drawer,
+  Empty,
+  Form,
+  Input,
+  List,
+  Row,
+  Skeleton,
+  Space,
+  Spin,
+} from 'antd';
 import * as React from 'react';
-import { mutate } from '../api';
+import { atom, useRecoilValue } from 'recoil';
+import { mutate, query } from '../api';
 import { useUser } from '../auth';
+import { convertToHTML, TextEditor } from './TextEditor';
 
 type NewsData = {
   id: string;
   title: string;
   article: string;
+  author: {
+    name: string;
+    picture: string;
+  };
   datetime: string;
+  likes?: number;
+  comments?: {}[];
 };
+
+const newsList = atom({
+  key: 'news',
+  default: query<{
+    data: {
+      news: NewsData[];
+    };
+  }>({
+    query: `{
+    news: getNews {
+      id
+      title
+      article
+      author {
+        name
+        picture
+      }
+      datetime
+    }
+  }`,
+  }),
+});
 
 export function News(): React.ReactElement {
   return (
     <div>
-      <Empty description={<span>Es gibt nichts Neues.</span>} />
+      <WriteNews />
+      <React.Suspense
+        fallback={
+          <List>
+            <List.Item>
+              <Skeleton loading active avatar>
+                <List.Item.Meta
+                  avatar={<Avatar />}
+                  title="Lorem Ipsum Dolor sit"
+                />
+                Lorem Ipsum Dolor sit
+              </Skeleton>
+            </List.Item>
+            <List.Item>
+              <Skeleton loading active avatar>
+                <List.Item.Meta
+                  avatar={<Avatar />}
+                  title="Lorem Ipsum Dolor sit"
+                />
+                Lorem Ipsum Dolor sit
+              </Skeleton>
+            </List.Item>
+          </List>
+        }
+      >
+        <NewsList />
+      </React.Suspense>
     </div>
+  );
+}
+
+function NewsList() {
+  const {
+    data: { news },
+  } = useRecoilValue(newsList).read();
+
+  if (news.filter(Boolean).length === 0) {
+    return <Empty description={<span>Es gibt nichts Neues.</span>} />;
+  }
+
+  return (
+    <List
+      itemLayout="vertical"
+      size="large"
+      dataSource={news.filter(Boolean)}
+      renderItem={(item) => (
+        <List.Item
+          key={item.title}
+          actions={[
+            typeof item.likes === 'number' && (
+              <Space key="likes">
+                <LikeOutlined />
+                {item.likes}
+              </Space>
+            ),
+            item.comments && (
+              <Space key="comments">
+                <CommentOutlined />
+                {item.comments.length}
+              </Space>
+            ),
+          ].filter(Boolean)}
+        >
+          <List.Item.Meta
+            avatar={<Avatar src={item.author.picture} />}
+            title={item.title}
+            description={item.datetime}
+          />
+          {
+            <div
+              dangerouslySetInnerHTML={{ __html: convertToHTML(item.article) }}
+            />
+          }
+        </List.Item>
+      )}
+    />
   );
 }
 
@@ -24,7 +142,6 @@ function WriteNews() {
   const [isSubmitting, setSubmitting] = React.useState(false);
   const [title, setTitle] = React.useState('');
   const [article, setArticle] = React.useState('');
-  const [isLoading, setIsLoading] = React.useState(false);
   // const setBoardgameList = useSetRecoilState(boardgamesList);
 
   const canWriteNews = user?.groups?.includes('NewsEditors');
@@ -34,13 +151,13 @@ function WriteNews() {
   }
 
   return (
-    <>
+    <div>
       <Button type="primary" onClick={() => setFormVisible(true)}>
         Einen Artikel schreiben
       </Button>
       <Drawer
         title="Artikel schreiben"
-        width={Math.min(500, window.innerWidth)}
+        width={Math.min(800, window.innerWidth)}
         onClose={() => setFormVisible(false)}
         visible={isFormVisible}
         bodyStyle={{ paddingBottom: 80 }}
@@ -123,17 +240,12 @@ function WriteNews() {
                   },
                 ]}
               >
-                <Input
-                  disabled={isSubmitting}
-                  style={{ width: 200 }}
-                  value={title}
-                  onChange={({ target: { value } }) => setTitle(value)}
-                />
+                <TextEditor onChange={setArticle} />
               </Form.Item>
             </Col>
           </Row>
         </Form>
       </Drawer>
-    </>
+    </div>
   );
 }

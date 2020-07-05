@@ -33,6 +33,15 @@ type News @aws_cognito_user_pools @aws_iam {
   title: String!
   article: String!
   datetime: AWSDateTime!
+  likes: Int
+  comments: [Comment]
+}
+
+type Comment @aws_cognito_user_pools @aws_iam {
+  id: ID!
+  author: User!
+  text: String!
+  datetime: AWSDateTime!
 }
 
 type Query {

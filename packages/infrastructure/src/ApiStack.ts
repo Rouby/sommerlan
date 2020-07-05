@@ -305,7 +305,11 @@ export class ApiStack extends cdk.NestedStack {
       fieldName: 'writeNews',
       requestMappingTemplate: MappingTemplate.dynamoDbPutItem(
         PrimaryKey.partition('id').auto(),
-        Values.attribute('author').is('$ctx.identity.username'),
+        Values.projecting('news')
+          .attribute('author')
+          .is('$ctx.identity.username')
+          .attribute('datetime')
+          .is('$util.time.nowISO8601()'),
       ),
       responseMappingTemplate: MappingTemplate.dynamoDbResultItem(),
     });

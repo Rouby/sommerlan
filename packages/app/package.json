@@ -21,9 +21,13 @@
     "@types/react-dom": "^16.9.8",
     "@types/recoil": "^0.0.1",
     "antd": "^4.4.0",
+    "draft-js": "^0.11.6",
+    "draftjs-to-html": "^0.9.1",
     "history": "^5.0.0",
+    "immutable": "^4.0.0-rc.12",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-draft-wysiwyg": "^1.14.5",
     "react-jss": "^10.3.0",
     "react-router-dom": "^6.0.0-beta.0",
     "react-scripts": "3.4.1",
@@ -45,5 +49,10 @@
       "last 1 safari version"
     ]
   },
-  "main": "./build/index.html"
+  "main": "./build/index.html",
+  "devDependencies": {
+    "@types/draft-js": "^0",
+    "@types/draftjs-to-html": "^0",
+    "@types/react-draft-wysiwyg": "^1"
+  }
 }
