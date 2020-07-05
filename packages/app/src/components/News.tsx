@@ -178,6 +178,10 @@ function WriteNews() {
     id
     title
     article
+    author {
+      name
+      picture
+    }
     datetime
   }
 }`,
