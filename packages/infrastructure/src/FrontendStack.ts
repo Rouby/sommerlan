@@ -79,7 +79,7 @@ export class FrontendStack extends cdk.NestedStack {
       destinationBucket: webappBucket,
       sources: [Source.asset(dirname(require.resolve('@sommerlan/app')))],
       distribution,
-      retainOnDelete: false,
+      retainOnDelete: true,
       cacheControl: [CacheControl.maxAge(Duration.days(365))],
     });
 
