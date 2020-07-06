@@ -111,7 +111,18 @@ export class ApiStack extends cdk.NestedStack {
     boardgamesDynamoDB.createResolver({
       typeName: 'Mutation',
       fieldName: 'removeBoardgame',
-      requestMappingTemplate: MappingTemplate.dynamoDbDeleteItem('id', 'id'),
+      requestMappingTemplate: MappingTemplate.fromString(
+        `{ "version": "2017-02-28",
+           "operation": "DeleteItem",
+           "key": { "id": $util.dynamodb.toDynamoDBJson($ctx.args.id) },
+           "condition": { 
+             "expression": "#owner = :user",
+             "expressionNames": { "#owner": "owner" },
+             "expressionValues": { ":user": $util.dynamodb.toDynamoDBJson($ctx.identity.username) }
+            }
+          }`,
+      ),
+      // requestMappingTemplate: MappingTemplate.dynamoDbDeleteItem('id', 'id'),
       responseMappingTemplate: MappingTemplate.dynamoDbResultItem(),
     });
 

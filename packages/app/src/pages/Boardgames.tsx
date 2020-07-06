@@ -1,3 +1,4 @@
+import { DeleteOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import {
   Alert,
   AutoComplete,
@@ -8,6 +9,7 @@ import {
   Empty,
   Form,
   message,
+  Popconfirm,
   Row,
   Space,
   Spin,
@@ -35,7 +37,7 @@ type Boardgame = {
   id: string;
   name: string;
   imageUrl: string;
-  owner: { name: string };
+  owner: { id: string; name: string };
 };
 
 const boardgamesList = atom({
@@ -51,6 +53,7 @@ const boardgamesList = atom({
       name
       imageUrl
       owner {
+        id
         name
       }
     }
@@ -99,6 +102,8 @@ function BoardgamesList(): React.ReactElement {
   const {
     data: { boardgames },
   } = useRecoilValue(boardgamesList).read();
+  const user = useUser();
+  const setBoardgameList = useSetRecoilState(boardgamesList);
 
   return (
     <>
@@ -108,6 +113,43 @@ function BoardgamesList(): React.ReactElement {
           hoverable
           style={{ width: 240 }}
           cover={<img alt={game.name} src={game.imageUrl} />}
+          actions={
+            game.owner.id === user?.id
+              ? [
+                  <Popconfirm
+                    key="delete"
+                    title="Brettspiel entfernen?"
+                    icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+                    onConfirm={() => {
+                      mutate<{ data: { boardgame: Boardgame } }>({
+                        mutation: `mutation($id: ID!) {
+        boardgame: removeBoardgame(id: $id) {
+          id
+        }
+      }`,
+                        variables: {
+                          id: game.id,
+                        },
+                      })
+                        .promise()
+                        .then(({ data: { boardgame } }) => {
+                          setBoardgameList((list) =>
+                            list.update((v) => ({
+                              data: {
+                                boardgames: v.data.boardgames.filter(
+                                  (b) => b.id !== boardgame.id,
+                                ),
+                              },
+                            })),
+                          );
+                        });
+                    }}
+                  >
+                    <DeleteOutlined />
+                  </Popconfirm>,
+                ]
+              : undefined
+          }
         >
           <Card.Meta
             title={game.name}
@@ -203,6 +245,7 @@ function BoardgameSubmit(): React.ReactElement {
     name
     imageUrl
     owner {
+      id
       name
     }
   }
