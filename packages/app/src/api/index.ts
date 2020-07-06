@@ -3,9 +3,7 @@ import { Signer } from '@aws-amplify/core';
 import { toResource } from '../util';
 
 const endpoint =
-  process.env.NODE_ENV === 'production'
-    ? 'https://smsg2vdwvrebxc5x22nbbfv74m.appsync-api.eu-central-1.amazonaws.com/graphql'
-    : 'http://localhost:5000/graphql';
+  process.env.REACT_APP_BACKEND_ENDPOINT ?? 'http://localhost:5000/graphql';
 
 type AuthMode = 'iam' | 'cognito' | 'auto';
 

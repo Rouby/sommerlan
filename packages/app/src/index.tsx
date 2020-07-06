@@ -8,10 +8,7 @@ import { RecoilRoot } from 'recoil';
 import { App } from './App';
 import { PushNotifications } from './PushNotifications';
 
-if (
-  process.env.NODE_ENV === 'production' &&
-  process.env.REACT_APP_LOGROCKET_ID
-) {
+if (process.env.REACT_APP_LOGROCKET_ID) {
   LogRocket.init(process.env.REACT_APP_LOGROCKET_ID);
 }
 

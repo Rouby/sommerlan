@@ -6,24 +6,19 @@ import { toResource } from '../util';
 
 Auth.configure({
   region: 'eu-central-1',
-  userPoolId: 'eu-central-1_mD1SGJtDD',
-  userPoolWebClientId: '4jav5504icbh82roajash68vcp',
+  userPoolId: process.env.REACT_APP_AUTH_USERPOOL_ID,
+  userPoolWebClientId: process.env.REACT_APP_AUTH_USERPOOL_WEBCLIENT_ID,
   oauth: {
-    domain: 'sommerlan.auth.eu-central-1.amazoncognito.com',
-    redirectSignIn:
-      process.env.NODE_ENV === 'production'
-        ? 'https://sommerlan.rocks/'
-        : 'http://localhost:3000/',
-    redirectSignOut:
-      process.env.NODE_ENV === 'production'
-        ? 'https://sommerlan.rocks/'
-        : 'http://localhost:3000/',
+    domain: process.env.REACT_APP_AUTH_OAUTH_DOMAIN,
+    redirectSignIn: `${window.location.origin}/`,
+    redirectSignOut: `${window.location.origin}/`,
     responseType: 'code',
   },
-  identityPoolId: 'eu-central-1:6e1392d2-6e7b-4cab-b1e6-c39d790f5f71',
+  identityPoolId: process.env.REACT_APP_AUTH_IDENTITYPOOL_ID,
 });
 
 export type User = {
+  id: string;
   email: string;
   locale: string;
   name: string;
@@ -38,6 +33,7 @@ export const currentUserInfoResource = toResource(
       (user) =>
         user?.attributes
           ? ({
+              id: user.username,
               ...user.attributes,
               groups:
                 user?.signInUserSession?.accessToken?.payload?.[
@@ -48,8 +44,12 @@ export const currentUserInfoResource = toResource(
       () => false as const,
     )
     .then((user) => {
-      if (user) {
-        LogRocket.identify(user.name);
+      if (process.env.REACT_APP_LOGROCKET_ID && user) {
+        LogRocket.identify(user.id, {
+          name: user.name,
+          email: user.email,
+          groups: user.groups?.join(', ') ?? 'none',
+        });
       }
       return user;
     }),
