@@ -324,5 +324,27 @@ export class ApiStack extends cdk.NestedStack {
       ),
       responseMappingTemplate: MappingTemplate.dynamoDbResultItem(),
     });
+
+    newsDynamoDB.createResolver({
+      typeName: 'Mutation',
+      fieldName: 'updateNews',
+      requestMappingTemplate: MappingTemplate.fromString(
+        `{ "version": "2017-02-28",
+           "operation": "UpdateItem",
+           "key": { "id": $util.dynamodb.toDynamoDBJson($ctx.args.id) },
+           "update": {
+             "expression": "SET #title = :title, #article = :article",
+             "expressionNames": { "#title": "title", "#article": "article" },
+             "expressionValues": { ":title": $util.dynamodb.toDynamoDBJson($ctx.args.news.title), ":article": $util.dynamodb.toDynamoDBJson($ctx.args.news.article) }
+           },
+           "condition": { 
+             "expression": "#author = :user",
+             "expressionNames": { "#author": "author" },
+             "expressionValues": { ":user": $util.dynamodb.toDynamoDBJson($ctx.identity.username) }
+            }
+          }`,
+      ),
+      responseMappingTemplate: MappingTemplate.dynamoDbResultItem(),
+    });
   }
 }

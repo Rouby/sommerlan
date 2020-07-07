@@ -92,4 +92,6 @@ type Mutation {
   giveUpSeat(seatId: ID!): Seat
   writeNews(news: NewsInput!): News!
     @aws_cognito_user_pools(cognito_groups: ["NewsEditors"])
+  updateNews(id: ID!, news: NewsInput!): News!
+    @aws_cognito_user_pools(cognito_groups: ["NewsEditors"])
 }

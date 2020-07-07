@@ -1,4 +1,4 @@
-import { CommentOutlined, LikeOutlined } from '@ant-design/icons';
+import { CommentOutlined, EditOutlined, LikeOutlined } from '@ant-design/icons';
 import {
   Avatar,
   Button,
@@ -14,7 +14,12 @@ import {
   Spin,
 } from 'antd';
 import * as React from 'react';
-import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
+import {
+  atom,
+  useRecoilState,
+  useRecoilValue,
+  useSetRecoilState,
+} from 'recoil';
 import { mutate, query } from '../api';
 import { useUser } from '../auth';
 import { convertToHTML, TextEditor } from './TextEditor';
@@ -24,6 +29,7 @@ type NewsData = {
   title: string;
   article: string;
   author: {
+    id: string;
     name: string;
     picture: string;
   };
@@ -45,6 +51,7 @@ const newsList = atom({
       title
       article
       author {
+        id
         name
         picture
       }
@@ -52,6 +59,16 @@ const newsList = atom({
     }
   }`,
   }),
+});
+
+const newsArticle = atom({
+  key: 'writeNewsArticle',
+  default: {
+    writing: false,
+    id: null as string | null,
+    title: '',
+    article: '',
+  },
 });
 
 export function News(): React.ReactElement {
@@ -92,6 +109,8 @@ function NewsList() {
   const {
     data: { news },
   } = useRecoilValue(newsList).read();
+  const user = useUser();
+  const setNewsArticle = useSetRecoilState(newsArticle);
 
   if (news.filter(Boolean).length === 0) {
     return <Empty description={<span>Es gibt nichts Neues.</span>} />;
@@ -104,7 +123,7 @@ function NewsList() {
       dataSource={news.filter(Boolean)}
       renderItem={(item) => (
         <List.Item
-          key={item.title}
+          key={item.id}
           actions={[
             typeof item.likes === 'number' && (
               <Space key="likes">
@@ -116,6 +135,20 @@ function NewsList() {
               <Space key="comments">
                 <CommentOutlined />
                 {item.comments.length}
+              </Space>
+            ),
+            item.author.id === user?.id && (
+              <Space key="edit">
+                <EditOutlined
+                  onClick={() =>
+                    setNewsArticle({
+                      writing: true,
+                      id: item.id,
+                      title: item.title,
+                      article: item.article,
+                    })
+                  }
+                />
               </Space>
             ),
           ].filter(Boolean)}
@@ -138,10 +171,11 @@ function NewsList() {
 
 function WriteNews() {
   const user = useUser();
-  const [isFormVisible, setFormVisible] = React.useState(false);
+  const [
+    { writing: isFormVisible, id, title, article },
+    setNewsArticle,
+  ] = useRecoilState(newsArticle);
   const [isSubmitting, setSubmitting] = React.useState(false);
-  const [title, setTitle] = React.useState('');
-  const [article, setArticle] = React.useState('');
   const setNewsList = useSetRecoilState(newsList);
 
   const canWriteNews = user?.groups?.includes('NewsEditors');
@@ -152,19 +186,24 @@ function WriteNews() {
 
   return (
     <div>
-      <Button type="primary" onClick={() => setFormVisible(true)}>
+      <Button
+        type="primary"
+        onClick={() =>
+          setNewsArticle({ id: null, title: '', article: '', writing: true })
+        }
+      >
         Einen Artikel schreiben
       </Button>
       <Drawer
         title="Artikel schreiben"
         width={Math.min(800, window.innerWidth)}
-        onClose={() => setFormVisible(false)}
+        onClose={() => setNewsArticle((n) => ({ ...n, writing: false }))}
         visible={isFormVisible}
         bodyStyle={{ paddingBottom: 80 }}
         footer={
           <div style={{ textAlign: 'right' }}>
             <Button
-              onClick={() => setFormVisible(false)}
+              onClick={() => setNewsArticle((n) => ({ ...n, writing: false }))}
               style={{ marginRight: 8 }}
             >
               Abbrechen
@@ -173,12 +212,15 @@ function WriteNews() {
               onClick={() => {
                 setSubmitting(true);
                 mutate<{ data: { news: NewsData } }>({
-                  mutation: `mutation($news: NewsInput!) {
-  news: writeNews(news: $news) {
+                  mutation: `mutation(${
+                    id ? '$id: ID!, $news: NewsInput!' : '$news: NewsInput!'
+                  }) {
+  news: ${id ? 'updateNews(id: $id, news: $news)' : 'writeNews(news: $news)'} {
     id
     title
     article
     author {
+      id
       name
       picture
     }
@@ -186,6 +228,7 @@ function WriteNews() {
   }
 }`,
                   variables: {
+                    ...(id && { id }),
                     news: {
                       title,
                       article,
@@ -195,10 +238,21 @@ function WriteNews() {
                   .promise()
                   .then(({ data: { news } }) => {
                     setSubmitting(false);
-                    setFormVisible(false);
+                    setNewsArticle({
+                      id: null,
+                      title: '',
+                      article: '',
+                      writing: false,
+                    });
                     setNewsList((list) =>
                       list.update((v) => ({
-                        data: { news: [...v.data.news, news] },
+                        data: {
+                          news: id
+                            ? v.data.news.map((n) =>
+                                n?.id === news.id ? news : n,
+                              )
+                            : [...v.data.news, news],
+                        },
                       })),
                     );
                   });
@@ -207,7 +261,7 @@ function WriteNews() {
               disabled={!title || !article || isSubmitting}
             >
               {isSubmitting && <Spin />}
-              Eintragen
+              {id ? 'Bearbeiten' : 'Eintragen'}
             </Button>
           </div>
         }
@@ -216,7 +270,6 @@ function WriteNews() {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                name="title"
                 label="Titel"
                 rules={[
                   { required: true, message: 'Bitte gib einen Titel an' },
@@ -226,7 +279,9 @@ function WriteNews() {
                   disabled={isSubmitting}
                   style={{ width: 200 }}
                   value={title}
-                  onChange={({ target: { value } }) => setTitle(value)}
+                  onChange={({ target: { value } }) =>
+                    setNewsArticle((n) => ({ ...n, title: value }))
+                  }
                 />
               </Form.Item>
             </Col>
@@ -234,7 +289,6 @@ function WriteNews() {
           <Row gutter={16}>
             <Col span={24}>
               <Form.Item
-                name="article"
                 label="Artikel"
                 rules={[
                   {
@@ -243,7 +297,12 @@ function WriteNews() {
                   },
                 ]}
               >
-                <TextEditor onChange={setArticle} />
+                <TextEditor
+                  value={article}
+                  onChange={(text) =>
+                    setNewsArticle((n) => ({ ...n, article: text }))
+                  }
+                />
               </Form.Item>
             </Col>
           </Row>
