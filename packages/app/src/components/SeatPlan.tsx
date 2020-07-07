@@ -1,4 +1,4 @@
-import { Popconfirm, Tooltip } from 'antd';
+import { message, Popconfirm, Tooltip } from 'antd';
 import * as React from 'react';
 import { User, useUser } from '../auth';
 import floorImage from './assets/floor.jpg';
@@ -122,19 +122,33 @@ function Seat({ id, x, y, r, tableR }: SeatProps) {
     />
   );
 
-  if (!owner && user) {
-    seat = (
-      <Popconfirm
-        title="Wunschplatz angeben?"
-        okText="Ja"
-        cancelText="Abbrechen"
-        onConfirm={() => {
-          onTakeSeat(id);
-        }}
-      >
-        {seat}
-      </Popconfirm>
-    );
+  if (!owner) {
+    if (user) {
+      seat = (
+        <Popconfirm
+          title="Wunschplatz angeben?"
+          okText="Ja"
+          cancelText="Abbrechen"
+          onConfirm={() => {
+            onTakeSeat(id);
+          }}
+        >
+          {seat}
+        </Popconfirm>
+      );
+    } else {
+      seat = (
+        <g
+          onClick={() => {
+            message.info(
+              'Du musst eingeloggt sein um einen Wunschplatz angeben zu können.',
+            );
+          }}
+        >
+          {seat}
+        </g>
+      );
+    }
   }
 
   let person = null;
