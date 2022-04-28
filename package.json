@@ -1,0 +1,41 @@
+{
+  "private": true,
+  "name": "sommerlan-app",
+  "description": "",
+  "license": "",
+  "scripts": {
+    "build": "remix build",
+    "dev": "remix watch",
+    "postinstall": "remix setup node",
+    "start": "arc sandbox",
+    "deploy": "arc deploy",
+    "destroy": "arc destroy"
+  },
+  "dependencies": {
+    "@copper/plugin-cognito": "^1.0.6",
+    "@mantine/core": "^4.2.1",
+    "@mantine/dates": "^4.2.1",
+    "@mantine/hooks": "^4.2.1",
+    "@mantine/notifications": "^4.2.1",
+    "@mantine/ssr": "^4.2.1",
+    "@modulz/radix-icons": "^4.0.0",
+    "@remix-run/architect": "^1.1.1",
+    "@remix-run/react": "^1.4.3",
+    "aws-sdk": "2.796.0",
+    "dayjs": "^1.11.1",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
+    "remix": "^1.4.3"
+  },
+  "devDependencies": {
+    "@remix-run/dev": "^1.4.3",
+    "@types/react": "^18.0.8",
+    "@types/react-dom": "^18.0.0",
+    "typescript": "^4.6.3"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "sideEffects": false,
+  "packageManager": "yarn@3.2.0"
+}
