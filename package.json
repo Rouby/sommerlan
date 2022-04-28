@@ -12,7 +12,7 @@
     "format": "prettier --write .",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "setup": "prisma migrate dev && prisma db seed",
-    "start": "remix-serve build",
+    "start": "prisma migrate deploy && remix-serve build",
     "start:mocks": "binode --require ./mocks -- @remix-run/serve:remix-serve build",
     "test": "vitest",
     "test:e2e:dev": "start-server-and-test dev http://localhost:3000 \"cypress open\"",
