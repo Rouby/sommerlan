@@ -175,6 +175,7 @@ jobs:
         if: ${{ github.ref == 'refs/heads/dev' }}
         run: |
           docker-compose -p sommerlan-staging up -d
+          docker-compose -p sommerlan-staging run --rm app yarn prisma migrate deploy
         env:
           BRANCH: ${{ github.ref_name }}
           SHA: ${{ github.sha }}
@@ -184,6 +185,7 @@ jobs:
         if: ${{ github.ref == 'refs/heads/main' }}
         run: |
           docker-compose -p sommerlan-production up -d
+          docker-compose -p sommerlan-production run --rm app yarn prisma migrate deploy
         env:
           BRANCH: ${{ github.ref_name }}
           SHA: ${{ github.sha }}
