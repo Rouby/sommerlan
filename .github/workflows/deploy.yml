@@ -93,7 +93,7 @@ jobs:
 
       - name: 🐳 Docker compose
         # the sleep is just there to give time for postgres to get started
-        run: docker-compose up db -d && sleep 3
+        run: docker-compose up -d -f ./docker-compose-e2e.yml && sleep 3
         env:
           DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/postgres"
 
