@@ -107,7 +107,16 @@ const UserInfo = forwardRef<HTMLButtonElement>(function UserInfo(
   const user = useOptionalUser();
 
   if (!user) {
-    return null;
+    return (
+      <Group>
+        <Button component={Link} to="/join" variant="subtle">
+          Anmelden
+        </Button>
+        <Button component={Link} to="/login" variant="subtle">
+          Einloggen
+        </Button>
+      </Group>
+    );
   }
 
   return (

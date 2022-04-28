@@ -1,3 +1,12 @@
+import {
+  Button,
+  Container,
+  Group,
+  PasswordInput,
+  Text,
+  TextInput,
+} from "@mantine/core";
+import { PersonIcon } from "@modulz/radix-icons";
 import type {
   ActionFunction,
   LoaderFunction,
@@ -6,6 +15,7 @@ import type {
 import { json, redirect } from "@remix-run/node";
 import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
 import * as React from "react";
+import { At, ShieldLock } from "tabler-icons-react";
 import { createUser, getUserByEmail } from "~/models/user.server";
 import { createUserSession, getUserId } from "~/session.server";
 import { safeRedirect, validateEmail } from "~/utils";
@@ -20,6 +30,7 @@ interface ActionData {
   errors: {
     email?: string;
     password?: string;
+    name?: string;
   };
 }
 
@@ -32,28 +43,28 @@ export const action: ActionFunction = async ({ request }) => {
 
   if (!validateEmail(email)) {
     return json<ActionData>(
-      { errors: { email: "Email is invalid" } },
+      { errors: { email: "Email ist ungültig" } },
       { status: 400 }
     );
   }
 
   if (typeof password !== "string") {
     return json<ActionData>(
-      { errors: { password: "Password is required" } },
+      { errors: { password: "Passwort wird benötigt" } },
       { status: 400 }
     );
   }
 
   if (password.length < 3) {
     return json<ActionData>(
-      { errors: { password: "Password is too short" } },
+      { errors: { password: "Passwort ist zu kurz" } },
       { status: 400 }
     );
   }
 
   if (typeof name !== "string") {
     return json<ActionData>(
-      { errors: { password: "Name is required" } },
+      { errors: { name: "Name wird benötigt" } },
       { status: 400 }
     );
   }
@@ -61,7 +72,7 @@ export const action: ActionFunction = async ({ request }) => {
   const existingUser = await getUserByEmail(email);
   if (existingUser) {
     return json<ActionData>(
-      { errors: { email: "A user already exists with this email" } },
+      { errors: { email: "Es gibt bereits einen Nutzer mit dieser Email" } },
       { status: 400 }
     );
   }
@@ -78,7 +89,7 @@ export const action: ActionFunction = async ({ request }) => {
 
 export const meta: MetaFunction = () => {
   return {
-    title: "Sign Up",
+    title: "Anmelden",
   };
 };
 
@@ -86,98 +97,62 @@ export default function Join() {
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get("redirectTo") ?? undefined;
   const actionData = useActionData() as ActionData;
-  const emailRef = React.useRef<HTMLInputElement>(null);
-  const passwordRef = React.useRef<HTMLInputElement>(null);
-
-  React.useEffect(() => {
-    if (actionData?.errors?.email) {
-      emailRef.current?.focus();
-    } else if (actionData?.errors?.password) {
-      passwordRef.current?.focus();
-    }
-  }, [actionData]);
 
   return (
-    <div className="flex min-h-full flex-col justify-center">
-      <div className="mx-auto w-full max-w-md px-8">
-        <Form method="post" className="space-y-6">
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Email address
-            </label>
-            <div className="mt-1">
-              <input
-                ref={emailRef}
-                id="email"
-                required
-                autoFocus={true}
-                name="email"
-                type="email"
-                autoComplete="email"
-                aria-invalid={actionData?.errors?.email ? true : undefined}
-                aria-describedby="email-error"
-                className="w-full rounded border border-gray-500 px-2 py-1 text-lg"
-              />
-              {actionData?.errors?.email && (
-                <div className="pt-1 text-red-700" id="email-error">
-                  {actionData.errors.email}
-                </div>
-              )}
-            </div>
-          </div>
+    <Container size="xs">
+      <Form method="post">
+        <TextInput
+          id="email"
+          required
+          autoFocus={true}
+          name="email"
+          type="email"
+          autoComplete="email"
+          label="Email"
+          icon={<At size={16} />}
+          placeholder="Deine Email"
+          error={actionData?.errors?.email}
+        />
+        <PasswordInput
+          id="password"
+          required
+          name="password"
+          type="password"
+          autoComplete="new-password"
+          label="Passwort"
+          icon={<ShieldLock size={16} />}
+          error={actionData?.errors?.password}
+        />
+        <TextInput
+          id="name"
+          required
+          name="name"
+          label="Name"
+          icon={<PersonIcon />}
+          placeholder="Name"
+          error={actionData?.errors?.name}
+        />
 
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Password
-            </label>
-            <div className="mt-1">
-              <input
-                id="password"
-                ref={passwordRef}
-                name="password"
-                type="password"
-                autoComplete="new-password"
-                aria-invalid={actionData?.errors?.password ? true : undefined}
-                aria-describedby="password-error"
-                className="w-full rounded border border-gray-500 px-2 py-1 text-lg"
-              />
-              {actionData?.errors?.password && (
-                <div className="pt-1 text-red-700" id="password-error">
-                  {actionData.errors.password}
-                </div>
-              )}
-            </div>
-          </div>
+        <input type="hidden" name="redirectTo" value={redirectTo} />
 
-          <input type="hidden" name="redirectTo" value={redirectTo} />
-          <button
-            type="submit"
-            className="w-full rounded bg-blue-500  py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400"
+        <Group position="right" mt="md">
+          <Button type="submit">Account anlegen</Button>
+        </Group>
+
+        <Text>
+          Du hast schon einen Account?{" "}
+          <Button
+            component={Link}
+            to={{
+              pathname: "/login",
+              search: searchParams.toString(),
+            }}
+            variant="subtle"
           >
-            Create Account
-          </button>
-          <div className="flex items-center justify-center">
-            <div className="text-center text-sm text-gray-500">
-              Already have an account?{" "}
-              <Link
-                className="text-blue-500 underline"
-                to={{
-                  pathname: "/login",
-                  search: searchParams.toString(),
-                }}
-              >
-                Log in
-              </Link>
-            </div>
-          </div>
-        </Form>
-      </div>
-    </div>
+            Einloggen
+          </Button>
+        </Text>
+      </Form>
+    </Container>
   );
 }
