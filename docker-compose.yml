@@ -9,9 +9,6 @@ services:
       SESSION_SECRET: sommerlan-rocks-cookies
     ports:
       - "${APP_PORT}:8080"
-    networks:
-      - inside
-      - outside
   db:
     image: postgres:14.2
     restart: unless-stopped
@@ -20,12 +17,3 @@ services:
       POSTGRES_PASSWORD: postgres
     volumes:
       - /media/hdd-1/sommerlan/data-${BRANCH}:/var/lib/postgresql/data
-    networks:
-      - inside
-
-networks:
-  inside:
-    driver: overlay
-    internal: true
-  outside:
-    external: true
