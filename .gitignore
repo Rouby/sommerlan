@@ -1,8 +1,12 @@
 node_modules
 
-/.cache
-/server/build
+/build
 /public/build
+.env
 
-sam.json
-sam.yaml
+/cypress/screenshots
+/cypress/videos
+/prisma/data.db
+/prisma/data.db-journal
+
+/app/styles/tailwind.css

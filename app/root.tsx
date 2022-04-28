@@ -1,82 +1,71 @@
 import {
-  ColorScheme,
   ColorSchemeProvider,
   MantineProvider,
-} from '@mantine/core';
-import { useState } from 'react';
+  type ColorScheme,
+} from "@mantine/core";
+import type {
+  LinksFunction,
+  LoaderFunction,
+  MetaFunction,
+} from "@remix-run/node";
+import { json } from "@remix-run/node";
 import {
   Links,
+  LiveReload,
   Meta,
-  MetaFunction,
   Outlet,
   Scripts,
   ScrollRestoration,
-  useCatch,
-} from 'remix';
-import { Layout } from './Layout';
+} from "@remix-run/react";
+import { useState } from "react";
+import { Layout } from "./Layout";
+import { getUser } from "./session.server";
 
-export const meta: MetaFunction = () => {
-  return { title: 'Sommer-Party-LAN' };
+export const links: LinksFunction = () => {
+  return [];
+};
+
+export const meta: MetaFunction = () => ({
+  charset: "utf-8",
+  title: "Sommer-Party-LAN",
+  viewport: "width=device-width,initial-scale=1",
+});
+
+type LoaderData = {
+  user: Awaited<ReturnType<typeof getUser>>;
+};
+
+export const loader: LoaderFunction = async ({ request }) => {
+  return json<LoaderData>({
+    user: await getUser(request),
+  });
 };
 
 export default function App() {
   return (
-    <Document>
-      <Layout>
-        <Outlet />
-      </Layout>
-    </Document>
-  );
-}
-
-export function CatchBoundary() {
-  const caught = useCatch();
-
-  return (
-    <Document>
-      <Layout>
-        <h1>
-          {caught.status} {caught.statusText}
-        </h1>
-      </Layout>
-    </Document>
-  );
-}
-
-export function ErrorBoundary({ error }: { error: Error }) {
-  return (
-    <Document>
-      <Layout>
-        <h1>App Error</h1>
-        <pre>{error.message}</pre>
-      </Layout>
-    </Document>
-  );
-}
-
-function Document({ children }: { children: React.ReactNode }) {
-  return (
     <html lang="de">
       <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
         <Meta />
         <Links />
       </head>
       <body>
-        <MantineTheme>{children}</MantineTheme>
+        <MantineTheme>
+          <Layout>
+            <Outlet />
+          </Layout>
+        </MantineTheme>
         <ScrollRestoration />
         <Scripts />
-        {/* {process.env.NODE_ENV === 'development' && <LiveReload />} */}
+        <LiveReload port={8002} />
       </body>
     </html>
   );
 }
 
 function MantineTheme({ children }: { children: React.ReactNode }) {
-  const [colorScheme, setColorScheme] = useState<ColorScheme>('dark');
+  const [colorScheme, setColorScheme] = useState<ColorScheme>("dark");
   const toggleColorScheme = (value?: ColorScheme) =>
-    setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
+    setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
 
   return (
     <ColorSchemeProvider
