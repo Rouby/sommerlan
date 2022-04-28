@@ -47,7 +47,7 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: 🔎 Type check
-        run: yarn typecheck --if-present
+        run: yarn typecheck
 
   vitest:
     name: ⚡ Vitest
@@ -93,7 +93,7 @@ jobs:
 
       - name: 🐳 Docker compose
         # the sleep is just there to give time for postgres to get started
-        run: docker-compose up -d -f ./docker-compose-e2e.yml && sleep 3
+        run: docker-compose -f ./docker-compose-e2e.yml -p e2e up -d && sleep 3
 
       - name: 🛠 Setup Database
         run: yarn prisma migrate reset --force
@@ -173,7 +173,7 @@ jobs:
       - name: 🚀 Deploy Staging
         if: ${{ github.ref == 'refs/heads/dev' }}
         run: |
-          sudo docker-compose up -d
+          sudo docker-compose -p sommerlan-staging up -d
         env:
           BRANCH: ${{ github.ref_name }}
           SHA: ${{ github.sha }}
@@ -182,7 +182,7 @@ jobs:
       - name: 🚀 Deploy Production
         if: ${{ github.ref == 'refs/heads/main' }}
         run: |
-          sudo docker-compose up -d
+          sudo docker-compose -p sommerlan-production up -d
         env:
           BRANCH: ${{ github.ref_name }}
           SHA: ${{ github.sha }}
