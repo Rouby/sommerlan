@@ -174,7 +174,7 @@ jobs:
       - name: 🚀 Deploy Staging
         if: ${{ github.ref == 'refs/heads/dev' }}
         run: |
-          sudo docker-compose -p sommerlan-staging up -d
+          docker-compose -p sommerlan-staging up -d
         env:
           BRANCH: ${{ github.ref_name }}
           SHA: ${{ github.sha }}
@@ -183,7 +183,7 @@ jobs:
       - name: 🚀 Deploy Production
         if: ${{ github.ref == 'refs/heads/main' }}
         run: |
-          sudo docker-compose -p sommerlan-production up -d
+          docker-compose -p sommerlan-production up -d
         env:
           BRANCH: ${{ github.ref_name }}
           SHA: ${{ github.sha }}
