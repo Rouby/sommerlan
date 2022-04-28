@@ -13,7 +13,7 @@ FROM base as deps
 WORKDIR /myapp
 
 ADD package.json yarn.lock ./
-RUN npm install --production=false
+RUN yarn
 
 # Setup production node_modules
 FROM base as production-deps
@@ -21,8 +21,8 @@ FROM base as production-deps
 WORKDIR /myapp
 
 COPY --from=deps /myapp/node_modules /myapp/node_modules
-ADD package.json yarn.lock.json ./
-RUN npm prune --production
+ADD package.json yarn.lock ./
+RUN yarn workspaces focus --production
 
 # Build the app
 FROM base as build
