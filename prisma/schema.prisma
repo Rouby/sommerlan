@@ -1,5 +1,5 @@
 datasource db {
-  provider = "sqlite"
+  provider = "postgres"
   url      = env("DATABASE_URL")
 }
 
@@ -13,8 +13,11 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  name     String
-  password Password?
+  name           String
+  password       Password?
+  role           Role                 @default(USER)
+  participations ParticipantOfParty[]
+  workloads      Workload[]
 }
 
 model Password {
@@ -22,4 +25,46 @@ model Password {
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String @unique
+}
+
+enum Role {
+  ADMIN
+  ORGANIZER
+  TRUSTED_USER
+  USER
+}
+
+model Party {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  startDate    DateTime             @unique
+  endDate      DateTime             @unique
+  name         String?
+  participants ParticipantOfParty[]
+  workloads    Workload[]
+}
+
+model Workload {
+  id String @id @default(cuid())
+
+  title      String
+  assignee   User?   @relation(fields: [assigneeId], references: [id])
+  assigneeId String?
+  party      Party   @relation(fields: [partyId], references: [id])
+  partyId    String
+}
+
+model ParticipantOfParty {
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId  String
+  party   Party  @relation(fields: [partyId], references: [id], onDelete: Cascade)
+  partyId String
+
+  arrivingAt  DateTime
+  departingAt DateTime
+  paidMoney   Int?
+
+  @@id([userId, partyId])
 }

@@ -7,17 +7,18 @@ import {
   Group,
   Header,
   MediaQuery,
+  Menu,
+  MenuItem,
   Navbar,
   Text,
   UnstyledButton,
   useMantineTheme,
 } from "@mantine/core";
 import { ChevronRightIcon } from "@modulz/radix-icons";
-import { Link } from "@remix-run/react";
+import { Form, Link } from "@remix-run/react";
 import type { To } from "history";
-import { useState } from "react";
+import { forwardRef, useState } from "react";
 import { useOptionalUser } from "./utils";
-// import { UserInfo } from './components';
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const [opened, setOpened] = useState(false);
@@ -63,7 +64,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <NavbarLink to="/games">Spiele</NavbarLink>
           </Navbar.Section>
           <Navbar.Section>
-            <UserInfo />
+            <Menu
+              position="right"
+              control={<UserInfo />}
+              sx={{ display: "block" }}
+            >
+              <Menu.Label>Nutzer</Menu.Label>
+              <Form action="/logout" method="post">
+                <MenuItem component="button" type="submit">
+                  Ausloggen
+                </MenuItem>
+              </Form>
+            </Menu>
           </Navbar.Section>
         </Navbar>
       }
@@ -87,7 +99,10 @@ function NavbarLink({ children, to }: { children: React.ReactNode; to: To }) {
   );
 }
 
-function UserInfo() {
+const UserInfo = forwardRef<HTMLButtonElement>(function UserInfo(
+  { ...props },
+  ref
+) {
   const theme = useMantineTheme();
   const user = useOptionalUser();
 
@@ -97,6 +112,7 @@ function UserInfo() {
 
   return (
     <UnstyledButton
+      ref={ref}
       sx={{
         display: "block",
         width: "100%",
@@ -111,6 +127,7 @@ function UserInfo() {
               : theme.colors.gray[0],
         },
       }}
+      {...props}
     >
       <Group noWrap>
         <Avatar radius="xl">
@@ -134,4 +151,4 @@ function UserInfo() {
       </Group>
     </UnstyledButton>
   );
-}
+});

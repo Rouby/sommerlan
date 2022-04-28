@@ -1,7 +1,15 @@
+import { AbilityBuilder, type AbilityClass } from "@casl/ability";
+import { PrismaAbility, type Subjects } from "@casl/prisma";
+import type {
+  ParticipantOfParty,
+  Party,
+  Password,
+  User,
+  Workload,
+} from "@prisma/client";
 import { useMatches } from "@remix-run/react";
 import { useMemo } from "react";
-
-import type { User } from "~/models/user.server";
+import { getUserById } from "./models/user.server";
 
 const DEFAULT_REDIRECT = "/";
 
@@ -68,4 +76,48 @@ export function useUser(): User {
 
 export function validateEmail(email: unknown): email is string {
   return typeof email === "string" && email.length > 3 && email.includes("@");
+}
+
+export async function defineAbilityForUser(userId?: string | null) {
+  const AppAbility = PrismaAbility as AbilityClass<
+    PrismaAbility<
+      [
+        string,
+        Subjects<{
+          all: any;
+          User: User;
+          Party: Party;
+          ParticipantOfParty: ParticipantOfParty;
+          Password: Password;
+          Workload: Workload;
+        }>
+      ]
+    >
+  >;
+  const { can, build } = new AbilityBuilder(AppAbility);
+
+  const user = userId ? await getUserById(userId) : null;
+
+  if (user?.role === "ADMIN") {
+    can("manage", "all");
+  }
+
+  can("read", "Party");
+  can("read", "ParticipantOfParty");
+
+  switch (user?.role) {
+    case "ADMIN":
+      can("manage", "User");
+      break;
+    case "ORGANIZER":
+    case "TRUSTED_USER":
+      can("read", "User");
+      can("manage", "User", { id: userId });
+      break;
+    default:
+      can("read", "User", { id: userId });
+      break;
+  }
+
+  return build();
 }

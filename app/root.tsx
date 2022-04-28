@@ -1,3 +1,4 @@
+import { Ability } from "@casl/ability";
 import {
   ColorSchemeProvider,
   MantineProvider,
@@ -16,10 +17,17 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "@remix-run/react";
+import dayjs from "dayjs";
+import "dayjs/locale/de";
 import { useState } from "react";
+import { AbilityContext } from "./Ability";
 import { Layout } from "./Layout";
-import { getUser } from "./session.server";
+import { getUser, getUserId } from "./session.server";
+import { defineAbilityForUser } from "./utils";
+
+dayjs.locale("de");
 
 export const links: LinksFunction = () => {
   return [];
@@ -33,15 +41,20 @@ export const meta: MetaFunction = () => ({
 
 type LoaderData = {
   user: Awaited<ReturnType<typeof getUser>>;
+  rules: Awaited<ReturnType<typeof defineAbilityForUser>>["rules"];
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
   return json<LoaderData>({
     user: await getUser(request),
+    rules: (await defineAbilityForUser(await getUserId(request))).rules,
   });
 };
 
 export default function App() {
+  const { rules } = useLoaderData();
+  const ability = new Ability(rules);
+
   return (
     <html lang="de">
       <head>
@@ -49,11 +62,13 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <MantineTheme>
-          <Layout>
-            <Outlet />
-          </Layout>
-        </MantineTheme>
+        <AbilityContext.Provider value={ability}>
+          <MantineTheme>
+            <Layout>
+              <Outlet />
+            </Layout>
+          </MantineTheme>
+        </AbilityContext.Provider>
         <ScrollRestoration />
         <Scripts />
         <LiveReload port={8002} />
@@ -73,7 +88,7 @@ function MantineTheme({ children }: { children: React.ReactNode }) {
       toggleColorScheme={toggleColorScheme}
     >
       <MantineProvider
-        theme={{ colorScheme }}
+        theme={{ colorScheme, datesLocale: "de" }}
         withNormalizeCSS
         withGlobalStyles
       >

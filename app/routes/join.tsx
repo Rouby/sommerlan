@@ -44,7 +44,7 @@ export const action: ActionFunction = async ({ request }) => {
     );
   }
 
-  if (password.length < 8) {
+  if (password.length < 3) {
     return json<ActionData>(
       { errors: { password: "Password is too short" } },
       { status: 400 }

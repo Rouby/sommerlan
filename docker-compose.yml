@@ -1,0 +1,19 @@
+version: "3.1"
+
+services:
+  app:
+    image: sommerlan-app:${BRANCH}-${SHA}
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/sommerlan?schema=public
+      SESSION_SECRET: sommerlan-rocks-cookies
+    ports:
+      - "${APP_PORT}:8080"
+  db:
+    image: postgres:14.2
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - /media/hdd-1/sommerlan/data-${BRANCH}:/var/lib/postgresql/data
