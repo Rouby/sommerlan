@@ -6,7 +6,9 @@
   "sideEffects": false,
   "scripts": {
     "build": "remix build",
+    "build:worker": "esbuild ./app/entry.worker.ts --outfile=./public/entry.worker.js --minify --bundle --format=esm --define:process.env.NODE_ENV='\"production\"'",
     "dev": "cross-env NODE_ENV=development binode --require ./mocks -- @remix-run/dev:remix dev",
+    "dev:worker": "esbuild ./app/entry.worker.ts --outfile=./public/entry.worker.js --bundle --format=esm --define:process.env.NODE_ENV='\"development\"' --watch",
     "format": "prettier --write .",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "setup": "prisma migrate dev && prisma db seed",
@@ -70,6 +72,7 @@
     "c8": "^7.11.0",
     "cross-env": "^7.0.3",
     "cypress": "^9.5.3",
+    "esbuild": "^0.14.38",
     "eslint": "^8.12.0",
     "eslint-config-prettier": "^8.5.0",
     "happy-dom": "^2.55.0",

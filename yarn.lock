@@ -4754,7 +4754,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild@npm:^0.14.27":
+"esbuild@npm:^0.14.27, esbuild@npm:^0.14.38":
   version: 0.14.38
   resolution: "esbuild@npm:0.14.38"
   dependencies:
@@ -6712,6 +6712,7 @@ __metadata:
     cross-env: ^7.0.3
     cypress: ^9.5.3
     dayjs: ^1.11.1
+    esbuild: ^0.14.38
     eslint: ^8.12.0
     eslint-config-prettier: ^8.5.0
     happy-dom: ^2.55.0
