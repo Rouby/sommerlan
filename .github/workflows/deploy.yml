@@ -136,13 +136,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-
 
-      - name: 🐳 Run Docker on tmpfs
-        uses: JonasAlfredsson/docker-on-tmpfs@v1
-        with:
-          tmpfs_size: 5
-          swap_size: 4
-          swap_location: "/mnt/swapfile"
-
+      - name: 🐳 Set up QEMU
+        uses: docker/setup-qemu-action@v1
       - name: 🐳 Docker build
         uses: docker/build-push-action@v2
         with:
