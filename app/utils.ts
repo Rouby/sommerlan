@@ -110,7 +110,6 @@ export async function defineAbilityForUser(userId?: string | null) {
 
   if (userId) {
     switch (user?.role) {
-      // case "ADMIN":
       case "ORGANIZER":
         can("manage", "Party");
         can("manage", "ParticipantOfParty");
