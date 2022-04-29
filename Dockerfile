@@ -50,9 +50,6 @@ ENV DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres
 ENV PORT="8080"
 ENV NODE_ENV="production"
 
-# add shortcut for connecting to database CLI
-RUN echo "#!/bin/sh\nset -x\nsqlite3 \$DATABASE_URL" > /usr/local/bin/database-cli && chmod +x /usr/local/bin/database-cli
-
 WORKDIR /myapp
 
 COPY --from=production-deps /myapp/node_modules /myapp/node_modules
