@@ -14,6 +14,7 @@ WORKDIR /myapp
 
 ADD package.json yarn.lock .yarnrc.yml ./
 COPY .yarn/ ./.yarn/
+RUN which node
 RUN yarn
 
 # Setup production node_modules
