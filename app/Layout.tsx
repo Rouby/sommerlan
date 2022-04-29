@@ -18,6 +18,7 @@ import { ChevronRightIcon } from "@modulz/radix-icons";
 import { Form, Link } from "@remix-run/react";
 import type { To } from "history";
 import { forwardRef, useState } from "react";
+import { Can } from "./Ability";
 import { useOptionalUser } from "./utils";
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -69,6 +70,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
               control={<UserInfo />}
               sx={{ display: "block" }}
             >
+              <Can I="manage" an="any">
+                <Menu.Label>Admin</Menu.Label>
+                <MenuItem component={Link} to="/admin/party">
+                  Party
+                </MenuItem>
+              </Can>
               <Menu.Label>Nutzer</Menu.Label>
               <Form action="/logout" method="post">
                 <MenuItem component="button" type="submit">

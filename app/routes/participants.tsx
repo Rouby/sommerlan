@@ -11,7 +11,7 @@ import {
   useTransition,
 } from "@remix-run/react";
 import dayjs from "dayjs";
-import React, { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import invariant from "tiny-invariant";
 import { Can } from "~/Ability";
 import {
@@ -199,7 +199,7 @@ export default function ParticipantsPage() {
           <div>EUR</div>
           {data.party.participants.map(
             ({ user, arrivingAt, departingAt, paidMoney }) => (
-              <React.Fragment key={user.id}>
+              <Fragment key={user.id}>
                 <Box sx={{ whiteSpace: "nowrap" }}>{user.name}</Box>
                 {days.map((day) => (
                   <div key={day.toISOString()}>
@@ -211,7 +211,7 @@ export default function ParticipantsPage() {
                   </div>
                 ))}
                 <div>{paidMoney ? paidMoney : <MinusIcon />}</div>
-              </React.Fragment>
+              </Fragment>
             )
           )}
         </Box>

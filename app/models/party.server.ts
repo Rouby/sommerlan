@@ -1,3 +1,5 @@
+import { ForbiddenError } from "@casl/ability";
+import { accessibleBy } from "@casl/prisma";
 import { prisma } from "~/db.server";
 import { defineAbilityForUser } from "~/utils";
 
@@ -7,7 +9,9 @@ export async function getCurrentParty(userId?: string) {
   const ability = await defineAbilityForUser(userId);
 
   return prisma.party.findFirst({
-    where: { endDate: { gte: new Date() } },
+    where: {
+      AND: [accessibleBy(ability).Party, { endDate: { gte: new Date() } }],
+    },
     orderBy: { startDate: "asc" },
     include: {
       participants: {
@@ -18,6 +22,44 @@ export async function getCurrentParty(userId?: string) {
           arrivingAt: "asc",
         },
       },
+    },
+  });
+}
+
+export async function getParties(userId?: string) {
+  const ability = await defineAbilityForUser(userId);
+
+  return prisma.party.findMany({
+    where: accessibleBy(ability).Party,
+    orderBy: { startDate: "desc" },
+    include: {
+      participants: {
+        include: {
+          user: ability.can("read", "User"),
+        },
+        orderBy: {
+          arrivingAt: "asc",
+        },
+      },
+    },
+  });
+}
+
+export async function createParty(
+  userId: string,
+  startDate: string,
+  endDate: string,
+  attributes: { name?: string }
+) {
+  const ability = await defineAbilityForUser(userId);
+
+  ForbiddenError.from(ability).throwUnlessCan("create", "Party");
+
+  return prisma.party.create({
+    data: {
+      startDate,
+      endDate,
+      ...attributes,
     },
   });
 }
