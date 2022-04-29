@@ -116,7 +116,7 @@ jobs:
     name: 🐳 Build
     # only build/deploy main branch on pushes
     if: ${{ (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push' }}
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - name: 🛑 Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.9.1
@@ -140,7 +140,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          load: true
+          outputs: type=docker,dest=/tmp/sommerlan-image.tar
           tags: sommerlan-app:${{ github.ref_name }}-${{ github.sha }}
           build-args: |
             COMMIT_SHA=${{ github.sha }}
@@ -157,6 +157,12 @@ jobs:
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
+      - name: ⬆️ Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: App-Image
+          path: /tmp/sommerlan-image.tar
+
   deploy:
     name: 🚀 Deploy
     runs-on: self-hosted
@@ -170,6 +176,16 @@ jobs:
 
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
+
+      - name: 📥 Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: App-Image
+          path: /tmp
+
+      - name: 🐳 Load image
+        run: |
+          docker load --input /tmp/sommerlan-image.tar
 
       - name: 🚀 Deploy Staging
         if: ${{ github.ref == 'refs/heads/dev' }}
