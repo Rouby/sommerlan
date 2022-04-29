@@ -1,6 +1,9 @@
-import type { Password, User } from "@prisma/client";
+import { ForbiddenError, subject } from "@casl/ability";
+import { accessibleBy } from "@casl/prisma";
+import type { Password, Role, User } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { prisma } from "~/db.server";
+import { defineAbilityForUser } from "~/utils";
 
 export type { User } from "@prisma/client";
 
@@ -63,4 +66,36 @@ export async function verifyLogin(
   const { password: _password, ...userWithoutPassword } = userWithPassword;
 
   return userWithoutPassword;
+}
+
+export async function getUsers(userId?: string) {
+  return prisma.user.findMany({
+    where: accessibleBy(await defineAbilityForUser(userId)).User,
+    orderBy: { email: "asc" },
+  });
+}
+
+export async function setUserRole(
+  userId: string,
+  userIdUpdate: string,
+  role: Role
+) {
+  const userToUpdate = await prisma.user.findFirst({
+    where: { id: userIdUpdate },
+  });
+
+  if (!userToUpdate) {
+    return null;
+  }
+
+  ForbiddenError.from(await defineAbilityForUser(userId)).throwUnlessCan(
+    "update",
+    subject("User", userToUpdate),
+    "role"
+  );
+
+  return prisma.user.update({
+    where: { id: userIdUpdate },
+    data: { role },
+  });
 }

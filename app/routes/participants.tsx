@@ -1,3 +1,4 @@
+import { subject } from "@casl/ability";
 import { Box, Button, Checkbox, Indicator } from "@mantine/core";
 import { RangeCalendar } from "@mantine/dates";
 import { MinusIcon } from "@modulz/radix-icons";
@@ -181,8 +182,8 @@ export default function ParticipantsPage() {
           value={value[1]?.toISOString() ?? ""}
         />
       </Form>
-      <Can I="read" this={data.party}>
-        Participants details
+      <Can I="read" this={subject("Party", data.party)}>
+        Teilnehmer Details
         <Box
           sx={{
             display: "grid",

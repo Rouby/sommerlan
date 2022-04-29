@@ -1,3 +1,4 @@
+import { useAbility } from "@casl/react";
 import {
   AppShell,
   Avatar,
@@ -18,7 +19,7 @@ import { ChevronRightIcon } from "@modulz/radix-icons";
 import { Form, Link } from "@remix-run/react";
 import type { To } from "history";
 import { forwardRef, useState } from "react";
-import { Can } from "./Ability";
+import { AbilityContext, Can } from "./Ability";
 import { useOptionalUser } from "./utils";
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -70,12 +71,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
               control={<UserInfo />}
               sx={{ display: "block" }}
             >
-              <Can I="manage" an="any">
-                <Menu.Label>Admin</Menu.Label>
-                <MenuItem component={Link} to="/admin/party">
-                  Party
-                </MenuItem>
-              </Can>
+              <AdminMenu />
               <Menu.Label>Nutzer</Menu.Label>
               <Form action="/logout" method="post">
                 <MenuItem component="button" type="submit">
@@ -103,6 +99,30 @@ function NavbarLink({ children, to }: { children: React.ReactNode; to: To }) {
     >
       {children}
     </Button>
+  );
+}
+
+function AdminMenu() {
+  const ability = useAbility(AbilityContext);
+
+  if (ability.cannot("manage", "User") && ability.cannot("manage", "Party")) {
+    return null;
+  }
+
+  return (
+    <>
+      <Menu.Label>Admin</Menu.Label>
+      <Can I="manage" a="User">
+        <MenuItem component={Link} to="/admin/user">
+          Nutzer
+        </MenuItem>
+      </Can>
+      <Can I="manage" a="Party">
+        <MenuItem component={Link} to="/admin/party">
+          Party
+        </MenuItem>
+      </Can>
+    </>
   );
 }
 

@@ -78,44 +78,51 @@ export function validateEmail(email: unknown): email is string {
   return typeof email === "string" && email.length > 3 && email.includes("@");
 }
 
+export type SommerlanAbility = PrismaAbility<
+  [
+    string,
+    Subjects<{
+      // all: any;
+      User: User;
+      Party: Party;
+      ParticipantOfParty: ParticipantOfParty;
+      Password: Password;
+      Workload: Workload;
+    }>
+  ]
+>;
+
 export async function defineAbilityForUser(userId?: string | null) {
-  const AppAbility = PrismaAbility as AbilityClass<
-    PrismaAbility<
-      [
-        string,
-        Subjects<{
-          all: any;
-          User: User;
-          Party: Party;
-          ParticipantOfParty: ParticipantOfParty;
-          Password: Password;
-          Workload: Workload;
-        }>
-      ]
-    >
-  >;
+  const AppAbility = PrismaAbility as AbilityClass<SommerlanAbility>;
   const { can, build } = new AbilityBuilder(AppAbility);
 
   const user = userId ? await getUserById(userId) : null;
 
   if (user?.role === "ADMIN") {
-    can("manage", "all");
+    can("manage", "User");
+    can("manage", "Party");
+    can("manage", "ParticipantOfParty");
+    can("manage", "Workload");
   }
 
   can("read", "Party");
   can("read", "ParticipantOfParty");
 
-  switch (user?.role) {
-    case "ORGANIZER":
-      can("manage", "Party");
-      can("manage", "ParticipantOfParty");
-    case "TRUSTED_USER":
-      can("read", "User");
-      can("manage", "User", { id: userId });
-      break;
-    default:
-      can("read", "User", { id: userId });
-      break;
+  if (userId) {
+    switch (user?.role) {
+      // case "ADMIN":
+      case "ORGANIZER":
+        can("manage", "Party");
+        can("manage", "ParticipantOfParty");
+        can("manage", "User", ["role"], { role: "USER" });
+        can("manage", "User", ["role"], { role: "TRUSTED_USER" });
+      case "TRUSTED_USER":
+        can("read", "User");
+        can("update", "User", { id: userId });
+      default:
+        can("update", "User", { id: userId });
+        break;
+    }
   }
 
   return build();

@@ -1,12 +1,13 @@
+import { useAbility } from "@casl/react";
 import { Accordion, Button, Group } from "@mantine/core";
 import { DateRangePicker } from "@mantine/dates";
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import { useState } from "react";
+import { AbilityContext } from "~/Ability";
 import { createParty, getParties } from "~/models/party.server";
 import { getUserId, requireUserId } from "~/session.server";
-import { useUser } from "~/utils";
 
 type LoaderData = {
   parties: Awaited<ReturnType<typeof getParties>>;
@@ -51,14 +52,14 @@ export const action: ActionFunction = async ({ request, params }) => {
   return json<ActionData>({}, { status: 200 });
 };
 
-export default function GamesPage() {
-  const user = useUser();
+export default function AdminPartyPage() {
+  const ability = useAbility(AbilityContext);
   const data = useLoaderData<LoaderData>();
 
   const [value, setValue] = useState<[Date | null, Date | null]>([null, null]);
 
-  if (user.role !== "ADMIN") {
-    return <div>You are not an admin</div>;
+  if (ability.cannot("manage", "Party")) {
+    return <div>Du hast keine Zugriffsberechtigung</div>;
   }
 
   const dateTimeFormat = new Intl.DateTimeFormat("de", {
