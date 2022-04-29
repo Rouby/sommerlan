@@ -1,5 +1,5 @@
 # base node image
-FROM arm64v8/node:16 as base
+FROM node:16 as base
 
 # set for base and all layer that inherit from it
 ENV NODE_ENV production
