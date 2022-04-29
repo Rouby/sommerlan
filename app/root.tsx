@@ -25,7 +25,7 @@ import { useState } from "react";
 import { AbilityContext } from "./Ability";
 import { Layout } from "./Layout";
 import { getUser, getUserId } from "./session.server";
-import { defineAbilityForUser } from "./utils";
+import { defineAbilityForUser, type SommerlanAbility } from "./utils";
 
 dayjs.locale("de");
 
@@ -53,7 +53,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function App() {
   const { rules } = useLoaderData();
-  const ability = new Ability(rules);
+  const ability = new Ability(rules) as SommerlanAbility;
 
   return (
     <html lang="de">
