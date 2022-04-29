@@ -56,7 +56,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           p="sm"
           hiddenBreakpoint="sm"
           hidden={!opened}
-          width={{ lg: 270 }}
+          width={{ sm: 200, lg: 300 }}
         >
           <Navbar.Section grow>
             <NavbarLink to="/">Übersicht</NavbarLink>
@@ -82,6 +82,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           </Navbar.Section>
         </Navbar>
       }
+      sx={{ overflow: "auto" }}
     >
       {children}
     </AppShell>
