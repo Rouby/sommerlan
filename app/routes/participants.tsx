@@ -183,39 +183,41 @@ export default function ParticipantsPage() {
         />
       </Form>
       <Can I="read" this={subject("Party", data.party)}>
-        Teilnehmer Details
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: `max-content repeat(${days.length}, max-content) max-content`,
-            alignItems: "center",
-            justifyItems: "center",
-            gap: 16,
-          }}
-        >
-          <div />
-          {days.map((day) => (
-            <div key={day.toISOString()}>{day.format("ddd DD.MM.")}</div>
-          ))}
-          <div>EUR</div>
-          {data.party.participants.map(
-            ({ user, arrivingAt, departingAt, paidMoney }) => (
-              <Fragment key={user.id}>
-                <Box sx={{ whiteSpace: "nowrap" }}>{user.name}</Box>
-                {days.map((day) => (
-                  <div key={day.toISOString()}>
-                    <Checkbox
-                      checked={isThere(day, arrivingAt, departingAt)}
-                      onChange={() => {}}
-                      size="lg"
-                    />
-                  </div>
-                ))}
-                <div>{paidMoney ? paidMoney : <MinusIcon />}</div>
-              </Fragment>
-            )
-          )}
-        </Box>
+        <Can I="read" an="User">
+          Teilnehmer Details
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: `max-content repeat(${days.length}, max-content) max-content`,
+              alignItems: "center",
+              justifyItems: "center",
+              gap: 16,
+            }}
+          >
+            <div />
+            {days.map((day) => (
+              <div key={day.toISOString()}>{day.format("ddd DD.MM.")}</div>
+            ))}
+            <div>EUR</div>
+            {data.party.participants.map(
+              ({ user, arrivingAt, departingAt, paidMoney }, idx) => (
+                <Fragment key={user?.id ?? idx}>
+                  <Box sx={{ whiteSpace: "nowrap" }}>{user?.name ?? "???"}</Box>
+                  {days.map((day) => (
+                    <div key={day.toISOString()}>
+                      <Checkbox
+                        checked={isThere(day, arrivingAt, departingAt)}
+                        onChange={() => {}}
+                        size="lg"
+                      />
+                    </div>
+                  ))}
+                  <div>{paidMoney ? paidMoney : <MinusIcon />}</div>
+                </Fragment>
+              )
+            )}
+          </Box>
+        </Can>
       </Can>
     </div>
   );
