@@ -14,7 +14,7 @@ import {
 import dayjs from "dayjs";
 import { Fragment, useEffect, useRef, useState } from "react";
 import invariant from "tiny-invariant";
-import { Can } from "~/Ability";
+import { useAbility } from "~/Ability";
 import {
   getCurrentParty,
   joinParty,
@@ -101,6 +101,8 @@ export default function ParticipantsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [submit, value]);
 
+  const ability = useAbility();
+
   if (!data.party) {
     return (
       <div>Die nächste Party ist noch in Planung und erscheint bald hier!</div>
@@ -182,8 +184,9 @@ export default function ParticipantsPage() {
           value={value[1]?.toISOString() ?? ""}
         />
       </Form>
-      <Can I="read" this={subject("Party", data.party)}>
-        <Can I="read" an="User">
+      {ability.can("read", subject("Party", data.party)) &&
+      ability.can("read", "User") ? (
+        <>
           Teilnehmer Details
           <Box
             sx={{
@@ -200,9 +203,9 @@ export default function ParticipantsPage() {
             ))}
             <div>EUR</div>
             {data.party.participants.map(
-              ({ user, arrivingAt, departingAt, paidMoney }, idx) => (
-                <Fragment key={user?.id ?? idx}>
-                  <Box sx={{ whiteSpace: "nowrap" }}>{user?.name ?? "???"}</Box>
+              ({ user, arrivingAt, departingAt, paidMoney }) => (
+                <Fragment key={user.id}>
+                  <Box sx={{ whiteSpace: "nowrap" }}>{user.name}</Box>
                   {days.map((day) => (
                     <div key={day.toISOString()}>
                       <Checkbox
@@ -217,8 +220,8 @@ export default function ParticipantsPage() {
               )
             )}
           </Box>
-        </Can>
-      </Can>
+        </>
+      ) : null}
     </div>
   );
 }
