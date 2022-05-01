@@ -2,8 +2,8 @@ import { ForbiddenError, subject } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
 import type { Password, Role, User } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import { defineAbilityForUser } from "~/Ability";
 import { prisma } from "~/db.server";
-import { defineAbilityForUser } from "~/utils";
 
 export type { User } from "@prisma/client";
 

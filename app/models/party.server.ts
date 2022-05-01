@@ -1,7 +1,7 @@
 import { ForbiddenError } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
+import { defineAbilityForUser } from "~/Ability";
 import { prisma } from "~/db.server";
-import { defineAbilityForUser } from "~/utils";
 
 export type { User } from "@prisma/client";
 

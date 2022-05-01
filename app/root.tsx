@@ -22,10 +22,13 @@ import {
 import dayjs from "dayjs";
 import "dayjs/locale/de";
 import { useState } from "react";
-import { AbilityContext } from "./Ability";
+import {
+  AbilityContext,
+  defineAbilityForUser,
+  type SommerlanAbility,
+} from "./Ability";
 import { Layout } from "./Layout";
 import { getUser, getUserId } from "./session.server";
-import { defineAbilityForUser, type SommerlanAbility } from "./utils";
 
 dayjs.locale("de");
 
