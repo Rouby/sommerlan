@@ -3,7 +3,7 @@ import { PrismaAbility, type Subjects } from "@casl/prisma";
 import {
   Can as CaslCan,
   useAbility as useCaslAbility,
-  type CanProps,
+  type BoundCanProps,
 } from "@casl/react";
 import type {
   News,
@@ -22,8 +22,11 @@ export function useAbility() {
   return useCaslAbility(AbilityContext);
 }
 
-export function Can(props: Omit<CanProps<SommerlanAbility>, "ability">) {
+export function Can(
+  props: BoundCanProps<SommerlanAbility> & { children: React.ReactNode }
+) {
   const ability = useAbility();
+
   return <CaslCan ability={ability} {...(props as any)} />;
 }
 
