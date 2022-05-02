@@ -1,6 +1,10 @@
 import { AbilityBuilder, type AbilityClass } from "@casl/ability";
 import { PrismaAbility, type Subjects } from "@casl/prisma";
-import { createContextualCan, useAbility as useCaslAbility } from "@casl/react";
+import {
+  Can as CaslCan,
+  useAbility as useCaslAbility,
+  type CanProps,
+} from "@casl/react";
 import type {
   News,
   ParticipantOfParty,
@@ -13,10 +17,14 @@ import { createContext } from "react";
 import { getUserById } from "./models/user.server";
 
 export const AbilityContext = createContext<SommerlanAbility>(null!);
-export const Can = createContextualCan(AbilityContext.Consumer);
 
 export function useAbility() {
   return useCaslAbility(AbilityContext);
+}
+
+export function Can(props: Omit<CanProps<SommerlanAbility>, "ability">) {
+  const ability = useAbility();
+  return <CaslCan ability={ability} {...(props as any)} />;
 }
 
 export type SommerlanAbility = PrismaAbility<

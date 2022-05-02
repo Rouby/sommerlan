@@ -9,8 +9,8 @@ import {
   Text,
   Title,
 } from "@mantine/core";
+import { Link } from "@remix-run/react";
 import dayjs from "dayjs";
-import { Link } from "react-router-dom";
 import { Edit } from "tabler-icons-react";
 import { Can } from "~/Ability";
 import type { getNews } from "~/models/news.server";
