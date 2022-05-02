@@ -1,5 +1,14 @@
 import { subject } from "@casl/ability";
-import { Box, Button, Checkbox, Indicator } from "@mantine/core";
+import {
+  Box,
+  Button,
+  Container,
+  Group,
+  Indicator,
+  Space,
+  Text,
+  Title,
+} from "@mantine/core";
 import { RangeCalendar } from "@mantine/dates";
 import { MinusIcon } from "@modulz/radix-icons";
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
@@ -15,6 +24,7 @@ import dayjs from "dayjs";
 import { Fragment, useEffect, useRef, useState } from "react";
 import invariant from "tiny-invariant";
 import { useAbility } from "~/Ability";
+import { Footer } from "~/components";
 import {
   getCurrentParty,
   joinParty,
@@ -109,120 +119,119 @@ export default function ParticipantsPage() {
     );
   }
 
-  const days = Array.from(
-    {
-      length:
-        dayjs(data.party.endDate).diff(dayjs(data.party.startDate), "day") + 1,
-    },
-    (_, idx) => dayjs(data.party!.startDate).add(idx, "day")
-  );
+  const dateTimeFormat = new Intl.DateTimeFormat("de", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 
   return (
-    <div>
-      <p>Teilnehmer: {data.party.participants.length}</p>
-      {participation ? (
-        <>
-          <p>Du bist Teilnehmer</p>
-          <Form method="post">
-            <Button type="submit" loading={transition.state === "submitting"}>
-              Nicht mehr teilnehmen
-            </Button>
-          </Form>
-          {action?.errors?.participation}
-        </>
-      ) : (
-        <>
-          <p>Du bist nicht Teilnehmer</p>
-          <Form method="post">
-            <Button type="submit" loading={transition.state === "submitting"}>
-              Teilnehmen
-            </Button>
-          </Form>
-          {action?.errors?.participation}
-        </>
-      )}
-      {participation && "Wann bist du da?"}
-      {transition.state === "submitting" ? " Speichere..." : null}
-      <RangeCalendar
-        value={participation ? value : [null, null]}
-        onChange={setValue}
-        minDate={new Date(data.party.startDate)}
-        maxDate={new Date(data.party.endDate)}
-        initialMonth={new Date(data.party.startDate)}
-        allowLevelChange={false}
-        renderDay={(date) => {
-          const day = date.getDate();
+    <>
+      <Container>
+        <p>
+          Bisher haben sich {data.party.participants.length} Teilnehmer für die
+          Sommerlan angemeldet.
+        </p>
+        {transition.state === "submitting" ? " Speichere..." : null}
+        <Group position="center" direction="column">
+          <RangeCalendar
+            value={participation ? value : [null, null]}
+            onChange={setValue}
+            minDate={new Date(data.party.startDate)}
+            maxDate={new Date(data.party.endDate)}
+            initialMonth={new Date(data.party.startDate)}
+            allowLevelChange={false}
+            renderDay={(date) => {
+              const day = date.getDate();
 
-          const participants = data.party?.participants.filter((p) =>
-            isThere(date, p.arrivingAt, p.departingAt)
-          ).length;
-          return (
-            <Indicator
-              color="red"
-              offset={8}
-              label={participants}
-              size={16}
-              disabled={
-                dayjs(date).endOf("day").isBefore(data.party?.startDate) ||
-                dayjs(date).isAfter(data.party?.endDate)
-              }
-            >
-              <div>{day}</div>
-            </Indicator>
-          );
-        }}
-      />
-      <Form ref={formRef} method="post">
-        <input
-          type="hidden"
-          name="arrivingAt"
-          value={value[0]?.toISOString() ?? ""}
-        />
-        <input
-          type="hidden"
-          name="departingAt"
-          value={value[1]?.toISOString() ?? ""}
-        />
-      </Form>
-      {ability.can("read", subject("Party", data.party)) &&
-      ability.can("read", "User") ? (
-        <>
-          Teilnehmer Details
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns: `max-content repeat(${days.length}, max-content) max-content`,
-              alignItems: "center",
-              justifyItems: "center",
-              gap: 16,
+              const participants = data.party?.participants.filter((p) =>
+                isThere(date, p.arrivingAt, p.departingAt)
+              ).length;
+              return (
+                <Indicator
+                  color="red"
+                  offset={8}
+                  label={participants}
+                  size={16}
+                  disabled={
+                    dayjs(date).endOf("day").isBefore(data.party?.startDate) ||
+                    dayjs(date).isAfter(data.party?.endDate)
+                  }
+                  sx={{ zIndex: 0 }}
+                >
+                  <div>{day}</div>
+                </Indicator>
+              );
             }}
-          >
-            <div />
-            {days.map((day) => (
-              <div key={day.toISOString()}>{day.format("ddd DD.MM.")}</div>
-            ))}
-            <div>EUR</div>
-            {data.party.participants.map(
-              ({ user, arrivingAt, departingAt, paidMoney }) => (
-                <Fragment key={user.id}>
-                  <Box sx={{ whiteSpace: "nowrap" }}>{user.name}</Box>
-                  {days.map((day) => (
-                    <div key={day.toISOString()}>
-                      <Checkbox
-                        checked={isThere(day, arrivingAt, departingAt)}
-                        onChange={() => {}}
-                        size="lg"
-                      />
-                    </div>
-                  ))}
-                  <div>{paidMoney ? paidMoney : <MinusIcon />}</div>
-                </Fragment>
-              )
-            )}
-          </Box>
-        </>
-      ) : null}
-    </div>
+          />
+          <Form method="post">
+            <Button type="submit" loading={transition.state === "submitting"}>
+              {participation ? "Nicht mehr teilnehmen" : "Teilnehmen"}
+            </Button>
+          </Form>
+          {action?.errors?.participation}
+          {participation ? (
+            <Text size="sm">
+              Du kannst deine Anwesenheit im Kalender ändern
+            </Text>
+          ) : null}
+        </Group>
+
+        <Form ref={formRef} method="post">
+          <input
+            type="hidden"
+            name="arrivingAt"
+            value={value[0]?.toISOString() ?? ""}
+          />
+          <input
+            type="hidden"
+            name="departingAt"
+            value={value[1]?.toISOString() ?? ""}
+          />
+        </Form>
+        {ability.can("read", subject("Party", data.party)) &&
+        ability.can("read", "User") ? (
+          <>
+            <Space h="lg" />
+            <Title order={3}> Teilnehmer Details</Title>
+            <Space h="md" />
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "max-content auto max-content",
+                gap: "4px 16px",
+                alignItems: "center",
+              }}
+            >
+              {data.party.participants.map(
+                ({ user, arrivingAt, departingAt, paidMoney }) => {
+                  const stay = dayjs(departingAt).diff(arrivingAt, "days");
+                  return (
+                    <Fragment key={user.id}>
+                      <Box>{user.name}</Box>
+                      <Box>
+                        {stay} Tage
+                        <br />
+                        {dateTimeFormat.formatRange(
+                          new Date(arrivingAt),
+                          new Date(departingAt)
+                        )}
+                      </Box>
+                      <Box>
+                        {paidMoney ? `${paidMoney} EUR` : <MinusIcon />}
+                      </Box>
+                    </Fragment>
+                  );
+                }
+              )}
+            </Box>
+          </>
+        ) : null}
+      </Container>
+      <Space h="lg" />
+      <Footer />
+    </>
   );
 }
 

@@ -1,169 +1,111 @@
-import { useAbility } from "@casl/react";
 import {
-  AppShell,
+  ActionIcon,
   Avatar,
   Box,
-  Burger,
   Button,
+  Container,
   Group,
   Header,
-  MediaQuery,
-  Menu,
-  MenuItem,
-  Navbar,
+  Space,
   Text,
   UnstyledButton,
+  useMantineColorScheme,
   useMantineTheme,
 } from "@mantine/core";
-import { ChevronRightIcon } from "@modulz/radix-icons";
-import { Form, Link } from "@remix-run/react";
-import type { To } from "history";
-import { forwardRef, useState } from "react";
-import { AbilityContext, Can } from "./Ability";
+import { useMediaQuery } from "@mantine/hooks";
+import { Link } from "@remix-run/react";
+import { Moon, Sun } from "tabler-icons-react";
 import { useOptionalUser } from "./utils";
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const [opened, setOpened] = useState(false);
-  const user = useOptionalUser();
-
+  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   return (
-    <AppShell
-      navbarOffsetBreakpoint="sm"
-      fixed
-      header={
-        <Header height={50} p="sm">
-          <div
-            style={{
+    <>
+      <Header height={65} fixed>
+        <Container sx={{ height: "100%" }}>
+          <Box
+            sx={{
               display: "flex",
               alignItems: "center",
               height: "100%",
+              overflowX: "auto",
+              overflowY: "hidden",
             }}
           >
-            <MediaQuery largerThan="sm" styles={{ display: "none" }}>
-              <Burger
-                opened={opened}
-                onClick={() => setOpened((o) => !o)}
-                size="sm"
-                mr="xl"
-              />
-            </MediaQuery>
-            <Text>Sommer-Party-LAN</Text>
-          </div>
-        </Header>
-      }
-      navbar={
-        <Navbar
-          p="sm"
-          hiddenBreakpoint="sm"
-          hidden={!opened}
-          width={{ sm: 200, lg: 300 }}
-        >
-          <Navbar.Section grow>
-            <NavbarLink to="/">Übersicht</NavbarLink>
-            {user && <NavbarLink to="/participants">Teilnehmer</NavbarLink>}
-            {user && <NavbarLink to="/tasks">Aufgaben</NavbarLink>}
-            <NavbarLink to="/seating">Sitzplan</NavbarLink>
-            <NavbarLink to="/games">Spiele</NavbarLink>
-          </Navbar.Section>
-          <Navbar.Section>
-            <Menu
-              position="right"
-              control={<UserInfo />}
-              sx={{ display: "block" }}
+            <UserInfo />
+            <Button component={Link} to="/#news" variant="subtle">
+              Neues
+            </Button>
+            {false && (
+              <Button
+                component={Link}
+                to="/#pary"
+                variant="subtle"
+                sx={{ "@media(max-width: 600px)": { display: "none" } }}
+              >
+                Party
+              </Button>
+            )}
+            <Button component={Link} to="/participants" variant="subtle">
+              Teilnehmer
+            </Button>
+            <Button component={Link} to="/tasks" variant="subtle">
+              Aufgaben
+            </Button>
+            <ActionIcon
+              onClick={() => toggleColorScheme()}
+              title="Farbschema wechseln"
             >
-              <AdminMenu />
-              <Menu.Label>Nutzer</Menu.Label>
-              <Form action="/logout" method="post">
-                <MenuItem component="button" type="submit">
-                  Ausloggen
-                </MenuItem>
-              </Form>
-            </Menu>
-          </Navbar.Section>
-        </Navbar>
-      }
-      sx={{ overflow: "auto" }}
-    >
+              {colorScheme === "dark" ? <Moon /> : <Sun />}
+            </ActionIcon>
+          </Box>
+        </Container>
+      </Header>
+      <Space h={65} />
       {children}
-    </AppShell>
-  );
-}
-
-function NavbarLink({ children, to }: { children: React.ReactNode; to: To }) {
-  return (
-    <Button
-      style={{ display: "block" }}
-      component={Link}
-      to={to}
-      mt="sm"
-      variant="gradient"
-    >
-      {children}
-    </Button>
-  );
-}
-
-function AdminMenu() {
-  const ability = useAbility(AbilityContext);
-
-  if (ability.cannot("manage", "User") && ability.cannot("manage", "Party")) {
-    return null;
-  }
-
-  return (
-    <>
-      <Menu.Label>Admin</Menu.Label>
-      <Can I="manage" a="User">
-        <MenuItem component={Link} to="/admin/user">
-          Nutzer
-        </MenuItem>
-      </Can>
-      <Can I="manage" a="Party">
-        <MenuItem component={Link} to="/admin/party">
-          Party
-        </MenuItem>
-      </Can>
     </>
   );
 }
 
-const UserInfo = forwardRef<HTMLButtonElement>(function UserInfo(
-  { ...props },
-  ref
-) {
+function UserInfo({ ...props }) {
   const theme = useMantineTheme();
   const user = useOptionalUser();
+  const isMobile = useMediaQuery("(max-width: 600px)");
 
   if (!user) {
     return (
-      <Group>
-        <Button component={Link} to="/join" variant="subtle">
-          Anmelden
-        </Button>
-        <Button component={Link} to="/login" variant="subtle">
-          Einloggen
-        </Button>
-      </Group>
+      <Button component={Link} to="/join" variant="subtle">
+        Anmelden
+      </Button>
     );
   }
 
   return (
     <UnstyledButton
-      ref={ref}
       sx={{
-        display: "block",
-        width: "100%",
         padding: theme.spacing.sm,
         color:
           theme.colorScheme === "dark" ? theme.colors.dark[0] : theme.black,
 
-        "&:hover": {
-          backgroundColor:
-            theme.colorScheme === "dark"
-              ? theme.colors.dark[8]
-              : theme.colors.gray[0],
+        "@media (hover: hover)": {
+          "&:hover": {
+            backgroundColor:
+              theme.colorScheme === "dark"
+                ? theme.colors.dark[8]
+                : theme.colors.gray[0],
+          },
+        },
+        "@media (hover: none)": {
+          "&:active": {
+            backgroundColor:
+              theme.colorScheme === "dark"
+                ? theme.colors.dark[8]
+                : theme.colors.gray[0],
+          },
         },
       }}
+      component={Link}
+      to="/user"
       {...props}
     >
       <Group noWrap>
@@ -174,18 +116,19 @@ const UserInfo = forwardRef<HTMLButtonElement>(function UserInfo(
             .slice(0, 2)
             .join("")}
         </Avatar>
-        <Box sx={{ flex: 1, overflow: "hidden" }}>
-          <Text size="sm">{user.name}</Text>
-          <Text
-            size="xs"
-            color="dimmed"
-            sx={{ overflow: "hidden", textOverflow: "ellipsis" }}
-          >
-            {user.email}
-          </Text>
-        </Box>
-        <ChevronRightIcon />
+        {isMobile ? null : (
+          <Box sx={{ flex: 1, overflow: "hidden" }}>
+            <Text size="sm">{user.name}</Text>
+            <Text
+              size="xs"
+              color="dimmed"
+              sx={{ overflow: "hidden", textOverflow: "ellipsis" }}
+            >
+              {user.email}
+            </Text>
+          </Box>
+        )}
       </Group>
     </UnstyledButton>
   );
-});
+}

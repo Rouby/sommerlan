@@ -4,6 +4,7 @@ import {
   MantineProvider,
   type ColorScheme,
 } from "@mantine/core";
+import { useColorScheme } from "@mantine/hooks";
 import type {
   LinksFunction,
   LoaderFunction,
@@ -17,11 +18,14 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useCatch,
+  useFetcher,
   useLoaderData,
 } from "@remix-run/react";
 import dayjs from "dayjs";
 import "dayjs/locale/de";
-import { useState } from "react";
+import localizedFormat from "dayjs/plugin/localizedFormat";
+import { useEffect, useState } from "react";
 import {
   AbilityContext,
   defineAbilityForUser,
@@ -29,7 +33,9 @@ import {
 } from "./Ability";
 import { Layout } from "./Layout";
 import { getUser, getUserId } from "./session.server";
+import { getUserPreferences } from "./utils/userPreferences.server";
 
+dayjs.extend(localizedFormat);
 dayjs.locale("de");
 
 export const links: LinksFunction = () => {
@@ -45,12 +51,16 @@ export const meta: MetaFunction = () => ({
 type LoaderData = {
   user: Awaited<ReturnType<typeof getUser>>;
   rules: Awaited<ReturnType<typeof defineAbilityForUser>>["rules"];
+  preferredColorScheme: "dark" | "light" | null;
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
+  const prefs = await getUserPreferences(request);
+
   return json<LoaderData>({
     user: await getUser(request),
     rules: (await defineAbilityForUser(await getUserId(request))).rules,
+    preferredColorScheme: prefs.theme,
   });
 };
 
@@ -81,9 +91,29 @@ export default function App() {
 }
 
 function MantineTheme({ children }: { children: React.ReactNode }) {
-  const [colorScheme, setColorScheme] = useState<ColorScheme>("dark");
+  const { preferredColorScheme } = useLoaderData();
+  const browserPreferredColorScheme = useColorScheme();
+  const persist = useFetcher();
+  const [colorScheme, setColorScheme] = useState<ColorScheme>(
+    preferredColorScheme ?? browserPreferredColorScheme
+  );
+
   const toggleColorScheme = (value?: ColorScheme) =>
     setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
+
+  useEffect(() => {
+    if (!preferredColorScheme) {
+      setColorScheme(browserPreferredColorScheme);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [browserPreferredColorScheme]);
+  useEffect(() => {
+    persist.submit(
+      { theme: colorScheme ?? browserPreferredColorScheme },
+      { action: "action/set-theme", method: "post" }
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [colorScheme, browserPreferredColorScheme]);
 
   return (
     <ColorSchemeProvider
@@ -99,4 +129,26 @@ function MantineTheme({ children }: { children: React.ReactNode }) {
       </MantineProvider>
     </ColorSchemeProvider>
   );
+}
+
+export function CatchBoundary() {
+  const caught = useCatch();
+  console.error("CatchBoundary", caught);
+  if (caught.status === 404) {
+    return (
+      <html lang="de">
+        <head>
+          <Meta />
+          <Links />
+        </head>
+        <body>
+          404
+          <ScrollRestoration />
+          <Scripts />
+          <LiveReload port={8002} />
+        </body>
+      </html>
+    );
+  }
+  throw new Error(`Unhandled error: ${caught.status}`);
 }

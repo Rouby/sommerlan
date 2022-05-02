@@ -79,6 +79,14 @@ async function seed() {
     },
   });
 
+  await prisma.news.create({
+    data: {
+      title: "A holy news",
+      text: "<p>das ist eine newus</p>",
+      author: { connect: { email: "jonathan.burke.1311@googlemail.com" } },
+    },
+  });
+
   console.log(`Database has been seeded. 🌱`);
 }
 

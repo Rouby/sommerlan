@@ -2,6 +2,7 @@ import { AbilityBuilder, type AbilityClass } from "@casl/ability";
 import { PrismaAbility, type Subjects } from "@casl/prisma";
 import { createContextualCan, useAbility as useCaslAbility } from "@casl/react";
 import type {
+  News,
   ParticipantOfParty,
   Party,
   Password,
@@ -27,6 +28,7 @@ export type SommerlanAbility = PrismaAbility<
       ParticipantOfParty: ParticipantOfParty;
       Password: Password;
       Workload: Workload;
+      News: News;
     }>
   ]
 >;
@@ -42,10 +44,12 @@ export async function defineAbilityForUser(userId?: string | null) {
     can("manage", "Party");
     can("manage", "ParticipantOfParty");
     can("manage", "Workload");
+    can("manage", "News");
   }
 
   can("read", "Party");
   can("read", "ParticipantOfParty");
+  can("read", "News");
 
   if (userId) {
     switch (user?.role) {
@@ -54,6 +58,7 @@ export async function defineAbilityForUser(userId?: string | null) {
         can("manage", "ParticipantOfParty");
         can("manage", "User", ["role"], { role: "USER" });
         can("manage", "User", ["role"], { role: "TRUSTED_USER" });
+        can("manage", "News");
       case "TRUSTED_USER":
         can("read", "User");
         can("update", "User", { id: userId });

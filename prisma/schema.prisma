@@ -18,6 +18,7 @@ model User {
   role           Role                 @default(USER)
   participations ParticipantOfParty[]
   workloads      Workload[]
+  news           News[]
 }
 
 model Password {
@@ -67,4 +68,15 @@ model ParticipantOfParty {
   paidMoney   Int?
 
   @@id([userId, partyId])
+}
+
+model News {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  title    String
+  text     String
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId String
 }
