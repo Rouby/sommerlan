@@ -32,7 +32,7 @@ import {
   updatePartyAttendance,
 } from "~/models/party.server";
 import { getUserId, requireUserId } from "~/session.server";
-import { useUser } from "~/utils";
+import { useOptionalUser } from "~/utils";
 
 type LoaderData = {
   party: Awaited<ReturnType<typeof getCurrentParty>>;
@@ -86,10 +86,10 @@ export default function ParticipantsPage() {
   const transition = useTransition();
   const submit = useSubmit();
   const data = useLoaderData() as LoaderData;
-  const user = useUser();
+  const user = useOptionalUser();
   const action = useActionData() as ActionData;
   const participation = data.party?.participants.find(
-    (p) => p.userId === user.id
+    (p) => p.userId === user?.id
   );
 
   const [value, setValue] = useState<[Date | null, Date | null]>([
