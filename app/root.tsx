@@ -1,4 +1,3 @@
-import { Ability } from "@casl/ability";
 import {
   ColorSchemeProvider,
   MantineProvider,
@@ -26,13 +25,9 @@ import dayjs from "dayjs";
 import "dayjs/locale/de";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import { useEffect, useState } from "react";
-import {
-  AbilityContext,
-  defineAbilityForUser,
-  type SommerlanAbility,
-} from "./Ability";
-import { Layout } from "./Layout";
+import { AbilityProvider, Layout } from "./components";
 import { getUser, getUserId } from "./session.server";
+import { defineAbilityForUser } from "./utils/ability.server";
 import { getUserPreferences } from "./utils/userPreferences.server";
 
 dayjs.extend(localizedFormat);
@@ -66,7 +61,6 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function App() {
   const { rules } = useLoaderData();
-  const ability = new Ability(rules) as SommerlanAbility;
 
   return (
     <html lang="de">
@@ -75,13 +69,13 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <AbilityContext.Provider value={ability}>
+        <AbilityProvider rules={rules}>
           <MantineTheme>
             <Layout>
               <Outlet />
             </Layout>
           </MantineTheme>
-        </AbilityContext.Provider>
+        </AbilityProvider>
         <ScrollRestoration />
         <Scripts />
         <LiveReload port={8002} />

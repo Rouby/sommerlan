@@ -1,5 +1,4 @@
 import { subject } from "@casl/ability";
-import { useAbility } from "@casl/react";
 import { Box, Loader, Select } from "@mantine/core";
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
@@ -10,7 +9,7 @@ import {
   useTransition,
 } from "@remix-run/react";
 import { Fragment, useEffect, useRef, useState } from "react";
-import { AbilityContext } from "~/Ability";
+import { useAbility } from "~/components";
 import { getUsers, setUserRole } from "~/models/user.server";
 import { getUserId, requireUserId } from "~/session.server";
 
@@ -53,7 +52,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export default function AdminUserPage() {
-  const ability = useAbility(AbilityContext);
+  const ability = useAbility();
   const data = useLoaderData<LoaderData>();
   const transition = useTransition();
 
@@ -94,7 +93,7 @@ function SelectRole({
 }: {
   user: Awaited<ReturnType<typeof getUsers>>[0];
 }) {
-  const ability = useAbility(AbilityContext);
+  const ability = useAbility();
   const formRef = useRef<HTMLFormElement>(null);
   const [value, setValue] = useState<string | null>(user.role);
   const submit = useSubmit();

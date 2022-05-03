@@ -1,11 +1,10 @@
-import { useAbility } from "@casl/react";
 import { Accordion, Button, Group } from "@mantine/core";
 import { DateRangePicker } from "@mantine/dates";
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import { useState } from "react";
-import { AbilityContext } from "~/Ability";
+import { useAbility } from "~/components";
 import { createParty, getParties } from "~/models/party.server";
 import { getUserId, requireUserId } from "~/session.server";
 
@@ -53,7 +52,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export default function AdminPartyPage() {
-  const ability = useAbility(AbilityContext);
+  const ability = useAbility();
   const data = useLoaderData<LoaderData>();
 
   const [value, setValue] = useState<[Date | null, Date | null]>([null, null]);

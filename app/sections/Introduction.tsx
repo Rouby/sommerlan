@@ -12,7 +12,7 @@ import {
 import { Link } from "@remix-run/react";
 import dayjs from "dayjs";
 import { Edit } from "tabler-icons-react";
-import { Can } from "~/Ability";
+import { Can } from "~/components";
 import type { getNews } from "~/models/news.server";
 
 export function Introduction({

@@ -15,7 +15,7 @@ import {
 import { useMediaQuery } from "@mantine/hooks";
 import { Link } from "@remix-run/react";
 import { Moon, Sun } from "tabler-icons-react";
-import { useOptionalUser } from "./utils";
+import { useOptionalUser } from "~/utils";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();

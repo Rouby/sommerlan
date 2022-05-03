@@ -1,10 +1,5 @@
 import { AbilityBuilder, type AbilityClass } from "@casl/ability";
 import { PrismaAbility, type Subjects } from "@casl/prisma";
-import {
-  Can as CaslCan,
-  useAbility as useCaslAbility,
-  type BoundCanProps,
-} from "@casl/react";
 import type {
   News,
   ParticipantOfParty,
@@ -13,22 +8,7 @@ import type {
   User,
   Workload,
 } from "@prisma/client";
-import { createContext } from "react";
-import { getUserById } from "./models/user.server";
-
-export const AbilityContext = createContext<SommerlanAbility>(null!);
-
-export function useAbility() {
-  return useCaslAbility(AbilityContext);
-}
-
-export function Can(
-  props: BoundCanProps<SommerlanAbility> & { children: React.ReactNode }
-) {
-  const ability = useAbility();
-
-  return <CaslCan ability={ability} {...(props as any)} />;
-}
+import { getUserById } from "~/models/user.server";
 
 export type SommerlanAbility = PrismaAbility<
   [

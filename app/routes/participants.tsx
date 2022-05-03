@@ -23,8 +23,7 @@ import {
 import dayjs from "dayjs";
 import { Fragment, useEffect, useRef, useState } from "react";
 import invariant from "tiny-invariant";
-import { useAbility } from "~/Ability";
-import { Footer } from "~/components";
+import { Footer, useAbility } from "~/components";
 import {
   getCurrentParty,
   joinParty,
