@@ -24,14 +24,17 @@ import {
 import dayjs from "dayjs";
 import "dayjs/locale/de";
 import localizedFormat from "dayjs/plugin/localizedFormat";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
 import { useEffect, useState } from "react";
 import { AbilityProvider, Layout } from "./components";
 import { getUser, getUserId } from "./session.server";
 import { defineAbilityForUser } from "./utils/ability.server";
 import { getUserPreferences } from "./utils/userPreferences.server";
 
+dayjs.extend(utc);
+dayjs.extend(timezone);
 dayjs.extend(localizedFormat);
-dayjs.locale("de");
 
 export const links: LinksFunction = () => {
   return [];
@@ -47,20 +50,30 @@ type LoaderData = {
   user: Awaited<ReturnType<typeof getUser>>;
   rules: Awaited<ReturnType<typeof defineAbilityForUser>>["rules"];
   preferredColorScheme: "dark" | "light" | null;
+  locale: string | null;
+  timeZone: string | null;
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
   const prefs = await getUserPreferences(request);
 
+  dayjs.tz.setDefault(prefs.timeZone ?? "Europe/Berlin");
+  dayjs.locale(prefs.locale ?? "de");
+
   return json<LoaderData>({
     user: await getUser(request),
     rules: (await defineAbilityForUser(await getUserId(request))).rules,
     preferredColorScheme: prefs.theme,
+    locale: prefs.locale,
+    timeZone: prefs.timeZone,
   });
 };
 
 export default function App() {
-  const { rules } = useLoaderData();
+  const { rules, locale, timeZone } = useLoaderData<LoaderData>();
+
+  dayjs.tz.setDefault(timeZone ?? dayjs.tz.guess());
+  dayjs.locale(locale ?? "de");
 
   return (
     <html lang="de">

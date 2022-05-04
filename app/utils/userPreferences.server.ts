@@ -28,6 +28,22 @@ async function getUserPreferences(request: Request) {
     set theme(theme: "dark" | "light" | null) {
       session.set("theme", theme);
     },
+    get locale() {
+      const localeValue = session.get("locale");
+      return localeValue === "de" ? (localeValue as "de") : null;
+    },
+    set locale(locale: "de" | null) {
+      session.set("locale", locale);
+    },
+    get timeZone() {
+      const timeZoneValue = session.get("timeZone");
+      return timeZoneValue === "Europe/Berlin"
+        ? (timeZoneValue as "Europe/Berlin")
+        : null;
+    },
+    set timeZone(timeZone: "Europe/Berlin" | null) {
+      session.set("timeZone", timeZone);
+    },
     commit() {
       return preferenceStorage.commitSession(session);
     },
