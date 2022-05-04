@@ -7,6 +7,7 @@ import type {
   Password,
   User,
   Workload,
+  WorkloadDependency,
 } from "@prisma/client";
 import { getUserById } from "~/models/user.server";
 
@@ -19,6 +20,7 @@ export type SommerlanAbility = PrismaAbility<
       ParticipantOfParty: ParticipantOfParty;
       Password: Password;
       Workload: Workload;
+      WorkloadDependency: WorkloadDependency;
       News: News;
     }>
   ]

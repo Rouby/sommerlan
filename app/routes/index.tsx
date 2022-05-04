@@ -5,25 +5,36 @@ import { useLoaderData } from "@remix-run/react";
 import { AlertCircle } from "tabler-icons-react";
 import { Footer } from "~/components";
 import { getNews } from "~/models/news.server";
+import { getCurrentParty } from "~/models/party.server";
 import { Introduction, PartyInfo } from "~/sections";
 import { getUserId } from "~/session.server";
+
+interface LoaderData {
+  news: Awaited<ReturnType<typeof getNews>>;
+  party: Awaited<ReturnType<typeof getCurrentParty>>;
+}
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await getUserId(request);
 
   return json({
     news: await getNews(userId),
+    party: await getCurrentParty(userId),
   });
 };
 
 export default function Index() {
-  const { news } = useLoaderData();
+  const { news, party } = useLoaderData<LoaderData>();
   return (
     <>
       <Introduction news={news} />
       <Space h="lg" />
-      <PartyInfo nextDate="1" />
-      <Space h="lg" />
+      {party ? (
+        <>
+          <PartyInfo nextDate={party.startDate} />
+          <Space h="lg" />
+        </>
+      ) : null}
       <Footer />
     </>
   );

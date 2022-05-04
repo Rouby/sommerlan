@@ -13,12 +13,13 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  name           String
-  password       Password?
-  role           Role                 @default(USER)
-  participations ParticipantOfParty[]
-  workloads      Workload[]
-  news           News[]
+  name                      String
+  password                  Password?
+  role                      Role                 @default(USER)
+  participations            ParticipantOfParty[]
+  workloads                 Workload[]
+  newsWritten               News[]
+  notificationSubscriptions String[]
 }
 
 model Password {
@@ -50,11 +51,26 @@ model Party {
 model Workload {
   id String @id @default(cuid())
 
-  title      String
-  assignee   User?   @relation(fields: [assigneeId], references: [id])
-  assigneeId String?
-  party      Party   @relation(fields: [partyId], references: [id])
-  partyId    String
+  title           String
+  assignee        User?   @relation(fields: [assigneeId], references: [id])
+  assigneeId      String?
+  party           Party   @relation(fields: [partyId], references: [id])
+  partyId         String
+  order           Int     @default(autoincrement())
+  // offsets when this workload should happen (0 = first day, 1 = second day, etc., -1 = last day, -2 = second to last day, etc.)
+  scheduledOnDays Int[]
+
+  dependents   WorkloadDependency[] @relation(name: "dependents")
+  dependencies WorkloadDependency[] @relation(name: "dependencies")
+}
+
+model WorkloadDependency {
+  dependent    Workload @relation(name: "dependents", fields: [dependentId], references: [id])
+  dependentId  String
+  dependency   Workload @relation(name: "dependencies", fields: [dependencyId], references: [id])
+  dependencyId String
+
+  @@id([dependentId, dependencyId])
 }
 
 model ParticipantOfParty {
