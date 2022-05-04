@@ -1,4 +1,4 @@
-import { Ability } from "@casl/ability";
+import { PrismaAbility } from "@casl/prisma";
 import {
   Can as CaslCan,
   useAbility as useCaslAbility,
@@ -28,7 +28,7 @@ export function AbilityProvider({
   rules: SommerlanAbility["rules"];
   children: React.ReactNode;
 }) {
-  const ability = new Ability(rules) as SommerlanAbility;
+  const ability = new PrismaAbility(rules) as SommerlanAbility;
   return (
     <AbilityContext.Provider value={ability}>
       {children}

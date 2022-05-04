@@ -7,12 +7,12 @@ import { RichTextEditor } from "~/components";
 import { getANews, updateNews } from "~/models/news.server";
 import { requireUserId } from "~/session.server";
 
-interface ActionData {
+type ActionData = {
   errors?: {
     title?: string;
     text?: string;
   };
-}
+};
 
 export const action: ActionFunction = async ({ request }) => {
   const userId = await requireUserId(request);
@@ -47,9 +47,9 @@ export const action: ActionFunction = async ({ request }) => {
   return redirect("/");
 };
 
-interface LoaderData {
+type LoaderData = {
   news: Awaited<ReturnType<typeof getANews>>;
-}
+};
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   return json({

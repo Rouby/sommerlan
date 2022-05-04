@@ -9,10 +9,10 @@ import { getCurrentParty } from "~/models/party.server";
 import { Introduction, PartyInfo } from "~/sections";
 import { getUserId } from "~/session.server";
 
-interface LoaderData {
+type LoaderData = {
   news: Awaited<ReturnType<typeof getNews>>;
   party: Awaited<ReturnType<typeof getCurrentParty>>;
-}
+};
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await getUserId(request);

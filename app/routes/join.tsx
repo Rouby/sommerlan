@@ -25,13 +25,13 @@ export const loader: LoaderFunction = async ({ request }) => {
   return json({});
 };
 
-interface ActionData {
+type ActionData = {
   errors: {
     email?: string;
     password?: string;
     name?: string;
   };
-}
+};
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();

@@ -28,33 +28,40 @@ export type SommerlanAbility = PrismaAbility<
 
 export async function defineAbilityForUser(userId?: string | null) {
   const AppAbility = PrismaAbility as AbilityClass<SommerlanAbility>;
-  const { can, build } = new AbilityBuilder(AppAbility);
+  const { can, cannot, build } = new AbilityBuilder(AppAbility);
 
   const user = userId ? await getUserById(userId) : null;
-
-  if (user?.role === "ADMIN") {
-    can("manage", "User");
-    can("manage", "Party");
-    can("manage", "ParticipantOfParty");
-    can("manage", "Workload");
-    can("manage", "News");
-  }
 
   can("read", "Party");
   can("read", "ParticipantOfParty");
   can("read", "News");
+  can("read", "Workload");
+  cannot("read", "Workload", "assignee");
 
   if (userId) {
     switch (user?.role) {
+      case "ADMIN":
+        can("manage", "User");
+        can("manage", "Party");
+        can("manage", "ParticipantOfParty");
+        can("manage", "Workload");
+        can("manage", "News");
+        break;
       case "ORGANIZER":
         can("manage", "Party");
         can("manage", "ParticipantOfParty");
-        can("manage", "User", ["role"], { role: "USER" });
-        can("manage", "User", ["role"], { role: "TRUSTED_USER" });
+        can("manage", "User", "role", {
+          role: { in: ["USER", "TRUSTED_USER"] },
+        });
+        can("manage", "Workload");
         can("manage", "News");
       case "TRUSTED_USER":
         can("read", "User");
         can("update", "User", { id: userId });
+        can("read", "Workload", "assignee");
+        can("update", "Workload", "assigneeId", {
+          OR: [{ assigneeId: userId }, { assigneeId: null }],
+        });
       default:
         can("update", "User", { id: userId });
         break;

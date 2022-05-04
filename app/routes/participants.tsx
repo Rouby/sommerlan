@@ -114,7 +114,9 @@ export default function ParticipantsPage() {
 
   if (!data.party) {
     return (
-      <div>Die nächste Party ist noch in Planung und erscheint bald hier!</div>
+      <Container>
+        <p>Die nächste Party ist noch in Planung und erscheint bald hier!</p>
+      </Container>
     );
   }
 

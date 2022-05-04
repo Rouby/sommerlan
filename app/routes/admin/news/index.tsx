@@ -7,12 +7,12 @@ import { RichTextEditor } from "~/components";
 import { createNews } from "~/models/news.server";
 import { requireUserId } from "~/session.server";
 
-interface ActionData {
+type ActionData = {
   errors?: {
     title?: string;
     text?: string;
   };
-}
+};
 
 export const action: ActionFunction = async ({ request }) => {
   const userId = await requireUserId(request);
