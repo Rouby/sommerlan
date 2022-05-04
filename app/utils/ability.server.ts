@@ -37,6 +37,7 @@ export async function defineAbilityForUser(userId?: string | null) {
   can("read", "News");
   can("read", "Workload");
   cannot("read", "Workload", "assignee");
+  cannot("read", "User", "email");
 
   if (userId) {
     switch (user?.role) {
@@ -63,6 +64,7 @@ export async function defineAbilityForUser(userId?: string | null) {
           OR: [{ assigneeId: userId }, { assigneeId: null }],
         });
       default:
+        can("read", "User", { id: userId });
         can("update", "User", { id: userId });
         break;
     }

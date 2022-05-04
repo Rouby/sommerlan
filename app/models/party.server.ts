@@ -16,7 +16,15 @@ export async function getCurrentParty(userId?: string) {
     include: {
       participants: {
         include: {
-          user: ability.can("read", "User"),
+          user: ability.can("read", "User")
+            ? {
+                select: {
+                  id: true,
+                  name: ability.can("read", "User", "name"),
+                  email: ability.can("read", "User", "email"),
+                },
+              }
+            : false,
         },
         orderBy: {
           arrivingAt: "asc",

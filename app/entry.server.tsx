@@ -1,6 +1,7 @@
 import { injectStylesIntoStaticMarkup } from "@mantine/ssr";
 import type { EntryContext } from "@remix-run/node";
 import { RemixServer } from "@remix-run/react";
+import dayjs from "dayjs";
 import { renderToString } from "react-dom/server";
 
 export default function handleRequest(
@@ -9,6 +10,10 @@ export default function handleRequest(
   responseHeaders: Headers,
   remixContext: EntryContext
 ) {
+  // TODO get this from context??
+  dayjs.tz.setDefault("Europe/Berlin");
+  dayjs.locale("de");
+
   const markup = renderToString(
     <RemixServer context={remixContext} url={request.url} />
   );
