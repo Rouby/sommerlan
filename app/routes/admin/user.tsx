@@ -1,17 +1,12 @@
 import { subject } from "@casl/ability";
 import { Box, Loader, Select } from "@mantine/core";
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import {
-  Form,
-  useLoaderData,
-  useSubmit,
-  useTransition,
-} from "@remix-run/react";
+import { Form, useSubmit, useTransition } from "@remix-run/react";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { useAbility } from "~/components";
 import { getUsers, setUserRole } from "~/models/user.server";
 import { getUserId, requireUserId } from "~/session.server";
+import { json, useLoaderData } from "~/utils/superjson";
 
 type LoaderData = {
   users: Awaited<ReturnType<typeof getUsers>>;

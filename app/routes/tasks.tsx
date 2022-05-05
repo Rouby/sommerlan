@@ -13,17 +13,8 @@ import {
   Title,
   UnstyledButton,
 } from "@mantine/core";
-import {
-  json,
-  type ActionFunction,
-  type LoaderFunction,
-} from "@remix-run/node";
-import {
-  Form,
-  useActionData,
-  useFetcher,
-  useLoaderData,
-} from "@remix-run/react";
+import { type ActionFunction, type LoaderFunction } from "@remix-run/node";
+import { Form, useActionData, useFetcher } from "@remix-run/react";
 import {
   animate,
   Reorder,
@@ -37,6 +28,7 @@ import { getCurrentParty } from "~/models/party.server";
 import { createWorkload, getCurrentWorkloads } from "~/models/workload.server";
 import { getUserId, requireUserId } from "~/session.server";
 import { md5 } from "~/utils";
+import { json, useLoaderData } from "~/utils/superjson";
 
 type LoaderData = {
   workloads: Awaited<ReturnType<typeof getCurrentWorkloads>>;

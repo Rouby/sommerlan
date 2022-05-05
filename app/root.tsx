@@ -9,7 +9,6 @@ import type {
   LoaderFunction,
   MetaFunction,
 } from "@remix-run/node";
-import { json } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -19,7 +18,6 @@ import {
   ScrollRestoration,
   useCatch,
   useFetcher,
-  useLoaderData,
 } from "@remix-run/react";
 import dayjs from "dayjs";
 import "dayjs/locale/de";
@@ -27,6 +25,7 @@ import localizedFormat from "dayjs/plugin/localizedFormat";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import { useEffect, useState } from "react";
+import { json, useLoaderData } from "~/utils/superjson";
 import { AbilityProvider, Layout } from "./components";
 import { getUser, getUserId } from "./session.server";
 import { defineAbilityForUser } from "./utils/ability.server";
@@ -56,9 +55,6 @@ type LoaderData = {
 
 export const loader: LoaderFunction = async ({ request }) => {
   const prefs = await getUserPreferences(request);
-
-  dayjs.tz.setDefault(prefs.timeZone ?? "Europe/Berlin");
-  dayjs.locale(prefs.locale ?? "de");
 
   return json<LoaderData>({
     user: await getUser(request),

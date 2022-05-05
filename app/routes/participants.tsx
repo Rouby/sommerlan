@@ -12,11 +12,9 @@ import {
 import { RangeCalendar } from "@mantine/dates";
 import { MinusIcon } from "@modulz/radix-icons";
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
 import {
   Form,
   useActionData,
-  useLoaderData,
   useSubmit,
   useTransition,
 } from "@remix-run/react";
@@ -32,6 +30,7 @@ import {
 } from "~/models/party.server";
 import { getUserId, requireUserId } from "~/session.server";
 import { useOptionalUser } from "~/utils";
+import { json, useLoaderData } from "~/utils/superjson";
 
 type LoaderData = {
   party: Awaited<ReturnType<typeof getCurrentParty>>;

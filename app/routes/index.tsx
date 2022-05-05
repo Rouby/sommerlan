@@ -1,13 +1,12 @@
 import { Alert, Code, Space, Text } from "@mantine/core";
 import type { LoaderFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
 import { AlertCircle } from "tabler-icons-react";
 import { Footer } from "~/components";
 import { getNews } from "~/models/news.server";
 import { getCurrentParty } from "~/models/party.server";
 import { Introduction, PartyInfo } from "~/sections";
 import { getUserId } from "~/session.server";
+import { json, useLoaderData } from "~/utils/superjson";
 
 type LoaderData = {
   news: Awaited<ReturnType<typeof getNews>>;

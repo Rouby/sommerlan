@@ -1,11 +1,12 @@
 import { Button, Container, Group, TextInput, Title } from "@mantine/core";
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
-import { Form, useLoaderData } from "@remix-run/react";
+import { redirect } from "@remix-run/node";
+import { Form } from "@remix-run/react";
 import { useState } from "react";
 import { RichTextEditor } from "~/components";
 import { getANews, updateNews } from "~/models/news.server";
 import { requireUserId } from "~/session.server";
+import { json, useLoaderData } from "~/utils/superjson";
 
 type ActionData = {
   errors?: {
