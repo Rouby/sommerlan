@@ -25,7 +25,8 @@ export function useMatches() {
     () =>
       matches.map((match) => ({
         ...match,
-        data: deserialize<RouteData>(match.data as SuperJSONResult),
+        data:
+          match.data && deserialize<RouteData>(match.data as SuperJSONResult),
       })),
     [matches]
   );
