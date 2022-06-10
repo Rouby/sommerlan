@@ -34,6 +34,7 @@ enum Role {
   ORGANIZER
   TRUSTED_USER
   USER
+  DISABLED
 }
 
 model Party {

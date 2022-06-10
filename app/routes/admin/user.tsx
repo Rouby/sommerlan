@@ -1,5 +1,5 @@
 import { subject } from "@casl/ability";
-import { Box, Loader, Select } from "@mantine/core";
+import { Box, Container, Loader, Select, Title } from "@mantine/core";
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { Form, useSubmit, useTransition } from "@remix-run/react";
 import { Fragment, useEffect, useRef, useState } from "react";
@@ -56,8 +56,8 @@ export default function AdminUserPage() {
   }
 
   return (
-    <div>
-      <h1>Nutzer</h1>
+    <Container>
+      <Title>Nutzer</Title>
       <Box
         sx={{
           display: "grid",
@@ -79,7 +79,7 @@ export default function AdminUserPage() {
           </Fragment>
         ))}
       </Box>
-    </div>
+    </Container>
   );
 }
 
@@ -143,6 +143,15 @@ function SelectRole({
             disabled: ability.cannot(
               "manage",
               subject("User", { ...user, role: "USER" as const }),
+              "role"
+            ),
+          },
+          {
+            label: "Deaktiviert",
+            value: "DISABLED",
+            disabled: ability.cannot(
+              "manage",
+              subject("User", { ...user, role: "DISABLED" as const }),
               "role"
             ),
           },

@@ -41,6 +41,12 @@ export async function defineAbilityForUser(userId?: string | null) {
 
   if (userId) {
     switch (user?.role) {
+      case "DISABLED":
+        cannot("read", "Party");
+        cannot("read", "ParticipantOfParty");
+        cannot("read", "News");
+        cannot("read", "Workload");
+        break;
       case "ADMIN":
         can("manage", "User");
         can("manage", "Party");

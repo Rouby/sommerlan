@@ -78,6 +78,7 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function TasksPage() {
   const data = useLoaderData<LoaderData>();
+  const ability = useAbility();
 
   if (!data.workloads) {
     return (
@@ -90,6 +91,12 @@ export default function TasksPage() {
   return (
     <Container>
       <Title>Aufgaben</Title>
+      <p>
+        Hier stehen alle Aufgaben die auf einer LAN so anfallen.{" "}
+        {ability.can("update", "Workload", "assigneeId")
+          ? "Du kannst dich für eine oder mehrere Aufgaben hier eintragen."
+          : null}
+      </p>
       <WorkloadList />
       <Can I="create" a="Workload">
         <WorkloadCreate key={data.workloads.length} />

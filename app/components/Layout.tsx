@@ -16,9 +16,11 @@ import { useMediaQuery } from "@mantine/hooks";
 import { Link } from "@remix-run/react";
 import { Moon, Sun } from "tabler-icons-react";
 import { useOptionalUser } from "~/utils";
+import { useAbility } from "./Ability";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+  const ability = useAbility();
   return (
     <>
       <Header height={65} fixed>
@@ -39,7 +41,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
             {false && (
               <Button
                 component={Link}
-                to="/#pary"
+                to="/#party"
                 variant="subtle"
                 sx={{ "@media(max-width: 600px)": { display: "none" } }}
               >
@@ -52,6 +54,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <Button component={Link} to="/tasks" variant="subtle">
               Aufgaben
             </Button>
+            {ability.can("manage", "Party") ? (
+              <Button component={Link} to="/admin" variant="subtle">
+                Admin
+              </Button>
+            ) : null}
             <ActionIcon
               onClick={() => toggleColorScheme()}
               title="Farbschema wechseln"
