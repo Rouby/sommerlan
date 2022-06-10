@@ -97,5 +97,5 @@
   "prisma": {
     "seed": "ts-node --require tsconfig-paths/register prisma/seed.ts"
   },
-  "packageManager": "yarn@3.2.0"
+  "packageManager": "yarn@3.2.1"
 }
