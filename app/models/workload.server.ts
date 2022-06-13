@@ -7,7 +7,8 @@ export async function createWorkload(
   userId: string,
   partyId: string,
   title: string,
-  description: string
+  description: string,
+  maxAssignees: number
 ) {
   const ability = await defineAbilityForUser(userId);
 
@@ -18,6 +19,32 @@ export async function createWorkload(
       party: { connect: { id: partyId } },
       title,
       description,
+      maxAssignees,
+    },
+  });
+}
+
+export async function updateWorkload(
+  userId: string,
+  partyId: string,
+  id: string,
+  title: string,
+  description: string,
+  maxAssignees: number
+) {
+  const ability = await defineAbilityForUser(userId);
+
+  ForbiddenError.from(ability).throwUnlessCan("create", "Workload");
+
+  return prisma.workload.update({
+    where: {
+      id,
+    },
+    data: {
+      party: { connect: { id: partyId } },
+      title,
+      description,
+      maxAssignees,
     },
   });
 }
@@ -42,7 +69,7 @@ export async function getCurrentWorkloads(userId?: string) {
         },
         workloads: {
           orderBy: { order: "asc" },
-          include: { assignee: ability.can("read", "Workload", "assignee") },
+          include: { assignees: ability.can("read", "Workload", "assignees") },
         },
       },
     })
@@ -83,6 +110,7 @@ export async function assignWorkload(userId: string, workloadId: string) {
 
   const workload = await prisma.workload.findFirst({
     where: { id: workloadId },
+    include: { assignees: true },
   });
 
   if (!workload) {
@@ -92,16 +120,15 @@ export async function assignWorkload(userId: string, workloadId: string) {
   ForbiddenError.from(ability).throwUnlessCan(
     "update",
     subject("Workload", workload),
-    "assigneeId"
+    "assignees"
   );
 
   return prisma.workload.update({
     where: { id: workloadId },
     data: {
-      assignee:
-        workload.assigneeId === userId
-          ? { disconnect: true }
-          : { connect: { id: userId } },
+      assignees: workload.assignees.some((u) => u.id === userId)
+        ? { disconnect: { id: userId } }
+        : { connect: { id: userId } },
     },
   });
 }

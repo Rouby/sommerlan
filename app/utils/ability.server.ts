@@ -38,7 +38,7 @@ export async function defineAbilityForUser(userId?: string | null) {
   can("read", "ParticipantOfParty");
   can("read", "News");
   can("read", "Workload");
-  cannot("read", "Workload", "assignee");
+  cannot("read", "Workload", "assignees");
   cannot("read", "User", "email");
 
   if (userId) {
@@ -69,9 +69,13 @@ export async function defineAbilityForUser(userId?: string | null) {
       case "TRUSTED_USER":
         can("read", "User");
         can("update", "User", { id: userId });
-        can("read", "Workload", "assignee");
-        can("update", "Workload", "assigneeId", {
-          OR: [{ assigneeId: userId }, { assigneeId: null }],
+        can("read", "Workload", "assignees");
+        can("update", "Workload", "assignees", {
+          OR: [
+            { assignees: { some: { id: userId } } },
+            { assignees: { none: {} } },
+            { maxAssignees: { gt: 1 } },
+          ],
         });
       default:
         can("read", "User", { id: userId });

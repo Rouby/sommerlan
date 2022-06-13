@@ -53,14 +53,14 @@ model Workload {
   id String @id @default(cuid())
 
   title           String
-  description     String  @default("")
-  assignee        User?   @relation(fields: [assigneeId], references: [id], onDelete: SetNull)
-  assigneeId      String?
-  party           Party   @relation(fields: [partyId], references: [id], onDelete: Cascade)
+  description     String @default("")
+  assignees       User[]
+  party           Party  @relation(fields: [partyId], references: [id], onDelete: Cascade)
   partyId         String
-  order           Int     @default(autoincrement())
+  order           Int    @default(autoincrement())
   // offsets when this workload should happen (0 = first day, 1 = second day, etc., -1 = last day, -2 = second to last day, etc.)
   scheduledOnDays Int[]
+  maxAssignees    Int    @default(1)
 
   dependents   WorkloadDependency[] @relation(name: "dependents")
   dependencies WorkloadDependency[] @relation(name: "dependencies")

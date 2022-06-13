@@ -1,31 +1,45 @@
 import { subject } from "@casl/ability";
 import {
+  ActionIcon,
   Avatar,
+  AvatarsGroup,
   Button,
   Collapse,
   Container,
   Group,
   List,
   Loader,
+  NumberInput,
   Space,
   Textarea,
   TextInput,
   Title,
   UnstyledButton,
+  type NumberInputHandlers,
 } from "@mantine/core";
+import { Cross1Icon, Pencil1Icon } from "@modulz/radix-icons";
 import { type ActionFunction, type LoaderFunction } from "@remix-run/node";
-import { Form, useActionData, useFetcher } from "@remix-run/react";
+import {
+  Form,
+  useActionData,
+  useFetcher,
+  useTransition,
+} from "@remix-run/react";
 import {
   animate,
   Reorder,
   useMotionValue,
   type MotionValue,
 } from "framer-motion";
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
 import { Subtask } from "tabler-icons-react";
 import { Can, useAbility } from "~/components";
 import { getCurrentParty } from "~/models/party.server";
-import { createWorkload, getCurrentWorkloads } from "~/models/workload.server";
+import {
+  createWorkload,
+  getCurrentWorkloads,
+  updateWorkload,
+} from "~/models/workload.server";
 import { getUserId, requireUserId } from "~/session.server";
 import { md5 } from "~/utils";
 import { json, useLoaderData } from "~/utils/superjson";
@@ -51,6 +65,8 @@ export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
   const title = formData.get("title");
   const description = formData.get("description");
+  const workloadId = formData.get("id");
+  const maxAssignees = formData.get("maxAssignees") ?? "1";
   const party = await getCurrentParty(userId);
 
   if (!party) {
@@ -71,7 +87,32 @@ export const action: ActionFunction = async ({ request }) => {
     );
   }
 
-  await createWorkload(userId, party.id, title, description);
+  if (typeof maxAssignees !== "string") {
+    return json<ActionData>(
+      { errors: { description: "Maximale Teilnehmer wird benötigt" } },
+      { status: 400 }
+    );
+  }
+
+  if (workloadId && typeof workloadId !== "string") {
+    return json<ActionData>(
+      { errors: { description: "WorkloadId muss String sein" } },
+      { status: 400 }
+    );
+  }
+
+  if (workloadId) {
+    await updateWorkload(
+      userId,
+      party.id,
+      workloadId,
+      title,
+      description,
+      +maxAssignees
+    );
+  } else {
+    await createWorkload(userId, party.id, title, description, +maxAssignees);
+  }
 
   return null;
 };
@@ -116,7 +157,18 @@ function WorkloadList() {
       setWorkloads(data.workloads);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data.workloads?.map((w) => w.assigneeId).join("-")]);
+  }, [
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    data.workloads
+      ?.map(
+        (w) =>
+          w.assignees?.map((u) => u.id).join(",") +
+          w.title +
+          w.description +
+          w.maxAssignees
+      )
+      .join("-"),
+  ]);
 
   useEffect(() => {
     if (ability.can("update", "Workload", "order")) {
@@ -135,7 +187,7 @@ function WorkloadList() {
 
   if (!ability.can("update", "Workload", "order")) {
     return (
-      <List icon={<Subtask />} spacing="xs" my="md">
+      <List icon={" "} spacing="xs" my="md">
         {workloads.map((workload) => (
           <WorkloadRender key={workload.id} workload={workload} />
         ))}
@@ -179,63 +231,160 @@ function WorkloadRender({ workload }: { workload: Workload }) {
   const [open, toggleOpen] = useReducer((open) => !open, false);
   const ability = useAbility();
   const fetcher = useFetcher();
+  const [editMode, setEditMode] = useState(false);
+  const numInput = useRef<NumberInputHandlers>();
+  const { state } = useTransition();
+
+  useEffect(() => {
+    if (state === "submitting") {
+      return () => {
+        setEditMode(false);
+      };
+    }
+  }, [state]);
 
   return (
-    <List.Item>
-      <Group>
-        <Avatar
-          size="sm"
-          onClick={
-            ability.can(
-              "update",
-              subject("Workload", workload),
-              "assigneeId"
-            ) && fetcher.state !== "submitting"
-              ? () =>
-                  fetcher.submit(
-                    { workloadId: workload.id },
-                    { action: "action/assign-workload", method: "post" }
+    <Form method="post">
+      <input type="hidden" name="id" value={workload.id} />
+      <List.Item>
+        <Group>
+          <AvatarsGroup limit={3}>
+            {workload.assignees?.map((user) => (
+              <Avatar
+                key={user.id}
+                size="sm"
+                onClick={
+                  ability.can(
+                    "update",
+                    subject("Workload", workload),
+                    "assignees"
+                  ) && fetcher.state !== "submitting"
+                    ? () =>
+                        fetcher.submit(
+                          { workloadId: workload.id },
+                          { action: "action/assign-workload", method: "post" }
+                        )
+                    : undefined
+                }
+                sx={{
+                  cursor: ability.can(
+                    "update",
+                    subject("Workload", workload),
+                    "assignees"
                   )
-              : undefined
-          }
-          sx={{
-            cursor: ability.can(
+                    ? "pointer"
+                    : undefined,
+                }}
+                radius="xl"
+                src={`https://www.gravatar.com/avatar/${md5(user.email)}`}
+              >
+                {user.name
+                  .split(" ")
+                  .map((n) => n[0].toUpperCase())
+                  .join("")}
+              </Avatar>
+            ))}
+            {ability.can(
               "update",
               subject("Workload", workload),
-              "assigneeId"
-            )
-              ? "pointer"
-              : undefined,
-          }}
-          radius="xl"
-          src={
-            fetcher.state === "submitting"
-              ? undefined
-              : workload.assignee
-              ? `https://www.gravatar.com/avatar/${md5(
-                  workload.assignee.email
-                )}`
-              : undefined
-          }
-        >
-          {fetcher.state === "submitting" ? (
-            <Loader size="sm" />
-          ) : workload.assigneeId ? (
-            workload.assignee?.name
-              .split(" ")
-              .map((n) => n[0].toUpperCase())
-              .join("")
+              "assignees"
+            ) &&
+              workload.assignees.length < workload.maxAssignees && (
+                <Avatar
+                  size="sm"
+                  onClick={
+                    ability.can(
+                      "update",
+                      subject("Workload", workload),
+                      "assignees"
+                    ) && fetcher.state !== "submitting"
+                      ? () =>
+                          fetcher.submit(
+                            { workloadId: workload.id },
+                            { action: "action/assign-workload", method: "post" }
+                          )
+                      : undefined
+                  }
+                  sx={{
+                    cursor: ability.can(
+                      "update",
+                      subject("Workload", workload),
+                      "assignees"
+                    )
+                      ? "pointer"
+                      : undefined,
+                  }}
+                  radius="xl"
+                >
+                  {fetcher.state === "submitting" ? <Loader size="sm" /> : "+"}
+                </Avatar>
+              )}
+          </AvatarsGroup>
+          <UnstyledButton onClick={toggleOpen}>
+            {editMode ? (
+              <TextInput
+                id="title"
+                name="title"
+                label="Arbeitstitel"
+                defaultValue={workload.title}
+              />
+            ) : (
+              workload.title
+            )}
+          </UnstyledButton>
+          <Can I="create" a="Workload">
+            <ActionIcon onClick={() => setEditMode(!editMode)}>
+              {editMode ? <Cross1Icon /> : <Pencil1Icon />}
+            </ActionIcon>
+          </Can>
+        </Group>
+        <Collapse in={open || editMode}>
+          {editMode ? (
+            <>
+              <Textarea
+                id="description"
+                name="description"
+                label="Beschreibung"
+                defaultValue={workload.description}
+              />
+              <Group spacing={5}>
+                <ActionIcon
+                  size={42}
+                  variant="default"
+                  onClick={() => numInput.current?.decrement()}
+                >
+                  –
+                </ActionIcon>
+
+                <NumberInput
+                  hideControls
+                  defaultValue={workload.maxAssignees}
+                  handlersRef={numInput}
+                  max={5}
+                  min={1}
+                  step={1}
+                  styles={{ input: { width: 54, textAlign: "center" } }}
+                  label="Maximale Personen"
+                  name="maxAssignees"
+                />
+
+                <ActionIcon
+                  size={42}
+                  variant="default"
+                  onClick={() => numInput.current?.increment()}
+                >
+                  +
+                </ActionIcon>
+                <Button type="submit">Speichern</Button>
+              </Group>
+            </>
           ) : (
-            "…"
+            workload.description
           )}
-        </Avatar>
-        <UnstyledButton onClick={toggleOpen}>{workload.title}</UnstyledButton>
-      </Group>
-      <Collapse in={open}>
-        {workload.description}
-        <Space h="md" />
-      </Collapse>
-    </List.Item>
+          <Space h="md" />
+        </Collapse>
+      </List.Item>
+    </Form>
   );
 }
 
