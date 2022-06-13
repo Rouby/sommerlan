@@ -52,7 +52,7 @@ export default function AdminUserPage() {
   const transition = useTransition();
 
   if (ability.cannot("manage", "User")) {
-    return <div>Du hast keine Zugriffsberechtigung</div>;
+    return <Container>Du hast keine Zugriffsberechtigung</Container>;
   }
 
   return (

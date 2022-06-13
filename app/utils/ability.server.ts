@@ -5,6 +5,7 @@ import type {
   ParticipantOfParty,
   Party,
   Password,
+  PushNotification,
   User,
   Workload,
   WorkloadDependency,
@@ -22,6 +23,7 @@ export type SommerlanAbility = PrismaAbility<
       Workload: Workload;
       WorkloadDependency: WorkloadDependency;
       News: News;
+      PushNotification: PushNotification;
     }>
   ]
 >;
@@ -53,6 +55,7 @@ export async function defineAbilityForUser(userId?: string | null) {
         can("manage", "ParticipantOfParty");
         can("manage", "Workload");
         can("manage", "News");
+        can("create", "PushNotification");
         break;
       case "ORGANIZER":
         can("manage", "Party");
@@ -62,6 +65,7 @@ export async function defineAbilityForUser(userId?: string | null) {
         });
         can("manage", "Workload");
         can("manage", "News");
+        can("create", "PushNotification");
       case "TRUSTED_USER":
         can("read", "User");
         can("update", "User", { id: userId });

@@ -99,3 +99,76 @@ export async function setUserRole(
     data: { role },
   });
 }
+
+export async function addPushNotification(
+  userId: string,
+  endpoint: string,
+  keys: {}
+) {
+  const userForNotification = await prisma.user.findFirst({
+    where: { id: userId },
+  });
+
+  if (!userForNotification) {
+    return null;
+  }
+
+  ForbiddenError.from(await defineAbilityForUser(userId)).throwUnlessCan(
+    "update",
+    subject("User", userForNotification)
+  );
+
+  return prisma.pushNotification.create({
+    data: { user: { connect: { id: userId } }, endpoint, keys },
+  });
+}
+
+export async function removePushNotification(userId: string, endpoint: string) {
+  const userForNotification = await prisma.user.findFirst({
+    where: { id: userId },
+  });
+
+  if (!userForNotification) {
+    return null;
+  }
+
+  ForbiddenError.from(await defineAbilityForUser(userId)).throwUnlessCan(
+    "update",
+    subject("User", userForNotification)
+  );
+
+  return prisma.pushNotification.delete({
+    where: { endpoint },
+  });
+}
+
+export async function getPushNotifications(userId: string, userIds: string[]) {
+  const userForNotification = await prisma.user.findFirst({
+    where: { id: userId },
+  });
+
+  if (!userForNotification) {
+    return null;
+  }
+
+  ForbiddenError.from(await defineAbilityForUser(userId)).throwUnlessCan(
+    "create",
+    "PushNotification"
+  );
+
+  return prisma.pushNotification.findMany({
+    where: { userId: { in: userIds } },
+  });
+}
+
+export async function getUsersWithPushNotifications(userId?: string) {
+  return prisma.user.findMany({
+    where: {
+      AND: [
+        accessibleBy(await defineAbilityForUser(userId)).User,
+        { pushNotifications: { some: {} } },
+      ],
+    },
+    orderBy: { email: "asc" },
+  });
+}

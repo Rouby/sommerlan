@@ -1,6 +1,7 @@
 node_modules
 
 /build
+/public/entry.worker.js
 /public/build
 .env
 

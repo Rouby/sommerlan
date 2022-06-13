@@ -4,6 +4,7 @@ import {
   type ColorScheme,
 } from "@mantine/core";
 import { useColorScheme } from "@mantine/hooks";
+import { NotificationsProvider } from "@mantine/notifications";
 import type {
   LinksFunction,
   LoaderFunction,
@@ -51,6 +52,7 @@ type LoaderData = {
   preferredColorScheme: "dark" | "light" | null;
   locale: string | null;
   timeZone: string | null;
+  env: Record<string, string | undefined>;
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -62,11 +64,14 @@ export const loader: LoaderFunction = async ({ request }) => {
     preferredColorScheme: prefs.theme,
     locale: prefs.locale,
     timeZone: prefs.timeZone,
+    env: {
+      APPLICATION_SERVER_KEY: process.env.APPLICATION_SERVER_KEY,
+    },
   });
 };
 
 export default function App() {
-  const { rules, locale, timeZone } = useLoaderData<LoaderData>();
+  const { rules, locale, timeZone, env } = useLoaderData<LoaderData>();
 
   dayjs.tz.setDefault(timeZone ?? dayjs.tz.guess());
   dayjs.locale(locale ?? "de");
@@ -80,14 +85,21 @@ export default function App() {
       <body>
         <AbilityProvider rules={rules}>
           <MantineTheme>
-            <Layout>
-              <Outlet />
-            </Layout>
+            <NotificationsProvider>
+              <Layout>
+                <Outlet />
+              </Layout>
+            </NotificationsProvider>
           </MantineTheme>
         </AbilityProvider>
         <ScrollRestoration />
         <Scripts />
         <LiveReload port={8002} />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.env = ${JSON.stringify(env)}`,
+          }}
+        />
       </body>
     </html>
   );

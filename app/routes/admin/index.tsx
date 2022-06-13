@@ -7,6 +7,9 @@ export default function AdminPage() {
       <Button component={Link} to="user" variant="subtle">
         Nutzer administrieren
       </Button>
+      <Button component={Link} to="push" variant="subtle">
+        Benachrichtigungen senden
+      </Button>
     </Container>
   );
 }

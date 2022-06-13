@@ -4,11 +4,7 @@
 
 const sw: ServiceWorkerGlobalScope = self as any;
 
-const applicationServerKey =
-  "BFgrQqNuZVowpcdsmTRQJkzPPKLISwco1EoHrUHqGaUbyGocrHWhywjkPEL8pzW0oqXcvocQAeqP4wmznmbm-iI";
-
 sw.addEventListener("activate", (event) => {
-  console.log("active");
   event.waitUntil(sw.clients.claim());
 });
 
@@ -19,7 +15,7 @@ sw.addEventListener("pushsubscriptionchange", (event) => {
     sw.registration.pushManager
       .subscribe({
         userVisibleOnly: true,
-        applicationServerKey: applicationServerKey,
+        applicationServerKey: process.env.APPLICATION_SERVER_KEY,
       })
       .then((newSubscription) => {
         // TODO: Send to application server
