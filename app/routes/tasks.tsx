@@ -246,7 +246,12 @@ function WorkloadRender({ workload }: { workload: Workload }) {
         )
       )
     ).then(setInvalidAvatars);
-  }, [workload.assignees]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    workload.assignees?.map((user) => user.email).join(","),
+    workload.assignees?.length,
+  ]);
 
   useEffect(() => {
     if (state === "submitting") {
