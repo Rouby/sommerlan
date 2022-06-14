@@ -235,17 +235,16 @@ function WorkloadRender({ workload }: { workload: Workload }) {
   const numInput = useRef<NumberInputHandlers>();
   const { state } = useTransition();
 
-  const [invalidAvatars, setInvalidAvatars] = useState<boolean[]>([]);
+  const [validAvatars, setValidAvatars] = useState<boolean[]>([]);
   useEffect(() => {
-    console.log(workload.assignees);
     Promise.all(
       workload.assignees?.map((user) =>
         fetch(`https://www.gravatar.com/avatar/${md5(user.email)}?d=404`).then(
-          (res) => res.status !== 200,
-          () => true
+          (res) => res.status >= 200 && res.status <= 299,
+          () => false
         )
       )
-    ).then(setInvalidAvatars);
+    ).then(setValidAvatars);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -295,9 +294,9 @@ function WorkloadRender({ workload }: { workload: Workload }) {
                 }}
                 radius="xl"
                 src={
-                  invalidAvatars[idx]
-                    ? undefined
-                    : `https://www.gravatar.com/avatar/${md5(user.email)}`
+                  validAvatars[idx]
+                    ? `https://www.gravatar.com/avatar/${md5(user.email)}?d=404`
+                    : undefined
                 }
                 title={user.name}
               >
