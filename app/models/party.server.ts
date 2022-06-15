@@ -72,14 +72,19 @@ export async function createParty(
   });
 }
 
-export async function joinParty(partyId: string, userId: string) {
+export async function joinParty(
+  partyId: string,
+  userId: string,
+  arrivingAt?: string | Date | null,
+  departingAt?: string | Date | null
+) {
   const party = (await prisma.party.findFirst({ where: { id: partyId } }))!;
   return prisma.participantOfParty.create({
     data: {
       party: { connect: { id: partyId } },
       user: { connect: { id: userId } },
-      arrivingAt: party.startDate,
-      departingAt: party.endDate,
+      arrivingAt: arrivingAt ?? party.startDate,
+      departingAt: departingAt ?? party.endDate,
     },
   });
 }

@@ -58,19 +58,40 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   const arrivingAt = formData.get("arrivingAt");
   const departingAt = formData.get("departingAt");
+  const action = formData.get("action");
 
-  if (typeof arrivingAt === "string" && typeof departingAt === "string") {
-    await updatePartyAttendance(party.id, userId, arrivingAt, departingAt);
-    return json<ActionData>({}, { status: 200 });
-  }
+  invariant(
+    typeof arrivingAt === "string" || !arrivingAt,
+    "invalid arriving at"
+  );
+  invariant(
+    typeof departingAt === "string" || !departingAt,
+    "invalid departing at"
+  );
+
+  console.log(action);
 
   try {
-    if (party.participants.some((p) => p.userId === userId)) {
-      await leaveParty(party.id, userId);
-    } else {
-      await joinParty(party.id, userId);
+    switch (action) {
+      case "join":
+        await joinParty(party.id, userId, arrivingAt, departingAt);
+        break;
+      case "leave":
+        await leaveParty(party.id, userId);
+        break;
+      default:
+        if (arrivingAt && departingAt) {
+          await updatePartyAttendance(
+            party.id,
+            userId,
+            arrivingAt,
+            departingAt
+          );
+        }
+        break;
     }
-  } catch {
+  } catch (err) {
+    console.log(err);
     return json<ActionData>(
       { errors: { participation: "failed" } },
       { status: 400 }
@@ -136,7 +157,7 @@ export default function ParticipantsPage() {
         {transition.state === "submitting" ? " Speichere..." : null}
         <Group position="center" direction="column">
           <RangeCalendar
-            value={participation ? value : [null, null]}
+            value={value}
             onChange={setValue}
             minDate={new Date(data.party.startDate)}
             maxDate={new Date(data.party.endDate)}
@@ -165,8 +186,23 @@ export default function ParticipantsPage() {
               );
             }}
           />
-          <Form method="post">
-            <Button type="submit" loading={transition.state === "submitting"}>
+          <Form method="post" ref={formRef}>
+            <input
+              type="hidden"
+              name="arrivingAt"
+              value={value[0]?.toISOString() ?? ""}
+            />
+            <input
+              type="hidden"
+              name="departingAt"
+              value={value[1]?.toISOString() ?? ""}
+            />
+            <Button
+              type="submit"
+              loading={transition.state === "submitting"}
+              name="action"
+              value={participation ? "leave" : "join"}
+            >
               {participation ? "Nicht mehr teilnehmen" : "Teilnehmen"}
             </Button>
           </Form>
@@ -178,18 +214,6 @@ export default function ParticipantsPage() {
           ) : null}
         </Group>
 
-        <Form ref={formRef} method="post">
-          <input
-            type="hidden"
-            name="arrivingAt"
-            value={value[0]?.toISOString() ?? ""}
-          />
-          <input
-            type="hidden"
-            name="departingAt"
-            value={value[1]?.toISOString() ?? ""}
-          />
-        </Form>
         {ability.can("read", subject("Party", data.party)) &&
         ability.can("read", "User") ? (
           <>
