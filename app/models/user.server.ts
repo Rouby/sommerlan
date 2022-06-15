@@ -123,6 +123,31 @@ export async function addPushNotification(
   });
 }
 
+export async function updatePushNotification(
+  userId: string,
+  previousEndpoint: string,
+  endpoint: string,
+  keys: {}
+) {
+  const userForNotification = await prisma.user.findFirst({
+    where: { id: userId },
+  });
+
+  if (!userForNotification) {
+    return null;
+  }
+
+  ForbiddenError.from(await defineAbilityForUser(userId)).throwUnlessCan(
+    "update",
+    subject("User", userForNotification)
+  );
+
+  return prisma.pushNotification.update({
+    where: { endpoint: previousEndpoint },
+    data: { endpoint, keys },
+  });
+}
+
 export async function removePushNotification(userId: string, endpoint: string) {
   const userForNotification = await prisma.user.findFirst({
     where: { id: userId },

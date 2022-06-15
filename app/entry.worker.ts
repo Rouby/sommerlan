@@ -8,20 +8,26 @@ sw.addEventListener("activate", (event) => {
   event.waitUntil(sw.clients.claim());
 });
 
-sw.addEventListener("pushsubscriptionchange", (event) => {
+sw.addEventListener("pushsubscriptionchange", (event: any) => {
   console.log("[Service Worker]: 'pushsubscriptionchange' event fired.");
 
-  event.waitUntil(
-    sw.registration.pushManager
-      .subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: process.env.APPLICATION_SERVER_KEY,
+  if (event.oldSubscription && event.newSubscription) {
+    const body = new URLSearchParams();
+    body.append("previousEndpoint", event.oldSubscription.endpoint);
+    body.append("endpoint", event.newSubscription.endpoint);
+    body.append("keys", JSON.stringify(event.newSubscription.toJSON().keys));
+
+    event.waitUntil(
+      fetch("/action/update-push-notification", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Accept: "application/json",
+        },
+        body,
       })
-      .then((newSubscription) => {
-        // TODO: Send to application server
-        console.log("[Service Worker] New subscription: ", newSubscription);
-      })
-  );
+    );
+  }
 });
 
 sw.addEventListener("push", (event) => {
