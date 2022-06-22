@@ -28,6 +28,35 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function Index() {
   const { news, party } = useLoaderData<LoaderData>();
+
+  useShowPushSubscriptionNotification();
+
+  return (
+    <>
+      <Introduction news={news} />
+      <Space h="lg" />
+      {party ? (
+        <>
+          <PartyInfo nextDate={party.startDate} />
+          <Space h="lg" />
+        </>
+      ) : null}
+      <Footer />
+    </>
+  );
+}
+
+export function ErrorBoundary({ error }: { error: Error }) {
+  console.error(error);
+  return (
+    <Alert icon={<AlertCircle size={16} />} title="Uff!" color="red">
+      <Text>{error.message}</Text>
+      <Code> {error.stack}</Code>
+    </Alert>
+  );
+}
+
+function useShowPushSubscriptionNotification() {
   const user = useOptionalUser();
   const { isSubscribed, subscribe, canSubscribe } = usePushNotifications();
 
@@ -99,28 +128,4 @@ export default function Index() {
       });
     }
   }, [user, isSubscribed, canSubscribe, subscribe]);
-
-  return (
-    <>
-      <Introduction news={news} />
-      <Space h="lg" />
-      {party ? (
-        <>
-          <PartyInfo nextDate={party.startDate} />
-          <Space h="lg" />
-        </>
-      ) : null}
-      <Footer />
-    </>
-  );
-}
-
-export function ErrorBoundary({ error }: { error: Error }) {
-  console.error(error);
-  return (
-    <Alert icon={<AlertCircle size={16} />} title="Uff!" color="red">
-      <Text>{error.message}</Text>
-      <Code> {error.stack}</Code>
-    </Alert>
-  );
 }

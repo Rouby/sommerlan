@@ -53,12 +53,11 @@ export const action: ActionFunction = async ({ request, params }) => {
   const userId = await requireUserId(request);
   const party = await getCurrentParty(userId);
   const formData = await request.formData();
-
-  invariant(party, "there is no party");
-
   const arrivingAt = formData.get("arrivingAt");
   const departingAt = formData.get("departingAt");
   const action = formData.get("action");
+
+  invariant(party, "there is no party");
 
   invariant(
     typeof arrivingAt === "string" || !arrivingAt,
@@ -104,7 +103,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 export default function ParticipantsPage() {
   const transition = useTransition();
   const submit = useSubmit();
-  const data = useLoaderData() as LoaderData;
+  const data = useLoaderData<LoaderData>();
   const user = useOptionalUser();
   const action = useActionData() as ActionData;
   const participation = data.party?.participants.find(
