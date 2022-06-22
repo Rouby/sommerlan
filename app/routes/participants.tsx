@@ -154,7 +154,6 @@ export default function ParticipantsPage() {
           Bisher haben sich {data.party.participants.length} Teilnehmer für die
           Sommerlan angemeldet.
         </p>
-        {transition.state === "submitting" ? " Speichere..." : null}
         <Group position="center" direction="column">
           <RangeCalendar
             value={value}
@@ -212,13 +211,14 @@ export default function ParticipantsPage() {
               Du kannst deine Anwesenheit im Kalender ändern
             </Text>
           ) : null}
+          {transition.state === "submitting" ? " Speichere..." : null}
         </Group>
 
         {ability.can("read", subject("Party", data.party)) &&
         ability.can("read", "User") ? (
           <>
             <Space h="lg" />
-            <Title order={3}> Teilnehmer Details</Title>
+            <Title order={3}>Teilnehmer Details</Title>
             <Space h="md" />
             <Box
               sx={{
