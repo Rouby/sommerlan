@@ -30,6 +30,7 @@ import {
 } from "~/models/party.server";
 import { getUserId, requireUserId } from "~/session.server";
 import { useOptionalUser } from "~/utils";
+import { dateTimeFormat } from "~/utils/formatter";
 import { json, useLoaderData } from "~/utils/superjson";
 
 type LoaderData = {
@@ -138,13 +139,6 @@ export default function ParticipantsPage() {
       </Container>
     );
   }
-
-  const dateTimeFormat = new Intl.DateTimeFormat("de", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
 
   return (
     <>

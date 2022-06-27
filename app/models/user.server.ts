@@ -71,7 +71,7 @@ export async function verifyLogin(
 export async function getUsers(userId?: string) {
   return prisma.user.findMany({
     where: accessibleBy(await defineAbilityForUser(userId)).User,
-    orderBy: { email: "asc" },
+    orderBy: { createdAt: "asc" },
   });
 }
 

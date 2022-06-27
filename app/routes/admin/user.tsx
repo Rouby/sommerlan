@@ -6,6 +6,7 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import { useAbility } from "~/components";
 import { getUsers, setUserRole } from "~/models/user.server";
 import { getUserId, requireUserId } from "~/session.server";
+import { dateTimeFormat } from "~/utils/formatter";
 import { json, useLoaderData } from "~/utils/superjson";
 
 type LoaderData = {
@@ -61,7 +62,8 @@ export default function AdminUserPage() {
       <Box
         sx={{
           display: "grid",
-          gridTemplateColumns: "max-content max-content min-content",
+          gridTemplateColumns:
+            "max-content max-content min-content max-content",
           gap: 16,
           alignItems: "center",
         }}
@@ -76,6 +78,7 @@ export default function AdminUserPage() {
             ) : (
               <div />
             )}
+            <div>{dateTimeFormat.format(user.createdAt)}</div>
           </Fragment>
         ))}
       </Box>

@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useAbility } from "~/components";
 import { createParty, getParties } from "~/models/party.server";
 import { getUserId, requireUserId } from "~/session.server";
+import { dateTimeFormat } from "~/utils/formatter";
 import { json, useLoaderData } from "~/utils/superjson";
 
 type LoaderData = {
@@ -60,13 +61,6 @@ export default function AdminPartyPage() {
   if (ability.cannot("manage", "Party")) {
     return <div>Du hast keine Zugriffsberechtigung</div>;
   }
-
-  const dateTimeFormat = new Intl.DateTimeFormat("de", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
 
   return (
     <div>
