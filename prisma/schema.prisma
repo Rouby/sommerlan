@@ -47,6 +47,9 @@ model Party {
   name         String?
   participants ParticipantOfParty[]
   workloads    Workload[]
+  entryFee     Int                  @default(2000)
+  entryDeposit Int                  @default(2500)
+  workDeposit  Int                  @default(2500)
 }
 
 model Workload {
@@ -81,9 +84,10 @@ model ParticipantOfParty {
   party   Party  @relation(fields: [partyId], references: [id], onDelete: Cascade)
   partyId String
 
-  arrivingAt  DateTime
-  departingAt DateTime
-  paidMoney   Int?
+  arrivingAt   DateTime
+  departingAt  DateTime
+  paidMoney    Int?
+  donatedMoney Int?
 
   @@id([userId, partyId])
 }
@@ -95,7 +99,7 @@ model News {
 
   title    String
   text     String
-  author   User   @relation(fields: [authorId], references: [id])
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId String
 }
 

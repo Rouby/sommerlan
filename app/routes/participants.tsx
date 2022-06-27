@@ -5,6 +5,7 @@ import {
   Container,
   Group,
   Indicator,
+  NumberInput,
   Space,
   Text,
   Title,
@@ -15,13 +16,14 @@ import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import {
   Form,
   useActionData,
+  useFetcher,
   useSubmit,
   useTransition,
 } from "@remix-run/react";
 import dayjs from "dayjs";
 import { Fragment, useEffect, useRef, useState } from "react";
 import invariant from "tiny-invariant";
-import { Footer, useAbility } from "~/components";
+import { Can, Footer, PopoverButton, useAbility } from "~/components";
 import {
   getCurrentParty,
   joinParty,
@@ -30,7 +32,7 @@ import {
 } from "~/models/party.server";
 import { getUserId, requireUserId } from "~/session.server";
 import { useOptionalUser } from "~/utils";
-import { dateTimeFormat } from "~/utils/formatter";
+import { dateTimeFormat, moneyFormat } from "~/utils/formatter";
 import { json, useLoaderData } from "~/utils/superjson";
 
 type LoaderData = {
@@ -222,7 +224,13 @@ export default function ParticipantsPage() {
               }}
             >
               {data.party.participants.map(
-                ({ user, arrivingAt, departingAt, paidMoney }) => {
+                ({
+                  user,
+                  arrivingAt,
+                  departingAt,
+                  paidMoney,
+                  donatedMoney,
+                }) => {
                   const stay = dayjs(departingAt).diff(arrivingAt, "days");
                   return (
                     <Fragment key={user.id}>
@@ -236,7 +244,42 @@ export default function ParticipantsPage() {
                         )}
                       </Box>
                       <Box>
-                        {paidMoney ? `${paidMoney} EUR` : <MinusIcon />}
+                        <Can I="manage" a="Party">
+                          {paidMoney || donatedMoney ? (
+                            moneyFormat.format(
+                              ((paidMoney ?? 0) + (donatedMoney ?? 0)) / 100
+                            )
+                          ) : (
+                            <MinusIcon />
+                          )}
+                          /
+                          {moneyFormat.format(
+                            (data.party!.entryFee +
+                              data.party!.entryDeposit +
+                              data.party!.workDeposit) /
+                              100
+                          )}
+                          <PopoverButton
+                            variant="subtle"
+                            label="Zahlungsdetails"
+                            title="Zahlung hinzufügen"
+                            withCloseButton
+                            withArrow
+                            width={260}
+                          >
+                            {({ setIsOpen }) => (
+                              <PaymentForm
+                                partyId={data.party!.id}
+                                participantId={user.id}
+                                paidMoney={paidMoney ? paidMoney / 100 : null}
+                                donatedMoney={
+                                  donatedMoney ? donatedMoney / 100 : null
+                                }
+                                onSubmit={() => setIsOpen(false)}
+                              />
+                            )}
+                          </PopoverButton>
+                        </Can>
                       </Box>
                     </Fragment>
                   );
@@ -262,5 +305,52 @@ function isThere(
       dayjs(arrivingAt).startOf("day").isBefore(dayjs(date).endOf("day"))) &&
     (!departingAt ||
       dayjs(departingAt).endOf("day").isAfter(dayjs(date).startOf("day")))
+  );
+}
+
+function PaymentForm({
+  partyId,
+  participantId,
+  paidMoney,
+  donatedMoney,
+  onSubmit,
+}: {
+  partyId: string;
+  participantId: string;
+  paidMoney: number | null;
+  donatedMoney: number | null;
+  onSubmit: () => void;
+}) {
+  const fetcher = useFetcher();
+
+  return (
+    <Form
+      method="post"
+      onSubmit={(evt) => {
+        evt.preventDefault();
+        fetcher.submit(evt.currentTarget, {
+          action: "action/set-payments",
+          method: "post",
+        });
+      }}
+    >
+      <input type="hidden" name="partyId" value={partyId} />
+      <input type="hidden" name="participantId" value={participantId} />
+      <NumberInput
+        label="Zahlung"
+        name="payment"
+        defaultValue={paidMoney ?? 0}
+      />
+      <NumberInput
+        label="Spende"
+        name="donation"
+        defaultValue={donatedMoney ?? 0}
+      />
+      <Group position="right" mt="md">
+        <Button type="submit" size="xs">
+          Speichern
+        </Button>
+      </Group>
+    </Form>
   );
 }

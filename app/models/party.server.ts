@@ -119,3 +119,28 @@ export async function updatePartyAttendance(
     },
   });
 }
+
+export async function updatePayments(
+  partyId: string,
+  userId: string,
+  participantId: string,
+  payment: number | null,
+  donation: number | null
+) {
+  const ability = await defineAbilityForUser(userId);
+
+  ForbiddenError.from(ability).throwUnlessCan("manage", "Party");
+
+  return prisma.participantOfParty.update({
+    where: {
+      userId_partyId: {
+        partyId,
+        userId: participantId,
+      },
+    },
+    data: {
+      paidMoney: payment ? payment : null,
+      donatedMoney: donation ? donation : null,
+    },
+  });
+}
