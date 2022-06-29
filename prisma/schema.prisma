@@ -84,10 +84,11 @@ model ParticipantOfParty {
   party   Party  @relation(fields: [partyId], references: [id], onDelete: Cascade)
   partyId String
 
-  arrivingAt   DateTime
-  departingAt  DateTime
-  paidMoney    Int?
-  donatedMoney Int?
+  arrivingAt     DateTime
+  departingAt    DateTime
+  paidMoney      Int?
+  donatedMoney   Int?
+  pendingPayment Boolean  @default(false)
 
   @@id([userId, partyId])
 }

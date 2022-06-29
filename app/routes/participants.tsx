@@ -12,6 +12,7 @@ import {
 } from "@mantine/core";
 import { RangeCalendar } from "@mantine/dates";
 import { MinusIcon } from "@modulz/radix-icons";
+import { PayPalButtons } from "@paypal/react-paypal-js";
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import {
   Form,
@@ -71,8 +72,6 @@ export const action: ActionFunction = async ({ request, params }) => {
     "invalid departing at"
   );
 
-  console.log(action);
-
   try {
     switch (action) {
       case "join":
@@ -112,6 +111,7 @@ export default function ParticipantsPage() {
   const participation = data.party?.participants.find(
     (p) => p.userId === user?.id
   );
+  const fetcher = useFetcher();
 
   const [value, setValue] = useState<[Date | null, Date | null]>([
     new Date(participation?.arrivingAt ?? data.party?.startDate ?? ""),
@@ -141,6 +141,9 @@ export default function ParticipantsPage() {
       </Container>
     );
   }
+
+  const hasPaidParticipation =
+    (participation?.paidMoney ?? 0) + (participation?.donatedMoney ?? 0) > 0;
 
   return (
     <>
@@ -208,13 +211,114 @@ export default function ParticipantsPage() {
           ) : null}
           {transition.state === "submitting" ? " Speichere..." : null}
         </Group>
-
+        {participation && (
+          <Can I="update" this={subject("ParticipantOfParty", participation)}>
+            <Title order={3} mt="lg" mb="md">
+              Beitrag
+            </Title>
+            {hasPaidParticipation ? (
+              <Box>Du hast deinen Beitrag geleistet!</Box>
+            ) : participation.pendingPayment ? (
+              <Box>Warte auf Bestätigung der Zahlung...</Box>
+            ) : (
+              <Box
+                sx={{
+                  display: "grid",
+                  gap: 8,
+                  gridTemplateColumns: "max-content max-content",
+                }}
+              >
+                {moneyFormat.format(
+                  (data.party.entryFee +
+                    data.party.entryDeposit +
+                    data.party.workDeposit) /
+                    100
+                )}{" "}
+                Teilnahmebeitrag bezahlen
+                <PayPalButtons
+                  style={{
+                    color: "blue",
+                    tagline: false,
+                    height: 30,
+                    layout: "horizontal",
+                  }}
+                  createOrder={(data, actions) => {
+                    return actions.order.create({
+                      purchase_units: [
+                        {
+                          reference_id: user?.id,
+                          payee: {
+                            email_address: "jonathan.burke.1311@googlemail.com",
+                            // merchant_id: "8T5ZB66ASHV3W",
+                          },
+                          amount: {
+                            value: "70",
+                            currency_code: "EUR",
+                            breakdown: {
+                              item_total: {
+                                value: "70",
+                                currency_code: "EUR",
+                              },
+                            },
+                          },
+                          items: [
+                            {
+                              name: "Kostenbeitrag",
+                              quantity: "1",
+                              unit_amount: {
+                                value: "20",
+                                currency_code: "EUR",
+                              },
+                            },
+                            {
+                              name: "Eintrittspfand",
+                              quantity: "1",
+                              unit_amount: {
+                                value: "25",
+                                currency_code: "EUR",
+                              },
+                            },
+                            {
+                              name: "Arbeitspfand",
+                              quantity: "1",
+                              unit_amount: {
+                                value: "25",
+                                currency_code: "EUR",
+                              },
+                            },
+                          ],
+                        },
+                      ],
+                    });
+                  }}
+                  onApprove={({ orderID }, actions) => {
+                    fetcher.submit(
+                      {
+                        orderId: orderID,
+                        partyId: data.party?.id ?? "",
+                      },
+                      { action: "/action/add-payment", method: "post" }
+                    );
+                    return Promise.resolve();
+                  }}
+                />
+              </Box>
+            )}
+            <Text size="xs">
+              Der Teilnahmebeitrag setzt sich zusammen aus{" "}
+              {moneyFormat.format(data.party.entryFee / 100)} (Kostenbeitrag) +{" "}
+              {moneyFormat.format(data.party.entryDeposit / 100)}{" "}
+              (Eintrittspfand) +{" "}
+              {moneyFormat.format(data.party.workDeposit / 100)} (Arbeitspfand)
+            </Text>
+          </Can>
+        )}
         {ability.can("read", subject("Party", data.party)) &&
         ability.can("read", "User") ? (
           <>
-            <Space h="lg" />
-            <Title order={3}>Teilnehmer Details</Title>
-            <Space h="md" />
+            <Title order={3} mt="lg" mb="md">
+              Teilnehmer Details
+            </Title>
             <Box
               sx={{
                 display: "grid",

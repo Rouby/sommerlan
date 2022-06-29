@@ -5,6 +5,7 @@ import {
 } from "@mantine/core";
 import { useColorScheme } from "@mantine/hooks";
 import { NotificationsProvider } from "@mantine/notifications";
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import type {
   LinksFunction,
   LoaderFunction,
@@ -66,6 +67,8 @@ export const loader: LoaderFunction = async ({ request }) => {
     timeZone: prefs.timeZone,
     env: {
       APPLICATION_SERVER_KEY: process.env.APPLICATION_SERVER_KEY,
+      PAYPAL_CLIENT_ID: process.env.PAYPAL_CLIENT_ID,
+      PAYPAL_MERCHANT_ID: process.env.PAYPAL_MERCHANT_ID,
     },
   });
 };
@@ -87,7 +90,16 @@ export default function App() {
           <MantineTheme>
             <NotificationsProvider>
               <Layout>
-                <Outlet />
+                <PayPalScriptProvider
+                  options={{
+                    "client-id": env.PAYPAL_CLIENT_ID ?? "",
+                    "merchant-id": env.PAYPAL_MERCHANT_ID ?? "",
+                    currency: "EUR",
+                    components: "buttons",
+                  }}
+                >
+                  <Outlet />
+                </PayPalScriptProvider>
               </Layout>
             </NotificationsProvider>
           </MantineTheme>

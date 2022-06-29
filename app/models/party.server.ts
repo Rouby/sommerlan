@@ -1,5 +1,6 @@
-import { ForbiddenError } from "@casl/ability";
+import { ForbiddenError, subject } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
+import invariant from "tiny-invariant";
 import { prisma } from "~/db.server";
 import { defineAbilityForUser } from "~/utils/ability.server";
 
@@ -120,16 +121,29 @@ export async function updatePartyAttendance(
   });
 }
 
-export async function updatePayments(
+export async function setAwaitingPayment(
   partyId: string,
   userId: string,
-  participantId: string,
-  payment: number | null,
-  donation: number | null
+  participantId: string
 ) {
   const ability = await defineAbilityForUser(userId);
 
-  ForbiddenError.from(ability).throwUnlessCan("manage", "Party");
+  const participation = await prisma.participantOfParty.findUnique({
+    where: {
+      userId_partyId: {
+        partyId,
+        userId: participantId,
+      },
+    },
+  });
+
+  invariant(participation);
+
+  ForbiddenError.from(ability).throwUnlessCan(
+    "update",
+    subject("ParticipantOfParty", participation),
+    "pendingPayment"
+  );
 
   return prisma.participantOfParty.update({
     where: {
@@ -139,8 +153,50 @@ export async function updatePayments(
       },
     },
     data: {
-      paidMoney: payment ? payment : null,
-      donatedMoney: donation ? donation : null,
+      pendingPayment: true,
+    },
+  });
+}
+
+export async function updatePayments(
+  partyId: string,
+  userId: string | null,
+  participantId: string,
+  payment: number | null,
+  donation?: number | null
+) {
+  if (userId) {
+    const ability = await defineAbilityForUser(userId);
+
+    const participation = await prisma.participantOfParty.findUnique({
+      where: {
+        userId_partyId: {
+          partyId,
+          userId: participantId,
+        },
+      },
+    });
+
+    invariant(participation);
+
+    ForbiddenError.from(ability).throwUnlessCan(
+      "update",
+      subject("ParticipantOfParty", participation),
+      "pendingPayment"
+    );
+  }
+
+  return prisma.participantOfParty.update({
+    where: {
+      userId_partyId: {
+        partyId,
+        userId: participantId,
+      },
+    },
+    data: {
+      paidMoney: payment === 0 ? null : payment,
+      donatedMoney: donation === 0 ? null : donation,
+      pendingPayment: false,
     },
   });
 }

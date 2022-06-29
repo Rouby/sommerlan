@@ -80,6 +80,8 @@ export async function defineAbilityForUser(userId?: string | null) {
       default:
         can("read", "User", { id: userId });
         can("update", "User", { id: userId });
+        can("create", "ParticipantOfParty");
+        can("update", "ParticipantOfParty", "pendingPayment", { userId });
         break;
     }
   }

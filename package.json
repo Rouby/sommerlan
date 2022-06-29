@@ -43,6 +43,7 @@
     "@mantine/spotlight": "^4.2.1",
     "@mantine/ssr": "^4.2.1",
     "@modulz/radix-icons": "^4.0.0",
+    "@paypal/react-paypal-js": "^7.8.1",
     "@prisma/client": "^3.11.1",
     "@remix-run/node": "^1.4.3",
     "@remix-run/react": "^1.4.3",
