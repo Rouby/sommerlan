@@ -18,5 +18,6 @@ declare global {
 interface Window {
   env: {
     APPLICATION_SERVER_KEY: string;
+    PAYPAL_MERCHANT_ID: string;
   };
 }

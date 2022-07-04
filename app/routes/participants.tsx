@@ -145,6 +145,8 @@ export default function ParticipantsPage() {
   const hasPaidParticipation =
     (participation?.paidMoney ?? 0) + (participation?.donatedMoney ?? 0) > 0;
 
+  const enablePaypalButton = false;
+
   return (
     <>
       <Container>
@@ -220,7 +222,7 @@ export default function ParticipantsPage() {
               <Box>Du hast deinen Beitrag geleistet!</Box>
             ) : participation.pendingPayment ? (
               <Box>Warte auf Bestätigung der Zahlung...</Box>
-            ) : (
+            ) : enablePaypalButton ? (
               <Box
                 sx={{
                   display: "grid",
@@ -242,21 +244,30 @@ export default function ParticipantsPage() {
                     height: 30,
                     layout: "horizontal",
                   }}
-                  createOrder={(data, actions) => {
+                  createOrder={(_, actions) => {
                     return actions.order.create({
                       purchase_units: [
                         {
                           reference_id: user?.id,
                           payee: {
-                            email_address: "jonathan.burke.1311@googlemail.com",
-                            // merchant_id: "8T5ZB66ASHV3W",
+                            email_address: window.env.PAYPAL_MERCHANT_ID,
                           },
                           amount: {
-                            value: "70",
+                            value: `${
+                              (data.party!.entryFee +
+                                data.party!.entryDeposit +
+                                data.party!.workDeposit) /
+                              100
+                            }`,
                             currency_code: "EUR",
                             breakdown: {
                               item_total: {
-                                value: "70",
+                                value: `${
+                                  (data.party!.entryFee +
+                                    data.party!.entryDeposit +
+                                    data.party!.workDeposit) /
+                                  100
+                                }`,
                                 currency_code: "EUR",
                               },
                             },
@@ -266,7 +277,7 @@ export default function ParticipantsPage() {
                               name: "Kostenbeitrag",
                               quantity: "1",
                               unit_amount: {
-                                value: "20",
+                                value: data.party!.entryFee.toString(),
                                 currency_code: "EUR",
                               },
                             },
@@ -274,7 +285,7 @@ export default function ParticipantsPage() {
                               name: "Eintrittspfand",
                               quantity: "1",
                               unit_amount: {
-                                value: "25",
+                                value: data.party!.entryDeposit.toString(),
                                 currency_code: "EUR",
                               },
                             },
@@ -282,7 +293,7 @@ export default function ParticipantsPage() {
                               name: "Arbeitspfand",
                               quantity: "1",
                               unit_amount: {
-                                value: "25",
+                                value: data.party!.workDeposit.toString(),
                                 currency_code: "EUR",
                               },
                             },
@@ -303,7 +314,7 @@ export default function ParticipantsPage() {
                   }}
                 />
               </Box>
-            )}
+            ) : null}
             <Text size="xs">
               Der Teilnahmebeitrag setzt sich zusammen aus{" "}
               {moneyFormat.format(data.party.entryFee / 100)} (Kostenbeitrag) +{" "}
