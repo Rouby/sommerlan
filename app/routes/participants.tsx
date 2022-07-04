@@ -338,42 +338,51 @@ export default function ParticipantsPage() {
                 alignItems: "center",
               }}
             >
-              {data.party.participants.map(
-                ({
+              {data.party.participants.map((participation) => {
+                const {
                   user,
                   arrivingAt,
                   departingAt,
                   paidMoney,
                   donatedMoney,
-                }) => {
-                  const stay = dayjs(departingAt).diff(arrivingAt, "days");
-                  return (
-                    <Fragment key={user.id}>
-                      <Box>{user.name}</Box>
-                      <Box>
-                        {stay} Tage
-                        <br />
-                        {dateTimeFormat.formatRange(
-                          new Date(arrivingAt),
-                          new Date(departingAt)
+                } = participation;
+                const stay = dayjs(departingAt).diff(arrivingAt, "days");
+                return (
+                  <Fragment key={user.id}>
+                    <Box>{user.name ?? <Text>Jemand</Text>}</Box>
+                    <Box>
+                      {stay} Nächte
+                      <br />
+                      {dateTimeFormat.formatRange(
+                        new Date(arrivingAt),
+                        new Date(departingAt)
+                      )}
+                    </Box>
+                    <Box>
+                      <Can
+                        I="read"
+                        this={subject("ParticipantOfParty", participation)}
+                        field="paidMoney"
+                      >
+                        {paidMoney || donatedMoney ? (
+                          moneyFormat.format(
+                            ((paidMoney ?? 0) + (donatedMoney ?? 0)) / 100
+                          )
+                        ) : (
+                          <MinusIcon />
                         )}
-                      </Box>
-                      <Box>
-                        <Can I="manage" a="Party">
-                          {paidMoney || donatedMoney ? (
-                            moneyFormat.format(
-                              ((paidMoney ?? 0) + (donatedMoney ?? 0)) / 100
-                            )
-                          ) : (
-                            <MinusIcon />
-                          )}
-                          /
-                          {moneyFormat.format(
-                            (data.party!.entryFee +
-                              data.party!.entryDeposit +
-                              data.party!.workDeposit) /
-                              100
-                          )}
+                        /
+                        {moneyFormat.format(
+                          (data.party!.entryFee +
+                            data.party!.entryDeposit +
+                            data.party!.workDeposit) /
+                            100
+                        )}
+                        <Can
+                          I="update"
+                          this={subject("ParticipantOfParty", participation)}
+                          field="paidMoney"
+                        >
                           <PopoverButton
                             variant="subtle"
                             label="Zahlungsdetails"
@@ -395,11 +404,11 @@ export default function ParticipantsPage() {
                             )}
                           </PopoverButton>
                         </Can>
-                      </Box>
-                    </Fragment>
-                  );
-                }
-              )}
+                      </Can>
+                    </Box>
+                  </Fragment>
+                );
+              })}
             </Box>
           </>
         ) : null}
