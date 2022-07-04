@@ -4,14 +4,16 @@
 // and it will log out the cookie value you can use to interact with the server
 // as that new user.
 
+import type { Role } from "@prisma/client";
 import { installGlobals } from "@remix-run/node/globals";
 import { parse } from "cookie";
+import { prisma } from "~/db.server";
 import { createUser } from "~/models/user.server";
 import { createUserSession } from "~/session.server";
 
 installGlobals();
 
-async function createAndLogin(email: string) {
+async function createAndLogin(email: string, role: Role) {
   if (!email) {
     throw new Error("email required for login");
   }
@@ -20,8 +22,10 @@ async function createAndLogin(email: string) {
   }
 
   const user = await createUser(email, "myreallystrongpassword", {
-    name: "test",
+    name: "test user",
   });
+
+  await prisma.user.update({ where: { email }, data: { role } });
 
   const response = await createUserSession({
     request: new Request(""),
@@ -46,4 +50,4 @@ async function createAndLogin(email: string) {
   );
 }
 
-createAndLogin(process.argv[2]);
+createAndLogin(process.argv[2], process.argv[3] as Role);

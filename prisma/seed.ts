@@ -85,14 +85,14 @@ async function seed() {
   await prisma.news.create({
     data: {
       title: "Super news 1",
-      text: `<h1>Wunderbare News</h1><p>Jeder kann <strong>kommen</strong> und alles wird gut!</p><h3>Sachen die man mitbringen sollte</h3><ul><li>Hullulu</li><li>Kopfkissen</li><li>Schampoo</li></ul><p>Hier noch ein interessanter Link: <a href="https://www.google.de/" rel="noopener noreferrer" target="_blank">Google</a></p><p>Und ein Video:</p><iframe class="ql-video" frameborder="0" allowfullscreen="true" src="https://www.youtube.com/embed/kB2z9YuwzFQ?showinfo=0"></iframe><p><br></p>`,
+      text: `<h1>Wunderbare News</h1><p>Jeder kann <strong>kommen</strong> und alles wird gut!</p><h3>Sachen die man mitbringen sollte</h3><ul><li>Hullulu</li><li>Kopfkissen</li><li>Schampoo</li></ul><p>Hier noch ein interessanter Link: <a href="https://www.google.de/" rel="noopener noreferrer" target="_blank">Google</a></p><p>Und ein Video:</p><p><br></p>`,
       author: { connect: { email: "jonathan.burke.1311@googlemail.com" } },
     },
   });
   await prisma.news.create({
     data: {
       title: "Super news 2",
-      text: `<h1>Wunderbare News</h1><p>Jeder kann <strong>kommen</strong> und alles wird gut!</p><h3>Sachen die man mitbringen sollte</h3><ul><li>Hullulu</li><li>Kopfkissen</li><li>Schampoo</li></ul><p>Hier noch ein interessanter Link: <a href="https://www.google.de/" rel="noopener noreferrer" target="_blank">Google</a></p><p>Und ein Video:</p><iframe class="ql-video" frameborder="0" allowfullscreen="true" src="https://www.youtube.com/embed/kB2z9YuwzFQ?showinfo=0"></iframe><p><br></p>`,
+      text: `<h1>Wunderbare News</h1><p>Jeder kann <strong>kommen</strong> und alles wird gut!</p><h3>Sachen die man mitbringen sollte</h3><ul><li>Hullulu</li><li>Kopfkissen</li><li>Schampoo</li></ul><p>Hier noch ein interessanter Link: <a href="https://www.google.de/" rel="noopener noreferrer" target="_blank">Google</a></p><p>Und ein Video:</p><p><br></p>`,
       author: { connect: { email: "jonathan.burke.1311@googlemail.com" } },
     },
   });
