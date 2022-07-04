@@ -35,7 +35,6 @@ export async function defineAbilityForUser(userId?: string | null) {
   const user = userId ? await getUserById(userId) : null;
 
   can("read", "Party");
-  can("read", "ParticipantOfParty");
   can("read", "News");
   can("read", "Workload");
   cannot("read", "Workload", "assignees");
@@ -45,7 +44,6 @@ export async function defineAbilityForUser(userId?: string | null) {
     switch (user?.role) {
       case "DISABLED":
         cannot("read", "Party");
-        cannot("read", "ParticipantOfParty");
         cannot("read", "News");
         cannot("read", "Workload");
         break;
@@ -81,6 +79,7 @@ export async function defineAbilityForUser(userId?: string | null) {
         can("read", "User", { id: userId });
         can("update", "User", { id: userId });
         can("create", "ParticipantOfParty");
+        can("read", "ParticipantOfParty", "paidMoney", { userId });
         can("update", "ParticipantOfParty", "pendingPayment", { userId });
         break;
     }

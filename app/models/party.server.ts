@@ -9,7 +9,7 @@ export type { User } from "@prisma/client";
 export async function getCurrentParty(userId?: string) {
   const ability = await defineAbilityForUser(userId);
 
-  return prisma.party.findFirst({
+  const party = await prisma.party.findFirst({
     where: {
       AND: [accessibleBy(ability).Party, { endDate: { gte: new Date() } }],
     },
@@ -33,6 +33,26 @@ export async function getCurrentParty(userId?: string) {
       },
     },
   });
+
+  if (!party) {
+    return party;
+  }
+
+  return {
+    ...party,
+    participants: party.participants?.map((p) => ({
+      ...p,
+      user: {
+        ...p.user,
+        name: ability.can("read", subject("User", p.user), "name")
+          ? p.user.name
+          : null,
+        email: ability.can("read", subject("User", p.user), "email")
+          ? p.user.email
+          : null,
+      },
+    })),
+  };
 }
 
 export async function getParties(userId?: string) {
