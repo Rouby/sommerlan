@@ -1,9 +1,9 @@
 {
-  "exclude": ["./cypress", "./app/entry.worker.ts"],
+  "exclude": ["./cypress", "./cypress.config.ts", "./app/entry.worker.ts"],
   "include": ["remix.env.d.ts", "**/*.ts", "**/*.tsx"],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "types": ["vitest/globals"],
+    "types": ["vitest/globals", "jest"],
     "isolatedModules": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",
