@@ -11,8 +11,10 @@ export default function handleRequest(
   remixContext: EntryContext
 ) {
   // TODO get this from context??
-  dayjs.tz.setDefault("Europe/Berlin");
-  dayjs.locale("de");
+  dayjs.tz.setDefault(
+    remixContext.routeData.root.json.timeZone ?? "Europe/Berlin"
+  );
+  dayjs.locale(remixContext.routeData.root.json.locale ?? "de");
 
   const markup = renderToString(
     <RemixServer context={remixContext} url={request.url} />

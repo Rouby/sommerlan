@@ -3,7 +3,6 @@ import {
   MantineProvider,
   type ColorScheme,
 } from "@mantine/core";
-import { useColorScheme } from "@mantine/hooks";
 import { NotificationsProvider } from "@mantine/notifications";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import type {
@@ -19,18 +18,21 @@ import {
   Scripts,
   ScrollRestoration,
   useCatch,
-  useFetcher,
 } from "@remix-run/react";
 import dayjs from "dayjs";
 import "dayjs/locale/de";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { json, useLoaderData } from "~/utils/superjson";
 import { AbilityProvider, Layout } from "./components";
 import { getUser, getUserId } from "./session.server";
 import { defineAbilityForUser } from "./utils/ability.server";
+import {
+  UserPreferencesProvider,
+  useUserPreferences,
+} from "./utils/userPreferences";
 import { getUserPreferences } from "./utils/userPreferences.server";
 
 dayjs.extend(utc);
@@ -52,7 +54,7 @@ type LoaderData = {
   rules: Awaited<ReturnType<typeof defineAbilityForUser>>["rules"];
   preferredColorScheme: "dark" | "light" | null;
   locale: string | null;
-  timeZone: string | null;
+  timeZone: `${string}/${string}` | null;
   env: Record<string, string | undefined>;
 };
 
@@ -62,7 +64,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   return json<LoaderData>({
     user: await getUser(request),
     rules: (await defineAbilityForUser(await getUserId(request))).rules,
-    preferredColorScheme: prefs.theme,
+    preferredColorScheme: prefs.preferredColorScheme,
     locale: prefs.locale,
     timeZone: prefs.timeZone,
     env: {
@@ -74,10 +76,8 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function App() {
-  const { rules, locale, timeZone, env } = useLoaderData<LoaderData>();
-
-  dayjs.tz.setDefault(timeZone ?? dayjs.tz.guess());
-  dayjs.locale(locale ?? "de");
+  const data = useLoaderData<LoaderData>();
+  const { rules, env } = data;
 
   return (
     <html lang="de">
@@ -86,24 +86,26 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <AbilityProvider rules={rules}>
-          <MantineTheme>
-            <NotificationsProvider>
-              <Layout>
-                <PayPalScriptProvider
-                  options={{
-                    "client-id": env.PAYPAL_CLIENT_ID ?? "",
-                    "merchant-id": env.PAYPAL_MERCHANT_ID ?? "",
-                    currency: "EUR",
-                    components: "buttons",
-                  }}
-                >
-                  <Outlet />
-                </PayPalScriptProvider>
-              </Layout>
-            </NotificationsProvider>
-          </MantineTheme>
-        </AbilityProvider>
+        <UserPreferencesProvider value={data}>
+          <AbilityProvider rules={rules}>
+            <MantineTheme>
+              <NotificationsProvider>
+                <Layout>
+                  <PayPalScriptProvider
+                    options={{
+                      "client-id": env.PAYPAL_CLIENT_ID ?? "",
+                      "merchant-id": env.PAYPAL_MERCHANT_ID ?? "",
+                      currency: "EUR",
+                      components: "buttons",
+                    }}
+                  >
+                    <Outlet />
+                  </PayPalScriptProvider>
+                </Layout>
+              </NotificationsProvider>
+            </MantineTheme>
+          </AbilityProvider>
+        </UserPreferencesProvider>
         <ScrollRestoration />
         <Scripts />
         <LiveReload port={8002} />
@@ -118,37 +120,35 @@ export default function App() {
 }
 
 function MantineTheme({ children }: { children: React.ReactNode }) {
-  const { preferredColorScheme } = useLoaderData();
-  const browserPreferredColorScheme = useColorScheme();
-  const persist = useFetcher();
-  const [colorScheme, setColorScheme] = useState<ColorScheme>(
-    preferredColorScheme ?? browserPreferredColorScheme
-  );
+  const [{ preferredColorScheme, timeZone, locale }, setUserPreferences] =
+    useUserPreferences();
+
+  dayjs.tz.setDefault(timeZone);
+  dayjs.locale(locale);
 
   const toggleColorScheme = (value?: ColorScheme) =>
-    setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
+    setUserPreferences({
+      preferredColorScheme:
+        value || (preferredColorScheme === "dark" ? "light" : "dark"),
+    });
 
   useEffect(() => {
-    if (!preferredColorScheme) {
-      setColorScheme(browserPreferredColorScheme);
-    }
+    setUserPreferences({
+      preferredColorScheme: preferredColorScheme,
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [browserPreferredColorScheme]);
-  useEffect(() => {
-    persist.submit(
-      { theme: colorScheme ?? browserPreferredColorScheme },
-      { action: "action/set-theme", method: "post" }
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [colorScheme, browserPreferredColorScheme]);
+  }, [preferredColorScheme]);
 
   return (
     <ColorSchemeProvider
-      colorScheme={colorScheme}
+      colorScheme={preferredColorScheme}
       toggleColorScheme={toggleColorScheme}
     >
       <MantineProvider
-        theme={{ colorScheme, datesLocale: "de" }}
+        theme={{
+          colorScheme: preferredColorScheme,
+          datesLocale: locale,
+        }}
         withNormalizeCSS
         withGlobalStyles
       >

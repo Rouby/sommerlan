@@ -18,15 +18,16 @@ async function getUserPreferences(request: Request) {
   const session = await preferenceStorage.getSession(
     request.headers.get("Cookie")
   );
+
   return {
-    get theme() {
-      const themeValue = session.get("theme");
+    get preferredColorScheme() {
+      const themeValue = session.get("preferredColorScheme");
       return themeValue === "light" || themeValue === "dark"
         ? (themeValue as "dark" | "light")
         : null;
     },
-    set theme(theme: "dark" | "light" | null) {
-      session.set("theme", theme);
+    set preferredColorScheme(theme: "dark" | "light" | null) {
+      session.set("preferredColorScheme", theme);
     },
     get locale() {
       const localeValue = session.get("locale");
@@ -37,11 +38,9 @@ async function getUserPreferences(request: Request) {
     },
     get timeZone() {
       const timeZoneValue = session.get("timeZone");
-      return timeZoneValue === "Europe/Berlin"
-        ? (timeZoneValue as "Europe/Berlin")
-        : null;
+      return timeZoneValue ?? null;
     },
-    set timeZone(timeZone: "Europe/Berlin" | null) {
+    set timeZone(timeZone: `${string}/${string}` | null) {
       session.set("timeZone", timeZone);
     },
     commit() {
