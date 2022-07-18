@@ -1,8 +1,4 @@
-import {
-  ColorSchemeProvider,
-  MantineProvider,
-  type ColorScheme,
-} from "@mantine/core";
+import { ColorSchemeProvider, MantineProvider } from "@mantine/core";
 import { NotificationsProvider } from "@mantine/notifications";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import type {
@@ -24,7 +20,6 @@ import "dayjs/locale/de";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
-import { useEffect } from "react";
 import { json, useLoaderData } from "~/utils/superjson";
 import { AbilityProvider, Layout } from "./components";
 import { getUser, getUserId } from "./session.server";
@@ -120,24 +115,8 @@ export default function App() {
 }
 
 function MantineTheme({ children }: { children: React.ReactNode }) {
-  const [{ preferredColorScheme, timeZone, locale }, setUserPreferences] =
+  const { preferredColorScheme, locale, toggleColorScheme } =
     useUserPreferences();
-
-  dayjs.tz.setDefault(timeZone);
-  dayjs.locale(locale);
-
-  const toggleColorScheme = (value?: ColorScheme) =>
-    setUserPreferences({
-      preferredColorScheme:
-        value || (preferredColorScheme === "dark" ? "light" : "dark"),
-    });
-
-  useEffect(() => {
-    setUserPreferences({
-      preferredColorScheme: preferredColorScheme,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [preferredColorScheme]);
 
   return (
     <ColorSchemeProvider
