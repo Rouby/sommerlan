@@ -19,6 +19,13 @@ async function seed() {
   await prisma.party
     .delete({
       where: {
+        startDate: "2023-07-07T12:00:00Z",
+      },
+    })
+    .catch(() => {});
+  await prisma.party
+    .delete({
+      where: {
         startDate: "2022-07-07T12:00:00Z",
       },
     })
@@ -69,6 +76,12 @@ async function seed() {
     },
   });
 
+  await prisma.party.create({
+    data: {
+      startDate: "2023-07-07T12:00:00Z",
+      endDate: "2023-07-16T12:00:00Z",
+    },
+  });
   await prisma.party.create({
     data: {
       startDate: "2022-07-07T12:00:00Z",

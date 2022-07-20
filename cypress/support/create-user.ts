@@ -5,7 +5,7 @@
 // as that new user.
 
 import type { Role } from "@prisma/client";
-import { installGlobals } from "@remix-run/node/globals";
+import { installGlobals } from "@remix-run/node";
 import { parse } from "cookie";
 import { prisma } from "~/db.server";
 import { createUser } from "~/models/user.server";
@@ -28,7 +28,7 @@ async function createAndLogin(email: string, role: Role) {
   await prisma.user.update({ where: { email }, data: { role } });
 
   const response = await createUserSession({
-    request: new Request(""),
+    request: new Request("http://localhost:3000"),
     userId: user.id,
     remember: false,
     redirectTo: "/",

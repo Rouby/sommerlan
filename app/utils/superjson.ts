@@ -3,7 +3,7 @@ import {
   useLoaderData as useRemixLoaderData,
   useMatches as useRemixMatches,
 } from "@remix-run/react";
-import type { RouteData } from "@remix-run/react/routeData";
+import type { RouteData } from "@remix-run/react/dist/routeData";
 import { useMemo } from "react";
 import { deserialize, serialize } from "superjson";
 import type { SuperJSONResult } from "superjson/dist/types";
