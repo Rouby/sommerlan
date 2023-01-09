@@ -93,6 +93,30 @@ export async function createParty(
   });
 }
 
+export async function updateParty(
+  partyId: string,
+  userId: string,
+  attributes: {
+    startDate?: string;
+    endDate?: string;
+    name?: string;
+    entryFee?: number;
+    entryDeposit?: number;
+    workDeposit?: number;
+  }
+) {
+  const ability = await defineAbilityForUser(userId);
+
+  ForbiddenError.from(ability).throwUnlessCan("update", "Party");
+
+  return prisma.party.update({
+    where: { id: partyId },
+    data: {
+      ...attributes,
+    },
+  });
+}
+
 export async function joinParty(
   partyId: string,
   userId: string,

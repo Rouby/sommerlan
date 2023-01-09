@@ -10,6 +10,9 @@ export default function AdminPage() {
       <Button component={Link} to="push" variant="subtle">
         Benachrichtigungen senden
       </Button>
+      <Button component={Link} to="party" variant="subtle">
+        LAN planen
+      </Button>
     </Container>
   );
 }

@@ -1,13 +1,14 @@
-import { Accordion, Button, Group } from "@mantine/core";
+import { Accordion, Button, Group, NumberInput } from "@mantine/core";
 import { DateRangePicker } from "@mantine/dates";
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
-import { Form } from "@remix-run/react";
+import { Form , useFetcher} from "@remix-run/react";
 import { useState } from "react";
 import { useAbility } from "~/components";
 import { createParty, getParties } from "~/models/party.server";
 import { getUserId, requireUserId } from "~/session.server";
 import { dateTimeFormat } from "~/utils/formatter";
 import { json, useLoaderData } from "~/utils/superjson";
+import { CurrencyEuro } from 'tabler-icons-react';
 
 type LoaderData = {
   parties: Awaited<ReturnType<typeof getParties>>;
@@ -57,6 +58,8 @@ export default function AdminPartyPage() {
   const data = useLoaderData<LoaderData>();
 
   const [value, setValue] = useState<[Date | null, Date | null]>([null, null]);
+  
+  const fetcher = useFetcher();
 
   if (ability.cannot("manage", "Party")) {
     return <div>Du hast keine Zugriffsberechtigung</div>;
@@ -100,6 +103,24 @@ export default function AdminPartyPage() {
               </>
             }
           >
+            <NumberInput
+              label="Eintrittspreis"
+              defaultValue={party.entryFee / 100}
+              min={0}
+              step={1}
+              icon={<CurrencyEuro />}
+              onChange={(value) => {
+                fetcher.submit(
+                  {
+                    id: party.id,
+                    attributes: JSON.stringify({
+                      entryFee: value && (value * 100)
+                    })
+                  },
+                  { action: "/action/update-party", method: "post" }
+                );
+              }}
+            />
             Teilnehmer:
             {party.participants.map((participant) => (
               <div key={participant.userId}>{participant.user.name}</div>
