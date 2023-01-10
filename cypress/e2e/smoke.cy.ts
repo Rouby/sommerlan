@@ -15,10 +15,11 @@ describe("smoke tests", () => {
 
     cy.visit("/");
     cy.findByRole("link", { name: /anmelden/i }).click();
+    cy.findByRole("link", { name: /account anmelden/i }).click();
 
+    cy.findByRole("textbox", { name: /name/i }).type(loginForm.name);
     cy.findByRole("textbox", { name: /email/i }).type(loginForm.email);
     cy.findByLabelText(/passwort/i).type(loginForm.password);
-    cy.findByRole("textbox", { name: /name/i }).type(loginForm.name);
     cy.findByRole("button", { name: /account anlegen/i }).click();
 
     cy.findByRole("link", { name: new RegExp(loginForm.name, "i") }).should(
