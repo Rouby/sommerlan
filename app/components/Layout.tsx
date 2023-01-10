@@ -81,7 +81,7 @@ function UserInfo({ ...props }) {
 
   if (!user) {
     return (
-      <Button component={Link} to="/join" variant="subtle">
+      <Button component={Link} to="/login" variant="subtle">
         Anmelden
       </Button>
     );
