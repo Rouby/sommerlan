@@ -1,14 +1,14 @@
 import { Accordion, Button, Group, NumberInput } from "@mantine/core";
 import { DateRangePicker } from "@mantine/dates";
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
-import { Form , useFetcher} from "@remix-run/react";
+import { Form, useFetcher } from "@remix-run/react";
 import { useState } from "react";
+import { CurrencyEuro } from "tabler-icons-react";
 import { useAbility } from "~/components";
 import { createParty, getParties } from "~/models/party.server";
 import { getUserId, requireUserId } from "~/session.server";
 import { dateTimeFormat } from "~/utils/formatter";
 import { json, useLoaderData } from "~/utils/superjson";
-import { CurrencyEuro } from 'tabler-icons-react';
 
 type LoaderData = {
   parties: Awaited<ReturnType<typeof getParties>>;
@@ -58,7 +58,7 @@ export default function AdminPartyPage() {
   const data = useLoaderData<LoaderData>();
 
   const [value, setValue] = useState<[Date | null, Date | null]>([null, null]);
-  
+
   const fetcher = useFetcher();
 
   if (ability.cannot("manage", "Party")) {
@@ -103,24 +103,62 @@ export default function AdminPartyPage() {
               </>
             }
           >
-            <NumberInput
-              label="Eintrittspreis"
-              defaultValue={party.entryFee / 100}
-              min={0}
-              step={1}
-              icon={<CurrencyEuro />}
-              onChange={(value) => {
-                fetcher.submit(
-                  {
-                    id: party.id,
-                    attributes: JSON.stringify({
-                      entryFee: value && (value * 100)
-                    })
-                  },
-                  { action: "/action/update-party", method: "post" }
-                );
-              }}
-            />
+            <Group>
+              <NumberInput
+                label="Eintrittspreis"
+                defaultValue={party.entryFee / 100}
+                min={0}
+                step={1}
+                icon={<CurrencyEuro />}
+                onChange={(value) => {
+                  fetcher.submit(
+                    {
+                      id: party.id,
+                      attributes: JSON.stringify({
+                        entryFee: value && value * 100,
+                      }),
+                    },
+                    { action: "/action/update-party", method: "post" }
+                  );
+                }}
+              />
+              <NumberInput
+                label="Eintrittspfand"
+                defaultValue={party.entryDeposit / 100}
+                min={0}
+                step={1}
+                icon={<CurrencyEuro />}
+                onChange={(value) => {
+                  fetcher.submit(
+                    {
+                      id: party.id,
+                      attributes: JSON.stringify({
+                        entryDeposit: value && value * 100,
+                      }),
+                    },
+                    { action: "/action/update-party", method: "post" }
+                  );
+                }}
+              />
+              <NumberInput
+                label="Arbeitspfand"
+                defaultValue={party.workDeposit / 100}
+                min={0}
+                step={1}
+                icon={<CurrencyEuro />}
+                onChange={(value) => {
+                  fetcher.submit(
+                    {
+                      id: party.id,
+                      attributes: JSON.stringify({
+                        workDeposit: value && value * 100,
+                      }),
+                    },
+                    { action: "/action/update-party", method: "post" }
+                  );
+                }}
+              />
+            </Group>
             Teilnehmer:
             {party.participants.map((participant) => (
               <div key={participant.userId}>{participant.user.name}</div>
