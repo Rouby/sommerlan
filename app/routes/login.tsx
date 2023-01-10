@@ -116,6 +116,7 @@ export default function LoginPage() {
           name="remember"
           label="Login speichern"
           mt="md"
+          defaultChecked
         />
 
         <input type="hidden" name="redirectTo" value={redirectTo} />
