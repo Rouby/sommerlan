@@ -19,4 +19,4 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     volumes:
-      - /media/hdd-1/sommerlan/data-${BRANCH}:/var/lib/postgresql/data
+      - ${WORKDIR}/data-${BRANCH}:/var/lib/postgresql/data

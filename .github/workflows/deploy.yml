@@ -215,6 +215,7 @@ jobs:
           docker-compose -p sommerlan-staging up -d
           docker-compose -p sommerlan-staging run --rm app yarn prisma migrate deploy
         env:
+          WORKDIR: "/home/pi/sommerlan"
           BRANCH: ${{ github.ref_name }}
           SHA: ${{ github.sha }}
           APP_PORT: "53346"
@@ -228,6 +229,7 @@ jobs:
           docker-compose -p sommerlan-production up -d
           docker-compose -p sommerlan-production run --rm app yarn prisma migrate deploy
         env:
+          WORKDIR: "/home/pi/sommerlan"
           BRANCH: ${{ github.ref_name }}
           SHA: ${{ github.sha }}
           APP_PORT: "53345"
