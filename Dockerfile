@@ -1,5 +1,5 @@
 # base node image
-FROM node:16 as base
+FROM node:18 as base
 
 # set for base and all layer that inherit from it
 ENV NODE_ENV production

@@ -4,6 +4,7 @@ node_modules
 /public/entry.worker.js
 /public/build
 .env
+service-account.json
 
 /cypress/screenshots
 /cypress/videos
