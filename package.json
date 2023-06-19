@@ -8,7 +8,9 @@
     "dev": "concurrently --kill-others \"yarn dev:client\" \"yarn dev:server\"",
     "dev:client": "vite",
     "dev:server": "wds --watch ./src/server/index.ts",
-    "build": "vite build",
+    "build": "yarn build:client && yarn build:server",
+    "build:client": "vite build",
+    "build:server": "tsc -b ./src/server",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "test": "vitest",
     "typecheck": "tsc -b"
@@ -22,6 +24,7 @@
   "dependencies": {
     "@casl/ability": "^6.5.0",
     "@casl/react": "^3.1.0",
+    "@fastify/static": "^6.10.2",
     "@fastify/websocket": "^8.1.0",
     "@mantine/core": "^6.0.13",
     "@mantine/dates": "^6.0.13",
@@ -35,8 +38,10 @@
     "@trpc/client": "^10.31.0",
     "@trpc/server": "^10.31.0",
     "dayjs": "^1.11.8",
+    "dotenv": "^16.3.1",
     "fastify": "^4.18.0",
     "framer-motion": "^10.12.16",
+    "google-spreadsheet": "^3.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tabler-icons-react": "^1.56.0",
@@ -44,6 +49,8 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@types/google-spreadsheet": "^3.3.2",
+    "@types/node": "^20.3.1",
     "@types/react": "^18.2.13",
     "@types/react-dom": "^18.2.6",
     "@typescript-eslint/eslint-plugin": "^5.60.0",

@@ -39,26 +39,20 @@ COPY --from=deps /myapp/.yarnrc.yml /myapp/.yarnrc.yml
 COPY --from=deps /myapp/package.json /myapp/package.json
 COPY --from=deps /myapp/yarn.lock /myapp/yarn.lock
 
-ADD prisma .
-RUN yarn prisma generate
-
 ADD . .
 RUN yarn build
 
 # Finally, build the production image with minimal footprint
 FROM base
 
-ENV DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres
-ENV PORT="8080"
 ENV NODE_ENV="production"
 
 WORKDIR /myapp
 
 COPY --from=production-deps /myapp/node_modules /myapp/node_modules
-COPY --from=build /myapp/node_modules/.prisma /myapp/node_modules/.prisma
 COPY --from=build /myapp/.yarn /myapp/.yarn
 
-COPY --from=build /myapp/build /myapp/build
+COPY --from=build /myapp/dist /myapp/dist
 COPY --from=build /myapp/public /myapp/public
 ADD . .
 

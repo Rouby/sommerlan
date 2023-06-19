@@ -5,18 +5,9 @@ services:
     image: sommerlan-app:${BRANCH}-${SHA}
     restart: unless-stopped
     environment:
-      DATABASE_URL: postgresql://postgres:postgres@db:5432/sommerlan?schema=public
       SESSION_SECRET: sommerlan-rocks-cookies
       APPLICATION_SERVER_KEY: "${VAPID_PUBLIC_KEY}"
       APPLICATION_SERVER_PRIVATE_KEY: "${VAPID_PRIVATE_KEY}"
       GCM_KEY: "${GCM_KEY}"
     ports:
       - "${APP_PORT}:8080"
-  db:
-    image: postgres:14.2
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    volumes:
-      - ${WORKDIR}/data-${BRANCH}:/var/lib/postgresql/data
