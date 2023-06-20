@@ -46,6 +46,7 @@ RUN yarn build
 FROM base
 
 ENV NODE_ENV="production"
+ENV PORT=8080
 
 WORKDIR /myapp
 

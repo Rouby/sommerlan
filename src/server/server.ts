@@ -1,3 +1,4 @@
+import cors from "@fastify/cors";
 import staticfs from "@fastify/static";
 import ws from "@fastify/websocket";
 import { fastifyTRPCPlugin } from "@trpc/server/adapters/fastify";
@@ -16,8 +17,9 @@ export function createServer(opts: ServerOptions) {
   const dev = opts.dev ?? true;
   const port = opts.port ?? 3000;
   const prefix = opts.prefix ?? "/trpc";
-  const server = fastify({ logger: dev });
+  const server = fastify({ logger: dev, disableRequestLogging: true });
 
+  server.register(cors, {});
   server.register(ws);
   server.register(fastifyTRPCPlugin, {
     prefix,

@@ -70,48 +70,6 @@ jobs:
       - name: ⚡ Run vitest
         run: yarn test -- --coverage
 
-  cypress:
-    name: ⚫️ Cypress
-    runs-on: ubuntu-latest
-    steps:
-      - name: 🛑 Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.9.1
-
-      - name: ⬇️ Checkout repo
-        uses: actions/checkout@v3
-
-      - name: 🏄 Copy test env vars
-        run: cp .env.example .env
-
-      - name: ⎔ Setup node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
-
-      - name: 🐳 Docker compose
-        # the sleep is just there to give time for postgres to get started
-        run: docker-compose -f ./docker-compose-e2e.yml -p e2e up -d && sleep 3
-
-      - name: 🛠 Setup Database
-        run: yarn prisma migrate reset --force
-        env:
-          DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/postgres"
-
-      - name: ⚙️ Build
-        run: yarn build
-
-      - name: 🌳 Cypress run
-        uses: cypress-io/github-action@v3
-        with:
-          start: yarn start:mocks
-          wait-on: "http://localhost:8811"
-        env:
-          PORT: "8811"
-          DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/postgres"
-
   build:
     name: 🐳 Build
     # only build/deploy main branch on pushes
@@ -184,7 +142,7 @@ jobs:
   deploy:
     name: 🚀 Deploy
     runs-on: self-hosted
-    needs: [lint, typecheck, vitest, cypress, build]
+    needs: [lint, typecheck, vitest, build]
     # only build/deploy main branch on pushes
     if: ${{ (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push' }}
 
@@ -213,26 +171,32 @@ jobs:
         if: ${{ github.ref == 'refs/heads/dev' }}
         run: |
           docker compose -p sommerlan-staging up -d
-          docker compose -p sommerlan-staging run --rm app yarn prisma migrate deploy
         env:
           WORKDIR: "/home/pi/sommerlan"
           BRANCH: ${{ github.ref_name }}
           SHA: ${{ github.sha }}
           APP_PORT: "53346"
+          APP_ORIGIN: "https://staging.sommerlan.rocks/"
           VAPID_PUBLIC_KEY: ${{ secrets.VAPID_PUBLIC_KEY }}
           VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
-          GCM_KEY: ${{ secrets.GCM_KEY }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
+          GOOGLE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
+          GOOGLE_PRIVATE_KEY: ${{ secrets.GOOGLE_PRIVATE_KEY }}
 
       - name: 🚀 Deploy Production
         if: ${{ github.ref == 'refs/heads/main' }}
         run: |
           docker compose -p sommerlan-production up -d
-          docker compose -p sommerlan-production run --rm app yarn prisma migrate deploy
         env:
           WORKDIR: "/home/pi/sommerlan"
           BRANCH: ${{ github.ref_name }}
           SHA: ${{ github.sha }}
           APP_PORT: "53345"
+          APP_ORIGIN: "https://sommerlan.rocks/"
           VAPID_PUBLIC_KEY: ${{ secrets.VAPID_PUBLIC_KEY }}
           VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
-          GCM_KEY: ${{ secrets.GCM_KEY }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
+          GOOGLE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
+          GOOGLE_PRIVATE_KEY: ${{ secrets.GOOGLE_PRIVATE_KEY }}
