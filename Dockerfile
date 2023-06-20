@@ -57,4 +57,4 @@ COPY --from=build /myapp/dist /myapp/dist
 COPY --from=build /myapp/public /myapp/public
 ADD . .
 
-CMD ["yarn", "start"]
+CMD ["node", "dist/server/index"]
