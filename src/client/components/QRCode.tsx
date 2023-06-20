@@ -4,7 +4,7 @@ import { toDataURL } from "qrcode";
 export function QRCode({ data }: { data: unknown }) {
   const { data: src } = useQuery(
     ["qrcode", data],
-    ({ queryKey: [_, data] }) => toDataURL(JSON.stringify(data)),
+    ({ queryKey: [, data] }) => toDataURL(JSON.stringify(data)),
     { refetchOnWindowFocus: false, staleTime: Infinity }
   );
 

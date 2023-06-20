@@ -27,9 +27,9 @@ export function LoginFlow() {
 
           console.log(user);
         })
-        .catch(() => {});
+        .catch(() => void 0);
     }
-  }, []);
+  }, [generateLoginOptions, login]);
 
   return (
     <>

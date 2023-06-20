@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { GoogleSpreadsheet } from "google-spreadsheet";
 
 export async function getSheet() {

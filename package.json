@@ -12,8 +12,8 @@
     "build:client": "vite build",
     "build:server": "tsc -b ./src/server",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "test": "vitest",
-    "typecheck": "tsc -b"
+    "test": "vitest --passWithNoTests",
+    "typecheck": "tsc -p ./src/server --noEmit && tsc -p ./src/client --noEmit"
   },
   "prettier": {},
   "eslintIgnore": [

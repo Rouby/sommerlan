@@ -36,21 +36,26 @@ export const authRouter = router({
     )
     .mutation(async (req) => {
       try {
-        const expectedChallenge = issuedChallenges.get(req.input.userId)!;
+        const expectedChallenge = issuedChallenges.get(req.input.userId);
+
+        if (!expectedChallenge) {
+          throw new Error("No challenge issued");
+        }
+
         const verification = await verifyRegistrationResponse({
           expectedChallenge,
           expectedOrigin,
           response: req.input.response,
           requireUserVerification: true,
         });
-        // TODO store user
-        console.log(verification);
+
         if (verification.verified && verification.registrationInfo) {
           const { credentialPublicKey, credentialID, counter } =
             verification.registrationInfo;
 
           const user = new User({
-            id: req.input.userId as any,
+            id: req.input
+              .userId as `${string}-${string}-${string}-${string}-${string}`,
             devices: [
               {
                 credentialPublicKey: Array.from(credentialPublicKey),
@@ -129,7 +134,12 @@ export const authRouter = router({
       }
 
       try {
-        const expectedChallenge = issuedChallenges.get(req.input.userId)!;
+        const expectedChallenge = issuedChallenges.get(req.input.userId);
+
+        if (!expectedChallenge) {
+          throw new Error("No challenge issued");
+        }
+
         const verification = await verifyAuthenticationResponse({
           expectedChallenge,
           expectedOrigin,

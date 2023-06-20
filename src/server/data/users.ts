@@ -2,6 +2,7 @@ import { randomUUID } from "crypto";
 import { getSheet } from "./api";
 
 type Values<T> = Partial<
+  // eslint-disable-next-line @typescript-eslint/ban-types
   Pick<T, { [K in keyof T]: T[K] extends Function ? never : K }[keyof T]>
 >;
 
@@ -12,7 +13,7 @@ export class User {
     credentialPublicKey: number[];
     credentialID: number[];
     counter: number;
-    transports?: any[];
+    transports?: ("ble" | "internal" | "nfc" | "usb" | "cable" | "hybrid")[];
   }[] = [];
 
   constructor(props: Values<User> = {}) {
