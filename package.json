@@ -25,6 +25,7 @@
     "@casl/ability": "^6.5.0",
     "@casl/react": "^3.1.0",
     "@emotion/react": "^11.11.1",
+    "@fastify/cookie": "^8.3.0",
     "@fastify/cors": "^8.3.0",
     "@fastify/static": "^6.10.2",
     "@fastify/websocket": "^8.1.0",

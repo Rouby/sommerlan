@@ -8,9 +8,7 @@ import { colorSchemeAtom } from "./state";
 import { trpc } from "./utils";
 
 const wsClient = createWSClient({
-  url: import.meta.env.DEV
-    ? "ws://localhost:2022/trpc"
-    : `wss://${location.host}/trpc`,
+  url: `ws${location.protocol === "https" ? "s" : ""}://${location.host}/trpc`,
 });
 
 const queryClient = new QueryClient();
@@ -23,7 +21,7 @@ const trpcClient = trpc.createClient({
         client: wsClient,
       }),
       false: httpBatchLink({
-        url: import.meta.env.DEV ? "http://localhost:2022/trpc" : "/trpc",
+        url: "/trpc",
         async headers() {
           let token;
           try {

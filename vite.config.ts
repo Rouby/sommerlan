@@ -8,4 +8,13 @@ export default defineConfig({
     outDir: "./dist/client",
     sourcemap: true,
   },
+  server: {
+    proxy: {
+      "/trpc": {
+        target: "http://localhost:2022",
+        changeOrigin: true,
+        ws: true,
+      },
+    },
+  },
 });

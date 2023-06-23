@@ -1,3 +1,4 @@
+import cookie from "@fastify/cookie";
 import cors from "@fastify/cors";
 import staticfs from "@fastify/static";
 import ws from "@fastify/websocket";
@@ -22,6 +23,7 @@ export function createServer(opts: ServerOptions) {
     disableRequestLogging: process.env.NODE_ENV !== "production",
   });
 
+  server.register(cookie, { secret: process.env.SESSION_SECRET });
   server.register(cors, {});
   server.register(ws);
   server.register(fastifyTRPCPlugin, {

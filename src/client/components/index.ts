@@ -1,4 +1,5 @@
 export * from "./AuthorizeOtherDevice";
 export * from "./Can";
 export * from "./LAN";
-export * from "./LoginFlow";
+export * from "./SignUpButton";
+export * from "./UserButton";

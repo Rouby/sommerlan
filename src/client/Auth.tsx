@@ -8,13 +8,16 @@ import { trpc } from "./utils";
 export function Authenticate() {
   const [token, setToken] = useAtom(tokenAtom);
   const setAuthenticated = useSetAtom(authenticatedAtom);
-  const { data: newToken, error } = trpc.auth.validateToken.useQuery(void 0, {
-    enabled: !!token,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-    retry: false,
-  });
+  const { data: newToken, error } = trpc.auth.validateToken.useQuery(
+    token?.split(".")[0],
+    {
+      enabled: !!token,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      retry: false,
+    }
+  );
 
   useEffect(() => {
     if (
@@ -26,7 +29,7 @@ export function Authenticate() {
     } else if (newToken) {
       setToken(newToken);
     }
-  }, [newToken, error, setAuthenticated, token, setToken]);
+  }, [newToken, error, setAuthenticated, setToken]);
 
   return <Outlet />;
 }

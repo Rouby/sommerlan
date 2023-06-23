@@ -1,4 +1,4 @@
-import { Group } from "@mantine/core";
+import { Group, LoadingOverlay } from "@mantine/core";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { trpc } from "../utils";
 
@@ -19,13 +19,13 @@ export function AuthorizeOtherDevice({
     }
   }, [active, startScanning, stopScanning]);
 
-  const { mutateAsync: authorizeRequest } =
+  const { mutateAsync: authorizeRequest, isLoading } =
     trpc.auth.authorizeLoginRequest.useMutation();
 
   useEffect(() => {
     if (data && typeof data.requestId === "string") {
+      stopScanning();
       authorizeRequest({ requestId: data.requestId }).then(() => {
-        stopScanning();
         onClose();
       });
     }
@@ -34,6 +34,7 @@ export function AuthorizeOtherDevice({
 
   return (
     <Group position="center">
+      <LoadingOverlay visible={isLoading} />
       Scan QR code on another device to accept sign in request.
       <video ref={video} width={300} />
     </Group>
@@ -43,15 +44,35 @@ export function AuthorizeOtherDevice({
 function useQRCodeScanner() {
   const video = useRef<HTMLVideoElement>(null);
   const stream = useRef<MediaStream | null>(null);
-  const [isScanning, setIsScanning] = useState(false);
+  const isScanning = useRef(false);
   const [data, setData] = useState<Record<string, unknown> | null>(null);
 
   const startScanning = useCallback(() => {
+    if (isScanning.current) {
+      return;
+    }
+
+    isScanning.current = true;
+
     setData(null);
 
     const barcodeDetector = new BarcodeDetector({ formats: ["qr_code"] });
 
-    const scan = async () => {
+    navigator.mediaDevices
+      .getUserMedia({
+        video: { facingMode: { exact: "environment" } },
+      })
+      .then((media) => {
+        stream.current = media;
+        if (video.current) {
+          video.current.srcObject = media;
+          video.current.play().then(scan);
+        } else {
+          stream.current.getTracks().forEach((track) => track.stop());
+        }
+      });
+
+    async function scan() {
       if (video.current) {
         const [code] = await barcodeDetector.detect(video.current);
 
@@ -61,9 +82,9 @@ function useQRCodeScanner() {
 
             if (data.__$app === "SommerLAN") {
               video.current.pause();
-              video.current.srcObject = null;
               stream.current?.getTracks().forEach((track) => track.stop());
-              setIsScanning(false);
+              video.current.srcObject = null;
+              isScanning.current = false;
               setData(data);
               return;
             }
@@ -74,24 +95,7 @@ function useQRCodeScanner() {
       }
 
       requestAnimationFrame(scan);
-    };
-
-    navigator.mediaDevices
-      .getUserMedia({
-        video: { facingMode: { exact: "environment" } },
-      })
-      .then((media) => {
-        stream.current = media;
-        if (video.current) {
-          video.current.srcObject = media;
-          video.current.play().then(() => {
-            setIsScanning(true);
-            scan();
-          });
-        } else {
-          stream.current.getTracks().forEach((track) => track.stop());
-        }
-      });
+    }
   }, []);
 
   const stopScanning = useCallback(() => {
@@ -100,10 +104,10 @@ function useQRCodeScanner() {
       video.current.srcObject = null;
     }
     stream.current?.getTracks().forEach((track) => track.stop());
-    setIsScanning(false);
+    isScanning.current = false;
   }, []);
 
-  return { video, startScanning, stopScanning, isScanning, data };
+  return { video, startScanning, stopScanning, data };
 }
 
 declare global {

@@ -15,7 +15,7 @@ import { User } from "../../data";
 import { createAbility } from "../ability";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 
-const issuedChallenges = new Map<string, string>();
+const issuedChallenges = new Set<string>();
 
 const expectedOrigin = process.env.APP_ORIGIN ?? "http://localhost:5173";
 const rpID =
@@ -42,16 +42,16 @@ export const authRouter = router({
       })
     )
     .mutation(async (req) => {
+      const expectedChallenge = req.ctx.req.cookies.challenge;
+
+      if (!expectedChallenge) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Challenge not found",
+        });
+      }
+
       try {
-        const expectedChallenge = issuedChallenges.get(req.input.userId);
-
-        if (!expectedChallenge) {
-          throw new TRPCError({
-            code: "NOT_FOUND",
-            message: "Challenge not found",
-          });
-        }
-
         const verification = await verifyRegistrationResponse({
           expectedChallenge,
           expectedOrigin,
@@ -80,7 +80,7 @@ export const authRouter = router({
           return signToken(user);
         }
       } finally {
-        issuedChallenges.delete(req.input.userId);
+        issuedChallenges.delete(expectedChallenge);
       }
     }),
 
@@ -103,7 +103,13 @@ export const authRouter = router({
         supportedAlgorithmIDs: [-7, -257],
       });
 
-      issuedChallenges.set(id, options.challenge);
+      issuedChallenges.add(options.challenge);
+      req.ctx.res.cookie("challenge", options.challenge, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+        maxAge: 60000,
+      });
 
       return options;
     }),
@@ -111,7 +117,6 @@ export const authRouter = router({
   login: publicProcedure
     .input(
       z.object({
-        userId: z.string(),
         response: z.object({
           id: z.string(),
           rawId: z.string(),
@@ -127,86 +132,87 @@ export const authRouter = router({
       })
     )
     .mutation(async (req) => {
-      const user = await User.findById(req.input.userId);
-
-      if (!user) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "User not found" });
-      }
-
       const credId = Array.from(
         base64url.toBuffer(req.input.response.rawId)
       ).join(",");
-      const dbAuthenticator = user.devices.find(
+      const user = (await User.all()).find((user) =>
+        user.devices.find((dev) => dev.credentialID.join(",") === credId)
+      );
+      const authenticator = user?.devices.find(
         (dev) => dev.credentialID.join(",") === credId
       );
 
-      if (!dbAuthenticator) {
+      if (!user || !authenticator) {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Authenticator not found",
         });
       }
 
+      const expectedChallenge = req.ctx.req.cookies.challenge;
+
+      if (!expectedChallenge) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Challenge not found",
+        });
+      }
+
       try {
-        const expectedChallenge = issuedChallenges.get(req.input.userId);
-
-        if (!expectedChallenge) {
-          throw new TRPCError({
-            code: "NOT_FOUND",
-            message: "Challenge not found",
-          });
-        }
-
         const verification = await verifyAuthenticationResponse({
           expectedChallenge,
           expectedOrigin,
           response: req.input.response,
           expectedRPID: rpID,
           authenticator: {
-            counter: dbAuthenticator.counter,
-            credentialID: Uint8Array.from(dbAuthenticator.credentialID),
+            counter: authenticator.counter,
+            credentialID: Uint8Array.from(authenticator.credentialID),
             credentialPublicKey: Uint8Array.from(
-              dbAuthenticator.credentialPublicKey
+              authenticator.credentialPublicKey
             ),
-            transports: dbAuthenticator.transports,
+            transports: authenticator.transports,
           },
           requireUserVerification: true,
         });
 
         if (verification.verified) {
-          dbAuthenticator.counter = verification.authenticationInfo.newCounter;
+          authenticator.counter = verification.authenticationInfo.newCounter;
           await user.save();
 
           return signToken(user);
         }
       } finally {
-        issuedChallenges.delete(req.input.userId);
+        issuedChallenges.delete(expectedChallenge);
       }
     }),
 
   generateLoginOptions: publicProcedure
-    .input(z.object({ userId: z.string() }))
+    .input(z.object({ userId: z.string().nullish() }))
     .mutation(async (req) => {
-      const user = await User.findById(req.input.userId);
-
-      if (!user) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "User not found" });
-      }
+      const user = req.input.userId
+        ? await User.findById(req.input.userId)
+        : null;
 
       const options = generateAuthenticationOptions({
         rpID,
         userVerification: "preferred",
         timeout: 60000,
-        allowCredentials: user.devices.map((dev) => ({
+        allowCredentials: user?.devices.map((dev) => ({
           id: Uint8Array.from(dev.credentialID),
           type: "public-key",
           transports: dev.transports,
         })),
       });
 
-      issuedChallenges.set(req.input.userId, options.challenge);
+      issuedChallenges.add(options.challenge);
+      req.ctx.res.cookie("challenge", options.challenge, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+        maxAge: 60000,
+      });
 
-      return options;
+      return { userId: user?.id, options };
     }),
 
   loginFromOtherDevice: publicProcedure
@@ -245,7 +251,9 @@ export const authRouter = router({
       });
     }),
 
-  validateToken: protectedProcedure.query((req) => signToken(req.ctx.user)),
+  validateToken: protectedProcedure
+    .input(z.string().nullish())
+    .query((req) => signToken(req.ctx.user)),
 });
 
 async function tokenPayload(user: User) {

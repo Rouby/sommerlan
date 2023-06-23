@@ -1,4 +1,5 @@
 import { createHash, randomUUID } from "crypto";
+import { GoogleSpreadsheetRow } from "google-spreadsheet";
 import { getSheet } from "./api";
 
 type Values<T> = Partial<
@@ -54,17 +55,27 @@ export class User {
     }
   }
 
+  private static fromRow(row: GoogleSpreadsheetRow) {
+    const user = new User();
+    Object.assign(
+      user,
+      Object.fromEntries(
+        Object.keys(user).map((key) => [key, JSON.parse(row[key])])
+      )
+    );
+    return user;
+  }
+
+  static async all() {
+    const sheet = await getSheet();
+    const rows = await sheet.sheetsByTitle["Users"].getRows();
+    return rows.map(this.fromRow);
+  }
+
   static async findById(id: string) {
     const row = await findRow(id);
     if (row) {
-      const user = new User();
-      Object.assign(
-        user,
-        Object.fromEntries(
-          Object.keys(user).map((key) => [key, JSON.parse(row[key])])
-        )
-      );
-      return user;
+      return this.fromRow(row);
     }
     return null;
   }
