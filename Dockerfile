@@ -45,8 +45,7 @@ RUN yarn build
 # Finally, build the production image with minimal footprint
 FROM base
 
-ENV NODE_ENV="production"
-ENV PORT=8080
+ENV PORT 8080
 
 WORKDIR /myapp
 
@@ -54,7 +53,5 @@ COPY --from=production-deps /myapp/node_modules /myapp/node_modules
 COPY --from=build /myapp/.yarn /myapp/.yarn
 
 COPY --from=build /myapp/dist /myapp/dist
-COPY --from=build /myapp/public /myapp/public
-ADD . .
 
 CMD ["node", "dist/server/index"]

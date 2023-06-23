@@ -17,7 +17,10 @@ export function createServer(opts: ServerOptions) {
   const dev = opts.dev ?? true;
   const port = opts.port ?? 3000;
   const prefix = opts.prefix ?? "/trpc";
-  const server = fastify({ logger: dev, disableRequestLogging: true });
+  const server = fastify({
+    logger: dev,
+    disableRequestLogging: process.env.NODE_ENV !== "production",
+  });
 
   server.register(cors, {});
   server.register(ws);
@@ -38,7 +41,7 @@ export function createServer(opts: ServerOptions) {
   };
   const start = async () => {
     try {
-      await server.listen({ port });
+      await server.listen({ port, host: "0.0.0.0" });
       console.log("listening on port", port);
     } catch (err) {
       server.log.error(err);
