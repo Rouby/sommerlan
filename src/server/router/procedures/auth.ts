@@ -1,3 +1,4 @@
+import "@fastify/cookie";
 import {
   generateAuthenticationOptions,
   generateRegistrationOptions,
