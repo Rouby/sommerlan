@@ -8,7 +8,7 @@ import { colorSchemeAtom } from "./state";
 import { trpc } from "./utils";
 
 const wsClient = createWSClient({
-  url: `ws${location.protocol === "https" ? "s" : ""}://${location.host}/trpc`,
+  url: `ws${location.protocol === "https:" ? "s" : ""}://${location.host}/trpc`,
 });
 
 const queryClient = new QueryClient();
