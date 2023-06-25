@@ -17,7 +17,7 @@ export function SignUpButton() {
 
   return (
     <>
-      <Group>
+      <Group noWrap>
         <Button variant="default" onClick={() => setShowAuthForm("login")}>
           Log in
         </Button>
