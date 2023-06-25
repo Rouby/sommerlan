@@ -17,6 +17,9 @@ export function Root() {
                 <Button variant="subtle">Party</Button>
               </Link>
             </Can>
+            <Link to="/imprint">
+              <Button variant="subtle">Imprint</Button>
+            </Link>
           </Group>
           <Can I="read" a="User">
             <UserButton />
