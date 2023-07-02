@@ -15,3 +15,12 @@ services:
       GOOGLE_PRIVATE_KEY: "${GOOGLE_PRIVATE_KEY}"
     ports:
       - "${APP_PORT}:8080"
+    networks:
+      - default
+      - mail
+
+networks:
+  default:
+  mail:
+    name: mailserver
+    external: true

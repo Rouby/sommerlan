@@ -5,6 +5,8 @@ import ws from "@fastify/websocket";
 import { fastifyTRPCPlugin } from "@trpc/server/adapters/fastify";
 import fastify from "fastify";
 import { join } from "path";
+import { logger } from "./logger";
+import { transporter } from "./mail";
 import { appRouter } from "./router";
 import { createContext } from "./router/context";
 
@@ -35,16 +37,26 @@ export function createServer(opts: ServerOptions) {
     server.register(staticfs, {
       root: join(__dirname, "../client"),
     });
-    console.log("serving", join(__dirname, "../client"));
+    logger.info("serving", join(__dirname, "../client"));
   }
 
   const stop = async () => {
     await server.close();
+    transporter.close();
   };
   const start = async () => {
     try {
       await server.listen({ port, host: "0.0.0.0" });
-      console.log("listening on port", port);
+
+      transporter.verify((error) => {
+        if (error) {
+          logger.error(error);
+        } else {
+          logger.info("Server is ready to take our messages");
+        }
+      });
+
+      logger.info("listening on port", port);
     } catch (err) {
       server.log.error(err);
       process.exit(1);

@@ -1768,6 +1768,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/nodemailer@npm:^6.4.8":
+  version: 6.4.8
+  resolution: "@types/nodemailer@npm:6.4.8"
+  dependencies:
+    "@types/node": "*"
+  checksum: 3cc9b6a0e54f25a1b36124df413964ff5a69e8dc4558c5dfc06818917313a50f4dbfe31fc9190e4270d07a0f8678474da24a2eae42f907933ea81d983b4772d4
+  languageName: node
+  linkType: hard
+
 "@types/parse-json@npm:^4.0.0":
   version: 4.0.0
   resolution: "@types/parse-json@npm:4.0.0"
@@ -5462,6 +5471,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"nodemailer@npm:^6.9.3":
+  version: 6.9.3
+  resolution: "nodemailer@npm:6.9.3"
+  checksum: 3bea8316652c0578515d9146d2f24660e4855807520153f061d39af76b440a4f61b4e70f10fed35f8f12f115f6aea1aeb483ea7ba0337c0e3e675f117c41c611
+  languageName: node
+  linkType: hard
+
 "nopt@npm:^6.0.0":
   version: 6.0.0
   resolution: "nopt@npm:6.0.0"
@@ -6457,6 +6473,7 @@ __metadata:
     "@types/jsonwebtoken": ^9.0.2
     "@types/mdx": ^2.0.5
     "@types/node": ^20.3.1
+    "@types/nodemailer": ^6.4.8
     "@types/qrcode": ^1.5.0
     "@types/react": ^18.2.13
     "@types/react-dom": ^18.2.6
@@ -6477,6 +6494,7 @@ __metadata:
     jotai: ^2.2.1
     jsonwebtoken: ^9.0.0
     jwt-decode: ^3.1.2
+    nodemailer: ^6.9.3
     prettier: ^2.8.8
     qrcode: ^1.5.3
     react: ^18.2.0
