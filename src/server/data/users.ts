@@ -1,18 +1,17 @@
 import { createHash, randomUUID } from "crypto";
-import { GoogleSpreadsheetRow } from "google-spreadsheet";
 import { getSheet } from "./api";
-
-type Values<T> = Partial<
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  Pick<T, { [K in keyof T]: T[K] extends Function ? never : K }[keyof T]>
->;
+import { Base, Values, findRow } from "./utils";
 
 enum Role {
   TrustedUser = "TrustedUser",
   Admin = "Admin",
 }
 
-export class User {
+export class User extends Base {
+  get sheetName() {
+    return "Users";
+  }
+
   public id = randomUUID();
 
   public devices: {
@@ -37,60 +36,29 @@ export class User {
     return `https://www.gravatar.com/avatar/${hash}`;
   }
 
-  constructor(props: Values<User> = {}) {
-    Object.assign(this, props);
-  }
-
-  async save() {
-    const row = await findRow(this.id);
-    const values = Object.fromEntries(
-      Object.entries(this).map(([key, value]) => [key, JSON.stringify(value)])
-    );
-    if (row) {
-      Object.assign(row, values);
-      await row.save();
-    } else {
-      const sheet = await getSheet();
-      await sheet.sheetsByTitle["Users"].addRow(values);
-    }
-  }
-
-  private static fromRow(row: GoogleSpreadsheetRow) {
-    const user = new User();
-    Object.assign(
-      user,
-      Object.fromEntries(
-        Object.keys(user).map((key) => [key, JSON.parse(row[key])])
-      )
-    );
-    return user;
+  constructor(props?: Values<User>) {
+    super();
+    if (props) Object.assign(this, props);
   }
 
   static async all() {
     const sheet = await getSheet();
     const rows = await sheet.sheetsByTitle["Users"].getRows();
-    return rows.map(this.fromRow);
+    return rows.map((row) => Base.fromRow(User, row));
   }
 
   static async findById(id: string) {
-    const row = await findRow(id);
+    const row = await findRow("Users", id);
     if (row) {
-      return this.fromRow(row);
+      return Base.fromRow(User, row);
     }
     return null;
   }
 
-  static Role = Role;
-}
+  static async findByName(name: string) {
+    const users = await User.all();
+    return users.find((user) => user.name === name);
+  }
 
-async function findRow(id: string) {
-  const sheet = await getSheet();
-  const rows = await sheet.sheetsByTitle["Users"].getRows();
-  return rows.find((row) => {
-    try {
-      return JSON.parse(row.id) === id;
-    } catch {
-      return row.id === id;
-    }
-  });
+  static Role = Role;
 }

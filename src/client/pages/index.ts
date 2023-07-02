@@ -1,3 +1,3 @@
-export * from "./Imprint";
-export * from "./Intro";
-export * from "./Party";
+export { default as Imprint } from "./Imprint.mdx";
+export { default as Intro } from "./Intro.mdx";
+export { default as Party } from "./Party.mdx";

@@ -8,11 +8,11 @@ import {
 import { TRPCError } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
 import base64url from "base64url";
-import { randomUUID } from "crypto";
 import { EventEmitter } from "events";
 import { sign } from "jsonwebtoken";
 import { z } from "zod";
 import { User } from "../../data";
+import { logger } from "../../logger";
 import { createAbility } from "../ability";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 
@@ -26,9 +26,33 @@ const authEvents = new EventEmitter();
 
 export const authRouter = router({
   register: publicProcedure
+    .input(z.object({ userName: z.string(), email: z.string() }))
+    .mutation(async (req) => {
+      const { userName, email } = req.input;
+
+      if (await User.findByName(userName)) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "User already exists",
+        });
+      }
+
+      const user = new User({
+        name: userName,
+        displayName: userName,
+        email,
+      });
+      await user.save();
+
+      logger.trace({ user }, "Registered user");
+
+      return signToken(user);
+    }),
+
+  registerPasskey: publicProcedure
     .input(
       z.object({
-        userId: z.string(),
+        userID: z.string(),
         response: z.object({
           id: z.string(),
           rawId: z.string(),
@@ -52,7 +76,21 @@ export const authRouter = router({
         });
       }
 
+      const user = await User.findById(req.input.userID);
+
+      if (!user) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
       try {
+        logger.trace(
+          { expectedChallenge, issuedChallenges },
+          "Received registration request"
+        );
+
         const verification = await verifyRegistrationResponse({
           expectedChallenge,
           expectedOrigin,
@@ -64,17 +102,11 @@ export const authRouter = router({
           const { credentialPublicKey, credentialID, counter } =
             verification.registrationInfo;
 
-          const user = new User({
-            id: req.input
-              .userId as `${string}-${string}-${string}-${string}-${string}`,
-            devices: [
-              {
-                credentialPublicKey: Array.from(credentialPublicKey),
-                credentialID: Array.from(credentialID),
-                counter,
-                transports: req.input.response.response.transports,
-              },
-            ],
+          user.devices.push({
+            credentialPublicKey: Array.from(credentialPublicKey),
+            credentialID: Array.from(credentialID),
+            counter,
+            transports: req.input.response.response.transports,
           });
           await user.save();
 
@@ -86,22 +118,29 @@ export const authRouter = router({
     }),
 
   generateRegistrationOptions: publicProcedure
-    .input(z.object({ userName: z.string() }))
+    .input(z.object({ userID: z.string() }))
     .mutation(async (req) => {
-      const id = randomUUID();
+      const user = await User.findById(req.input.userID);
+
+      if (!user) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
 
       const options = generateRegistrationOptions({
         rpID,
         rpName: "SommerLAN",
-        userID: id,
-        userName: req.input.userName,
+        userID: req.input.userID,
+        userName: user.name,
         timeout: 60000,
-        attestationType: "none",
-        authenticatorSelection: {
-          residentKey: "required",
-          userVerification: "preferred",
-        },
-        supportedAlgorithmIDs: [-7, -257],
+        attestationType: "direct",
+        excludeCredentials: user.devices.map((device) => ({
+          id: Uint8Array.from(device.credentialID),
+          type: "public-key",
+          transports: device.transports,
+        })),
       });
 
       issuedChallenges.add(options.challenge);
@@ -188,10 +227,10 @@ export const authRouter = router({
     }),
 
   generateLoginOptions: publicProcedure
-    .input(z.object({ userId: z.string().nullish() }))
+    .input(z.object({ userID: z.string().nullish() }))
     .mutation(async (req) => {
-      const user = req.input.userId
-        ? await User.findById(req.input.userId)
+      const user = req.input.userID
+        ? await User.findById(req.input.userID)
         : null;
 
       const options = generateAuthenticationOptions({
@@ -213,7 +252,7 @@ export const authRouter = router({
         maxAge: 60000,
       });
 
-      return { userId: user?.id, options };
+      return { userID: user?.id, options };
     }),
 
   loginFromOtherDevice: publicProcedure

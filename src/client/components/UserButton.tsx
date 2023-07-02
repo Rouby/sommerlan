@@ -1,16 +1,63 @@
-import { Avatar, Group, Menu, Modal, UnstyledButton } from "@mantine/core";
-import { IconQrcode } from "@tabler/icons-react";
-import { useAtomValue } from "jotai";
-import { useState } from "react";
-import { userAtom } from "../state";
+import {
+  Avatar,
+  Button,
+  Group,
+  Menu,
+  Modal,
+  Text,
+  UnstyledButton,
+} from "@mantine/core";
+import { startRegistration } from "@simplewebauthn/browser";
+import { IconLock, IconQrcode } from "@tabler/icons-react";
+import { useAtomValue, useSetAtom } from "jotai";
+import { useCallback, useState } from "react";
+import { tokenAtom, userAtom } from "../state";
+import { trpc } from "../utils";
 import { AuthorizeOtherDevice } from "./";
 
 export function UserButton() {
   const user = useAtomValue(userAtom);
+  const setToken = useSetAtom(tokenAtom);
 
   const canScanQRCodes = "BarcodeDetector" in window;
   const [showAuthorizeOtherDevice, setShowAuthorizeOtherDevice] =
     useState(false);
+
+  const { mutateAsync: generateRegistrationOptions } =
+    trpc.auth.generateRegistrationOptions.useMutation();
+  const { mutateAsync: registerPasskey } =
+    trpc.auth.registerPasskey.useMutation();
+
+  const createPasskey = useCallback(async () => {
+    if (!user) return;
+
+    setCreatingPasskey(true);
+
+    try {
+      const options = await generateRegistrationOptions({
+        userID: user.id,
+      });
+
+      console.log(options);
+
+      const response = await startRegistration(options);
+
+      const token = await registerPasskey({
+        userID: user.id,
+        response,
+      });
+
+      if (token) setToken(token);
+    } catch (err) {
+      setCreatingPasskey(false);
+      console.error(err);
+    }
+  }, [generateRegistrationOptions, registerPasskey, setToken, user]);
+
+  const [showPasskeyOptions, setShowPasskeyOptions] = useState(false);
+  const [creatingPasskey, setCreatingPasskey] = useState(false);
+
+  if (!user) return null;
 
   return (
     <>
@@ -18,25 +65,35 @@ export function UserButton() {
         <Menu.Target>
           <UnstyledButton>
             <Group noWrap>
-              <Avatar src={user?.avatar} radius="xl" />
-              {user?.displayName}
+              <Avatar src={user.avatar} radius="xl" />
+              {user.displayName}
             </Group>
           </UnstyledButton>
         </Menu.Target>
 
         <Menu.Dropdown>
           <Menu.Label>Application</Menu.Label>
-          {canScanQRCodes && (
+
+          <Menu.Item
+            icon={<IconQrcode size={14} />}
+            onClick={() => setShowAuthorizeOtherDevice(true)}
+          >
+            {canScanQRCodes ? "Scan Auth QR Code" : "Provide Auth QR Code"}
+          </Menu.Item>
+
+          {user.devices.length !== -1 && (
             <Menu.Item
-              icon={<IconQrcode size={14} />}
-              onClick={() => setShowAuthorizeOtherDevice(true)}
+              icon={<IconLock size={14} />}
+              disabled={creatingPasskey}
+              onClick={() => setShowPasskeyOptions(true)}
             >
-              Scan QR Code
+              Create a passkey
             </Menu.Item>
           )}
         </Menu.Dropdown>
       </Menu>
       <Modal
+        size="lg"
         opened={showAuthorizeOtherDevice}
         onClose={() => setShowAuthorizeOtherDevice(false)}
       >
@@ -44,6 +101,17 @@ export function UserButton() {
           active={showAuthorizeOtherDevice}
           onClose={() => setShowAuthorizeOtherDevice(false)}
         />
+      </Modal>
+      <Modal
+        size="lg"
+        opened={showPasskeyOptions}
+        onClose={() => setShowPasskeyOptions(false)}
+      >
+        <Text>Passkeys allow you to sign in.</Text>
+
+        <Button loading={creatingPasskey} onClick={createPasskey}>
+          Create passkey
+        </Button>
       </Modal>
     </>
   );

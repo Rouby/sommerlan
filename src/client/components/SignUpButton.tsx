@@ -1,27 +1,39 @@
 import { Alert, Button, Group, Input, Modal, Stack, Text } from "@mantine/core";
-import {
-  startAuthentication,
-  startRegistration,
-} from "@simplewebauthn/browser";
+import { startAuthentication } from "@simplewebauthn/browser";
 import { TRPCClientError } from "@trpc/client";
 import { useSetAtom } from "jotai";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useQRCodeScanner } from "../hooks";
 import { tokenAtom } from "../state";
 import { trpc } from "../utils";
 import { QRCode } from "./QRCode";
 
 export function SignUpButton() {
-  const [showAuthForm, setShowAuthForm] = useState<"login" | "signup" | false>(
-    false
+  const [showAuthForm, setShowAuthForm] = useState(false);
+  const [authMode, setAuthMode] = useState<"login" | "signup" | false>(
+    "signup"
   );
 
   return (
     <>
       <Group noWrap>
-        <Button variant="default" onClick={() => setShowAuthForm("login")}>
+        <Button
+          variant="default"
+          onClick={() => {
+            setAuthMode("login");
+            setShowAuthForm(true);
+          }}
+        >
           Log in
         </Button>
-        <Button onClick={() => setShowAuthForm("signup")}>Sign up</Button>
+        <Button
+          onClick={() => {
+            setAuthMode("signup");
+            setShowAuthForm(true);
+          }}
+        >
+          Sign up
+        </Button>
       </Group>
 
       <Modal
@@ -29,57 +41,23 @@ export function SignUpButton() {
         opened={!!showAuthForm}
         onClose={() => setShowAuthForm(false)}
       >
-        <AuthForm mode={showAuthForm} />
+        {authMode === "signup" && <RegisterForm />}
+        {authMode === "login" && <LoginForm />}
       </Modal>
     </>
   );
 }
 
-function AuthForm({ mode }: { mode: "login" | "signup" | false }) {
-  const active = mode !== false;
-  const setToken = useSetAtom(tokenAtom);
-
-  const { mutateAsync: generateRegistrationOptions } =
-    trpc.auth.generateRegistrationOptions.useMutation();
-  const { mutateAsync: register } = trpc.auth.register.useMutation();
-
-  const { mutateAsync: generateLoginOptions } =
-    trpc.auth.generateLoginOptions.useMutation();
+function RegisterForm() {
   const {
-    mutateAsync: login,
+    mutateAsync: register,
+    isLoading,
     error,
-    isLoading: isLoggingIn,
-  } = trpc.auth.login.useMutation();
-  const isRequesting = useRef(false);
-  useEffect(() => {
-    if (isRequesting.current) return;
-    isRequesting.current = true;
-    const userId = localStorage.getItem("userId");
-    if (active) {
-      generateLoginOptions({ userId })
-        .then(async ({ userId, options }) => {
-          const response = await startAuthentication(options, true);
-
-          const jwt = await login({ response });
-
-          if (jwt && userId) {
-            setToken(jwt);
-            localStorage.setItem("userId", userId);
-          }
-        })
-        .catch((err) => {
-          if (err instanceof TRPCClientError && err.data.code === "NOT_FOUND") {
-            localStorage.removeItem("userId");
-          }
-        })
-        .finally(() => {
-          isRequesting.current = false;
-        });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [active]);
+  } = trpc.auth.register.useMutation();
 
   const [signInFromOtherDevice, setSignInFromOtherDevice] = useState(false);
+
+  const setToken = useSetAtom(tokenAtom);
 
   if (signInFromOtherDevice) {
     return <SignInFromOtherDevice />;
@@ -92,31 +70,15 @@ function AuthForm({ mode }: { mode: "login" | "signup" | false }) {
         const form = event.target as HTMLFormElement;
 
         const userName = form["username"].value;
+        const email = form["email"].value;
 
-        const options = await generateRegistrationOptions({
-          userName,
-        });
+        const token = await register({ userName, email });
 
-        const response = await startRegistration(options);
-
-        const jwt = await register({ userId: options.user.id, response });
-
-        if (jwt) {
-          setToken(jwt);
-          localStorage.setItem("userId", options.user.id);
-        }
+        setToken(token);
       }}
     >
       <Stack>
-        <Text>
-          Start by creating a user account. The account will be bound to this
-          device.
-        </Text>
-
-        <Text>
-          If you already have created an account with this device, you may also
-          use the passkey to sign in.
-        </Text>
+        <Text>Start by creating an user account.</Text>
 
         {error && (
           <Alert color="red">
@@ -126,20 +88,17 @@ function AuthForm({ mode }: { mode: "login" | "signup" | false }) {
           </Alert>
         )}
 
-        <Input
-          required
-          name="username"
-          autoComplete="webauthn"
-          placeholder="Your username"
-        />
+        <Input required name="username" placeholder="Your username" />
+
+        <Input required type="email" name="email" placeholder="Your email" />
 
         <Group grow>
-          <Button type="submit" disabled={isLoggingIn}>
+          <Button type="submit" disabled={isLoading}>
             Register
           </Button>
           <Button
             variant="subtle"
-            disabled={isLoggingIn}
+            disabled={isLoading}
             onClick={() => setSignInFromOtherDevice(true)}
           >
             Sign in from another device
@@ -150,7 +109,88 @@ function AuthForm({ mode }: { mode: "login" | "signup" | false }) {
   );
 }
 
+function LoginForm() {
+  const [signInFromOtherDevice, setSignInFromOtherDevice] = useState(false);
+
+  const setToken = useSetAtom(tokenAtom);
+
+  const { mutateAsync: generateLoginOptions } =
+    trpc.auth.generateLoginOptions.useMutation();
+  const { mutateAsync: login, isLoading: isLoggingIn } =
+    trpc.auth.login.useMutation();
+
+  const isRequesting = useRef(false);
+  useEffect(() => {
+    if (isRequesting.current) return;
+    isRequesting.current = true;
+
+    generateLoginOptions({})
+      .then(async ({ userID, options }) => {
+        const response = await startAuthentication(options, true);
+
+        const jwt = await login({ response });
+
+        if (jwt) {
+          setToken(jwt);
+        }
+        if (userID) {
+          localStorage.setItem("userId", userID);
+        }
+      })
+      .catch((err) => {
+        if (err instanceof TRPCClientError && err.data.code === "NOT_FOUND") {
+          localStorage.removeItem("userId");
+        }
+      })
+      .finally(() => {
+        isRequesting.current = false;
+      });
+  }, [generateLoginOptions, login, setToken]);
+
+  if (signInFromOtherDevice) {
+    return <SignInFromOtherDevice />;
+  }
+
+  return (
+    <>
+      <Stack>
+        <Text>Sign in using a passkey.</Text>
+
+        <Input
+          required
+          name="username"
+          autoComplete="webauthn"
+          placeholder="Your username"
+        />
+
+        <Group grow>
+          <Button type="submit" loading={isLoggingIn}>
+            Sign In
+          </Button>
+          <Button
+            variant="subtle"
+            disabled={isLoggingIn}
+            onClick={() => setSignInFromOtherDevice(true)}
+          >
+            Sign in from another device
+          </Button>
+        </Group>
+      </Stack>
+    </>
+  );
+}
+
 function SignInFromOtherDevice() {
+  const canScanQRCodes = "BarcodeDetector" in window;
+
+  if (canScanQRCodes) {
+    return <ScanQRCode />;
+  }
+
+  return <ProvideQRCode />;
+}
+
+function ProvideQRCode() {
   const requestId = useMemo(() => crypto.randomUUID(), []);
   const setToken = useSetAtom(tokenAtom);
   const data = useMemo(() => ({ __$app: "SommerLAN", requestId }), [requestId]);
@@ -169,5 +209,31 @@ function SignInFromOtherDevice() {
       <Text>Scan this QR code from a signed-in device capable:</Text>
       <QRCode data={data} />
     </Stack>
+  );
+}
+
+function ScanQRCode() {
+  const { video, startScanning, stopScanning, data } = useQRCodeScanner();
+
+  useEffect(() => {
+    startScanning();
+    return () => stopScanning();
+  }, [startScanning, stopScanning]);
+
+  const setToken = useSetAtom(tokenAtom);
+
+  useEffect(() => {
+    if (data && typeof data.token === "string") {
+      stopScanning();
+      setToken(data.token);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
+
+  return (
+    <Group position="center">
+      Scan QR code on another device to receive credentials.
+      <video ref={video} width={300} />
+    </Group>
   );
 }
