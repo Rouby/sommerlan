@@ -32,6 +32,8 @@ RUN yarn workspaces focus @sommerlan-app/server --production
 
 FROM base
 
+WORKDIR /myapp
+
 COPY --from=server-build /myapp/node_modules /myapp/node_modules
 COPY --from=server-build /myapp/packages/server/dist /myapp/dist/server
 
