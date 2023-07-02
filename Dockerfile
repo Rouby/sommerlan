@@ -32,6 +32,8 @@ RUN yarn workspaces focus @sommerlan-app/server --production
 
 FROM base
 
+ENV PORT 8080
+
 WORKDIR /myapp
 
 COPY --from=server-build /myapp/node_modules /myapp/node_modules
