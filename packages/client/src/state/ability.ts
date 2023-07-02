@@ -1,7 +1,7 @@
 import { createMongoAbility } from "@casl/ability";
+import { type AppAbility } from "@sommerlan-app/server/src/router/ability";
 import { atom } from "jotai";
 import { jwtPayloadAtom } from ".";
-import { type AppAbility } from "../../server/router/ability";
 
 export const abilityAtom = atom((get) => {
   const jwtPayload = get(jwtPayloadAtom);

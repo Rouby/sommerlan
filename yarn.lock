@@ -48,7 +48,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.13.10, @babel/runtime@npm:^7.16.7, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.21.0, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
+"@babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.13.10, @babel/runtime@npm:^7.16.7, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
   version: 7.22.5
   resolution: "@babel/runtime@npm:7.22.5"
   dependencies:
@@ -1164,6 +1164,83 @@ __metadata:
   checksum: 11e55e74035e4a88287d5a615939c9cfffc6e05520dc947b68d77a1b5b301707137c2e29b5b279f91e3e4a9b472226fb6c7025144a6057990b6841145fdd4959
   languageName: node
   linkType: hard
+
+"@sommerlan-app/client@workspace:packages/client":
+  version: 0.0.0-use.local
+  resolution: "@sommerlan-app/client@workspace:packages/client"
+  dependencies:
+    "@casl/ability": ^6.5.0
+    "@casl/react": ^3.1.0
+    "@emotion/react": ^11.11.1
+    "@mantine/core": ^6.0.13
+    "@mantine/dates": ^6.0.13
+    "@mantine/dropzone": ^6.0.13
+    "@mantine/form": ^6.0.13
+    "@mantine/hooks": ^6.0.13
+    "@mantine/notifications": ^6.0.13
+    "@mantine/spotlight": ^6.0.13
+    "@mantine/tiptap": ^6.0.13
+    "@mdx-js/rollup": ^2.3.0
+    "@simplewebauthn/browser": ^7.2.0
+    "@tabler/icons-react": ^2.22.0
+    "@tanstack/react-query": ^4.29.14
+    "@tanstack/router": 0.0.1-beta.86
+    "@tiptap/extension-link": ^2.0.3
+    "@tiptap/react": ^2.0.3
+    "@tiptap/starter-kit": ^2.0.3
+    "@trpc/client": ^10.31.0
+    "@trpc/react-query": ^10.31.0
+    "@types/mdx": ^2.0.5
+    "@types/qrcode": ^1.5.0
+    "@types/react": ^18.2.13
+    "@types/react-dom": ^18.2.6
+    "@vitejs/plugin-react-swc": ^3.3.2
+    base64url: ^3.0.1
+    dayjs: ^1.11.8
+    framer-motion: ^10.12.16
+    jotai: ^2.2.1
+    jwt-decode: ^3.1.2
+    qrcode: ^1.5.3
+    react: ^18.2.0
+    react-dom: ^18.2.0
+    tabler-icons-react: ^1.56.0
+    typescript: ^5.1.3
+    vite: ^4.3.9
+    vitest: ^0.32.2
+  languageName: unknown
+  linkType: soft
+
+"@sommerlan-app/server@workspace:packages/server":
+  version: 0.0.0-use.local
+  resolution: "@sommerlan-app/server@workspace:packages/server"
+  dependencies:
+    "@casl/ability": ^6.5.0
+    "@fastify/cookie": ^8.3.0
+    "@fastify/cors": ^8.3.0
+    "@fastify/static": ^6.10.2
+    "@fastify/websocket": ^8.1.0
+    "@simplewebauthn/server": ^7.3.0
+    "@trpc/server": ^10.31.0
+    "@types/google-spreadsheet": ^3.3.2
+    "@types/jsonwebtoken": ^9.0.2
+    "@types/node": ^20.3.1
+    "@types/nodemailer": ^6.4.8
+    "@types/qrcode": ^1.5.0
+    base64url: ^3.0.1
+    dayjs: ^1.11.8
+    dotenv: ^16.3.1
+    fastify: ^4.18.0
+    google-spreadsheet: ^3.3.0
+    jsonwebtoken: ^9.0.0
+    jwt-decode: ^3.1.2
+    nodemailer: ^6.9.3
+    typescript: ^5.1.3
+    vitest: ^0.32.2
+    wds: ^0.17.1
+    web-push: ^3.6.2
+    zod: ^3.21.4
+  languageName: unknown
+  linkType: soft
 
 "@swc/core-darwin-arm64@npm:1.3.65":
   version: 1.3.65
@@ -2591,7 +2668,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chalk@npm:^4.0.0, chalk@npm:^4.1.2":
+"chalk@npm:^4.0.0":
   version: 4.1.2
   resolution: "chalk@npm:4.1.2"
   dependencies:
@@ -2691,17 +2768,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cliui@npm:^8.0.1":
-  version: 8.0.1
-  resolution: "cliui@npm:8.0.1"
-  dependencies:
-    string-width: ^4.2.0
-    strip-ansi: ^6.0.1
-    wrap-ansi: ^7.0.0
-  checksum: 79648b3b0045f2e285b76fb2e24e207c6db44323581e421c3acbd0e86454cba1b37aea976ab50195a49e7384b871e6dfb2247ad7dec53c02454ac6497394cb56
-  languageName: node
-  linkType: hard
-
 "clsx@npm:1.1.1":
   version: 1.1.1
   resolution: "clsx@npm:1.1.1"
@@ -2780,26 +2846,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"concurrently@npm:^8.2.0":
-  version: 8.2.0
-  resolution: "concurrently@npm:8.2.0"
-  dependencies:
-    chalk: ^4.1.2
-    date-fns: ^2.30.0
-    lodash: ^4.17.21
-    rxjs: ^7.8.1
-    shell-quote: ^1.8.1
-    spawn-command: 0.0.2
-    supports-color: ^8.1.1
-    tree-kill: ^1.2.2
-    yargs: ^17.7.2
-  bin:
-    conc: dist/bin/concurrently.js
-    concurrently: dist/bin/concurrently.js
-  checksum: eafe6a4d9b7fda87f55ea285cfc6acd937a5286ceec8991ab48e6cc27c45fce6a5c6f45e18d7555defa15dc7d7e8941bc5a9d1ceaf182e31441d420e00333434
-  languageName: node
-  linkType: hard
-
 "console-control-strings@npm:^1.1.0":
   version: 1.1.0
   resolution: "console-control-strings@npm:1.1.0"
@@ -2874,15 +2920,6 @@ __metadata:
   version: 3.1.2
   resolution: "csstype@npm:3.1.2"
   checksum: e1a52e6c25c1314d6beef5168da704ab29c5186b877c07d822bd0806717d9a265e8493a2e35ca7e68d0f5d472d43fac1cdce70fd79fd0853dff81f3028d857b5
-  languageName: node
-  linkType: hard
-
-"date-fns@npm:^2.30.0":
-  version: 2.30.0
-  resolution: "date-fns@npm:2.30.0"
-  dependencies:
-    "@babel/runtime": ^7.21.0
-  checksum: f7be01523282e9bb06c0cd2693d34f245247a29098527d4420628966a2d9aad154bd0e90a6b1cf66d37adcb769cd108cf8a7bd49d76db0fb119af5cdd13644f4
   languageName: node
   linkType: hard
 
@@ -6263,15 +6300,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rxjs@npm:^7.8.1":
-  version: 7.8.1
-  resolution: "rxjs@npm:7.8.1"
-  dependencies:
-    tslib: ^2.1.0
-  checksum: de4b53db1063e618ec2eca0f7965d9137cabe98cf6be9272efe6c86b47c17b987383df8574861bcced18ebd590764125a901d5506082be84a8b8e364bf05f119
-  languageName: node
-  linkType: hard
-
 "sade@npm:^1.7.3":
   version: 1.8.1
   resolution: "sade@npm:1.8.1"
@@ -6375,13 +6403,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"shell-quote@npm:^1.8.1":
-  version: 1.8.1
-  resolution: "shell-quote@npm:1.8.1"
-  checksum: 5f01201f4ef504d4c6a9d0d283fa17075f6770bfbe4c5850b074974c68062f37929ca61700d95ad2ac8822e14e8c4b990ca0e6e9272e64befd74ce5e19f0736b
-  languageName: node
-  linkType: hard
-
 "siginfo@npm:^2.0.0":
   version: 2.0.0
   resolution: "siginfo@npm:2.0.0"
@@ -6442,70 +6463,14 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "sommerlan-app@workspace:."
   dependencies:
-    "@casl/ability": ^6.5.0
-    "@casl/react": ^3.1.0
-    "@emotion/react": ^11.11.1
-    "@fastify/cookie": ^8.3.0
-    "@fastify/cors": ^8.3.0
-    "@fastify/static": ^6.10.2
-    "@fastify/websocket": ^8.1.0
-    "@mantine/core": ^6.0.13
-    "@mantine/dates": ^6.0.13
-    "@mantine/dropzone": ^6.0.13
-    "@mantine/form": ^6.0.13
-    "@mantine/hooks": ^6.0.13
-    "@mantine/notifications": ^6.0.13
-    "@mantine/spotlight": ^6.0.13
-    "@mantine/tiptap": ^6.0.13
-    "@mdx-js/rollup": ^2.3.0
-    "@simplewebauthn/browser": ^7.2.0
-    "@simplewebauthn/server": ^7.3.0
-    "@tabler/icons-react": ^2.22.0
-    "@tanstack/react-query": ^4.29.14
-    "@tanstack/router": 0.0.1-beta.86
-    "@tiptap/extension-link": ^2.0.3
-    "@tiptap/react": ^2.0.3
-    "@tiptap/starter-kit": ^2.0.3
-    "@trpc/client": ^10.31.0
-    "@trpc/react-query": ^10.31.0
-    "@trpc/server": ^10.31.0
-    "@types/google-spreadsheet": ^3.3.2
-    "@types/jsonwebtoken": ^9.0.2
-    "@types/mdx": ^2.0.5
-    "@types/node": ^20.3.1
-    "@types/nodemailer": ^6.4.8
-    "@types/qrcode": ^1.5.0
-    "@types/react": ^18.2.13
-    "@types/react-dom": ^18.2.6
     "@typescript-eslint/eslint-plugin": ^5.60.0
     "@typescript-eslint/parser": ^5.60.0
-    "@vitejs/plugin-react-swc": ^3.3.2
-    base64url: ^3.0.1
-    concurrently: ^8.2.0
-    dayjs: ^1.11.8
-    dotenv: ^16.3.1
     eslint: ^8.43.0
     eslint-config-prettier: ^8.8.0
     eslint-plugin-react-hooks: ^4.6.0
     eslint-plugin-react-refresh: ^0.4.1
-    fastify: ^4.18.0
-    framer-motion: ^10.12.16
-    google-spreadsheet: ^3.3.0
-    jotai: ^2.2.1
-    jsonwebtoken: ^9.0.0
-    jwt-decode: ^3.1.2
-    nodemailer: ^6.9.3
     prettier: ^2.8.8
-    qrcode: ^1.5.3
-    react: ^18.2.0
-    react-dom: ^18.2.0
-    tabler-icons-react: ^1.56.0
     typescript: ^5.1.3
-    vite: ^4.3.9
-    vitest: ^0.32.2
-    wds: ^0.17.1
-    web-push: ^3.6.2
-    zod: ^3.21.4
   languageName: unknown
   linkType: soft
 
@@ -6543,13 +6508,6 @@ __metadata:
   version: 2.0.2
   resolution: "space-separated-tokens@npm:2.0.2"
   checksum: 202e97d7ca1ba0758a0aa4fe226ff98142073bcceeff2da3aad037968878552c3bbce3b3231970025375bbba5aee00c5b8206eda408da837ab2dc9c0f26be990
-  languageName: node
-  linkType: hard
-
-"spawn-command@npm:0.0.2":
-  version: 0.0.2
-  resolution: "spawn-command@npm:0.0.2"
-  checksum: e35c5d28177b4d461d33c88cc11f6f3a5079e2b132c11e1746453bbb7a0c0b8a634f07541a2a234fa4758239d88203b758def509161b651e81958894c0b4b64b
   languageName: node
   linkType: hard
 
@@ -6699,15 +6657,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"supports-color@npm:^8.1.1":
-  version: 8.1.1
-  resolution: "supports-color@npm:8.1.1"
-  dependencies:
-    has-flag: ^4.0.0
-  checksum: c052193a7e43c6cdc741eb7f378df605636e01ad434badf7324f17fb60c69a880d8d8fcdcb562cf94c2350e57b937d7425ab5b8326c67c2adc48f7c87c1db406
-  languageName: node
-  linkType: hard
-
 "supports-preserve-symlinks-flag@npm:^1.0.0":
   version: 1.0.0
   resolution: "supports-preserve-symlinks-flag@npm:1.0.0"
@@ -6846,15 +6795,6 @@ __metadata:
   version: 0.0.3
   resolution: "tr46@npm:0.0.3"
   checksum: 726321c5eaf41b5002e17ffbd1fb7245999a073e8979085dacd47c4b4e8068ff5777142fc6726d6ca1fd2ff16921b48788b87225cbc57c72636f6efa8efbffe3
-  languageName: node
-  linkType: hard
-
-"tree-kill@npm:^1.2.2":
-  version: 1.2.2
-  resolution: "tree-kill@npm:1.2.2"
-  bin:
-    tree-kill: cli.js
-  checksum: 49117f5f410d19c84b0464d29afb9642c863bc5ba40fcb9a245d474c6d5cc64d1b177a6e6713129eb346b40aebb9d4631d967517f9fbe8251c35b21b13cd96c7
   languageName: node
   linkType: hard
 
@@ -7506,13 +7446,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yargs-parser@npm:^21.1.1":
-  version: 21.1.1
-  resolution: "yargs-parser@npm:21.1.1"
-  checksum: ed2d96a616a9e3e1cc7d204c62ecc61f7aaab633dcbfab2c6df50f7f87b393993fe6640d017759fe112d0cb1e0119f2b4150a87305cc873fd90831c6a58ccf1c
-  languageName: node
-  linkType: hard
-
 "yargs@npm:^15.3.1":
   version: 15.4.1
   resolution: "yargs@npm:15.4.1"
@@ -7544,21 +7477,6 @@ __metadata:
     y18n: ^5.0.5
     yargs-parser: ^20.2.2
   checksum: b14afbb51e3251a204d81937c86a7e9d4bdbf9a2bcee38226c900d00f522969ab675703bee2a6f99f8e20103f608382936034e64d921b74df82b63c07c5e8f59
-  languageName: node
-  linkType: hard
-
-"yargs@npm:^17.7.2":
-  version: 17.7.2
-  resolution: "yargs@npm:17.7.2"
-  dependencies:
-    cliui: ^8.0.1
-    escalade: ^3.1.1
-    get-caller-file: ^2.0.5
-    require-directory: ^2.1.1
-    string-width: ^4.2.3
-    y18n: ^5.0.5
-    yargs-parser: ^21.1.1
-  checksum: 73b572e863aa4a8cbef323dd911d79d193b772defd5a51aab0aca2d446655216f5002c42c5306033968193bdbf892a7a4c110b0d77954a7fdf563e653967b56a
   languageName: node
   linkType: hard
 

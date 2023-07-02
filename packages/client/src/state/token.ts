@@ -1,7 +1,7 @@
+import { type JWTPayload } from "@sommerlan-app/server/src/router/procedures/auth";
 import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import jwtDecode from "jwt-decode";
-import { type JWTPayload } from "../../server/router/procedures/auth";
 import { authenticatedAtom } from "./authenticated";
 
 export const tokenAtom = atomWithStorage<string | null>("token", null);

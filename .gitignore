@@ -1,7 +1,7 @@
 node_modules
 .swc
 
-/dist
+**/dist
 /public/entry.worker.js
 /public/build
 .env

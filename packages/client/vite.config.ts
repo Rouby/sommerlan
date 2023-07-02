@@ -12,7 +12,7 @@ export default async () =>
       react(),
     ],
     build: {
-      outDir: "./dist/client",
+      outDir: "./dist",
       sourcemap: true,
     },
     server: {
