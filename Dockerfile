@@ -33,6 +33,9 @@ RUN yarn workspaces focus @sommerlan-app/server --production
 FROM base
 
 ENV PORT 8080
+ENV NEW_RELIC_NO_CONFIG_FILE true
+ENV NEW_RELIC_DISTRIBUTED_TRACING_ENABLED true
+ENV NEW_RELIC_LOG stdout
 
 WORKDIR /myapp
 

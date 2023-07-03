@@ -17,6 +17,7 @@
     "@fastify/cors": "^8.3.0",
     "@fastify/static": "^6.10.2",
     "@fastify/websocket": "^8.1.0",
+    "@newrelic/pino-enricher": "^1.1.1",
     "@simplewebauthn/server": "^7.3.0",
     "@trpc/server": "^10.31.0",
     "base64url": "^3.0.1",
@@ -26,7 +27,9 @@
     "google-spreadsheet": "^3.3.0",
     "jsonwebtoken": "^9.0.0",
     "jwt-decode": "^3.1.2",
+    "newrelic": "^10.4.0",
     "nodemailer": "^6.9.3",
+    "pino": "^8.14.1",
     "web-push": "^3.6.2",
     "zod": "^3.21.4"
   },

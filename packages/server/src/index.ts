@@ -1,4 +1,5 @@
 import "dotenv/config";
+import "newrelic";
 
 import { serverConfig } from "./config";
 import { createServer } from "./server";
