@@ -215,12 +215,12 @@ jobs:
       #     version: "${{ github.sha }}"
       #     commit: "${{ github.sha }}"
       #     user: "${{ github.actor }}"
-      # - name: 🏷️ New Relic Application Deployment Marker (server)
-      #   uses: newrelic/deployment-marker-action@v2.2.0
-      #   with:
-      #     apiKey: ${{ secrets.NEW_RELIC_API_KEY }}
-      #     region: "EU"
-      #     guid: ${{ secrets.NEW_RELIC_DEPLOYMENT_ENTITY_GUID_SERVER }}
-      #     version: "${{ github.sha }}"
-      #     commit: "${{ github.sha }}"
-      #     user: "${{ github.actor }}"
+      - name: 🏷️ New Relic Application Deployment Marker (server)
+        uses: newrelic/deployment-marker-action@v2.2.0
+        with:
+          apiKey: ${{ secrets.NEW_RELIC_API_KEY }}
+          region: "EU"
+          guid: ${{ secrets.NEW_RELIC_DEPLOYMENT_ENTITY_GUID_SERVER }}
+          version: "${{ github.sha }}"
+          commit: "${{ github.sha }}"
+          user: "${{ github.actor }}"
