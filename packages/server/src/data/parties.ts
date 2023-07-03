@@ -1,6 +1,5 @@
 import { randomUUID } from "crypto";
-import { getSheet } from "./api";
-import { Base, Values, findRow } from "./utils";
+import { Base, Values, allRows, findRow } from "./utils";
 
 export class Party extends Base {
   get sheetName() {
@@ -19,8 +18,7 @@ export class Party extends Base {
   }
 
   static async all() {
-    const sheet = await getSheet();
-    const rows = await sheet.sheetsByTitle["Parties"].getRows();
+    const rows = await allRows("Parties");
     return rows.map((row) => Base.fromRow(Party, row));
   }
 

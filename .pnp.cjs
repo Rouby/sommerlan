@@ -1182,6 +1182,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:0.7.31"\
       ],\
       [\
+        "@types/newrelic",\
+        "npm:9.14.0"\
+      ],\
+      [\
         "@types/node",\
         "npm:20.3.1"\
       ],\
@@ -6015,7 +6019,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/__virtual__/@newrelic-pino-enricher-virtual-1ec50b7108/0/cache/@newrelic-pino-enricher-npm-1.1.1-66ed609cc4-7ebf8f0d4b.zip/node_modules/@newrelic/pino-enricher/",\
           "packageDependencies": [\
             ["@newrelic/pino-enricher", "virtual:f9aaeb0ff5026b521d6a9b424ffbc3c34990b6972b440282c9eb836880cb71f3dfd141e9455e392c98abc5918762c91d12bf17451df331903d8e149b2f873a01#npm:1.1.1"],\
-            ["@types/newrelic", null],\
+            ["@types/newrelic", "npm:9.14.0"],\
             ["newrelic", "npm:10.4.0"]\
           ],\
           "packagePeers": [\
@@ -7220,6 +7224,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@trpc/server", "npm:10.31.0"],\
             ["@types/google-spreadsheet", "npm:3.3.2"],\
             ["@types/jsonwebtoken", "npm:9.0.2"],\
+            ["@types/newrelic", "npm:9.14.0"],\
             ["@types/node", "npm:20.3.1"],\
             ["@types/nodemailer", "npm:6.4.8"],\
             ["@types/qrcode", "npm:1.5.0"],\
@@ -8408,6 +8413,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-ms-npm-0.7.31-ea3b89342b-daadd354ae.zip/node_modules/@types/ms/",\
           "packageDependencies": [\
             ["@types/ms", "npm:0.7.31"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@types/newrelic", [\
+        ["npm:9.14.0", {\
+          "packageLocation": "./.yarn/cache/@types-newrelic-npm-9.14.0-4668da51a1-7f7bfc77e0.zip/node_modules/@types/newrelic/",\
+          "packageDependencies": [\
+            ["@types/newrelic", "npm:9.14.0"]\
           ],\
           "linkType": "HARD"\
         }]\

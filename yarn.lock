@@ -2472,6 +2472,7 @@ __metadata:
     "@trpc/server": ^10.31.0
     "@types/google-spreadsheet": ^3.3.2
     "@types/jsonwebtoken": ^9.0.2
+    "@types/newrelic": ^9.14.0
     "@types/node": ^20.3.1
     "@types/nodemailer": ^6.4.8
     "@types/qrcode": ^1.5.0
@@ -3180,6 +3181,13 @@ __metadata:
   version: 0.7.31
   resolution: "@types/ms@npm:0.7.31"
   checksum: daadd354aedde024cce6f5aa873fefe7b71b22cd0e28632a69e8b677aeb48ae8caa1c60e5919bb781df040d116b01cb4316335167a3fc0ef6a63fa3614c0f6da
+  languageName: node
+  linkType: hard
+
+"@types/newrelic@npm:^9.14.0":
+  version: 9.14.0
+  resolution: "@types/newrelic@npm:9.14.0"
+  checksum: 7f7bfc77e035479cbb1ee9384433beafbe5e693501659c4bffcf6ea2907fdee490e16e36694d29393ca57f8242d82315ec55f856ed49b47d7f924be3383d4bc4
   languageName: node
   linkType: hard
 

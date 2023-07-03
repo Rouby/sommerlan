@@ -1,6 +1,5 @@
 import { createHash, randomUUID } from "crypto";
-import { getSheet } from "./api";
-import { Base, Values, findRow } from "./utils";
+import { Base, Values, allRows, findRow } from "./utils";
 
 enum Role {
   TrustedUser = "TrustedUser",
@@ -42,8 +41,7 @@ export class User extends Base {
   }
 
   static async all() {
-    const sheet = await getSheet();
-    const rows = await sheet.sheetsByTitle["Users"].getRows();
+    const rows = await allRows("Users");
     return rows.map((row) => Base.fromRow(User, row));
   }
 
