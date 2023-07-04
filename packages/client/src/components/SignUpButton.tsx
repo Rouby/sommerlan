@@ -111,6 +111,7 @@ function RegisterForm() {
 
 function LoginForm() {
   const [signInFromOtherDevice, setSignInFromOtherDevice] = useState(false);
+  const [signInViaEmail, setSignInViaEmail] = useState(false);
 
   const setToken = useSetAtom(tokenAtom);
 
@@ -151,6 +152,10 @@ function LoginForm() {
     return <SignInFromOtherDevice />;
   }
 
+  if (signInViaEmail) {
+    return <SignInViaEmail />;
+  }
+
   return (
     <>
       <Stack>
@@ -173,6 +178,13 @@ function LoginForm() {
             onClick={() => setSignInFromOtherDevice(true)}
           >
             Sign in from another device
+          </Button>
+          <Button
+            variant="subtle"
+            disabled={isLoggingIn}
+            onClick={() => setSignInViaEmail(true)}
+          >
+            Sign in via email link
           </Button>
         </Group>
       </Stack>
@@ -235,5 +247,58 @@ function ScanQRCode() {
       Scan QR code on another device to receive credentials.
       <video ref={video} width={300} />
     </Group>
+  );
+}
+
+function SignInViaEmail() {
+  const {
+    mutateAsync: sendLink,
+    isLoading,
+    isSuccess,
+    error,
+  } = trpc.auth.sendMagicLink.useMutation();
+
+  return (
+    <form
+      onSubmit={async (event) => {
+        event.preventDefault();
+        const form = event.target as HTMLFormElement;
+
+        const email = form["email"].value;
+
+        await sendLink({ email });
+      }}
+    >
+      <Stack>
+        <Text>Enter your email.</Text>
+
+        {error && (
+          <Alert color="red">
+            {error instanceof TRPCClientError && error.data.code === "NOT_FOUND"
+              ? "User with that email does not exist, try signing up first."
+              : error.message}
+          </Alert>
+        )}
+
+        {isSuccess ? (
+          <Alert color="green">Email sent</Alert>
+        ) : (
+          <>
+            <Input
+              required
+              type="email"
+              name="email"
+              placeholder="Your email"
+            />
+
+            <Group grow>
+              <Button type="submit" disabled={isLoading}>
+                Send Link
+              </Button>
+            </Group>
+          </>
+        )}
+      </Stack>
+    </form>
   );
 }

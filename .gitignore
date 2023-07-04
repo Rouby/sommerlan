@@ -8,3 +8,4 @@ node_modules
 service-account.json
 
 
+newrelic_agent.log

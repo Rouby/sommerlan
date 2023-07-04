@@ -1,3 +1,4 @@
+import newrelic from "newrelic";
 import { createTransport, SendMailOptions } from "nodemailer";
 
 export const transporter = createTransport({
@@ -13,8 +14,10 @@ export const transporter = createTransport({
 });
 
 export async function sendMail(options: SendMailOptions) {
-  await transporter.sendMail({
-    from: '"Sommerlan" <admin@sommerlan.rocks>',
-    ...options,
+  await newrelic.startSegment("sendMail", true, async () => {
+    await transporter.sendMail({
+      from: '"Sommerlan" <admin@sommerlan.rocks>',
+      ...options,
+    });
   });
 }

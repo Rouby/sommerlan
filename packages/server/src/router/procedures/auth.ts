@@ -8,17 +8,20 @@ import {
 import { TRPCError } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
 import base64url from "base64url";
+import { randomUUID } from "crypto";
 import { EventEmitter } from "events";
 import { sign } from "jsonwebtoken";
 import { z } from "zod";
 import { User } from "../../data";
 import { logger } from "../../logger";
+import { sendMail } from "../../mail";
 import { createAbility } from "../ability";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 
 const issuedChallenges = new Set<string>();
+const issuedMagicLinks = new Map<string, string>();
 
-const expectedOrigin = process.env.APP_ORIGIN ?? "http://localhost:5173";
+const expectedOrigin = process.env.APP_ORIGIN ?? "http://localhost:5173/";
 const rpID =
   expectedOrigin.match(/^https?:\/\/(.*?)\/?(:\d+)?$/)?.[1] ?? "localhost";
 
@@ -259,12 +262,12 @@ export const authRouter = router({
     .input(z.object({ requestId: z.string() }))
     .subscription((req) =>
       observable<{ userId: string; token: string }>((emit) => {
-        console.log("Subscribing");
+        logger.trace("Subscribing");
 
         authEvents.on("signInFromDevice", handleSignIn);
 
         return () => {
-          console.log("Stop Subscribing");
+          logger.trace("Stop Subscribing");
           authEvents.off("signInFromDevice", handleSignIn);
         };
 
@@ -294,6 +297,29 @@ export const authRouter = router({
   validateToken: protectedProcedure
     .input(z.string().nullish())
     .query((req) => signToken(req.ctx.user)),
+
+  sendMagicLink: publicProcedure
+    .input(z.object({ email: z.string() }))
+    .mutation(async (req) => {
+      const user = await User.findByEmail(req.input.email);
+
+      if (!user) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      const magicLinkId = randomUUID();
+
+      issuedMagicLinks.set(magicLinkId, await signToken(user));
+
+      await sendMail({
+        to: req.input.email,
+        subject: "SommerLAN Login Link",
+        html: `Login with this link: <a href="${expectedOrigin}?auth=${magicLinkId}">${expectedOrigin}?auth=${magicLinkId}</a>`,
+      });
+    }),
 });
 
 async function tokenPayload(user: User) {

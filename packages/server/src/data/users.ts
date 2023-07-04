@@ -58,5 +58,10 @@ export class User extends Base {
     return users.find((user) => user.name === name);
   }
 
+  static async findByEmail(email: string) {
+    const users = await User.all();
+    return users.find((user) => user.email === email);
+  }
+
   static Role = Role;
 }
