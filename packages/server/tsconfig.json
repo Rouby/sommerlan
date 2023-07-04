@@ -10,6 +10,7 @@
     "moduleResolution": "NodeNext",
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "allowSyntheticDefaultImports": true,
     "outDir": "./dist",
     "sourceMap": true,
     /* Linting */

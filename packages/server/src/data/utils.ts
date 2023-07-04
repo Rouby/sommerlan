@@ -1,5 +1,5 @@
 import { GoogleSpreadsheetRow } from "google-spreadsheet";
-import { addCustomSpanAttribute, startSegment } from "newrelic";
+import newrelic from "newrelic";
 import { getSheet } from "./api";
 
 export type Values<T> = Partial<
@@ -8,8 +8,8 @@ export type Values<T> = Partial<
 >;
 
 export async function findRow(sheetId: string, id: string) {
-  return startSegment(`${sheetId}.findRow`, true, async () => {
-    addCustomSpanAttribute("db.id", id);
+  return newrelic.startSegment(`${sheetId}.findRow`, true, async () => {
+    newrelic.addCustomSpanAttribute("db.id", id);
     const sheet = await getSheet();
     const rows = await sheet.sheetsByTitle[sheetId].getRows();
     return rows.find((row) => {
@@ -23,8 +23,8 @@ export async function findRow(sheetId: string, id: string) {
 }
 
 export async function allRows(sheetId: string) {
-  return startSegment(`${sheetId}.allRows`, true, async () => {
-    addCustomSpanAttribute("db.id", "all");
+  return newrelic.startSegment(`${sheetId}.allRows`, true, async () => {
+    newrelic.addCustomSpanAttribute("db.id", "all");
     const sheet = await getSheet();
     const rows = await sheet.sheetsByTitle["Users"].getRows();
     return rows;
@@ -37,8 +37,8 @@ export abstract class Base {
   public id = "";
 
   async save() {
-    await startSegment(`${this.sheetName}.save`, true, async () => {
-      addCustomSpanAttribute("db.id", this.id);
+    await newrelic.startSegment(`${this.sheetName}.save`, true, async () => {
+      newrelic.addCustomSpanAttribute("db.id", this.id);
       const row = await findRow(this.sheetName, this.id);
       const values = Object.fromEntries(
         Object.entries(this).map(([key, value]) => [key, JSON.stringify(value)])
