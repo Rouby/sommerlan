@@ -83,7 +83,7 @@ jobs:
     name: 🐳 Build
     # only build/deploy main branch on pushes
     if: ${{ (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push' }}
-    runs-on: macos-latest-xl
+    runs-on: macos-13
 
     concurrency:
       group: build-${{ github.ref }}
