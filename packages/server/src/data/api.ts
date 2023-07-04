@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { GoogleSpreadsheet } from "google-spreadsheet";
-import * as newrelic from "newrelic";
+import { startSegment } from "newrelic";
 
 export async function getSheet() {
-  return newrelic.startSegment("getSheet", true, async () => {
+  return startSegment("getSheet", true, async () => {
     const doc = new GoogleSpreadsheet(process.env.GOOGLE_SHEET_ID);
 
     await doc.useServiceAccountAuth({

@@ -1,5 +1,5 @@
 import { TRPCError, initTRPC } from "@trpc/server";
-import * as newrelic from "newrelic";
+import { startSegment } from "newrelic";
 import { Context } from "./context";
 
 const t = initTRPC.context<Context>().create();
@@ -18,7 +18,7 @@ export const isAuthed = middleware(({ next, ctx }) => {
 });
 
 export const withSegment = middleware(({ next, path }) => {
-  return newrelic.startSegment(path, true, next);
+  return startSegment(path, true, next);
 });
 
 export const router = t.router;
