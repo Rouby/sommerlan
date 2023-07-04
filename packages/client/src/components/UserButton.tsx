@@ -40,8 +40,6 @@ export function UserButton() {
         userID: user.id,
       });
 
-      console.log(options);
-
       const response = await startRegistration(options);
 
       const token = await registerPasskey({
