@@ -1,11 +1,30 @@
-import { Loader } from "@mantine/core";
+import { Center, Loader } from "@mantine/core";
 import dayjs from "dayjs";
-import { trpc } from "../utils";
+import { formatRange, trpc } from "../utils";
 
 export function NextPartyAttending() {
   const { data, isLoading } = trpc.party.nextParty.useQuery();
 
-  if (isLoading) return <Loader />;
+  if (isLoading) {
+    return (
+      <Center>
+        <Loader />
+      </Center>
+    );
+  }
 
-  return dayjs(data?.startDate, "YYYY-MM-DD").format("L");
+  if (!data?.startDate || !data?.endDate) {
+    return <Center>No Party planned</Center>;
+  }
+
+  return (
+    <>
+      Die naechste Party ist vom{" "}
+      {formatRange(
+        dayjs(data.startDate, "YYYY-MM-DD").toDate(),
+        dayjs(data.endDate, "YYYY-MM-DD").toDate()
+      )}{" "}
+      (noch ca {dayjs(data.startDate, "YYYY-MM-DD").toNow(true)})
+    </>
+  );
 }
