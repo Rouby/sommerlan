@@ -66,4 +66,17 @@ export abstract class Base {
     );
     return obj;
   }
+
+  toJSON() {
+    return {
+      ...Object.fromEntries(
+        Object.entries(
+          Object.getOwnPropertyDescriptors(Object.getPrototypeOf(this))
+        )
+          .filter(([key, value]) => !(key in { ...this }) && !value.writable)
+          .map(([key, value]) => [key, value.get?.call(this)])
+      ),
+      ...this,
+    };
+  }
 }

@@ -341,14 +341,7 @@ export const authRouter = router({
 
 async function tokenPayload(user: User) {
   return {
-    user: {
-      ...Object.fromEntries(
-        Object.entries(Object.getOwnPropertyDescriptors(User.prototype))
-          .filter(([key, value]) => !(key in { ...user }) && !value.writable)
-          .map(([key, value]) => [key, value.get?.call(user)])
-      ),
-      ...user,
-    } as User,
+    user,
     abilityRules: (await createAbility(user)).rules,
   };
 }
