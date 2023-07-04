@@ -1,4 +1,4 @@
-import { Outlet, useSearch } from "@tanstack/router";
+import { Outlet, useNavigate, useSearch } from "@tanstack/router";
 import { TRPCClientError } from "@trpc/client";
 import { useAtom, useSetAtom } from "jotai";
 import { useEffect } from "react";
@@ -21,15 +21,17 @@ export function Authenticate() {
   );
 
   const { auth } = useSearch({ from: authRoute.id });
+  const navigate = useNavigate();
   const { mutateAsync: loginWithMagicLink } =
     trpc.auth.loginWithMagicLink.useMutation();
   useEffect(() => {
     if (auth) {
-      loginWithMagicLink({ magicLinkId: auth }).then((token) =>
-        setToken(token)
-      );
+      loginWithMagicLink({ magicLinkId: auth }).then((token) => {
+        setToken(token);
+        navigate({ search: undefined });
+      });
     }
-  }, [auth, loginWithMagicLink, setToken]);
+  }, [auth, loginWithMagicLink, navigate, setToken]);
 
   useEffect(() => {
     if (

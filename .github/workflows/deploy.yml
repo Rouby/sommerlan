@@ -189,7 +189,7 @@ jobs:
           BRANCH: ${{ github.ref_name }}
           SHA: ${{ github.sha }}
           APP_PORT: "53346"
-          APP_ORIGIN: "https://staging.sommerlan.rocks/"
+          APP_ORIGIN: "https://staging.sommerlan.rocks"
           VAPID_PUBLIC_KEY: ${{ secrets.VAPID_PUBLIC_KEY }}
           VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
@@ -207,7 +207,7 @@ jobs:
           BRANCH: ${{ github.ref_name }}
           SHA: ${{ github.sha }}
           APP_PORT: "53345"
-          APP_ORIGIN: "https://sommerlan.rocks/"
+          APP_ORIGIN: "https://sommerlan.rocks"
           VAPID_PUBLIC_KEY: ${{ secrets.VAPID_PUBLIC_KEY }}
           VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}

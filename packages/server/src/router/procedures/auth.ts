@@ -21,7 +21,7 @@ import { protectedProcedure, publicProcedure, router } from "../trpc";
 const issuedChallenges = new Set<string>();
 const issuedMagicLinks = new Map<string, string>();
 
-const expectedOrigin = process.env.APP_ORIGIN ?? "http://localhost:5173/";
+const expectedOrigin = process.env.APP_ORIGIN ?? "http://localhost:5173";
 const rpID =
   expectedOrigin.match(/^https?:\/\/(.*?)\/?(:\d+)?$/)?.[1] ?? "localhost";
 

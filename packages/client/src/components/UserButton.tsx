@@ -1,4 +1,5 @@
 import {
+  Alert,
   Avatar,
   Button,
   Group,
@@ -32,6 +33,7 @@ export function UserButton() {
     if (!user) return;
 
     setCreatingPasskey(true);
+    setPasskeyError(undefined);
 
     try {
       const options = await generateRegistrationOptions({
@@ -50,12 +52,13 @@ export function UserButton() {
       if (token) setToken(token);
     } catch (err) {
       setCreatingPasskey(false);
-      console.error(err);
+      setPasskeyError(err);
     }
   }, [generateRegistrationOptions, registerPasskey, setToken, user]);
 
   const [showPasskeyOptions, setShowPasskeyOptions] = useState(false);
   const [creatingPasskey, setCreatingPasskey] = useState(false);
+  const [passkeyError, setPasskeyError] = useState<unknown>();
 
   if (!user) return null;
 
@@ -107,6 +110,18 @@ export function UserButton() {
         opened={showPasskeyOptions}
         onClose={() => setShowPasskeyOptions(false)}
       >
+        {!!passkeyError && (
+          <Alert
+            color="red"
+            withCloseButton
+            onClose={() => setPasskeyError(undefined)}
+          >
+            {passkeyError instanceof Error
+              ? passkeyError.message
+              : `${passkeyError}`}
+          </Alert>
+        )}
+
         <Text>Passkeys allow you to sign in.</Text>
 
         <Button loading={creatingPasskey} onClick={createPasskey}>
