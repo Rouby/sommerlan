@@ -29,7 +29,6 @@ export async function createContext({ req, res }: CreateFastifyContextOptions) {
 
     // TODO check if token was revoked
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     user = await User.findById(decodedToken?.payload.user.id);
   }
 
