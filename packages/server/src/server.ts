@@ -39,6 +39,9 @@ export function createServer(opts: ServerOptions) {
     });
     logger.info("serving", join(__dirname, "../client"));
   }
+  server.setNotFoundHandler((_, reply) => {
+    reply.sendFile("index.html");
+  });
 
   const stop = async () => {
     await server.close();
@@ -52,11 +55,11 @@ export function createServer(opts: ServerOptions) {
         if (error) {
           logger.error(error);
         } else {
-          logger.info("Server is ready to take our messages");
+          logger.info("Mail-Server is ready to take our messages");
         }
       });
 
-      logger.info("listening on port", port);
+      logger.info("Listening on port", port);
     } catch (err) {
       server.log.error(err);
       process.exit(1);
