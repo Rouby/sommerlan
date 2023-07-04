@@ -24,7 +24,7 @@ export function createServer(opts: ServerOptions) {
   const prefix = opts.prefix ?? "/trpc";
   const server = fastify({
     logger,
-    disableRequestLogging: process.env.NODE_ENV !== "production",
+    disableRequestLogging: true,
   });
 
   server.register(cookie, { secret: process.env.SESSION_SECRET });

@@ -1,5 +1,6 @@
 import newrelic from "newrelic";
 import { createTransport, SendMailOptions } from "nodemailer";
+import { logger } from "./logger";
 
 export const transporter = createTransport({
   host: "mailserver",
@@ -15,6 +16,7 @@ export const transporter = createTransport({
 
 export async function sendMail(options: SendMailOptions) {
   await newrelic.startSegment("sendMail", true, async () => {
+    logger.info({ to: options.to }, "Sending mail");
     await transporter.sendMail({
       from: '"SommerLAN" <no-reply@sommerlan.rocks>',
       ...options,
