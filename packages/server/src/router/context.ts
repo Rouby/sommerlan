@@ -10,7 +10,7 @@ export async function createContext({ req, res }: CreateFastifyContextOptions) {
     [, token] = req.headers.authorization.split(" ");
   }
 
-  let user: User | null = null;
+  let user: User | undefined = undefined;
   if (token) {
     let decodedToken: JwtPayload | null = null;
 
@@ -29,6 +29,7 @@ export async function createContext({ req, res }: CreateFastifyContextOptions) {
 
     // TODO check if token was revoked
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     user = await User.findById(decodedToken?.payload.user.id);
   }
 

@@ -8,7 +8,7 @@ import { User } from "../data";
 export type AbilityTuple = [string, User | "User"];
 export type AppAbility = MongoAbility<AbilityTuple>;
 
-export async function createAbility(user: User | null) {
+export async function createAbility(user?: User) {
   const { can, build } = new AbilityBuilder<AppAbility>(createMongoAbility);
 
   if (user) {
