@@ -16,7 +16,7 @@ export const transporter = createTransport({
 export async function sendMail(options: SendMailOptions) {
   await newrelic.startSegment("sendMail", true, async () => {
     await transporter.sendMail({
-      from: '"Sommerlan" <admin@sommerlan.rocks>',
+      from: '"SommerLAN" <no-reply@sommerlan.rocks>',
       ...options,
     });
   });

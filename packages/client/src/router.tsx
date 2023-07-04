@@ -7,10 +7,15 @@ const rootRoute = new RootRoute({
   component: Root,
 });
 
-const authRoute = new Route({
+export const authRoute = new Route({
   getParentRoute: () => rootRoute,
   id: "auth",
   component: Authenticate,
+  validateSearch: (search) => {
+    return {
+      auth: typeof search.auth === "string" ? search.auth : undefined,
+    };
+  },
 });
 
 const indexRoute = new Route({

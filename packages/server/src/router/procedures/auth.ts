@@ -320,6 +320,23 @@ export const authRouter = router({
         html: `Login with this link: <a href="${expectedOrigin}?auth=${magicLinkId}">${expectedOrigin}?auth=${magicLinkId}</a>`,
       });
     }),
+
+  loginWithMagicLink: publicProcedure
+    .input(z.object({ magicLinkId: z.string() }))
+    .mutation(async (req) => {
+      const token = issuedMagicLinks.get(req.input.magicLinkId);
+
+      if (!token) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Magic link not found",
+        });
+      }
+
+      issuedMagicLinks.delete(req.input.magicLinkId);
+
+      return token;
+    }),
 });
 
 async function tokenPayload(user: User) {
