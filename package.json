@@ -5,7 +5,7 @@
   "license": "MIT",
   "sideEffects": false,
   "scripts": {
-    "dev": "yarn workspaces foreach -pti run dev",
+    "dev": "concurrently --kill-others-on-fail \"yarn workspace @sommerlan-app/server dev\" \"yarn workspace @sommerlan-app/client dev\"",
     "build": "yarn workspaces foreach -pti run build",
     "lint": "yarn workspaces foreach -p run lint",
     "test": "yarn workspaces foreach -p run test",
@@ -22,12 +22,15 @@
     "**/*.mdx"
   ],
   "devDependencies": {
+    "@types/esprima": "^4",
     "@typescript-eslint/eslint-plugin": "^5.60.0",
     "@typescript-eslint/parser": "^5.60.0",
+    "concurrently": "^8.2.0",
     "eslint": "^8.43.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.1",
+    "esprima": "^4.0.1",
     "prettier": "^2.8.8",
     "typescript": "^5.1.3"
   },

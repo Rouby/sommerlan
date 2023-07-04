@@ -32,7 +32,10 @@ function ProvideQRCode() {
 
   return (
     <Stack align="center">
-      <Text>Scan this QR code to grant your access to that device:</Text>
+      <Text>
+        Scanne diesen Code mit einem Gerät mit dem du dich einloggen möchtest
+      </Text>
+
       <QRCode data={data} />
     </Stack>
   );
@@ -71,7 +74,11 @@ function ScanQRCode({
   return (
     <Group position="center">
       <LoadingOverlay visible={isLoading} />
-      Scan QR code on another device to accept sign in request.
+
+      <Text>
+        Scanne diesen Code mit einem Gerät auf dem du bereits eingeloggt bist
+      </Text>
+
       <video ref={video} width={300} />
     </Group>
   );

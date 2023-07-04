@@ -1,62 +1,19 @@
-import {
-  Alert,
-  Avatar,
-  Button,
-  Group,
-  Menu,
-  Modal,
-  Text,
-  UnstyledButton,
-} from "@mantine/core";
-import { startRegistration } from "@simplewebauthn/browser";
+import { Avatar, Group, Menu, Modal, UnstyledButton } from "@mantine/core";
 import { IconLock, IconQrcode } from "@tabler/icons-react";
-import { useAtomValue, useSetAtom } from "jotai";
-import { useCallback, useState } from "react";
-import { tokenAtom, userAtom } from "../state";
-import { trpc } from "../utils";
+import { useAtomValue } from "jotai";
+import { useState } from "react";
+import { userAtom } from "../state";
 import { AuthorizeOtherDevice } from "./";
+import { CreatePasskeyFlow } from "./CreatePasskeyFlow";
 
 export function UserButton() {
   const user = useAtomValue(userAtom);
-  const setToken = useSetAtom(tokenAtom);
 
   const canScanQRCodes = "BarcodeDetector" in window;
   const [showAuthorizeOtherDevice, setShowAuthorizeOtherDevice] =
     useState(false);
 
-  const { mutateAsync: generateRegistrationOptions } =
-    trpc.auth.generateRegistrationOptions.useMutation();
-  const { mutateAsync: registerPasskey } =
-    trpc.auth.registerPasskey.useMutation();
-
-  const createPasskey = useCallback(async () => {
-    if (!user) return;
-
-    setCreatingPasskey(true);
-    setPasskeyError(undefined);
-
-    try {
-      const options = await generateRegistrationOptions({
-        userID: user.id,
-      });
-
-      const response = await startRegistration(options);
-
-      const token = await registerPasskey({
-        userID: user.id,
-        response,
-      });
-
-      if (token) setToken(token);
-    } catch (err) {
-      setCreatingPasskey(false);
-      setPasskeyError(err);
-    }
-  }, [generateRegistrationOptions, registerPasskey, setToken, user]);
-
   const [showPasskeyOptions, setShowPasskeyOptions] = useState(false);
-  const [creatingPasskey, setCreatingPasskey] = useState(false);
-  const [passkeyError, setPasskeyError] = useState<unknown>();
 
   if (!user) return null;
 
@@ -85,7 +42,6 @@ export function UserButton() {
           {user.devices.length !== -1 && (
             <Menu.Item
               icon={<IconLock size={14} />}
-              disabled={creatingPasskey}
               onClick={() => setShowPasskeyOptions(true)}
             >
               Create a passkey
@@ -93,6 +49,7 @@ export function UserButton() {
           )}
         </Menu.Dropdown>
       </Menu>
+
       <Modal
         size="lg"
         opened={showAuthorizeOtherDevice}
@@ -103,28 +60,14 @@ export function UserButton() {
           onClose={() => setShowAuthorizeOtherDevice(false)}
         />
       </Modal>
+
       <Modal
         size="lg"
         opened={showPasskeyOptions}
+        withCloseButton={false}
         onClose={() => setShowPasskeyOptions(false)}
       >
-        {!!passkeyError && (
-          <Alert
-            color="red"
-            withCloseButton
-            onClose={() => setPasskeyError(undefined)}
-          >
-            {passkeyError instanceof Error
-              ? passkeyError.message
-              : `${passkeyError}`}
-          </Alert>
-        )}
-
-        <Text>Passkeys allow you to sign in.</Text>
-
-        <Button loading={creatingPasskey} onClick={createPasskey}>
-          Create passkey
-        </Button>
+        <CreatePasskeyFlow />
       </Modal>
     </>
   );

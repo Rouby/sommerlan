@@ -1,9 +1,24 @@
-import { Alert, Button, Group, Input, Modal, Stack, Text } from "@mantine/core";
+import {
+  Alert,
+  Box,
+  Button,
+  Group,
+  Input,
+  LoadingOverlay,
+  MediaQuery,
+  Modal,
+  Stack,
+  Text,
+} from "@mantine/core";
 import { startAuthentication } from "@simplewebauthn/browser";
+import { useMutation } from "@tanstack/react-query";
 import { TRPCClientError } from "@trpc/client";
 import { useSetAtom } from "jotai";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useQRCodeScanner } from "../hooks";
+import { ReactComponent as FingerprintIllustration } from "../illustrations/undraw_fingerprint_login_re_t71l.svg";
+import { ReactComponent as MessageSentIllustration } from "../illustrations/undraw_message_sent_re_q2kl.svg";
+import { ReactComponent as SignUpIllustration } from "../illustrations/undraw_sign_up_n6im.svg";
 import { tokenAtom } from "../state";
 import { trpc } from "../utils";
 import { QRCode } from "./QRCode";
@@ -39,6 +54,7 @@ export function SignUpButton() {
       <Modal
         size="xl"
         opened={!!showAuthForm}
+        withCloseButton={false}
         onClose={() => setShowAuthForm(false)}
       >
         {authMode === "signup" && <RegisterForm />}
@@ -77,76 +93,62 @@ function RegisterForm() {
         setToken(token);
       }}
     >
-      <Stack>
-        <Text>Start by creating an user account.</Text>
+      <Alert mb="md" hidden={!error} color="red">
+        {error instanceof TRPCClientError && error.data.code === "NOT_FOUND"
+          ? "Der Passkey ist auf dieser Seite nicht vorhanden."
+          : `${error?.message}`}
+      </Alert>
 
-        {error && (
-          <Alert color="red">
-            {error instanceof TRPCClientError && error.data.code === "NOT_FOUND"
-              ? "Passkey is not valid"
-              : error.message}
-          </Alert>
-        )}
+      <Box
+        sx={(theme) => ({
+          display: "grid",
+          gridTemplateColumns: "1fr auto",
+          [theme.fn.smallerThan("sm")]: {
+            gridTemplateColumns: "1fr",
+          },
+        })}
+      >
+        <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
+          <SignUpIllustration />
+        </MediaQuery>
 
-        <Input required name="username" placeholder="Your username" />
+        <Stack>
+          <Input required name="username" placeholder="Dein Nutzername" />
 
-        <Input required type="email" name="email" placeholder="Your email" />
+          <Input
+            required
+            type="email"
+            name="email"
+            placeholder="Deine Email-Adresse"
+          />
 
-        <Group grow>
-          <Button type="submit" disabled={isLoading}>
-            Register
-          </Button>
-          <Button
-            variant="subtle"
-            disabled={isLoading}
-            onClick={() => setSignInFromOtherDevice(true)}
-          >
-            Sign in from another device
-          </Button>
-        </Group>
-      </Stack>
+          <Group>
+            <Button type="submit" disabled={isLoading}>
+              Anmelden
+            </Button>
+
+            <Button
+              variant="subtle"
+              disabled={isLoading}
+              onClick={() => setSignInFromOtherDevice(true)}
+            >
+              Mit einem anderen Gerät anmelden
+            </Button>
+          </Group>
+        </Stack>
+      </Box>
     </form>
   );
 }
 
 function LoginForm() {
+  const [signInViaPasskey, setSignInViaPasskey] = useState(false);
   const [signInFromOtherDevice, setSignInFromOtherDevice] = useState(false);
   const [signInViaEmail, setSignInViaEmail] = useState(false);
 
-  const setToken = useSetAtom(tokenAtom);
-
-  const { mutateAsync: generateLoginOptions } =
-    trpc.auth.generateLoginOptions.useMutation();
-  const { mutateAsync: login, isLoading: isLoggingIn } =
-    trpc.auth.login.useMutation();
-
-  const isRequesting = useRef(false);
-  useEffect(() => {
-    if (isRequesting.current) return;
-    isRequesting.current = true;
-
-    generateLoginOptions({})
-      .then(async ({ userID, options }) => {
-        const response = await startAuthentication(options, true);
-
-        const jwt = await login({ response });
-
-        if (jwt) {
-          setToken(jwt);
-        }
-        if (userID) {
-          localStorage.setItem("userId", userID);
-        }
-      })
-      .catch((err) => {
-        if (err instanceof TRPCClientError && err.data.code === "NOT_FOUND") {
-          localStorage.removeItem("userId");
-        }
-      })
-      .finally(() => {
-        isRequesting.current = false;
-      });
-  }, [generateLoginOptions, login, setToken]);
+  if (signInViaPasskey) {
+    return <SignInViaPasskey />;
+  }
 
   if (signInFromOtherDevice) {
     return <SignInFromOtherDevice />;
@@ -158,36 +160,85 @@ function LoginForm() {
 
   return (
     <>
-      <Stack>
-        <Text>Sign in using a passkey.</Text>
+      <Box
+        sx={(theme) => ({
+          display: "grid",
+          gridTemplateColumns: "1fr auto",
+          alignItems: "center",
+          [theme.fn.smallerThan("sm")]: {
+            gridTemplateColumns: "1fr",
+          },
+        })}
+      >
+        <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
+          <SignUpIllustration />
+        </MediaQuery>
 
-        <Input
-          required
-          name="username"
-          autoComplete="webauthn"
-          placeholder="Your username"
-        />
-
-        <Group grow>
-          <Button type="submit" loading={isLoggingIn}>
-            Sign In
+        <Stack>
+          <Button onClick={() => setSignInViaPasskey(true)}>
+            Mit Passkey anmelden
           </Button>
           <Button
             variant="subtle"
-            disabled={isLoggingIn}
             onClick={() => setSignInFromOtherDevice(true)}
           >
-            Sign in from another device
+            Mit einem anderen Gerät anmelden
           </Button>
-          <Button
-            variant="subtle"
-            disabled={isLoggingIn}
-            onClick={() => setSignInViaEmail(true)}
-          >
-            Sign in via email link
+          <Button variant="subtle" onClick={() => setSignInViaEmail(true)}>
+            Einen Einmal-Link zum einloggen per Email anfordern
           </Button>
-        </Group>
-      </Stack>
+        </Stack>
+      </Box>
+    </>
+  );
+}
+
+function SignInViaPasskey() {
+  const setToken = useSetAtom(tokenAtom);
+
+  const { mutateAsync: generateLoginOptions } =
+    trpc.auth.generateLoginOptions.useMutation();
+  const { mutateAsync: login } = trpc.auth.login.useMutation();
+
+  const { mutate, isLoading, error } = useMutation({
+    mutationFn: async () => {
+      const { options } = await generateLoginOptions({});
+
+      const response = await startAuthentication(options);
+
+      const jwt = await login({ response });
+
+      if (jwt) {
+        setToken(jwt);
+      }
+    },
+  });
+
+  const isRequesting = useRef(false);
+  useEffect(() => {
+    if (isRequesting.current) return;
+    isRequesting.current = true;
+
+    mutate();
+
+    return () => {
+      isRequesting.current = false;
+    };
+  }, [mutate]);
+
+  return (
+    <>
+      <LoadingOverlay visible={isLoading} />
+
+      <Alert mb="md" hidden={!error} color="red">
+        {error instanceof TRPCClientError && error.data.code === "NOT_FOUND"
+          ? "Der Passkey ist auf dieser Seite nicht vorhanden."
+          : error instanceof Error
+          ? error.message
+          : `${error}`}
+      </Alert>
+
+      <FingerprintIllustration />
     </>
   );
 }
@@ -218,7 +269,10 @@ function ProvideQRCode() {
 
   return (
     <Stack align="center">
-      <Text>Scan this QR code from a signed-in device capable:</Text>
+      <Text>
+        Scanne diesen Code mit einem Gerät auf dem du bereits eingeloggt bist
+      </Text>
+
       <QRCode data={data} />
     </Stack>
   );
@@ -269,36 +323,46 @@ function SignInViaEmail() {
         await sendLink({ email });
       }}
     >
-      <Stack>
-        <Text>Enter your email.</Text>
+      <Alert color="red" hidden={!error}>
+        {error instanceof TRPCClientError && error.data.code === "NOT_FOUND"
+          ? "User with that email does not exist, try signing up first."
+          : error instanceof Error
+          ? error.message
+          : `${error}`}
+      </Alert>
 
-        {error && (
-          <Alert color="red">
-            {error instanceof TRPCClientError && error.data.code === "NOT_FOUND"
-              ? "User with that email does not exist, try signing up first."
-              : error.message}
+      {isSuccess ? (
+        <>
+          <Alert color="green">
+            Es wurde eine Email mit einem Login-Link versandt, schau
+            gegebenfalls auch im Spam-Ordner nach.
           </Alert>
-        )}
 
-        {isSuccess ? (
-          <Alert color="green">Email sent</Alert>
-        ) : (
-          <>
+          <MessageSentIllustration />
+        </>
+      ) : (
+        <Stack>
+          <Text>
+            Falls du bereits mit einer Email registriert bist kannst du dir hier
+            einen Link zuschicken lassen mit dem du dich einmalig bequem
+            einloggen kannst.
+          </Text>
+
+          <Group>
             <Input
+              sx={{ flex: "1 1 auto" }}
               required
               type="email"
               name="email"
-              placeholder="Your email"
+              placeholder="Deine Email-Adresse"
             />
 
-            <Group grow>
-              <Button type="submit" disabled={isLoading}>
-                Send Link
-              </Button>
-            </Group>
-          </>
-        )}
-      </Stack>
+            <Button type="submit" disabled={isLoading}>
+              Link zuschicken
+            </Button>
+          </Group>
+        </Stack>
+      )}
     </form>
   );
 }
