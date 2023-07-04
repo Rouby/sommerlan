@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
-import { Base, Values, allRows, findRow } from "./utils";
+import { Base, Values } from "./$base";
 
 export class Party extends Base {
   get sheetName() {
@@ -15,18 +15,5 @@ export class Party extends Base {
   constructor(props?: Values<Party>) {
     super();
     if (props) Object.assign(this, props);
-  }
-
-  static async all() {
-    const rows = await allRows("Parties");
-    return rows.map((row) => Base.fromRow(Party, row));
-  }
-
-  static async findById(id: string) {
-    const row = await findRow("Parties", id);
-    if (row) {
-      return Base.fromRow(Party, row);
-    }
-    return null;
   }
 }

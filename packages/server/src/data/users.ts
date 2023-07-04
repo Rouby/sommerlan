@@ -1,5 +1,5 @@
 import { createHash, randomUUID } from "crypto";
-import { Base, Values, allRows, findRow } from "./utils";
+import { Base, Values } from "./$base";
 
 enum Role {
   TrustedUser = "TrustedUser",
@@ -40,28 +40,13 @@ export class User extends Base {
     if (props) Object.assign(this, props);
   }
 
-  static async all() {
-    const rows = await allRows("Users");
-    return rows.map((row) => Base.fromRow(User, row));
-  }
-
-  static async findById(id: string) {
-    const row = await findRow("Users", id);
-    if (row) {
-      return Base.fromRow(User, row);
-    }
-    return null;
-  }
+  static Role = Role;
 
   static async findByName(name: string) {
-    const users = await User.all();
-    return users.find((user) => user.name === name);
+    return User.find((user) => user.name === name);
   }
 
   static async findByEmail(email: string) {
-    const users = await User.all();
-    return users.find((user) => user.email === email);
+    return User.find((user) => user.email === email);
   }
-
-  static Role = Role;
 }

@@ -2487,6 +2487,7 @@ __metadata:
     newrelic: ^10.4.0
     nodemailer: ^6.9.3
     pino: ^8.14.1
+    recron: ^1.1.5
     typescript: ^5.1.3
     vitest: ^0.32.2
     wds: ^0.17.1
@@ -4736,6 +4737,15 @@ __metadata:
     path-type: ^4.0.0
     yaml: ^1.10.0
   checksum: c53bf7befc1591b2651a22414a5e786cd5f2eeaa87f3678a3d49d6069835a9d8d1aef223728e98aa8fec9a95bf831120d245096db12abe019fecb51f5696c96f
+  languageName: node
+  linkType: hard
+
+"cron-parser@npm:^4.8.1":
+  version: 4.8.1
+  resolution: "cron-parser@npm:4.8.1"
+  dependencies:
+    luxon: ^3.2.1
+  checksum: e3e7b227cb45c8e3e16b5ceab9fd1b4769b878b430f009d5de26c3e20d4e0112fde6f90a663afbcd9cc2be92d73b6eefe2d939d1646f3a96704f73c63dd39b6f
   languageName: node
   linkType: hard
 
@@ -7240,6 +7250,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"luxon@npm:^3.2.1":
+  version: 3.3.0
+  resolution: "luxon@npm:3.3.0"
+  checksum: 50cf17a0dc155c3dcacbeae8c0b7e80db425e0ba97b9cbdf12a7fc142d841ff1ab1560919f033af46240ed44e2f70c49f76e3422524c7fc8bb8d81ca47c66187
+  languageName: node
+  linkType: hard
+
 "magic-string@npm:^0.30.0":
   version: 0.30.0
   resolution: "magic-string@npm:0.30.0"
@@ -9035,6 +9052,15 @@ __metadata:
   version: 0.2.0
   resolution: "real-require@npm:0.2.0"
   checksum: fa060f19f2f447adf678d1376928c76379dce5f72bd334da301685ca6cdcb7b11356813332cc243c88470796bc2e2b1e2917fc10df9143dd93c2ea608694971d
+  languageName: node
+  linkType: hard
+
+"recron@npm:^1.1.5":
+  version: 1.1.5
+  resolution: "recron@npm:1.1.5"
+  dependencies:
+    cron-parser: ^4.8.1
+  checksum: 55baabcbc9b51b9f2ce0ed4cbb2b86b83d0a156c0cdabe605f9294c43ade046caffe5920c3011424d8c0c38844d9d95cb436983fce6c1409f104d48ed790958f
   languageName: node
   linkType: hard
 

@@ -15,7 +15,7 @@ export const partyRouter = router({
       ...party,
       attendings: await Promise.all(
         (
-          await Attending.findByPartyId(party.id)
+          await Attending.filterByPartyId(party.id)
         ).map(async (attending) => ({
           ...attending,
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -65,7 +65,7 @@ export const partyRouter = router({
 
       return await Promise.all(
         (
-          await Attending.findByPartyId(req.input.partyId)
+          await Attending.filterByPartyId(req.input.partyId)
         ).map(async (attending) => ({
           ...attending,
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

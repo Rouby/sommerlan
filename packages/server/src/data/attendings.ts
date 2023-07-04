@@ -1,9 +1,10 @@
 import { randomUUID } from "crypto";
-import { Base, Values, allRows } from "./utils";
+import { Base, Values } from "./$base";
 
 export class Attending extends Base {
+  static sheetName = "Attendings";
   get sheetName() {
-    return "Attendings";
+    return Attending.sheetName;
   }
 
   public id = randomUUID();
@@ -19,18 +20,14 @@ export class Attending extends Base {
     if (props) Object.assign(this, props);
   }
 
-  static async all() {
-    const rows = await allRows("Attendings");
-    return rows.map((row) => Base.fromRow(Attending, row));
-  }
-
-  static async findByPartyId(partyId: string) {
-    const attendings = await Attending.all();
-    return attendings.filter((attending) => attending.partyId === partyId);
+  static async filterByPartyId(partyId: string) {
+    return Attending.filter((attending) => attending.partyId === partyId);
   }
 
   static async findByPartyIdAndUserId(partyId: string, userId: string) {
-    const attendings = await Attending.findByPartyId(partyId);
-    return attendings.find((attending) => attending.userId === userId);
+    return Attending.find(
+      (attending) =>
+        attending.partyId === partyId && attending.userId === userId
+    );
   }
 }

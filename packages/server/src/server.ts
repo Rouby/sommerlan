@@ -5,6 +5,8 @@ import ws from "@fastify/websocket";
 import { fastifyTRPCPlugin } from "@trpc/server/adapters/fastify";
 import fastify from "fastify";
 import { join } from "path";
+import { cron } from "./cron";
+import { syncCache } from "./data/$api";
 import { logger } from "./logger";
 import { transporter } from "./mail";
 import { appRouter } from "./router";
@@ -50,22 +52,33 @@ export function createServer(opts: ServerOptions) {
   });
 
   const stop = async () => {
-    await server.close();
     transporter.close();
+    await Promise.all([
+      await cron.stop(),
+      await syncCache(),
+      await server.close(),
+    ]);
   };
   const start = async () => {
     try {
       await server.listen({ port, host: "0.0.0.0" });
 
-      transporter.verify((error) => {
-        if (error) {
-          logger.error(error);
-        } else {
-          logger.info("Mail-Server is ready to take our messages");
-        }
-      });
+      await cron.start();
 
-      logger.info("Listening on port", port);
+      if (!dev) {
+        await new Promise<void>((resolve, reject) =>
+          transporter.verify((error) => {
+            if (error) {
+              logger.error(error);
+              reject(error);
+            } else {
+              resolve();
+            }
+          })
+        );
+      }
+
+      logger.info("Startup complete", port);
     } catch (err) {
       server.log.error(err);
       process.exit(1);
