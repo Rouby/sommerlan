@@ -21,7 +21,7 @@ export function createServer(opts: ServerOptions) {
   const port = opts.port ?? 3000;
   const prefix = opts.prefix ?? "/trpc";
   const server = fastify({
-    logger: dev,
+    logger,
     disableRequestLogging: process.env.NODE_ENV !== "production",
   });
 
@@ -31,7 +31,13 @@ export function createServer(opts: ServerOptions) {
   server.register(fastifyTRPCPlugin, {
     prefix,
     useWSS: true,
-    trpcOptions: { router: appRouter, createContext },
+    trpcOptions: {
+      router: appRouter,
+      createContext,
+      onError: ({ error }: { error: Error }): void => {
+        logger.error(error);
+      },
+    },
   });
   if (!dev) {
     server.register(staticfs, {

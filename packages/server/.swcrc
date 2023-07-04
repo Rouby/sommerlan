@@ -16,5 +16,6 @@
     "type": "commonjs",
     // turn on lazy imports for maximum reboot performance
     "lazy": true
-  }
+  },
+  "sourceMaps": true
 }

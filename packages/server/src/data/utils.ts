@@ -26,7 +26,7 @@ export async function allRows(sheetId: string) {
   return newrelic.startSegment(`${sheetId}.allRows`, true, async () => {
     newrelic.addCustomSpanAttribute("db.id", "all");
     const sheet = await getSheet();
-    const rows = await sheet.sheetsByTitle["Users"].getRows();
+    const rows = await sheet.sheetsByTitle[sheetId].getRows();
     return rows;
   });
 }
@@ -48,7 +48,7 @@ export abstract class Base {
         await row.save();
       } else {
         const sheet = await getSheet();
-        await sheet.sheetsByTitle["Users"].addRow(values);
+        await sheet.sheetsByTitle[this.sheetName].addRow(values);
       }
     });
   }

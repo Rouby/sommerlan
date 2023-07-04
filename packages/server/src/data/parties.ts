@@ -19,6 +19,7 @@ export class Party extends Base {
 
   static async all() {
     const rows = await allRows("Parties");
+    console.log(rows);
     return rows.map((row) => Base.fromRow(Party, row));
   }
 
