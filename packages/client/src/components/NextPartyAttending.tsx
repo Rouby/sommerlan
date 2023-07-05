@@ -121,7 +121,7 @@ function AddUserMenu({
   return (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     <Can I="update" this={subject("Attending", { userId: "any" } as any)}>
-      <Menu width={300} position="top-start" shadow="lg" withArrow>
+      <Menu width={300} position="bottom-start" shadow="lg" withArrow>
         <Menu.Target>
           <ActionIcon radius="xl" variant="default">
             <IconPlus size="1rem" />
