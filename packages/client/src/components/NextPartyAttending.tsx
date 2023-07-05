@@ -1,16 +1,26 @@
+import { subject } from "@casl/ability";
 import {
   ActionIcon,
+  Alert,
   Avatar,
   Box,
+  Button,
   Center,
   Group,
+  Input,
   Loader,
+  LoadingOverlay,
+  Menu,
+  Popover,
+  Stack,
   Tooltip,
 } from "@mantine/core";
-import { IconCheck } from "@tabler/icons-react";
+import type { User } from "@sommerlan-app/server/src/data/users";
+import { IconCheck, IconMan, IconPlus } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { useAtomValue } from "jotai";
 import { Fragment } from "react";
+import { Can } from ".";
 import { userAtom } from "../state";
 import { formatRange, trpc } from "../utils";
 
@@ -84,12 +94,174 @@ export function NextPartyAttending() {
                     ))}
                   </Avatar.Group>
                 </Tooltip.Group>
+
+                <AddUserMenu
+                  usersAttending={attendingsOnDate.map((att) => att.user)}
+                  partyId={party.id}
+                  date={date.format("YYYY-MM-DD")}
+                />
               </Group>
             </Fragment>
           );
         })}
       </Box>
     </>
+  );
+}
+
+function AddUserMenu({
+  partyId,
+  date,
+  usersAttending,
+}: {
+  partyId: string;
+  date: string;
+  usersAttending: User[];
+}) {
+  return (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    <Can I="update" this={subject("Attending", { userId: "any" } as any)}>
+      <Menu width={300} position="top-start" shadow="lg" withArrow>
+        <Menu.Target>
+          <ActionIcon radius="xl" variant="default">
+            <IconPlus size="1rem" />
+          </ActionIcon>
+        </Menu.Target>
+
+        <Menu.Dropdown>
+          <Menu.Label>Nutzer</Menu.Label>
+          <MenuOptions
+            usersAttending={usersAttending}
+            partyId={partyId}
+            date={date}
+          />
+
+          <Menu.Divider />
+
+          <Popover width={300} position="bottom" shadow="lg">
+            <Popover.Target>
+              <Menu.Item icon={<IconMan size={24} />} closeMenuOnClick={false}>
+                Neuen Nutzer anlegen
+              </Menu.Item>
+            </Popover.Target>
+            <Popover.Dropdown>
+              <AddUserForm />
+            </Popover.Dropdown>
+          </Popover>
+        </Menu.Dropdown>
+      </Menu>
+    </Can>
+  );
+}
+
+function AddUserForm() {
+  const context = trpc.useContext();
+  const {
+    mutateAsync: register,
+    isLoading,
+    error,
+  } = trpc.auth.register.useMutation({
+    onSuccess: (data) => {
+      context.user.list.setData(void 0, (prev) => prev && [...prev, data.user]);
+    },
+  });
+
+  return (
+    <form
+      onSubmit={async (event) => {
+        event.preventDefault();
+        const form = event.target as HTMLFormElement;
+
+        const userName = form["username"].value;
+        const email = form["email"].value;
+
+        await register({ userName, email });
+
+        (event.target as HTMLFormElement).reset();
+      }}
+    >
+      <LoadingOverlay visible={isLoading} />
+
+      <Alert mb="md" hidden={!error} color="red">
+        {`${error?.message}`}
+      </Alert>
+
+      <Stack>
+        <Input required name="username" placeholder="Nutzername" />
+
+        <Input required type="email" name="email" placeholder="Email-Adresse" />
+
+        <Button type="submit">Nutzer erstellen</Button>
+      </Stack>
+    </form>
+  );
+}
+
+function MenuOptions({
+  partyId,
+  date,
+  usersAttending,
+}: {
+  partyId: string;
+  date: string;
+  usersAttending: User[];
+}) {
+  const { data, isLoading } = trpc.user.list.useQuery();
+
+  return (
+    <>
+      <LoadingOverlay visible={isLoading} />
+      {data?.map((user) => (
+        <MenuItem
+          key={user.id}
+          user={user}
+          attending={usersAttending.some((att) => att.id === user.id)}
+          partyId={partyId}
+          date={date}
+        />
+      ))}
+    </>
+  );
+}
+
+function MenuItem({
+  partyId,
+  date,
+  attending,
+  user,
+}: {
+  partyId: string;
+  date: string;
+  attending: boolean;
+  user: User;
+}) {
+  const context = trpc.useContext();
+  const { mutateAsync: attend, isLoading } = trpc.party.attend.useMutation({
+    onSuccess: (data) => {
+      context.party.nextParty.setData(
+        void 0,
+        (prev) =>
+          prev && {
+            ...prev,
+            attendings: data,
+          }
+      );
+    },
+  });
+
+  return (
+    <Menu.Item
+      icon={<Avatar size={24} radius="xl" src={user.avatar} />}
+      onClick={() =>
+        attend({ partyId, date, attending: !attending, userId: user.id })
+      }
+      closeMenuOnClick={false}
+      rightSection={
+        isLoading ? <Loader size={24} /> : attending ? <IconCheck /> : null
+      }
+    >
+      {user.displayName}
+    </Menu.Item>
   );
 }
 

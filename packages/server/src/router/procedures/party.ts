@@ -31,35 +31,27 @@ export const partyRouter = router({
         partyId: z.string(),
         attending: z.boolean(),
         date: z.string(),
+        userId: z.string().optional(),
       })
     )
     .mutation(async (req) => {
-      const attending = await Attending.findByPartyIdAndUserId(
-        req.input.partyId,
-        req.ctx.user.id
-      );
+      const userId = req.input.userId || req.ctx.user.id;
 
-      if (!attending) {
-        if (req.input.attending) {
-          const attending = new Attending({
-            userId: req.ctx.user.id,
-            partyId: req.input.partyId,
-            dates: [req.input.date],
-          });
+      const attending =
+        (await Attending.findByPartyIdAndUserId(req.input.partyId, userId)) ??
+        new Attending({ userId: userId, partyId: req.input.partyId });
 
-          await attending.save();
-        }
+      req.ctx.forbidden.throwUnlessCan("update", attending);
+
+      if (!req.input.attending) {
+        attending.dates = attending.dates.filter(
+          (date) => date !== req.input.date
+        );
+        await attending.save();
       } else {
-        if (!req.input.attending) {
-          attending.dates = attending.dates.filter(
-            (date) => date !== req.input.date
-          );
+        if (!attending.dates.includes(req.input.date)) {
+          attending.dates.push(req.input.date);
           await attending.save();
-        } else {
-          if (!attending.dates.includes(req.input.date)) {
-            attending.dates.push(req.input.date);
-            await attending.save();
-          }
         }
       }
 

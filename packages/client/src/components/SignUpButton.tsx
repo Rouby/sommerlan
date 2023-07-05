@@ -88,7 +88,7 @@ function RegisterForm() {
         const userName = form["username"].value;
         const email = form["email"].value;
 
-        const token = await register({ userName, email });
+        const { token } = await register({ userName, email });
 
         setToken(token);
       }}

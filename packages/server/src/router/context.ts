@@ -1,3 +1,4 @@
+import { ForbiddenError } from "@casl/ability";
 import { TRPCError, inferAsyncReturnType } from "@trpc/server";
 import { CreateFastifyContextOptions } from "@trpc/server/adapters/fastify";
 import { JwtPayload, decode, verify } from "jsonwebtoken";
@@ -34,7 +35,7 @@ export async function createContext({ req, res }: CreateFastifyContextOptions) {
 
   const ability = await createAbility(user);
 
-  return { req, res, user, ability };
+  return { req, res, user, ability, forbidden: ForbiddenError.from(ability) };
 }
 
 export type Context = inferAsyncReturnType<typeof createContext>;

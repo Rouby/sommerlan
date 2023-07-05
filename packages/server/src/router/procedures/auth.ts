@@ -33,7 +33,7 @@ export const authRouter = router({
     .mutation(async (req) => {
       const { userName, email } = req.input;
 
-      if (await User.findByName(userName)) {
+      if (await User.findByEmail(email)) {
         throw new TRPCError({
           code: "CONFLICT",
           message: "User already exists",
@@ -49,7 +49,10 @@ export const authRouter = router({
 
       logger.trace({ user }, "Registered user");
 
-      return signToken(user);
+      return {
+        user,
+        token: await signToken(user),
+      };
     }),
 
   registerPasskey: publicProcedure
