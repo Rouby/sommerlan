@@ -81,9 +81,9 @@ jobs:
 
   build:
     name: 🐳 Build
+    runs-on: self-hosted
     # only build/deploy main branch on pushes
     if: ${{ (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push' }}
-    runs-on: ubuntu-latest
 
     concurrency:
       group: build-${{ github.ref }}
@@ -95,9 +95,6 @@ jobs:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
 
-      - name: 🐳 Set up QEMU
-        uses: docker/setup-qemu-action@v2
-
       - name: 🐳 Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
@@ -105,19 +102,11 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          outputs: type=docker,dest=/tmp/sommerlan-image.tar
-          platforms: linux/arm64
           tags: sommerlan-app:${{ github.ref_name }}-${{ github.sha }}
           build-args: |
             COMMIT_SHA=${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-      - name: ⬆️ Upload artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: App-Image
-          path: /tmp/sommerlan-image.tar
 
       - name: ✏️ Write output
         id: branch_check
@@ -151,16 +140,6 @@ jobs:
 
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
-
-      - name: 📥 Download artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: App-Image
-          path: /tmp
-
-      - name: 🐳 Load image
-        run: |
-          docker load --input /tmp/sommerlan-image.tar
 
       - name: 🚀 Deploy Staging
         if: ${{ github.ref == 'refs/heads/dev' }}
