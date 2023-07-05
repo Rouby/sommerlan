@@ -102,7 +102,8 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          push: true
+          outputs: type=docker,dest=/tmp/sommerlan-image.tar
+          platforms: linux/arm64
           tags: sommerlan-app:${{ github.ref_name }}-${{ github.sha }}
           build-args: |
             COMMIT_SHA=${{ github.sha }}
@@ -141,6 +142,10 @@ jobs:
 
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
+
+      - name: 🐳 Load image
+        run: |
+          docker load --input /tmp/sommerlan-image.tar
 
       - name: 🚀 Deploy Staging
         if: ${{ github.ref == 'refs/heads/dev' }}
