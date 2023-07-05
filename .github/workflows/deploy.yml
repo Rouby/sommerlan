@@ -103,6 +103,7 @@ jobs:
         with:
           context: .
           outputs: type=docker,dest=/tmp/sommerlan-image.tar
+          platforms: linux/arm64
           tags: sommerlan-app:${{ github.ref_name }}-${{ github.sha }}
           build-args: |
             COMMIT_SHA=${{ github.sha }}
