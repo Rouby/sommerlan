@@ -18,6 +18,12 @@ RUN yarn install --immutable
 
 FROM build as client-build
 
+ARG NEW_RELIC_LICENSE_KEY
+ARG NEW_RELIC_APPLICATION_ID
+
+ENV NEW_RELIC_LICENSE_KEY $NEW_RELIC_LICENSE_KEY
+ENV NEW_RELIC_APPLICATION_ID $NEW_RELIC_APPLICATION_ID
+
 ADD ./packages/client ./packages/client
 RUN yarn workspace @sommerlan-app/client build
 

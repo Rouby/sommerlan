@@ -1,5 +1,4 @@
 import react from "@vitejs/plugin-react-swc";
-import { readFileSync } from "node:fs";
 import { defineConfig } from "vite";
 import { createHtmlPlugin } from "vite-plugin-html";
 import svgr from "vite-plugin-svgr";
@@ -14,10 +13,12 @@ export default defineConfig(async ({ mode }) => ({
     })),
     react(),
     createHtmlPlugin({
+      minify: mode !== "development",
       template: "index.html",
       inject: {
         data: {
-          head: mode === "development" ? `` : readFileSync("newrelic", "utf-8"),
+          new_relic_license_key: process.env.NEW_RELIC_LICENSE_KEY,
+          new_relic_application_id: process.env.NEW_RELIC_APPLICATION_ID,
         },
       },
     }),
