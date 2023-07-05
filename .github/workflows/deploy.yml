@@ -102,6 +102,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
+          push: true
           tags: sommerlan-app:${{ github.ref_name }}-${{ github.sha }}
           build-args: |
             COMMIT_SHA=${{ github.sha }}
