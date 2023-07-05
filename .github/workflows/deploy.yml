@@ -108,6 +108,10 @@ jobs:
           build-args: |
             COMMIT_SHA=${{ github.sha }}
             NEW_RELIC_LICENSE_KEY=${{ secrets.NEW_RELIC_LICENSE_KEY }}
+            NEW_RELIC_ACCOUNT_ID=${{ secrets.NEW_RELIC_ACCOUNT_ID }}
+            NEW_RELIC_TRUST_KEY=${{ secrets.NEW_RELIC_TRUST_KEY }}
+            NEW_RELIC_AGENT_ID=${{ secrets.NEW_RELIC_AGENT_ID }}
+            NEW_RELIC_LICENSE_KEY=${{ secrets.NEW_RELIC_LICENSE_KEY }}
             NEW_RELIC_APPLICATION_ID=${{ secrets.NEW_RELIC_APPLICATION_ID }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

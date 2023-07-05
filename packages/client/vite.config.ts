@@ -17,6 +17,9 @@ export default defineConfig(async ({ mode }) => ({
       template: "index.html",
       inject: {
         data: {
+          new_relic_account_id: process.env.NEW_RELIC_ACCOUNT_ID,
+          new_relic_trust_key: process.env.NEW_RELIC_TRUST_KEY,
+          new_relic_agent_id: process.env.NEW_RELIC_AGENT_ID,
           new_relic_license_key: process.env.NEW_RELIC_LICENSE_KEY,
           new_relic_application_id: process.env.NEW_RELIC_APPLICATION_ID,
         },
