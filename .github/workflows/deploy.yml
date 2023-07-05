@@ -79,14 +79,14 @@ jobs:
       - name: ⚡ Run vitest
         run: yarn test -- --coverage
 
-  build:
-    name: 🐳 Build
-    runs-on: self-hosted
+  branch:
+    name: 🌿 Branch check
+    runs-on: ubuntu-latest
     # only build/deploy main branch on pushes
     if: ${{ (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push' }}
 
     concurrency:
-      group: build-${{ github.ref }}
+      group: branch-${{ github.ref }}
 
     outputs:
       env_name: ${{ steps.branch_check.outputs.env_name }}
@@ -94,27 +94,6 @@ jobs:
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
-
-      - name: 🐳 Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: 🐳 Docker build
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          outputs: type=docker,dest=/tmp/sommerlan-image.tar
-          platforms: linux/arm64
-          tags: sommerlan-app:${{ github.ref_name }}-${{ github.sha }}
-          build-args: |
-            COMMIT_SHA=${{ github.sha }}
-            NEW_RELIC_LICENSE_KEY=${{ secrets.NEW_RELIC_LICENSE_KEY }}
-            NEW_RELIC_ACCOUNT_ID=${{ secrets.NEW_RELIC_ACCOUNT_ID }}
-            NEW_RELIC_TRUST_KEY=${{ secrets.NEW_RELIC_TRUST_KEY }}
-            NEW_RELIC_AGENT_ID=${{ secrets.NEW_RELIC_AGENT_ID }}
-            NEW_RELIC_LICENSE_KEY=${{ secrets.NEW_RELIC_LICENSE_KEY }}
-            NEW_RELIC_APPLICATION_ID=${{ secrets.NEW_RELIC_APPLICATION_ID }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
 
       - name: ✏️ Write output
         id: branch_check
@@ -131,7 +110,7 @@ jobs:
   deploy:
     name: 🚀 Deploy
     runs-on: self-hosted
-    needs: [lint, typecheck, vitest, build]
+    needs: [lint, typecheck, vitest, branch]
     # only build/deploy main branch on pushes
     if: ${{ (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push' }}
 
@@ -139,15 +118,29 @@ jobs:
       group: deploy-${{ github.ref }}
 
     environment:
-      name: ${{ needs.build.outputs.env_name }}
-      url: ${{ needs.build.outputs.env_url }}
+      name: ${{ needs.branch.outputs.env_name }}
+      url: ${{ needs.branch.outputs.env_url }}
 
     steps:
-      - name: 🛑 Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.9.1
-
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
+
+      - name: 🐳 Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: 🐳 Docker build
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          outputs: type=docker,dest=/tmp/sommerlan-image.tar
+          platforms: linux/arm64
+          tags: sommerlan-app:${{ github.ref_name }}-${{ github.sha }}
+          build-args: |
+            COMMIT_SHA=${{ github.sha }}
+            NEW_RELIC_LOADER_CONFIG="${{ secrets.NEW_RELIC_LOADER_CONFIG }}"
+            NEW_RELIC_INFO="${{ secrets.NEW_RELIC_INFO }}"
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: 🐳 Load image
         run: |
