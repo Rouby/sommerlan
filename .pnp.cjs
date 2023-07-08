@@ -2234,6 +2234,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:3.3.0"\
       ],\
       [\
+        "fast-json-patch",\
+        "npm:3.1.1"\
+      ],\
+      [\
         "fast-json-stable-stringify",\
         "npm:2.1.0"\
       ],\
@@ -7736,6 +7740,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["base64url", "npm:3.0.1"],\
             ["dayjs", "npm:1.11.8"],\
             ["dotenv", "npm:16.3.1"],\
+            ["fast-json-patch", "npm:3.1.1"],\
             ["fastify", "npm:4.18.0"],\
             ["google-spreadsheet", "npm:3.3.0"],\
             ["jsonwebtoken", "npm:9.0.0"],\
@@ -12129,6 +12134,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["glob-parent", "npm:5.1.2"],\
             ["merge2", "npm:1.4.1"],\
             ["micromatch", "npm:4.0.5"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["fast-json-patch", [\
+        ["npm:3.1.1", {\
+          "packageLocation": "./.yarn/cache/fast-json-patch-npm-3.1.1-7e8bb70a45-c4525b61b2.zip/node_modules/fast-json-patch/",\
+          "packageDependencies": [\
+            ["fast-json-patch", "npm:3.1.1"]\
           ],\
           "linkType": "HARD"\
         }]\

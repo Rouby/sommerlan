@@ -1,8 +1,11 @@
 import { Cron } from "recron";
-import { syncCache } from "./data/$api";
+import { syncCache } from "./data";
 
 export const cron = new Cron();
 
-cron.schedule("@every 5m", async () => {
-  await syncCache();
-});
+cron.schedule(
+  process.env.NODE_ENV === "production" ? "@every 5m" : "@every 1m",
+  async () => {
+    await syncCache();
+  }
+);

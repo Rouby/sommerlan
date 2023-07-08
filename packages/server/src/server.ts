@@ -6,7 +6,7 @@ import { fastifyTRPCPlugin } from "@trpc/server/adapters/fastify";
 import fastify from "fastify";
 import { join } from "path";
 import { cron } from "./cron";
-import { syncCache } from "./data/$api";
+import { syncCache } from "./data";
 import { logger } from "./logger";
 import { transporter } from "./mail";
 import { appRouter } from "./router";
