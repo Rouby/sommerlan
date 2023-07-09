@@ -6,7 +6,6 @@ import {
   Box,
   Button,
   Center,
-  Group,
   Input,
   Loader,
   LoadingOverlay,
@@ -58,11 +57,19 @@ export function NextPartyAttending() {
         p="xs"
         sx={(theme) => ({
           display: "grid",
-          gridTemplateColumns: "auto 1fr",
-          gridAutoRows: theme.spacing.xl,
+          gridTemplateColumns: "auto auto auto 1fr",
+          // gridAutoRows: theme.spacing.xl,
           columnGap: theme.spacing.md,
           rowGap: theme.spacing.sm,
           alignItems: "center",
+
+          [theme.fn.smallerThan("xs")]: {
+            gridTemplateColumns: "auto auto 1fr",
+
+            "& > *:nth-child(4n)": {
+              gridColumn: "1 / span 3",
+            },
+          },
         })}
       >
         {dates.map((date) => {
@@ -71,36 +78,35 @@ export function NextPartyAttending() {
           );
           return (
             <Fragment key={date.toString()}>
-              <div>{date.format("ddd, L")}</div>
-              <Group>
-                <AttendingToggle
-                  attending={attendingsOnDate.some(
-                    (att) => att.userId === user.id
-                  )}
-                  partyId={party.id}
-                  date={date.format("YYYY-MM-DD")}
-                />
+              <Box sx={{ whiteSpace: "nowrap" }}>{date.format("ddd, L")}</Box>
 
-                <Tooltip.Group openDelay={300} closeDelay={100}>
-                  <Avatar.Group spacing="sm">
-                    {attendingsOnDate.map((attending) => (
-                      <Tooltip
-                        key={attending.id}
-                        label={attending.user.displayName}
-                        withArrow
-                      >
-                        <UserAvatar user={attending.user} />
-                      </Tooltip>
-                    ))}
-                  </Avatar.Group>
-                </Tooltip.Group>
+              <AttendingToggle
+                attending={attendingsOnDate.some(
+                  (att) => att.userId === user.id
+                )}
+                partyId={party.id}
+                date={date.format("YYYY-MM-DD")}
+              />
 
-                <AddUserMenu
-                  usersAttending={attendingsOnDate.map((att) => att.user)}
-                  partyId={party.id}
-                  date={date.format("YYYY-MM-DD")}
-                />
-              </Group>
+              <AddUserMenu
+                usersAttending={attendingsOnDate.map((att) => att.user)}
+                partyId={party.id}
+                date={date.format("YYYY-MM-DD")}
+              />
+
+              <Tooltip.Group openDelay={300} closeDelay={100}>
+                <Avatar.Group spacing="sm" sx={{ flexWrap: "wrap" }}>
+                  {attendingsOnDate.map((attending) => (
+                    <Tooltip
+                      key={attending.id}
+                      label={attending.user.displayName}
+                      withArrow
+                    >
+                      <UserAvatar user={attending.user} />
+                    </Tooltip>
+                  ))}
+                </Avatar.Group>
+              </Tooltip.Group>
             </Fragment>
           );
         })}
