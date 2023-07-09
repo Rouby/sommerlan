@@ -1,12 +1,14 @@
-import { Avatar, AvatarProps, useMantineTheme } from "@mantine/core";
+import { Avatar, AvatarProps, Tooltip, useMantineTheme } from "@mantine/core";
 import type { User } from "@sommerlan-app/server/src/data/users";
 
 export function UserAvatar({
   user,
   size,
+  innerRef,
 }: {
   user: User;
   size?: AvatarProps["size"];
+  innerRef?: React.ForwardedRef<HTMLDivElement>;
 }) {
   const theme = useMantineTheme();
   const availableColors = Object.keys(
@@ -19,14 +21,17 @@ export function UserAvatar({
         availableColors.length
     ];
   return (
-    <Avatar
-      src={user.avatar}
-      alt={user.displayName}
-      radius="xl"
-      color={color}
-      size={size}
-    >
-      {user.displayName.split(" ").map((name) => name[0])}
-    </Avatar>
+    <Tooltip key={user.id} label={user.displayName} withArrow>
+      <Avatar
+        src={user.avatar}
+        alt={user.displayName}
+        radius="xl"
+        color={color}
+        size={size}
+        ref={innerRef}
+      >
+        {user.displayName.split(" ").map((name) => name[0])}
+      </Avatar>
+    </Tooltip>
   );
 }
