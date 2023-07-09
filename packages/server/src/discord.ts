@@ -2,8 +2,6 @@ import {
   Client,
   GatewayDispatchEvents,
   GatewayIntentBits,
-  InteractionType,
-  MessageFlags,
 } from "@discordjs/core";
 import { REST } from "@discordjs/rest";
 import { WebSocketManager } from "@discordjs/ws";
@@ -24,26 +22,6 @@ const gateway = new WebSocketManager({
 
 const client = new Client({ rest, gateway });
 
-// Listen for interactions
-// Each event contains an `api` prop along with the event data that allows you to interface with the Discord REST API
-client.on(
-  GatewayDispatchEvents.InteractionCreate,
-  async ({ data: interaction, api }) => {
-    if (
-      interaction.type !== InteractionType.ApplicationCommand ||
-      interaction.data.name !== "ping"
-    ) {
-      return;
-    }
-
-    await api.interactions.reply(interaction.id, interaction.token, {
-      content: "Pong!",
-      flags: MessageFlags.Ephemeral,
-    });
-  }
-);
-
-// Listen for the ready event
 client.once(GatewayDispatchEvents.Ready, () => {
   // sendDiscordMessage("154637662890885120", "Hello", { ttl: "1m" });
 });

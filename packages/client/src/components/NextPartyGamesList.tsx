@@ -3,6 +3,7 @@ import {
   Box,
   Center,
   Group,
+  Indicator,
   Loader,
   MultiSelect,
   Text,
@@ -109,11 +110,7 @@ export function NextPartyGamesList() {
           alignItems: "center",
 
           [theme.fn.smallerThan("xs")]: {
-            gridTemplateColumns: "auto auto 1fr",
-
-            "& > *:nth-child(4n)": {
-              gridColumn: "1 / span 3",
-            },
+            gridTemplateColumns: "1fr",
           },
         })}
       >
@@ -121,13 +118,16 @@ export function NextPartyGamesList() {
           const attendingsOnDate = party.attendings.filter((attending) =>
             attending.dates.includes(date.format("YYYY-MM-DD"))
           );
-          const gamesOnDate = games.filter((game) =>
-            game.players.some((player) =>
-              attendingsOnDate.some(
-                (attending) => attending.user.id === player.id
-              )
-            )
-          );
+          const gamesOnDate = games
+            .map((game) => ({
+              ...game,
+              players: game.players.filter((player) =>
+                attendingsOnDate.some(
+                  (attending) => attending.user.id === player.id
+                )
+              ),
+            }))
+            .filter((game) => game.players.length > 0);
           return (
             <Fragment key={date.toString()}>
               <Box sx={{ whiteSpace: "nowrap" }}>{date.format("ddd, L")}</Box>
@@ -136,12 +136,19 @@ export function NextPartyGamesList() {
                 <Avatar.Group spacing="sm" sx={{ flexWrap: "wrap" }}>
                   {gamesOnDate.map((game) => (
                     <Tooltip key={game.id} label={game.name} withArrow>
-                      <Avatar radius="xl" src={game.imageUrl}>
-                        {game.name
-                          .split(" ")
-                          .map((name) => name[0])
-                          .join("")}
-                      </Avatar>
+                      <Indicator
+                        position="top-start"
+                        label={`${game.players.length} Spieler`}
+                        size={26}
+                        offset={8}
+                      >
+                        <Avatar radius="xl" src={game.imageUrl} size="xl">
+                          {game.name
+                            .split(" ")
+                            .map((name) => name[0])
+                            .join("")}
+                        </Avatar>
+                      </Indicator>
                     </Tooltip>
                   ))}
                 </Avatar.Group>
