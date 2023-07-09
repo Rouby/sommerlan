@@ -75,6 +75,8 @@ export const eventRouter = router({
       event.description = req.input.description;
       event.imageUrl = req.input.imageUrl;
 
+      req.ctx.forbidden.throwUnlessCan("update", event);
+
       await event.save();
 
       return {

@@ -1,3 +1,4 @@
+import { subject } from "@casl/ability";
 import {
   ActionIcon,
   Avatar,
@@ -18,7 +19,7 @@ import {
 } from "@mantine/core";
 import { DatePickerInput, TimeInput } from "@mantine/dates";
 import { RichTextEditor } from "@mantine/tiptap";
-import type { User } from "@sommerlan-app/server/src/data";
+import type { Event, User } from "@sommerlan-app/server/src/data";
 import { IconCheck, IconPencil } from "@tabler/icons-react";
 import Highlight from "@tiptap/extension-highlight";
 import Placeholder from "@tiptap/extension-placeholder";
@@ -27,7 +28,7 @@ import StarterKit from "@tiptap/starter-kit";
 import dayjs from "dayjs";
 import { useAtomValue } from "jotai";
 import { useState } from "react";
-import { UserAvatar } from ".";
+import { Can, UserAvatar } from ".";
 import { userAtom } from "../state";
 import { trpc } from "../utils";
 
@@ -93,6 +94,7 @@ function EventCard({
     endTime: string;
     name: string;
     description: string;
+    organizerId: string;
     participants: User[];
   };
 }) {
@@ -129,9 +131,15 @@ function EventCard({
 
       <Group mt="md" position="apart">
         <Text weight={500}>{event.name}</Text>
-        <ActionIcon size="xs" onClick={() => setShowEdit(true)}>
-          <IconPencil />
-        </ActionIcon>
+        <Can
+          I="update"
+          this={subject("Event", event as unknown as Event)}
+          otherwise={<div />}
+        >
+          <ActionIcon size="xs" onClick={() => setShowEdit(true)}>
+            <IconPencil />
+          </ActionIcon>
+        </Can>
       </Group>
       <Text size="sm" color="dimmed">
         {event.date
