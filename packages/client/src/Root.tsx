@@ -35,11 +35,9 @@ export function Root() {
                 <Link to="/">
                   <Button variant="subtle">Intro</Button>
                 </Link>
-                <Can I="read" a="User">
-                  <Link to="/party">
-                    <Button variant="subtle">Party</Button>
-                  </Link>
-                </Can>
+                <Link to="/party">
+                  <Button variant="subtle">Party</Button>
+                </Link>
               </Group>
             </MediaQuery>
             <Can I="read" a="User">
