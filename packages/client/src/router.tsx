@@ -1,7 +1,7 @@
 import { RootRoute, Route, Router } from "@tanstack/router";
 import { Authenticate } from "./Auth";
 import { Root } from "./Root";
-import { Imprint, Intro, Party } from "./pages";
+import { Games, Imprint, Intro, Party } from "./pages";
 
 const rootRoute = new RootRoute({
   component: Root,
@@ -30,6 +30,12 @@ const partyRoute = new Route({
   component: Party,
 });
 
+const gamesRoute = new Route({
+  getParentRoute: () => authRoute,
+  path: "games",
+  component: Games,
+});
+
 const imprintRoute = new Route({
   getParentRoute: () => authRoute,
   path: "imprint",
@@ -37,7 +43,7 @@ const imprintRoute = new Route({
 });
 
 const routeTree = rootRoute.addChildren([
-  authRoute.addChildren([indexRoute, partyRoute, imprintRoute]),
+  authRoute.addChildren([indexRoute, partyRoute, gamesRoute, imprintRoute]),
 ]);
 
 export const router = new Router({ routeTree });

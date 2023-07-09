@@ -9,7 +9,12 @@ import {
   UnstyledButton,
   useMantineTheme,
 } from "@mantine/core";
-import { IconCloudComputing, IconHome, IconPrinter } from "@tabler/icons-react";
+import {
+  IconCloudComputing,
+  IconDeviceGamepad,
+  IconHome,
+  IconPrinter,
+} from "@tabler/icons-react";
 import { Link, Outlet } from "@tanstack/router";
 import { Can, SignUpButton, UserButton } from "./components";
 
@@ -38,13 +43,13 @@ export function Root() {
                 <Link to="/party">
                   <Button variant="subtle">Party</Button>
                 </Link>
+                <Link to="/games">
+                  <Button variant="subtle">Games</Button>
+                </Link>
               </Group>
             </MediaQuery>
-            <Can I="read" a="User">
+            <Can I="read" a="User" otherwise={<SignUpButton />}>
               <UserButton />
-            </Can>
-            <Can I="read" a="User" not>
-              <SignUpButton />
             </Can>
           </Group>
         </Header>
@@ -65,6 +70,9 @@ export function Root() {
               </Link>
               <Link to="/party" activeProps={linkActiveProps}>
                 <NavButton icon={<IconCloudComputing />} label="Party" />
+              </Link>
+              <Link to="/games" activeProps={linkActiveProps}>
+                <NavButton icon={<IconDeviceGamepad />} label="Games" />
               </Link>
               <Link to="/imprint" activeProps={linkActiveProps}>
                 <NavButton icon={<IconPrinter />} label="Imprint" />
