@@ -154,46 +154,66 @@ const patches = new Map<
 export async function syncCache() {
   //
   logger.info("Syncing cache");
-  for (const [cls, entities] of patches.entries()) {
-    const sheetName = cls.prototype.sheetName;
-    const objectKeys = Object.keys(new cls());
-    const doc = await getSheet();
-    const rows = await doc.sheetsByTitle[sheetName].getRows();
-    for (const [id, operations] of entities.entries()) {
-      const row = rows.find((row) => row.id === JSON.stringify(id));
-      if (operations === deleteMarker) {
-        logger.info({ sheetName, id }, "Deleting entity");
-        row?.delete();
-      } else {
-        const original = row
-          ? Object.fromEntries(
-              objectKeys.map((key) => [key, JSON.parse(row[key])])
-            )
-          : {};
-        try {
-          const { newDocument } = applyPatch(original, operations, true, false);
-          const values = Object.fromEntries(
-            Object.entries(newDocument).map(([key, value]) => [
-              key,
-              JSON.stringify(value),
-            ])
-          );
-          logger.info({ sheetName, id, operations, values }, "Syncing entity");
-          if (row) {
-            Object.assign(row, values);
-            await row.save();
-          } else {
-            await doc.sheetsByTitle[sheetName].addRow(values);
-          }
-        } catch (err) {
-          logger.error(
-            { err, sheetName, id, operations, original },
-            "Failed to apply patch"
+  await newrelic.startSegment(`syncCache`, true, async () => {
+    for (const [cls, entities] of patches.entries()) {
+      const sheetName = cls.prototype.sheetName;
+      await newrelic.startSegment(`syncCahce.${sheetName}`, true, async () => {
+        const objectKeys = Object.keys(new cls());
+        const doc = await getSheet();
+        const rows = await doc.sheetsByTitle[sheetName].getRows();
+        for (const [id, operations] of entities.entries()) {
+          const row = rows.find((row) => row.id === JSON.stringify(id));
+          await newrelic.startSegment(
+            `syncCache.${sheetName}.entity`,
+            true,
+            async () => {
+              newrelic.addCustomAttribute("entity.id", id);
+              newrelic.addCustomAttribute("entity.sheetName", sheetName);
+              if (operations === deleteMarker) {
+                logger.info({ sheetName, id }, "Deleting entity");
+                row?.delete();
+              } else {
+                const original = row
+                  ? Object.fromEntries(
+                      objectKeys.map((key) => [key, JSON.parse(row[key])])
+                    )
+                  : {};
+                try {
+                  const { newDocument } = applyPatch(
+                    original,
+                    operations,
+                    true,
+                    false
+                  );
+                  const values = Object.fromEntries(
+                    Object.entries(newDocument).map(([key, value]) => [
+                      key,
+                      JSON.stringify(value),
+                    ])
+                  );
+                  logger.info(
+                    { sheetName, id, operations, values },
+                    "Syncing entity"
+                  );
+                  if (row) {
+                    Object.assign(row, values);
+                    await row.save();
+                  } else {
+                    await doc.sheetsByTitle[sheetName].addRow(values);
+                  }
+                } catch (err) {
+                  logger.error(
+                    { err, sheetName, id, operations, original },
+                    "Failed to apply patch"
+                  );
+                }
+              }
+            }
           );
         }
-      }
+      });
     }
-  }
+  });
   logger.info("Synced cache");
   patches.clear();
   cache.clear();
