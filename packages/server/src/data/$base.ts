@@ -27,6 +27,11 @@ export abstract class Base {
 
     const diff = compare(cachedValues ?? {}, thisValues, true);
 
+    logger.debug(
+      { diff, cachedValues, thisValues, sheetName: this.sheetName },
+      "Storing diff"
+    );
+
     const thisClass = this.constructor as StaticThis<Base>;
 
     if (!patches.has(thisClass)) {
@@ -130,7 +135,7 @@ export abstract class Base {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return cache.get(sheetName)!.map((values) => {
       const obj = new cls();
-      Object.assign(obj, values);
+      Object.assign(obj, JSON.parse(JSON.stringify(values)));
       return obj;
     });
   }
