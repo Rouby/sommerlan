@@ -13,6 +13,7 @@ import { EventEmitter } from "events";
 import { sign } from "jsonwebtoken";
 import { z } from "zod";
 import { User } from "../../data";
+import { findDiscordUserId, sendDiscordMessage } from "../../discord";
 import { logger } from "../../logger";
 import { sendMail } from "../../mail";
 import { createAbility } from "../ability";
@@ -302,26 +303,70 @@ export const authRouter = router({
     .query((req) => signToken(req.ctx.user)),
 
   sendMagicLink: publicProcedure
-    .input(z.object({ email: z.string() }))
+    .input(
+      z
+        .object({
+          email: z.string().optional(),
+          discordUsername: z.string().optional(),
+        })
+        .and(
+          z.union([
+            z.object({ email: z.undefined(), discordUsername: z.string() }),
+            z.object({ email: z.string(), discordUsername: z.undefined() }),
+          ])
+        )
+    )
     .mutation(async (req) => {
-      const user = await User.findByEmail(req.input.email);
+      if (req.input.email) {
+        const user = await User.findByEmail(req.input.email);
 
-      if (!user) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User not found",
+        if (!user) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "User not found",
+          });
+        }
+
+        const magicLinkId = randomUUID();
+
+        issuedMagicLinks.set(magicLinkId, await signToken(user));
+
+        await sendMail({
+          to: req.input.email,
+          subject: "SommerLAN Login Link",
+          html: `Login with this link: <a href="${expectedOrigin}?auth=${magicLinkId}">${expectedOrigin}?auth=${magicLinkId}</a>`,
         });
       }
 
-      const magicLinkId = randomUUID();
+      if (req.input.discordUsername) {
+        const userId = await findDiscordUserId(req.input.discordUsername);
 
-      issuedMagicLinks.set(magicLinkId, await signToken(user));
+        if (!userId) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "User not found",
+          });
+        }
 
-      await sendMail({
-        to: req.input.email,
-        subject: "SommerLAN Login Link",
-        html: `Login with this link: <a href="${expectedOrigin}?auth=${magicLinkId}">${expectedOrigin}?auth=${magicLinkId}</a>`,
-      });
+        const user = await User.findByDiscordId(userId);
+
+        if (!user) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "User not connected",
+          });
+        }
+
+        const magicLinkId = randomUUID();
+
+        issuedMagicLinks.set(magicLinkId, await signToken(user));
+
+        await sendDiscordMessage(
+          userId,
+          `Login with this link: <a href="${expectedOrigin}?auth=${magicLinkId}">${expectedOrigin}?auth=${magicLinkId}</a>`,
+          { ttl: "15m" }
+        );
+      }
     }),
 
   loginWithMagicLink: publicProcedure

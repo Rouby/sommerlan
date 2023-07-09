@@ -7,6 +7,7 @@ import fastify from "fastify";
 import { join } from "path";
 import { cron } from "./cron";
 import { syncCache } from "./data";
+import { discord } from "./discord";
 import { logger } from "./logger";
 import { transporter } from "./mail";
 import { appRouter } from "./router";
@@ -54,6 +55,7 @@ export function createServer(opts: ServerOptions) {
   const stop = async () => {
     transporter.close();
     await Promise.all([
+      await discord.destroy(),
       await cron.stop(),
       await syncCache(),
       await server.close(),
@@ -64,6 +66,8 @@ export function createServer(opts: ServerOptions) {
       await server.listen({ port, host: "0.0.0.0" });
 
       await cron.start();
+
+      await discord.connect();
 
       if (!dev) {
         await new Promise<void>((resolve, reject) =>

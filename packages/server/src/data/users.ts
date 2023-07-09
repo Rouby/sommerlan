@@ -28,6 +28,8 @@ export class User extends Base {
 
   public email = "";
 
+  public discordUserId = "";
+
   get avatar() {
     const hash = createHash("md5")
       .update(this.email.toLowerCase())
@@ -48,5 +50,9 @@ export class User extends Base {
 
   static async findByEmail(email: string) {
     return User.find((user) => user.email === email);
+  }
+
+  static async findByDiscordId(id: string) {
+    return User.find((user) => user.discordUserId === id);
   }
 }
