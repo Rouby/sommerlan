@@ -137,7 +137,7 @@ function AddUserMenu({
           </ActionIcon>
         </Menu.Target>
 
-        <Menu.Dropdown>
+        <Menu.Dropdown sx={{ overflow: "auto", maxHeight: 300 }}>
           <Menu.Label>Nutzer</Menu.Label>
           <MenuOptions
             usersAttending={usersAttending}
@@ -145,18 +145,32 @@ function AddUserMenu({
             date={date}
           />
 
-          <Menu.Divider />
+          <Box
+            sx={(theme) => ({
+              position: "sticky",
+              bottom: 0,
+              background:
+                theme.colorScheme === "dark"
+                  ? theme.colors.dark[6]
+                  : theme.white,
+            })}
+          >
+            <Menu.Divider />
 
-          <Popover width={300} position="bottom" shadow="lg">
-            <Popover.Target>
-              <Menu.Item icon={<IconMan size={24} />} closeMenuOnClick={false}>
-                Neuen Nutzer anlegen
-              </Menu.Item>
-            </Popover.Target>
-            <Popover.Dropdown>
-              <AddUserForm />
-            </Popover.Dropdown>
-          </Popover>
+            <Popover width={300} position="top" shadow="lg">
+              <Popover.Target>
+                <Menu.Item
+                  icon={<IconMan size={24} />}
+                  closeMenuOnClick={false}
+                >
+                  Neuen Nutzer anlegen
+                </Menu.Item>
+              </Popover.Target>
+              <Popover.Dropdown>
+                <AddUserForm />
+              </Popover.Dropdown>
+            </Popover>
+          </Box>
         </Menu.Dropdown>
       </Menu>
     </Can>
