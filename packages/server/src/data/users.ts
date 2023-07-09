@@ -32,7 +32,7 @@ export class User extends Base {
     const hash = createHash("md5")
       .update(this.email.toLowerCase())
       .digest("hex");
-    return `https://www.gravatar.com/avatar/${hash}`;
+    return `https://www.gravatar.com/avatar/${hash}?d=404`;
   }
 
   constructor(props?: Values<User>) {

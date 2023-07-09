@@ -20,7 +20,7 @@ import { IconCheck, IconMan, IconPlus } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { useAtomValue } from "jotai";
 import { Fragment } from "react";
-import { Can } from ".";
+import { Can, UserAvatar } from ".";
 import { userAtom } from "../state";
 import { formatRange, trpc } from "../utils";
 
@@ -89,7 +89,7 @@ export function NextPartyAttending() {
                         label={attending.user.displayName}
                         withArrow
                       >
-                        <Avatar src={attending.user.avatar} radius="xl" />
+                        <UserAvatar user={attending.user} />
                       </Tooltip>
                     ))}
                   </Avatar.Group>
@@ -251,7 +251,7 @@ function MenuItem({
 
   return (
     <Menu.Item
-      icon={<Avatar size={24} radius="xl" src={user.avatar} />}
+      icon={<UserAvatar user={user} size={32} />}
       onClick={() =>
         attend({ partyId, date, attending: !attending, userId: user.id })
       }
