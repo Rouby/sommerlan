@@ -152,8 +152,7 @@ const patches = new Map<
 >();
 
 export async function syncCache() {
-  //
-  logger.info("Syncing cache");
+  logger.trace("Syncing cache");
   await newrelic.startSegment(`syncCache`, true, async () => {
     for (const [cls, entities] of patches.entries()) {
       const sheetName = cls.prototype.sheetName;
@@ -170,7 +169,7 @@ export async function syncCache() {
               newrelic.addCustomAttribute("entity.id", id);
               newrelic.addCustomAttribute("entity.sheetName", sheetName);
               if (operations === deleteMarker) {
-                logger.info({ sheetName, id }, "Deleting entity");
+                logger.trace({ sheetName, id }, "Deleting entity");
                 row?.delete();
               } else {
                 const original = row
@@ -191,7 +190,7 @@ export async function syncCache() {
                       JSON.stringify(value),
                     ])
                   );
-                  logger.info(
+                  logger.trace(
                     { sheetName, id, operations, values },
                     "Syncing entity"
                   );
@@ -214,7 +213,7 @@ export async function syncCache() {
       });
     }
   });
-  logger.info("Synced cache");
+  logger.trace("Synced cache");
   patches.clear();
   cache.clear();
 }
