@@ -69,8 +69,6 @@ export function NextPartyGamesList() {
     .filter((game) => game.players.some((player) => player.id === user?.id))
     .map((game) => game.id as string);
 
-  console.log(gamesPlayed);
-
   return (
     <>
       <MultiSelect
