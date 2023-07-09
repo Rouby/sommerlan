@@ -130,7 +130,13 @@ function AddUserMenu({
       this={subject("Attending", { userId: "any" } as any)}
       otherwise={<div />}
     >
-      <Menu width={300} position="bottom-start" shadow="lg" withArrow>
+      <Menu
+        width={300}
+        position="bottom-start"
+        shadow="lg"
+        withArrow
+        withinPortal
+      >
         <Menu.Target>
           <ActionIcon radius="xl" variant="default">
             <IconPlus size="1rem" />
