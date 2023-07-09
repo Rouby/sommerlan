@@ -1,0 +1,16 @@
+import { Container, Center } from "@mantine/core";
+import { NextPartyEventsList, Can } from "../components";
+
+<Container>
+
+<Can
+  I="read"
+  a="User"
+  otherwise={
+    <Center>Logge dich ein um Informationen zur Party zu bekommen!</Center>
+  }
+>
+  <NextPartyEventsList />
+</Can>
+
+</Container>

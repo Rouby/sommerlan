@@ -1,3 +1,4 @@
+export { default as Events } from "./Events.mdx";
 export { default as Games } from "./Games.mdx";
 export { default as Imprint } from "./Imprint.mdx";
 export { default as Intro } from "./Intro.mdx";

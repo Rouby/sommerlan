@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import z from "zod";
-import { Attending, Game, Party, User } from "../../data";
+import { Attending, Event, Game, Party, User } from "../../data";
 import { protectedProcedure, router } from "../trpc";
 
 export const partyRouter = router({
@@ -164,6 +164,40 @@ export const partyRouter = router({
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             async (playerId) => (await User.findById(playerId))!
           )
+        ),
+      };
+    }),
+
+  eventsPlanned: protectedProcedure
+    .input(
+      z.object({
+        partyId: z.string().optional(),
+      })
+    )
+    .query(async (req) => {
+      const party = req.input.partyId
+        ? await Party.findById(req.input.partyId)
+        : (await Party.all())
+            .sort((a, b) => (a.startDate < b.startDate ? -1 : 1))
+            .at(0);
+
+      if (!party) return null;
+
+      const events = await Event.filterByPartyId(party.id);
+
+      return {
+        party,
+        events: await Promise.all(
+          events.map(async (event) => ({
+            ...event,
+            organizer: await User.findById(event.organizerId),
+            participants: await Promise.all(
+              event.participantIds.map(
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                async (userId) => (await User.findById(userId))!
+              )
+            ),
+          }))
         ),
       };
     }),

@@ -10,10 +10,11 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import {
+  IconCalendar,
   IconCloudComputing,
   IconDeviceGamepad,
+  IconGavel,
   IconHome,
-  IconPrinter,
 } from "@tabler/icons-react";
 import { Link, Outlet } from "@tanstack/router";
 import { Can, SignUpButton, UserButton } from "./components";
@@ -44,7 +45,10 @@ export function Root() {
                   <Button variant="subtle">Party</Button>
                 </Link>
                 <Link to="/games">
-                  <Button variant="subtle">Games</Button>
+                  <Button variant="subtle">Spiele</Button>
+                </Link>
+                <Link to="/events">
+                  <Button variant="subtle">Events</Button>
                 </Link>
               </Group>
             </MediaQuery>
@@ -72,10 +76,13 @@ export function Root() {
                 <NavButton icon={<IconCloudComputing />} label="Party" />
               </Link>
               <Link to="/games" activeProps={linkActiveProps}>
-                <NavButton icon={<IconDeviceGamepad />} label="Games" />
+                <NavButton icon={<IconDeviceGamepad />} label="Spiele" />
+              </Link>
+              <Link to="/events" activeProps={linkActiveProps}>
+                <NavButton icon={<IconCalendar />} label="Events" />
               </Link>
               <Link to="/imprint" activeProps={linkActiveProps}>
-                <NavButton icon={<IconPrinter />} label="Imprint" />
+                <NavButton icon={<IconGavel />} label="Imprint" />
               </Link>
             </Group>
           </MediaQuery>

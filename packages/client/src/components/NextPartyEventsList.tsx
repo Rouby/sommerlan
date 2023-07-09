@@ -1,0 +1,379 @@
+import {
+  ActionIcon,
+  Avatar,
+  Box,
+  Button,
+  Card,
+  Center,
+  Checkbox,
+  Group,
+  Image,
+  Input,
+  Loader,
+  Modal,
+  Stack,
+  Text,
+  Tooltip,
+  TypographyStylesProvider,
+} from "@mantine/core";
+import { DatePickerInput, TimeInput } from "@mantine/dates";
+import { RichTextEditor } from "@mantine/tiptap";
+import type { User } from "@sommerlan-app/server/src/data";
+import { IconCheck, IconPencil } from "@tabler/icons-react";
+import Highlight from "@tiptap/extension-highlight";
+import Placeholder from "@tiptap/extension-placeholder";
+import { useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import dayjs from "dayjs";
+import { useAtomValue } from "jotai";
+import { useState } from "react";
+import { UserAvatar } from ".";
+import { userAtom } from "../state";
+import { trpc } from "../utils";
+
+export function NextPartyEventsList() {
+  const { data, isLoading } = trpc.party.eventsPlanned.useQuery({});
+
+  const [showCreate, setShowCreate] = useState(false);
+
+  if (isLoading) {
+    return (
+      <Center>
+        <Loader />
+      </Center>
+    );
+  }
+
+  if (!data) {
+    return <Center>No Party planned</Center>;
+  }
+
+  const { party, events } = data;
+
+  return (
+    <>
+      <Button onClick={() => setShowCreate(true)}>Ein Event planen</Button>
+      <Modal
+        size="lg"
+        opened={showCreate}
+        onClose={() => setShowCreate(false)}
+        withCloseButton={false}
+      >
+        <CreateEventForm
+          partyId={party.id}
+          onSubmit={() => setShowCreate(false)}
+        />
+      </Modal>
+      <Box
+        sx={(theme) => ({
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, 280px)",
+          gap: theme.spacing.md,
+          justifyContent: "center",
+        })}
+      >
+        {events?.map((event) => (
+          <EventCard key={event.id} partyId={party.id} event={event} />
+        ))}
+      </Box>
+    </>
+  );
+}
+
+function EventCard({
+  partyId,
+  event,
+}: {
+  partyId: string;
+  event: {
+    id: string;
+    imageUrl: string;
+    date: string;
+    startTime: string;
+    endTime: string;
+    name: string;
+    description: string;
+    participants: User[];
+  };
+}) {
+  const user = useAtomValue(userAtom);
+  const context = trpc.useContext();
+  const { mutate: participate, isLoading } = trpc.event.participate.useMutation(
+    {
+      onSuccess: (event) => {
+        context.party.eventsPlanned.setData(
+          {},
+          (prev) =>
+            prev && {
+              ...prev,
+              events: prev.events.map((e) =>
+                e.id !== event.id ? e : { ...e, ...event }
+              ),
+            }
+        );
+      },
+    }
+  );
+
+  const [showEdit, setShowEdit] = useState(false);
+
+  const isParticipating = event.participants.some(
+    (participant) => participant.id === user?.id
+  );
+
+  return (
+    <Card key={event.id} shadow="sm" padding="lg" radius="md" withBorder>
+      <Card.Section>
+        <Image src={event.imageUrl} />
+      </Card.Section>
+
+      <Group mt="md" position="apart">
+        <Text weight={500}>{event.name}</Text>
+        <ActionIcon size="xs" onClick={() => setShowEdit(true)}>
+          <IconPencil />
+        </ActionIcon>
+      </Group>
+      <Text size="sm" color="dimmed">
+        {event.date
+          ? dayjs(event.date, "YYYY-MM-DD").format("LL")
+          : "Datum noch unbekannt"}
+      </Text>
+      <Text size="sm" color="dimmed">
+        {event.startTime
+          ? `${event.startTime}${event.endTime ? ` - ${event.endTime}` : ""}`
+          : ""}
+      </Text>
+
+      {event.description && (
+        <TypographyStylesProvider mt="sm">
+          <div dangerouslySetInnerHTML={{ __html: event.description }} />
+        </TypographyStylesProvider>
+      )}
+
+      <Button
+        loading={isLoading}
+        variant={isParticipating ? "gradient" : "light"}
+        color="blue"
+        fullWidth
+        mt="md"
+        radius="md"
+        leftIcon={isParticipating ? <IconCheck /> : undefined}
+        onClick={() =>
+          participate({ eventId: event.id, participating: !isParticipating })
+        }
+      >
+        Ich will mitmachen
+      </Button>
+
+      <Tooltip.Group openDelay={300} closeDelay={100}>
+        <Avatar.Group spacing="sm" sx={{ flexWrap: "wrap" }} mt="sm">
+          {event.participants.map((user) => (
+            <UserAvatar key={user.id} user={user} />
+          ))}
+        </Avatar.Group>
+      </Tooltip.Group>
+
+      <Modal
+        size="lg"
+        opened={showEdit}
+        onClose={() => setShowEdit(false)}
+        withCloseButton={false}
+      >
+        <CreateEventForm
+          partyId={partyId}
+          defaultValues={event}
+          onSubmit={() => setShowEdit(false)}
+        />
+      </Modal>
+    </Card>
+  );
+}
+
+function CreateEventForm({
+  partyId,
+  defaultValues,
+  onSubmit,
+}: {
+  partyId: string;
+  defaultValues?: {
+    id: string;
+    imageUrl: string;
+    date: string;
+    startTime: string;
+    endTime: string;
+    name: string;
+    description: string;
+  };
+  onSubmit: () => void;
+}) {
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Highlight,
+      Placeholder.configure({ placeholder: "Beschreibungstext" }),
+    ],
+    content: defaultValues?.description ?? "",
+  });
+
+  const [dateUncertain, setDateUncertain] = useState(
+    defaultValues ? !defaultValues.date : false
+  );
+  const [timeUncertain, setTimeUncertain] = useState(
+    defaultValues ? !defaultValues.startTime : true
+  );
+
+  const context = trpc.useContext();
+  const { mutateAsync: plan, isLoading } = trpc.event.plan.useMutation({
+    onSuccess: (event) => {
+      context.party.eventsPlanned.setData(
+        {},
+        (prev) =>
+          prev && {
+            ...prev,
+            events: defaultValues
+              ? prev.events.map((e) =>
+                  e.id !== event.id ? e : { ...e, ...event }
+                )
+              : [...prev.events, event],
+          }
+      );
+    },
+  });
+
+  return (
+    <form
+      onSubmit={async (evt) => {
+        evt.preventDefault();
+        const form = evt.target as HTMLFormElement;
+
+        const name = form["eventName"].value;
+
+        const description = editor?.getHTML() ?? "";
+
+        const date = form["date"].value;
+        const dateUncertain = form["dateUncertain"].checked || !date;
+
+        const startTime = form["startTime"].value;
+        const endTime = form["endTime"].value;
+        const timeUncertain = form["timeUncertain"].checked || !startTime;
+
+        const imageUrl = form["imageUrl"].value;
+
+        await plan({
+          eventId: defaultValues?.id,
+          partyId,
+          date: dateUncertain ? "" : date,
+          startTime: timeUncertain ? "" : startTime,
+          endTime: timeUncertain ? "" : endTime,
+          name,
+          description,
+          imageUrl,
+        });
+
+        onSubmit();
+      }}
+    >
+      <Stack>
+        <Input.Wrapper id="eventName" withAsterisk label="Event">
+          <Input
+            id="eventName"
+            required
+            name="eventName"
+            placeholder="Event"
+            defaultValue={defaultValues?.name}
+          />
+        </Input.Wrapper>
+
+        <Box
+          sx={(theme) => ({
+            display: "grid",
+            gridTemplateColumns: "auto 1fr 1fr",
+            alignItems: "center",
+            gap: theme.spacing.md,
+
+            "& > *:nth-child(2)": {
+              gridColumn: "span 2",
+            },
+          })}
+        >
+          <Checkbox
+            name="dateUncertain"
+            label="Datum noch unklar"
+            defaultChecked={dateUncertain}
+            onChange={(evt) => setDateUncertain(evt.target.checked)}
+          />
+          <DatePickerInput
+            name="date"
+            popoverProps={{ withinPortal: true }}
+            disabled={dateUncertain}
+            required={!dateUncertain}
+            placeholder="Datum"
+            defaultValue={
+              defaultValues?.date
+                ? dayjs(defaultValues.date, "YYYY-MM-DD").toDate()
+                : null
+            }
+          />
+
+          <Checkbox
+            name="timeUncertain"
+            label="Zeit noch unklar"
+            defaultChecked={timeUncertain}
+            onChange={(evt) => setTimeUncertain(evt.target.checked)}
+          />
+          <TimeInput
+            name="startTime"
+            placeholder="Startzeit"
+            disabled={timeUncertain}
+            required={!timeUncertain}
+            defaultValue={defaultValues?.startTime}
+          />
+          <TimeInput
+            name="endTime"
+            placeholder="Endzeit"
+            disabled={timeUncertain}
+            required={!timeUncertain}
+            defaultValue={defaultValues?.endTime}
+          />
+        </Box>
+
+        <RichTextEditor editor={editor}>
+          <RichTextEditor.Toolbar sticky stickyOffset={60}>
+            <RichTextEditor.ControlsGroup>
+              <RichTextEditor.Bold />
+              <RichTextEditor.Italic />
+              <RichTextEditor.Underline />
+              <RichTextEditor.Strikethrough />
+              <RichTextEditor.Highlight />
+              <RichTextEditor.ClearFormatting />
+            </RichTextEditor.ControlsGroup>
+          </RichTextEditor.Toolbar>
+
+          <RichTextEditor.Content />
+        </RichTextEditor>
+
+        <Input.Wrapper
+          id="imageUrl"
+          withAsterisk
+          label="Bild"
+          description="Gib die Adresse zu einem Bild an, das auf der Event-Seite erscheint."
+        >
+          <Input
+            id="imageUrl"
+            required
+            name="imageUrl"
+            placeholder="https://example.com/image.jpg"
+            pattern="https://.*"
+            defaultValue={defaultValues?.imageUrl}
+          />
+        </Input.Wrapper>
+
+        <Group position="right">
+          <Button type="submit" disabled={isLoading}>
+            {defaultValues ? "Speichern" : "Event erstellen"}
+          </Button>
+        </Group>
+      </Stack>
+    </form>
+  );
+}
