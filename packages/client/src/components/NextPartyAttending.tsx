@@ -58,7 +58,6 @@ export function NextPartyAttending() {
         sx={(theme) => ({
           display: "grid",
           gridTemplateColumns: "auto auto auto 1fr",
-          // gridAutoRows: theme.spacing.xl,
           columnGap: theme.spacing.md,
           rowGap: theme.spacing.sm,
           alignItems: "center",
@@ -125,8 +124,12 @@ function AddUserMenu({
   usersAttending: User[];
 }) {
   return (
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    <Can I="update" this={subject("Attending", { userId: "any" } as any)}>
+    <Can
+      I="update"
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      this={subject("Attending", { userId: "any" } as any)}
+      otherwise={<div />}
+    >
       <Menu width={300} position="bottom-start" shadow="lg" withArrow>
         <Menu.Target>
           <ActionIcon radius="xl" variant="default">
