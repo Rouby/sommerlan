@@ -43,14 +43,18 @@ export abstract class Base {
     if (Array.isArray(storedOperations)) {
       storedOperations.push(...diff);
 
-      cache.set(
-        this.sheetName,
+      const nextCache =
         cache
           .get(this.sheetName)
           ?.map((values) =>
             values.id === this.id ? { ...values, ...thisValues } : values
-          ) ?? []
-      );
+          ) ?? [];
+
+      if (!cachedValues) {
+        nextCache.push(thisValues);
+      }
+
+      cache.set(this.sheetName, nextCache);
     } else {
       logger.warn(
         { id: this.id, sheetName: this.sheetName },
