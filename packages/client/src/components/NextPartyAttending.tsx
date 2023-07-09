@@ -96,7 +96,7 @@ export function NextPartyAttending() {
               <Tooltip.Group openDelay={300} closeDelay={100}>
                 <Avatar.Group spacing="sm" sx={{ flexWrap: "wrap" }}>
                   {attendingsOnDate.map((attending) => (
-                    <UserAvatar user={attending.user} />
+                    <UserAvatar key={attending.id} user={attending.user} />
                   ))}
                 </Avatar.Group>
               </Tooltip.Group>
