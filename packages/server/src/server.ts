@@ -47,10 +47,10 @@ export function createServer(opts: ServerOptions) {
       root: join(__dirname, "../client"),
     });
     logger.info("serving", join(__dirname, "../client"));
+    server.setNotFoundHandler((_, reply) => {
+      reply.sendFile("index.html");
+    });
   }
-  server.setNotFoundHandler((_, reply) => {
-    reply.sendFile("index.html");
-  });
 
   const stop = async () => {
     transporter.close();
@@ -63,7 +63,7 @@ export function createServer(opts: ServerOptions) {
   };
   const start = async () => {
     try {
-      await server.listen({ port, host: "0.0.0.0" });
+      await server.listen({ port, host: !dev ? "0.0.0.0" : undefined });
 
       await cron.start();
 
