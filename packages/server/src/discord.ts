@@ -6,6 +6,9 @@ import {
 import { REST } from "@discordjs/rest";
 import { WebSocketManager } from "@discordjs/ws";
 import { cron } from "./cron";
+import { User } from "./data";
+import { logger } from "./logger";
+import { issueMagicLink } from "./magicLinks";
 
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const token = process.env.DISCORD_BOT_TOKEN!;
@@ -24,6 +27,29 @@ const client = new Client({ rest, gateway });
 
 client.once(GatewayDispatchEvents.Ready, () => {
   // sendDiscordMessage("154637662890885120", "Hello", { ttl: "1m" });
+});
+
+client.on(GatewayDispatchEvents.MessageCreate, async (message) => {
+  logger.info(message.data, "Received discord message");
+  if (message.data.content.toLowerCase().includes("login")) {
+    await client.api.channels.showTyping(message.data.channel_id);
+
+    const user = await User.findByDiscordId(message.data.author.id);
+
+    if (!user) {
+      await sendDiscordMessage(
+        message.data.author.id,
+        "Ich habe keinen Account gefunden, der mit deinem Discord Account verknüpft ist."
+      );
+    } else {
+      const magicLink = await issueMagicLink(user);
+
+      await sendDiscordMessage(
+        message.data.author.id,
+        `Du kannst dich mit folgendem Link anmelden ${magicLink}. Der Link ist 15 Minuten gültig.`
+      );
+    }
+  }
 });
 
 export const discord = {

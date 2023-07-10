@@ -1,9 +1,10 @@
 import { Avatar, Group, Menu, Modal, UnstyledButton } from "@mantine/core";
-import { IconLock, IconQrcode } from "@tabler/icons-react";
+import { IconLock, IconQrcode, IconUsers } from "@tabler/icons-react";
+import { Link } from "@tanstack/router";
 import { useAtomValue } from "jotai";
 import { useState } from "react";
 import { userAtom } from "../state";
-import { AuthorizeOtherDevice } from "./";
+import { AuthorizeOtherDevice, Can } from "./";
 import { CreatePasskeyFlow } from "./CreatePasskeyFlow";
 
 export function UserButton() {
@@ -36,7 +37,7 @@ export function UserButton() {
             icon={<IconQrcode size={14} />}
             onClick={() => setShowAuthorizeOtherDevice(true)}
           >
-            {canScanQRCodes ? "Scan Auth QR Code" : "Provide Auth QR Code"}
+            {canScanQRCodes ? "QR Code einscannen" : "QR Code anzeigen"}
           </Menu.Item>
 
           {user.devices.length !== -1 && (
@@ -44,9 +45,22 @@ export function UserButton() {
               icon={<IconLock size={14} />}
               onClick={() => setShowPasskeyOptions(true)}
             >
-              Create a passkey
+              Passkey erstellen
             </Menu.Item>
           )}
+
+          <Can I="manage" a="User">
+            <Menu.Label>Users</Menu.Label>
+            <Menu.Item
+              component={Link}
+              icon={<IconUsers size={14} />}
+              to="/admin/users"
+              search={{}}
+              params={{}}
+            >
+              Nutzer verwalten
+            </Menu.Item>
+          </Can>
         </Menu.Dropdown>
       </Menu>
 

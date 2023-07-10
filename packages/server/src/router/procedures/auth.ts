@@ -8,19 +8,17 @@ import {
 import { TRPCError } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
 import base64url from "base64url";
-import { randomUUID } from "crypto";
 import { EventEmitter } from "events";
-import { sign } from "jsonwebtoken";
 import { z } from "zod";
 import { User } from "../../data";
 import { findDiscordUserId, sendDiscordMessage } from "../../discord";
 import { logger } from "../../logger";
+import { getTokenFromMagicLink, issueMagicLink } from "../../magicLinks";
 import { sendMail } from "../../mail";
-import { createAbility } from "../ability";
+import { signToken } from "../../signToken";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 
 const issuedChallenges = new Set<string>();
-const issuedMagicLinks = new Map<string, string>();
 
 const expectedOrigin = process.env.APP_ORIGIN ?? "http://localhost:5173";
 const rpID =
@@ -327,14 +325,12 @@ export const authRouter = router({
           });
         }
 
-        const magicLinkId = randomUUID();
-
-        issuedMagicLinks.set(magicLinkId, await signToken(user));
+        const magicLink = await issueMagicLink(user);
 
         await sendMail({
           to: req.input.email,
           subject: "SommerLAN Login Link",
-          html: `Login with this link: <a href="${expectedOrigin}?auth=${magicLinkId}">${expectedOrigin}?auth=${magicLinkId}</a>`,
+          html: `Du kannst dich mit folgendem Link einloggen: <a href="${magicLink}">${magicLink}</a>. Der Link ist 15 Minuten gültig.`,
         });
       }
 
@@ -357,13 +353,11 @@ export const authRouter = router({
           });
         }
 
-        const magicLinkId = randomUUID();
-
-        issuedMagicLinks.set(magicLinkId, await signToken(user));
+        const magicLink = await issueMagicLink(user);
 
         await sendDiscordMessage(
           userId,
-          `Login with this link: <a href="${expectedOrigin}?auth=${magicLinkId}">${expectedOrigin}?auth=${magicLinkId}</a>`,
+          `Login with this link: <a href="${magicLink}">${magicLink}</a>`,
           { ttl: "15m" }
         );
       }
@@ -372,7 +366,7 @@ export const authRouter = router({
   loginWithMagicLink: publicProcedure
     .input(z.object({ magicLinkId: z.string() }))
     .mutation(async (req) => {
-      const token = issuedMagicLinks.get(req.input.magicLinkId);
+      const token = getTokenFromMagicLink(req.input.magicLinkId);
 
       if (!token) {
         throw new TRPCError({
@@ -381,30 +375,6 @@ export const authRouter = router({
         });
       }
 
-      issuedMagicLinks.delete(req.input.magicLinkId);
-
       return token;
     }),
 });
-
-async function tokenPayload(user: User) {
-  return {
-    user,
-    abilityRules: (await createAbility(user)).rules,
-  };
-}
-
-async function signToken(user: User) {
-  return sign(
-    await tokenPayload(user),
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    process.env.SESSION_SECRET!,
-    {
-      algorithm: "HS256",
-      subject: user.id,
-      expiresIn: "1y",
-    }
-  );
-}
-
-export type JWTPayload = Awaited<ReturnType<typeof tokenPayload>>;
