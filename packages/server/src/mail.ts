@@ -17,9 +17,13 @@ export const transporter = createTransport({
 export async function sendMail(options: SendMailOptions) {
   await newrelic.startSegment("sendMail", true, async () => {
     logger.info({ to: options.to }, "Sending mail");
-    await transporter.sendMail({
-      from: '"SommerLAN" <no-reply@sommerlan.rocks>',
-      ...options,
-    });
+    if (process.env.NODE_ENV !== "production") {
+      logger.info({ options }, "Would send mail");
+    } else {
+      await transporter.sendMail({
+        from: '"SommerLAN" <no-reply@sommerlan.rocks>',
+        ...options,
+      });
+    }
   });
 }
