@@ -1,4 +1,4 @@
-import { type JWTPayload } from "@sommerlan-app/server/src/router/procedures/auth";
+import { type JWTPayload } from "@sommerlan-app/server/src/signToken";
 import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import jwtDecode from "jwt-decode";
