@@ -12,26 +12,28 @@ export async function createContext({ req, res }: CreateFastifyContextOptions) {
   }
 
   let user: User | undefined = undefined;
-  if (token) {
-    let decodedToken: JwtPayload | null = null;
+  try {
+    if (token) {
+      let decodedToken: JwtPayload | null = null;
 
-    try {
-      decodedToken = decode(token, { complete: true });
-    } catch {
-      throw new TRPCError({ code: "UNAUTHORIZED", message: "Invalid token" });
+      try {
+        decodedToken = decode(token, { complete: true });
+      } catch {
+        throw new TRPCError({ code: "UNAUTHORIZED", message: "Invalid token" });
+      }
+
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        verify(token, process.env.SESSION_SECRET!);
+      } catch {
+        throw new TRPCError({ code: "UNAUTHORIZED", message: "Invalid token" });
+      }
+
+      // TODO check if token was revoked
+
+      user = await User.findById(decodedToken?.payload.user.id);
     }
-
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      verify(token, process.env.SESSION_SECRET!);
-    } catch {
-      throw new TRPCError({ code: "UNAUTHORIZED", message: "Invalid token" });
-    }
-
-    // TODO check if token was revoked
-
-    user = await User.findById(decodedToken?.payload.user.id);
-  }
+  } catch {}
 
   const ability = await createAbility(user);
 
