@@ -7,6 +7,7 @@ import { REST } from "@discordjs/rest";
 import { WebSocketManager } from "@discordjs/ws";
 import { cron } from "./cron";
 import { User } from "./data";
+import { getEnv } from "./env";
 import { logger } from "./logger";
 import { issueMagicLink } from "./magicLinks";
 
@@ -31,7 +32,29 @@ client.once(GatewayDispatchEvents.Ready, () => {
 
 client.on(GatewayDispatchEvents.MessageCreate, async (message) => {
   logger.info(message.data, "Received discord message");
-  if (message.data.content.toLowerCase().includes("login")) {
+  const msgContent = message.data.content.toLowerCase();
+  if (msgContent.includes("login")) {
+    switch (getEnv()) {
+      case "development":
+        if (!msgContent.includes("dev")) {
+          // Dont handle this message
+          return;
+        }
+        break;
+      case "staging":
+        if (!msgContent.includes("staging")) {
+          // Dont handle this message
+          return;
+        }
+        break;
+      case "production":
+        if (msgContent.includes("dev") || msgContent.includes("staging")) {
+          // Dont handle this message
+          return;
+        }
+        break;
+    }
+
     await client.api.channels.showTyping(message.data.channel_id);
 
     const user = await User.findByDiscordId(message.data.author.id);

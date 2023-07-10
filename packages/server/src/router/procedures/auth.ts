@@ -12,6 +12,7 @@ import { EventEmitter } from "events";
 import { z } from "zod";
 import { User } from "../../data";
 import { findDiscordUserId, sendDiscordMessage } from "../../discord";
+import { expectedOrigin } from "../../env";
 import { logger } from "../../logger";
 import { getTokenFromMagicLink, issueMagicLink } from "../../magicLinks";
 import { sendMail } from "../../mail";
@@ -20,7 +21,6 @@ import { protectedProcedure, publicProcedure, router } from "../trpc";
 
 const issuedChallenges = new Set<string>();
 
-const expectedOrigin = process.env.APP_ORIGIN ?? "http://localhost:5173";
 const rpID =
   expectedOrigin.match(/^https?:\/\/(.*?)\/?(:\d+)?$/)?.[1] ?? "localhost";
 

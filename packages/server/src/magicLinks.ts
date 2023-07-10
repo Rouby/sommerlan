@@ -1,11 +1,10 @@
 import { randomUUID } from "crypto";
 import { cron } from "./cron";
 import { User } from "./data";
+import { expectedOrigin } from "./env";
 import { signToken } from "./signToken";
 
 const issuedMagicLinks = new Map<string, string>();
-
-const expectedOrigin = process.env.APP_ORIGIN ?? "http://localhost:5173";
 
 export async function issueMagicLink(user: User) {
   const magicLinkId = randomUUID();
