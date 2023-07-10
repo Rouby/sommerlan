@@ -9,16 +9,6 @@ import { trpc } from "./utils";
 export function Authenticate() {
   const [token, setToken] = useAtom(tokenAtom);
   const setAuthenticated = useSetAtom(authenticatedAtom);
-  const { data: newToken, error } = trpc.auth.validateToken.useQuery(
-    token?.split(".")[0],
-    {
-      enabled: !!token,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-      retry: false,
-    }
-  );
 
   const { auth } = useSearch({ from: authRoute.id });
   const navigate = useNavigate();
@@ -33,10 +23,21 @@ export function Authenticate() {
     }
   }, [auth, loginWithMagicLink, navigate, setToken]);
 
+  const { data: newToken, error } = trpc.auth.validateToken.useQuery(
+    token?.split(".")[0],
+    {
+      enabled: !!token && !auth,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      retry: false,
+    }
+  );
+
   useEffect(() => {
     if (
       error instanceof TRPCClientError &&
-      error.data.code === "UNAUTHORIZED"
+      error.data?.code === "UNAUTHORIZED"
     ) {
       setAuthenticated(false);
       // clear token?
