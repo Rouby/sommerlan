@@ -33,7 +33,9 @@ export async function createContext({ req, res }: CreateFastifyContextOptions) {
 
       user = await User.findById(decodedToken?.payload.user.id);
     }
-  } catch {}
+  } catch {
+    //
+  }
 
   const ability = await createAbility(user);
 
