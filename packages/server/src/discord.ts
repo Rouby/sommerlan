@@ -26,11 +26,11 @@ const gateway = new WebSocketManager({
 
 const client = new Client({ rest, gateway });
 
-client.once(GatewayDispatchEvents.Ready, () => {
-  // sendDiscordMessage("154637662890885120", "Hello", { ttl: "1m" });
-});
-
 client.on(GatewayDispatchEvents.MessageCreate, async (message) => {
+  if (message.data.author.bot) {
+    // Dont handle bot messages
+    return;
+  }
   logger.info(message.data, "Received discord message");
   const msgContent = message.data.content.toLowerCase();
   if (msgContent.includes("login")) {
