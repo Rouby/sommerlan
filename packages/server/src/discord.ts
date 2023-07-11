@@ -31,7 +31,7 @@ client.on(GatewayDispatchEvents.MessageCreate, async (message) => {
     // Dont handle bot messages
     return;
   }
-  logger.info(message.data, "Received discord message");
+  logger.info({ message: { data: message.data } }, "Received discord message");
   const msgContent = message.data.content.toLowerCase();
   if (msgContent.includes("login")) {
     switch (getEnv()) {
