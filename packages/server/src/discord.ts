@@ -69,7 +69,8 @@ client.on(GatewayDispatchEvents.MessageCreate, async (message) => {
 
       await sendDiscordMessage(
         message.data.author.id,
-        `Du kannst dich mit folgendem Link anmelden ${magicLink}. Der Link ist 15 Minuten gültig.`
+        `Du kannst dich mit folgendem Link anmelden ${magicLink}. Der Link ist 15 Minuten gültig.`,
+        { ttl: "15m" }
       );
     }
   }
