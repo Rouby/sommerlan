@@ -22,9 +22,18 @@ services:
     networks:
       - default
       - mail
+    volumes:
+      - type: volume
+        source: uploads
+        target: /myapp/dist/client/uploads
+        volume:
+          nocopy: true
 
 networks:
   default:
   mail:
     name: mailserver
     external: true
+
+volumes:
+  uploads:
