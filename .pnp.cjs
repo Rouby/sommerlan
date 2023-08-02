@@ -486,6 +486,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:3.5.0"\
       ],\
       [\
+        "@fastify/busboy",\
+        "npm:1.2.1"\
+      ],\
+      [\
         "@fastify/cookie",\
         "npm:8.3.0"\
       ],\
@@ -499,11 +503,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@fastify/error",\
-        "npm:3.2.1"\
+        "npm:3.3.0"\
       ],\
       [\
         "@fastify/fast-json-stringify-compiler",\
         "npm:4.3.0"\
+      ],\
+      [\
+        "@fastify/multipart",\
+        "npm:7.7.3"\
       ],\
       [\
         "@fastify/send",\
@@ -512,6 +520,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [\
         "@fastify/static",\
         "npm:6.10.2"\
+      ],\
+      [\
+        "@fastify/swagger",\
+        "npm:8.8.0"\
+      ],\
+      [\
+        "@fastify/swagger-ui",\
+        "npm:1.9.3"\
       ],\
       [\
         "@fastify/websocket",\
@@ -2870,6 +2886,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:2.3.1"\
       ],\
       [\
+        "json-schema-resolver",\
+        "npm:2.0.0"\
+      ],\
+      [\
         "json-schema-traverse",\
         "npm:0.4.1"\
       ],\
@@ -3392,6 +3412,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [\
         "onetime",\
         "npm:5.1.2"\
+      ],\
+      [\
+        "openapi-types",\
+        "npm:12.1.3"\
       ],\
       [\
         "optionator",\
@@ -4002,6 +4026,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:3.3.3"\
       ],\
       [\
+        "stream-wormhole",\
+        "npm:1.1.0"\
+      ],\
+      [\
         "streamroller",\
         "npm:3.1.5"\
       ],\
@@ -4114,6 +4142,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [\
         "terser",\
         "npm:5.18.2"\
+      ],\
+      [\
+        "text-decoding",\
+        "npm:1.0.0"\
       ],\
       [\
         "text-table",\
@@ -4468,7 +4500,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "yaml",\
-        "npm:1.10.2"\
+        "npm:2.3.1"\
       ],\
       [\
         "yargs",\
@@ -6197,6 +6229,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["@fastify/busboy", [\
+        ["npm:1.2.1", {\
+          "packageLocation": "./.yarn/cache/@fastify-busboy-npm-1.2.1-238dba8f7a-6e773a2929.zip/node_modules/@fastify/busboy/",\
+          "packageDependencies": [\
+            ["@fastify/busboy", "npm:1.2.1"],\
+            ["text-decoding", "npm:1.0.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["@fastify/cookie", [\
         ["npm:8.3.0", {\
           "packageLocation": "./.yarn/cache/@fastify-cookie-npm-8.3.0-d4b09e29b0-d5dfb5c85d.zip/node_modules/@fastify/cookie/",\
@@ -6235,6 +6277,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@fastify/error", "npm:3.2.1"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:3.3.0", {\
+          "packageLocation": "./.yarn/cache/@fastify-error-npm-3.3.0-0ff1b36103-202507c8c7.zip/node_modules/@fastify/error/",\
+          "packageDependencies": [\
+            ["@fastify/error", "npm:3.3.0"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["@fastify/fast-json-stringify-compiler", [\
@@ -6243,6 +6292,24 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@fastify/fast-json-stringify-compiler", "npm:4.3.0"],\
             ["fast-json-stringify", "npm:5.7.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@fastify/multipart", [\
+        ["npm:7.7.3", {\
+          "packageLocation": "./.yarn/cache/@fastify-multipart-npm-7.7.3-709e0c210a-de9ec4e9d9.zip/node_modules/@fastify/multipart/",\
+          "packageDependencies": [\
+            ["@fastify/multipart", "npm:7.7.3"],\
+            ["@fastify/busboy", "npm:1.2.1"],\
+            ["@fastify/deepmerge", "npm:1.3.0"],\
+            ["@fastify/error", "npm:3.3.0"],\
+            ["@fastify/swagger", "npm:8.8.0"],\
+            ["@fastify/swagger-ui", "npm:1.9.3"],\
+            ["end-of-stream", "npm:1.4.4"],\
+            ["fastify-plugin", "npm:4.5.0"],\
+            ["secure-json-parse", "npm:2.7.0"],\
+            ["stream-wormhole", "npm:1.1.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -6273,6 +6340,34 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["glob", "npm:8.1.0"],\
             ["p-limit", "npm:3.1.0"],\
             ["readable-stream", "npm:4.4.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@fastify/swagger", [\
+        ["npm:8.8.0", {\
+          "packageLocation": "./.yarn/cache/@fastify-swagger-npm-8.8.0-26f902b35f-6f41ba96fd.zip/node_modules/@fastify/swagger/",\
+          "packageDependencies": [\
+            ["@fastify/swagger", "npm:8.8.0"],\
+            ["fastify-plugin", "npm:4.5.0"],\
+            ["json-schema-resolver", "npm:2.0.0"],\
+            ["openapi-types", "npm:12.1.3"],\
+            ["rfdc", "npm:1.3.0"],\
+            ["yaml", "npm:2.3.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@fastify/swagger-ui", [\
+        ["npm:1.9.3", {\
+          "packageLocation": "./.yarn/cache/@fastify-swagger-ui-npm-1.9.3-5b2e146b5a-fb4dbe9c23.zip/node_modules/@fastify/swagger-ui/",\
+          "packageDependencies": [\
+            ["@fastify/swagger-ui", "npm:1.9.3"],\
+            ["@fastify/static", "npm:6.10.2"],\
+            ["fastify-plugin", "npm:4.5.0"],\
+            ["openapi-types", "npm:12.1.3"],\
+            ["rfdc", "npm:1.3.0"],\
+            ["yaml", "npm:2.3.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -8357,6 +8452,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@discordjs/core", "npm:0.6.0"],\
             ["@fastify/cookie", "npm:8.3.0"],\
             ["@fastify/cors", "npm:8.3.0"],\
+            ["@fastify/multipart", "npm:7.7.3"],\
             ["@fastify/static", "npm:6.10.2"],\
             ["@fastify/websocket", "npm:8.1.0"],\
             ["@newrelic/pino-enricher", "virtual:f9aaeb0ff5026b521d6a9b424ffbc3c34990b6972b440282c9eb836880cb71f3dfd141e9455e392c98abc5918762c91d12bf17451df331903d8e149b2f873a01#npm:1.1.1"],\
@@ -14532,6 +14628,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["json-schema-resolver", [\
+        ["npm:2.0.0", {\
+          "packageLocation": "./.yarn/cache/json-schema-resolver-npm-2.0.0-5db390ee81-cd380d8d51.zip/node_modules/json-schema-resolver/",\
+          "packageDependencies": [\
+            ["json-schema-resolver", "npm:2.0.0"],\
+            ["debug", "virtual:531b6e79f7bcef9fa432316ab3ce4b1417df151c8e8350181023a666d55724fcedfdfe50cba6ee7c25a5adbd4f024013f036b79fb10bed8621708e2f7d85e6c6#npm:4.3.4"],\
+            ["rfdc", "npm:1.3.0"],\
+            ["uri-js", "npm:4.4.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["json-schema-traverse", [\
         ["npm:0.4.1", {\
           "packageLocation": "./.yarn/cache/json-schema-traverse-npm-0.4.1-4759091693-7486074d3b.zip/node_modules/json-schema-traverse/",\
@@ -16158,6 +16266,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["onetime", "npm:5.1.2"],\
             ["mimic-fn", "npm:2.1.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["openapi-types", [\
+        ["npm:12.1.3", {\
+          "packageLocation": "./.yarn/cache/openapi-types-npm-12.1.3-1b8ae4a632-7fa5547f87.zip/node_modules/openapi-types/",\
+          "packageDependencies": [\
+            ["openapi-types", "npm:12.1.3"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -17997,6 +18114,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["stream-wormhole", [\
+        ["npm:1.1.0", {\
+          "packageLocation": "./.yarn/cache/stream-wormhole-npm-1.1.0-f067a319cd-cc19e0235c.zip/node_modules/stream-wormhole/",\
+          "packageDependencies": [\
+            ["stream-wormhole", "npm:1.1.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["streamroller", [\
         ["npm:3.1.5", {\
           "packageLocation": "./.yarn/cache/streamroller-npm-3.1.5-2fe0f7e85a-c1df5612b7.zip/node_modules/streamroller/",\
@@ -18309,6 +18435,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["acorn", "npm:8.9.0"],\
             ["commander", "npm:2.20.3"],\
             ["source-map-support", "npm:0.5.21"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["text-decoding", [\
+        ["npm:1.0.0", {\
+          "packageLocation": "./.yarn/cache/text-decoding-npm-1.0.0-8c4bf7ef78-4b2359d8ef.zip/node_modules/text-decoding/",\
+          "packageDependencies": [\
+            ["text-decoding", "npm:1.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -19605,6 +19740,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/yaml-npm-1.10.2-0e780aebdf-ce4ada136e.zip/node_modules/yaml/",\
           "packageDependencies": [\
             ["yaml", "npm:1.10.2"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:2.3.1", {\
+          "packageLocation": "./.yarn/cache/yaml-npm-2.3.1-743f5688d1-2c7bc9a7cd.zip/node_modules/yaml/",\
+          "packageDependencies": [\
+            ["yaml", "npm:2.3.1"]\
           ],\
           "linkType": "HARD"\
         }]\

@@ -34,6 +34,10 @@ export default defineConfig(async ({ mode }) => ({
         changeOrigin: true,
         ws: true,
       },
+      "/uploads": {
+        target: "http://localhost:2022",
+        changeOrigin: true,
+      },
     },
   },
 }));

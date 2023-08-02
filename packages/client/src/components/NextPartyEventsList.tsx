@@ -18,18 +18,20 @@ import {
   TypographyStylesProvider,
 } from "@mantine/core";
 import { DatePickerInput, TimeInput } from "@mantine/dates";
+import { Dropzone, FileWithPath, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { RichTextEditor } from "@mantine/tiptap";
 import type { Event, User } from "@sommerlan-app/server/src/data";
 import { IconCheck, IconPencil } from "@tabler/icons-react";
+import { useMutation } from "@tanstack/react-query";
 import Highlight from "@tiptap/extension-highlight";
 import Placeholder from "@tiptap/extension-placeholder";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import dayjs from "dayjs";
 import { useAtomValue } from "jotai";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Can, UserAvatar } from ".";
-import { userAtom } from "../state";
+import { tokenAtom, userAtom } from "../state";
 import { trpc } from "../utils";
 
 export function NextPartyEventsList() {
@@ -257,6 +259,29 @@ function CreateEventForm({
     },
   });
 
+  const openRef = useRef<() => void>(null);
+
+  const token = useAtomValue(tokenAtom);
+
+  const { mutateAsync: uploadFile, isLoading: isUploading } = useMutation(
+    async (file: FileWithPath) => {
+      const formData = new FormData();
+      formData.append(file.name, file);
+
+      const response = await fetch("/uploads", {
+        method: "PUT",
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      return data.url as string;
+    }
+  );
+
   return (
     <form
       onSubmit={async (evt) => {
@@ -384,6 +409,27 @@ function CreateEventForm({
             defaultValue={defaultValues?.imageUrl}
           />
         </Input.Wrapper>
+
+        <Dropzone
+          accept={IMAGE_MIME_TYPE}
+          onDrop={(files) => {
+            uploadFile(files[0]).then((url) => {
+              const imageElem = document.getElementById(
+                "imageUrl"
+              ) as HTMLInputElement;
+              if (imageElem) {
+                imageElem.value = url;
+              }
+            });
+          }}
+          maxFiles={1}
+          openRef={openRef}
+          sx={{ height: 100, display: "grid", alignItems: "center" }}
+          loading={isUploading}
+        >
+          <Center>Alternativ kannst du ein Bild hochladen</Center>
+        </Dropzone>
+        <Button onClick={() => openRef.current?.()}>Bild hochladen</Button>
 
         <Group position="right">
           <Button type="submit" disabled={isLoading}>
