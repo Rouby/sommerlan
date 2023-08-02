@@ -124,12 +124,19 @@ function EventCard({
   );
 
   return (
-    <Card key={event.id} shadow="sm" padding="lg" radius="md" withBorder>
+    <Card
+      key={event.id}
+      shadow="sm"
+      padding="lg"
+      radius="md"
+      withBorder
+      sx={{ display: "flex", flexDirection: "column" }}
+    >
       <Card.Section>
-        <Image src={event.imageUrl} />
+        <Image src={event.imageUrl} height={300} />
       </Card.Section>
 
-      <Group mt="md" position="apart">
+      <Group mt="md" position="apart" noWrap>
         <Text weight={500}>{event.name}</Text>
         <Can
           I="update"
@@ -152,11 +159,13 @@ function EventCard({
           : ""}
       </Text>
 
-      {event.description && (
-        <TypographyStylesProvider mt="sm">
-          <div dangerouslySetInnerHTML={{ __html: event.description }} />
-        </TypographyStylesProvider>
-      )}
+      <Box sx={{ flex: 1 }}>
+        {event.description && (
+          <TypographyStylesProvider mt="sm">
+            <div dangerouslySetInnerHTML={{ __html: event.description }} />
+          </TypographyStylesProvider>
+        )}
+      </Box>
 
       <Button
         loading={isLoading}
