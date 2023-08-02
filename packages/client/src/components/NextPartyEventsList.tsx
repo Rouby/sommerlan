@@ -405,7 +405,7 @@ function CreateEventForm({
             required
             name="imageUrl"
             placeholder="https://example.com/image.jpg"
-            pattern="https://.*"
+            pattern="https?://.*"
             defaultValue={defaultValues?.imageUrl}
           />
         </Input.Wrapper>

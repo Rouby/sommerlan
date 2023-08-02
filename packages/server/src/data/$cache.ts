@@ -2,7 +2,8 @@ import { Operation, applyPatch, compare } from "fast-json-patch";
 import newrelic from "newrelic";
 import { logger } from "../logger";
 import { getSheet } from "./$api";
-import { Base } from "./$base";
+
+type Base = object;
 
 const deleteMarker = Symbol.for("delete");
 

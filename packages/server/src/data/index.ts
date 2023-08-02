@@ -1,4 +1,4 @@
-export { syncCache } from "./$base";
+export { syncCache } from "./$cache";
 export * from "./attendings";
 export * from "./events";
 export * from "./games";
