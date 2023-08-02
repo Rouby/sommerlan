@@ -429,7 +429,7 @@ function CreateEventForm({
         >
           <Center>Alternativ kannst du ein Bild hochladen</Center>
         </Dropzone>
-        <Button onClick={() => openRef.current?.()}>Bild hochladen</Button>
+        <Button onClick={() => openRef.current?.()}>Bild auswählen</Button>
 
         <Group position="right">
           <Button type="submit" disabled={isLoading}>
