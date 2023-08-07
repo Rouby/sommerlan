@@ -15,6 +15,8 @@ export class Attending extends Base {
 
   public dates: string[] = [];
 
+  public room: "" | "requested" | "granted" = "";
+
   constructor(props?: Values<Attending>) {
     super();
     if (props) Object.assign(this, props);

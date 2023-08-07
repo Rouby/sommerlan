@@ -15,13 +15,15 @@ export async function createAbility(user?: User) {
   const { can, build } = new AbilityBuilder<AppAbility>(createMongoAbility);
 
   if (user) {
-    can("manage", "User", { id: user.id });
+    can("read", "User", { id: user.id });
+    can("update", "User", { id: user.id });
     can("update", "Attending", { userId: user.id });
     can("update", "Event", { organizerId: user.id });
 
     if (user.roles.includes(User.Role.Admin)) {
       can("manage", "User");
       can("update", "Attending");
+      can("grantRoom", "Attending");
       can("update", "Event");
     }
   }

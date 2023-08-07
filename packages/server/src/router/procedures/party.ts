@@ -67,6 +67,100 @@ export const partyRouter = router({
       );
     }),
 
+  requestRoom: protectedProcedure
+    .input(
+      z.object({
+        partyId: z.string(),
+        requested: z.boolean(),
+        userId: z.string().optional(),
+      })
+    )
+    .mutation(async (req) => {
+      const userId = req.input.userId || req.ctx.user.id;
+
+      const attending =
+        (await Attending.findByPartyIdAndUserId(req.input.partyId, userId)) ??
+        new Attending({ userId: userId, partyId: req.input.partyId });
+
+      req.ctx.forbidden.throwUnlessCan("update", attending);
+
+      attending.room =
+        req.input.requested && attending.room === "" ? "requested" : "";
+      await attending.save();
+
+      return await Promise.all(
+        (
+          await Attending.filterByPartyId(req.input.partyId)
+        ).map(async (attending) => ({
+          ...attending,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          user: (await User.findById(attending.userId))!,
+        }))
+      );
+    }),
+
+  grantRoom: protectedProcedure
+    .input(
+      z.object({
+        partyId: z.string(),
+        userId: z.string(),
+      })
+    )
+    .mutation(async (req) => {
+      const attending = await Attending.findByPartyIdAndUserId(
+        req.input.partyId,
+        req.input.userId
+      );
+
+      if (!attending) throw new TRPCError({ code: "NOT_FOUND" });
+
+      req.ctx.forbidden.throwUnlessCan("grantRoom", attending);
+
+      attending.room = "granted";
+      await attending.save();
+
+      return await Promise.all(
+        (
+          await Attending.filterByPartyId(req.input.partyId)
+        ).map(async (attending) => ({
+          ...attending,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          user: (await User.findById(attending.userId))!,
+        }))
+      );
+    }),
+
+  denyRoom: protectedProcedure
+    .input(
+      z.object({
+        partyId: z.string(),
+        userId: z.string(),
+      })
+    )
+    .mutation(async (req) => {
+      const attending = await Attending.findByPartyIdAndUserId(
+        req.input.partyId,
+        req.input.userId
+      );
+
+      if (!attending) throw new TRPCError({ code: "NOT_FOUND" });
+
+      req.ctx.forbidden.throwUnlessCan("grantRoom", attending);
+
+      attending.room = "";
+      await attending.save();
+
+      return await Promise.all(
+        (
+          await Attending.filterByPartyId(req.input.partyId)
+        ).map(async (attending) => ({
+          ...attending,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          user: (await User.findById(attending.userId))!,
+        }))
+      );
+    }),
+
   gamesPlayed: protectedProcedure
     .input(
       z.object({

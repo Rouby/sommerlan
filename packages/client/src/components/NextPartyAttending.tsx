@@ -3,9 +3,11 @@ import {
   ActionIcon,
   Alert,
   Avatar,
+  Badge,
   Box,
   Button,
   Center,
+  Divider,
   Input,
   Loader,
   LoadingOverlay,
@@ -15,7 +17,12 @@ import {
   Tooltip,
 } from "@mantine/core";
 import type { User } from "@sommerlan-app/server/src/data/users";
-import { IconCheck, IconMan, IconPlus } from "@tabler/icons-react";
+import {
+  IconCheck,
+  IconHourglassLow,
+  IconMan,
+  IconPlus,
+} from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { useAtomValue } from "jotai";
 import { Fragment } from "react";
@@ -50,9 +57,10 @@ export function NextPartyAttending() {
 
   return (
     <>
-      Die naechste Party ist vom{" "}
+      Die nächste Party ist vom{" "}
       {formatRange(startDate.toDate(), endDate.toDate())} (noch ca{" "}
       {startDate.toNow(true)})
+      <Rooms />
       <Box
         p="xs"
         sx={(theme) => ({
@@ -100,6 +108,23 @@ export function NextPartyAttending() {
                   ))}
                 </Avatar.Group>
               </Tooltip.Group>
+
+              <Box
+                sx={(theme) => ({
+                  gridColumn: "1 / span 4",
+                  [theme.fn.smallerThan("xs")]: {
+                    gridColumn: "1 / span 3",
+                  },
+                })}
+              >
+                <Badge>
+                  {3 -
+                    attendingsOnDate.filter((att) => att.room === "granted")
+                      .length}{" "}
+                  / 3 rooms available
+                </Badge>
+                <Divider mt="sm" />
+              </Box>
             </Fragment>
           );
         })}
@@ -325,5 +350,130 @@ function AttendingToggle({
     >
       <IconCheck size="1rem" />
     </ActionIcon>
+  );
+}
+
+function Rooms() {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const user = useAtomValue(userAtom)!;
+
+  const { data: party, isLoading } = trpc.party.nextParty.useQuery();
+
+  const myAttending = party?.attendings.find(
+    (attending) => attending.userId === user.id
+  );
+
+  const context = trpc.useContext();
+  const { mutateAsync: requestRoom, isLoading: isRequesting } =
+    trpc.party.requestRoom.useMutation({
+      onSuccess: (data) => {
+        context.party.nextParty.setData(
+          void 0,
+          (prev) =>
+            prev && {
+              ...prev,
+              attendings: data,
+            }
+        );
+      },
+    });
+
+  const isRequestingRoom = myAttending?.room === "requested";
+  const isGrantedRoom = myAttending?.room === "granted";
+
+  if (!party) return null;
+
+  return (
+    <>
+      <Button
+        loading={isLoading || isRequesting}
+        variant={!isGrantedRoom ? "light" : "filled"}
+        color={isGrantedRoom ? "green" : "blue"}
+        fullWidth
+        mt="md"
+        radius="md"
+        leftIcon={
+          isGrantedRoom ? (
+            <IconCheck />
+          ) : isRequestingRoom ? (
+            <IconHourglassLow />
+          ) : undefined
+        }
+        onClick={() =>
+          requestRoom({ partyId: party.id, requested: !isRequestingRoom })
+        }
+      >
+        Ich würde gerne einen Raum haben
+      </Button>
+
+      <Can I="grantRoom" an="Attending">
+        {party.attendings
+          .filter((attending) => attending.room === "requested")
+          .map((attending) => (
+            <RoomRequest key={attending.id} user={attending.user} />
+          ))}
+      </Can>
+    </>
+  );
+}
+
+function RoomRequest({ user }: { user: User }) {
+  const { data: party } = trpc.party.nextParty.useQuery();
+
+  const context = trpc.useContext();
+  const { mutateAsync: grantRoom, isLoading: isGranting } =
+    trpc.party.grantRoom.useMutation({
+      onSuccess: (data) => {
+        context.party.nextParty.setData(
+          void 0,
+          (prev) =>
+            prev && {
+              ...prev,
+              attendings: data,
+            }
+        );
+      },
+    });
+  const { mutateAsync: denyRoom, isLoading: isDenying } =
+    trpc.party.denyRoom.useMutation({
+      onSuccess: (data) => {
+        context.party.nextParty.setData(
+          void 0,
+          (prev) =>
+            prev && {
+              ...prev,
+              attendings: data,
+            }
+        );
+      },
+    });
+
+  return (
+    <Box
+      m="sm"
+      sx={(theme) => ({
+        display: "grid",
+        gridTemplateColumns: "max-content max-content auto auto",
+        gap: theme.spacing.sm,
+        alignItems: "center",
+      })}
+    >
+      <UserAvatar user={user} />
+      {user.displayName} will einen Raum
+      <Button
+        loading={isGranting}
+        onClick={() => grantRoom({ partyId: party?.id ?? "", userId: user.id })}
+        disabled={isDenying}
+      >
+        Ok
+      </Button>
+      <Button
+        loading={isDenying}
+        onClick={() => denyRoom({ partyId: party?.id ?? "", userId: user.id })}
+        disabled={isGranting}
+      >
+        Ablehnen
+      </Button>
+    </Box>
   );
 }
