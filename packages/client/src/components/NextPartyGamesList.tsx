@@ -7,12 +7,14 @@ import {
   Indicator,
   Loader,
   MultiSelect,
+  Popover,
   Text,
   Tooltip,
 } from "@mantine/core";
 import dayjs from "dayjs";
 import { useAtomValue } from "jotai";
 import { Fragment, forwardRef } from "react";
+import { UserAvatar } from ".";
 import { userAtom } from "../state";
 import { trpc } from "../utils";
 
@@ -136,21 +138,32 @@ export function NextPartyGamesList() {
               <Tooltip.Group openDelay={300} closeDelay={100}>
                 <Avatar.Group spacing="sm" sx={{ flexWrap: "wrap" }}>
                   {gamesOnDate.map((game) => (
-                    <Tooltip key={game.id} label={game.name} withArrow>
-                      <Indicator
-                        position="top-start"
-                        label={`${game.players.length} Spieler`}
-                        size={26}
-                        offset={8}
-                      >
-                        <Avatar radius="xl" src={game.imageUrl} size="xl">
-                          {game.name
-                            .split(" ")
-                            .map((name) => name[0])
-                            .join("")}
-                        </Avatar>
-                      </Indicator>
-                    </Tooltip>
+                    <Popover key={game.id}>
+                      <Popover.Target>
+                        <Tooltip label={game.name} withArrow>
+                          <Indicator
+                            position="top-start"
+                            label={`${game.players.length} Spieler`}
+                            size={26}
+                            offset={8}
+                          >
+                            <Avatar radius="xl" src={game.imageUrl} size="xl">
+                              {game.name
+                                .split(" ")
+                                .map((name) => name[0])
+                                .join("")}
+                            </Avatar>
+                          </Indicator>
+                        </Tooltip>
+                      </Popover.Target>
+                      <Popover.Dropdown>
+                        <Avatar.Group>
+                          {game.players.map((player) => (
+                            <UserAvatar key={player.id} user={player} />
+                          ))}
+                        </Avatar.Group>
+                      </Popover.Dropdown>
+                    </Popover>
                   ))}
                 </Avatar.Group>
               </Tooltip.Group>
