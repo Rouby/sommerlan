@@ -2,6 +2,7 @@ import {
   Avatar,
   Box,
   Center,
+  Divider,
   Group,
   Indicator,
   Loader,
@@ -114,7 +115,7 @@ export function NextPartyGamesList() {
           },
         })}
       >
-        {dates.map((date) => {
+        {dates.map((date, idx, arr) => {
           const attendingsOnDate = party.attendings.filter((attending) =>
             attending.dates.includes(date.format("YYYY-MM-DD"))
           );
@@ -153,6 +154,17 @@ export function NextPartyGamesList() {
                   ))}
                 </Avatar.Group>
               </Tooltip.Group>
+
+              {idx < arr.length - 1 && (
+                <Divider
+                  sx={(theme) => ({
+                    gridColumn: "1 / span 2",
+                    [theme.fn.smallerThan("xs")]: {
+                      gridColumn: "1",
+                    },
+                  })}
+                />
+              )}
             </Fragment>
           );
         })}
