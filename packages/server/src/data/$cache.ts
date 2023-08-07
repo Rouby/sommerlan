@@ -123,7 +123,9 @@ export async function syncCache() {
                   ? Object.fromEntries(
                       objectKeys.map((key) => [
                         key,
-                        row[key] ? JSON.parse(row[key]) : undefined,
+                        row[key]
+                          ? JSON.parse(row[key])
+                          : new cls()[key as keyof typeof cls],
                       ])
                     )
                   : {};
@@ -188,7 +190,9 @@ async function fillCache<T extends Base>(cls: new () => T, sheetName: string) {
           return Object.fromEntries(
             objectKeys.map((key) => [
               key,
-              row[key] ? JSON.parse(row[key]) : undefined,
+              row[key]
+                ? JSON.parse(row[key])
+                : new cls()[key as keyof typeof cls],
             ])
           );
         })
