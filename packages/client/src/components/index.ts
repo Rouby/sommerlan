@@ -4,6 +4,7 @@ export * from "./LAN";
 export * from "./NextPartyAttending";
 export * from "./NextPartyEventsList";
 export * from "./NextPartyGamesList";
+export * from "./NextPartyLocation";
 export * from "./SignUpButton";
 export * from "./UserAvatar";
 export * from "./UserButton";

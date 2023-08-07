@@ -12,6 +12,14 @@ export class Party extends Base {
 
   public endDate = "";
 
+  public location = "";
+
+  public latitude = 0;
+
+  public longitude = 0;
+
+  public iframeSrc = "";
+
   constructor(props?: Values<Party>) {
     super();
     if (props) Object.assign(this, props);
