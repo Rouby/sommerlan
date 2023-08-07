@@ -8,6 +8,7 @@ import {
   Button,
   Center,
   Divider,
+  Group,
   Input,
   Loader,
   LoadingOverlay,
@@ -117,12 +118,15 @@ export function NextPartyAttending() {
                   },
                 })}
               >
-                <Badge>
-                  {3 -
-                    attendingsOnDate.filter((att) => att.room === "granted")
-                      .length}{" "}
-                  / 3 rooms available
-                </Badge>
+                <Group>
+                  <Badge>
+                    {3 -
+                      attendingsOnDate.filter((att) => att.room === "granted")
+                        .length}{" "}
+                    / 3 rooms available
+                  </Badge>
+                  <Badge>{attendingsOnDate.length} an diesem Tag da</Badge>
+                </Group>
                 <Divider mt="sm" />
               </Box>
             </Fragment>
