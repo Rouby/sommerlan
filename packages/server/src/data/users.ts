@@ -2,7 +2,6 @@ import { createHash, randomUUID } from "crypto";
 import { Base, Values } from "./$base";
 
 enum Role {
-  TrustedUser = "TrustedUser",
   Admin = "Admin",
 }
 
