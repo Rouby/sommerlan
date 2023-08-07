@@ -121,7 +121,10 @@ export async function syncCache() {
               } else {
                 const original = row
                   ? Object.fromEntries(
-                      objectKeys.map((key) => [key, JSON.parse(row[key])])
+                      objectKeys.map((key) => [
+                        key,
+                        row[key] ? JSON.parse(row[key]) : undefined,
+                      ])
                     )
                   : {};
                 try {
@@ -183,7 +186,10 @@ async function fillCache<T extends Base>(cls: new () => T, sheetName: string) {
         sheetName,
         rows.map((row) => {
           return Object.fromEntries(
-            objectKeys.map((key) => [key, JSON.parse(row[key])])
+            objectKeys.map((key) => [
+              key,
+              row[key] ? JSON.parse(row[key]) : undefined,
+            ])
           );
         })
       );
