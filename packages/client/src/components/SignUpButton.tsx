@@ -206,10 +206,11 @@ function SignInViaPasskey() {
 
       const response = await startAuthentication(options);
 
-      const jwt = await login({ response });
+      const info = await login({ response });
 
-      if (jwt) {
-        setToken(jwt);
+      if (info) {
+        setToken(info.token);
+        localStorage.setItem("credentialID", info.credentialID.join(","));
       }
     },
   });

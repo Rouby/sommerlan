@@ -13,6 +13,9 @@ export class User extends Base {
   public id = randomUUID();
 
   public devices: {
+    name?: string;
+    createdAt?: string;
+    lastUsedAt?: string;
     credentialPublicKey: number[];
     credentialID: number[];
     counter: number;
@@ -28,6 +31,8 @@ export class User extends Base {
   public email = "";
 
   public discordUserId = "";
+
+  public avatarUrl = "";
 
   get avatar() {
     const hash = createHash("md5")

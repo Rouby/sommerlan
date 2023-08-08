@@ -57,6 +57,7 @@ export const authRouter = router({
   registerPasskey: publicProcedure
     .input(
       z.object({
+        name: z.string().optional(),
         userID: z.string(),
         response: z.object({
           id: z.string(),
@@ -108,6 +109,8 @@ export const authRouter = router({
             verification.registrationInfo;
 
           user.devices.push({
+            name: req.input.name,
+            createdAt: new Date().toISOString(),
             credentialPublicKey: Array.from(credentialPublicKey),
             credentialID: Array.from(credentialID),
             counter,
@@ -222,9 +225,13 @@ export const authRouter = router({
 
         if (verification.verified) {
           authenticator.counter = verification.authenticationInfo.newCounter;
+          authenticator.lastUsedAt = new Date().toISOString();
           await user.save();
 
-          return signToken(user);
+          return {
+            token: await signToken(user),
+            credentialID: authenticator.credentialID,
+          };
         }
       } finally {
         issuedChallenges.delete(expectedChallenge);

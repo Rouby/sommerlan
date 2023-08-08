@@ -34,6 +34,7 @@ export function CreatePasskeyFlow() {
       const response = await startRegistration(options);
 
       const token = await registerPasskey({
+        name: navigator.userAgent,
         userID: user.id,
         response,
       });

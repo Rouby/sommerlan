@@ -1,13 +1,21 @@
-import { Avatar, Group, Menu, Modal, UnstyledButton } from "@mantine/core";
+import {
+  Avatar,
+  Divider,
+  Group,
+  Menu,
+  Modal,
+  UnstyledButton,
+} from "@mantine/core";
 import { IconLock, IconQrcode, IconUsers } from "@tabler/icons-react";
 import { Link } from "@tanstack/router";
-import { useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { useState } from "react";
-import { userAtom } from "../state";
+import { tokenAtom, userAtom } from "../state";
 import { AuthorizeOtherDevice, Can } from "./";
 import { CreatePasskeyFlow } from "./CreatePasskeyFlow";
 
 export function UserButton() {
+  const setToken = useSetAtom(tokenAtom);
   const user = useAtomValue(userAtom);
 
   const canScanQRCodes = "BarcodeDetector" in window;
@@ -31,6 +39,18 @@ export function UserButton() {
         </Menu.Target>
 
         <Menu.Dropdown>
+          <Menu.Label>Nutzer</Menu.Label>
+
+          <Menu.Item
+            component={Link}
+            icon={<IconUsers size={14} />}
+            to="/profile"
+            search={{}}
+            params={{}}
+          >
+            Mein Profil
+          </Menu.Item>
+
           <Menu.Label>Application</Menu.Label>
 
           <Menu.Item
@@ -50,7 +70,8 @@ export function UserButton() {
           )}
 
           <Can I="manage" a="User">
-            <Menu.Label>Users</Menu.Label>
+            <Menu.Label>Admin</Menu.Label>
+
             <Menu.Item
               component={Link}
               icon={<IconUsers size={14} />}
@@ -61,6 +82,15 @@ export function UserButton() {
               Nutzer verwalten
             </Menu.Item>
           </Can>
+
+          <Divider />
+
+          <Menu.Item
+            icon={<IconLock size={14} />}
+            onClick={() => setToken(null)}
+          >
+            Ausloggen
+          </Menu.Item>
         </Menu.Dropdown>
       </Menu>
 
