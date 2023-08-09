@@ -1,5 +1,6 @@
 import z from "zod";
 import { User } from "../../data";
+import { signToken } from "../../signToken";
 import { protectedProcedure, router } from "../trpc";
 
 export const userRouter = router({
@@ -51,5 +52,29 @@ export const userRouter = router({
       );
 
       await user.save();
+    }),
+
+  updateProfile: protectedProcedure
+    .input(
+      z.object({
+        name: z.string(),
+        displayName: z.string(),
+        email: z.string(),
+        avatarUrl: z.string().optional(),
+      })
+    )
+    .mutation(async (req) => {
+      req.ctx.forbidden.throwUnlessCan("update", "User");
+
+      const user = req.ctx.user;
+
+      user.name = req.input.name;
+      user.email = req.input.email;
+      user.displayName = req.input.displayName;
+      user.avatarUrl = req.input.avatarUrl || "";
+
+      await user.save();
+
+      return signToken(user);
     }),
 });

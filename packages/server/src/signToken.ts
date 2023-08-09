@@ -11,6 +11,7 @@ async function tokenPayload(user: User) {
       discordUserId: user.discordUserId,
       name: user.name,
       avatar: user.avatar,
+      avatarUrl: user.avatarUrl,
     },
     abilityRules: (await createAbility(user)).rules,
   };

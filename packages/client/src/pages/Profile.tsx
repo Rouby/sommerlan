@@ -1,30 +1,73 @@
 import {
   ActionIcon,
+  Anchor,
   Badge,
   Box,
   Button,
+  Center,
   Container,
   Group,
+  Input,
   Loader,
   Modal,
   Paper,
+  Space,
   Stack,
   Text,
   TextInput,
 } from "@mantine/core";
+import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { IconEdit, IconKey, IconTrashX } from "@tabler/icons-react";
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useAtomValue, useSetAtom } from "jotai";
+import { useRef, useState } from "react";
 import { CreatePasskeyFlow } from "../components";
+import { useUploadFileMutation } from "../hooks";
+import { tokenAtom, userAtom } from "../state";
 import { formatDate, trpc } from "../utils";
 
 export function Profile() {
-  const { data: devices, isLoading } = trpc.user.devices.useQuery();
-
-  const [showPasskeyOptions, setShowPasskeyOptions] = useState(false);
-
   return (
     <Container>
+      <ProfileSettings />
+      <Space h="md" />
+      <PasskeySettings />
+    </Container>
+  );
+}
+
+function ProfileSettings() {
+  const setToken = useSetAtom(tokenAtom);
+  const user = useAtomValue(userAtom);
+
+  const openRef = useRef<() => void>(null);
+
+  const { mutateAsync: uploadFile, isLoading: isUploading } =
+    useUploadFileMutation();
+  const { mutateAsync: updateProfile, isLoading } =
+    trpc.user.updateProfile.useMutation();
+
+  return (
+    <form
+      onSubmit={async (evt) => {
+        evt.preventDefault();
+        const form = evt.target as HTMLFormElement;
+
+        const name = form["userName"].value;
+        const displayName = form["displayName"].value;
+        const email = form["email"].value;
+        const avatarUrl = form["avatarUrl"].value;
+
+        const token = await updateProfile({
+          name,
+          displayName,
+          email,
+          avatarUrl,
+        });
+
+        setToken(token);
+      }}
+    >
       <Paper withBorder>
         <Group
           position="apart"
@@ -36,14 +79,127 @@ export function Profile() {
                 : theme.colors.gray[2],
           })}
         >
-          <Text>Deine Passkeys</Text>
-          <Button onClick={() => setShowPasskeyOptions(true)}>
-            Passkey erstellen
-          </Button>
+          <Text>Deine Profil</Text>
         </Group>
 
         <Stack p="xs" spacing="xs">
-          {isLoading && <Loader />}
+          <Input.Wrapper label="Dein Name">
+            <Input
+              id="userName"
+              required
+              name="userName"
+              defaultValue={user?.name}
+            />
+          </Input.Wrapper>
+
+          <Input.Wrapper
+            label="Dein Anzeige-Name"
+            description="Dieser Name wird an den meisten Stellen in der UI angezeigt"
+          >
+            <Input
+              id="displayName"
+              required
+              name="displayName"
+              defaultValue={user?.displayName}
+            />
+          </Input.Wrapper>
+
+          <Input.Wrapper label="Deine E-Mail-Adresse">
+            <Input
+              id="email"
+              required
+              name="email"
+              defaultValue={user?.email}
+            />
+          </Input.Wrapper>
+
+          <Input.Wrapper
+            label="Profil-Bild"
+            description={
+              <>
+                Gib die Adresse zu einem Bild an, oder leer lassen um ein Bild
+                von{" "}
+                <Anchor
+                  href="https://de.gravatar.com/"
+                  target="_blank"
+                  referrerPolicy="no-referrer"
+                >
+                  Gravatar
+                </Anchor>{" "}
+                zu verwenden
+              </>
+            }
+          >
+            <Input
+              id="avatarUrl"
+              name="avatarUrl"
+              placeholder="https://example.com/image.jpg"
+              pattern="https?://.*"
+              defaultValue={user?.avatarUrl}
+            />
+          </Input.Wrapper>
+
+          <Dropzone
+            accept={IMAGE_MIME_TYPE}
+            onDrop={(files) => {
+              uploadFile(files[0]).then((url) => {
+                const imageElem = document.getElementById(
+                  "avatarUrl"
+                ) as HTMLInputElement;
+                if (imageElem) {
+                  imageElem.value = url;
+                }
+              });
+            }}
+            maxFiles={1}
+            openRef={openRef}
+            sx={{ height: 100, display: "grid", alignItems: "center" }}
+            loading={isUploading}
+          >
+            <Center>Alternativ kannst du ein Bild hochladen</Center>
+          </Dropzone>
+          <Button variant="light" onClick={() => openRef.current?.()}>
+            Bild auswählen
+          </Button>
+
+          <Group position="right">
+            <Button loading={isLoading} type="submit">
+              Speichern
+            </Button>
+          </Group>
+        </Stack>
+      </Paper>
+    </form>
+  );
+}
+
+function PasskeySettings() {
+  const { data: devices, isLoading } = trpc.user.devices.useQuery();
+
+  const [showPasskeyOptions, setShowPasskeyOptions] = useState(false);
+
+  return (
+    <Paper withBorder>
+      <Group
+        position="apart"
+        p="xs"
+        sx={(theme) => ({
+          background:
+            theme.colorScheme === "dark"
+              ? theme.colors.dark[6]
+              : theme.colors.gray[2],
+        })}
+      >
+        <Text>Deine Passkeys</Text>
+        <Button onClick={() => setShowPasskeyOptions(true)}>
+          Passkey erstellen
+        </Button>
+      </Group>
+
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <Stack p="xs" spacing="xs">
           {devices?.map((device, idx) => (
             <DeviceInfos
               key={idx}
@@ -54,17 +210,17 @@ export function Profile() {
             />
           ))}
         </Stack>
+      )}
 
-        <Modal
-          size="lg"
-          opened={showPasskeyOptions}
-          withCloseButton={false}
-          onClose={() => setShowPasskeyOptions(false)}
-        >
-          <CreatePasskeyFlow />
-        </Modal>
-      </Paper>
-    </Container>
+      <Modal
+        size="lg"
+        opened={showPasskeyOptions}
+        withCloseButton={false}
+        onClose={() => setShowPasskeyOptions(false)}
+      >
+        <CreatePasskeyFlow />
+      </Modal>
+    </Paper>
   );
 }
 

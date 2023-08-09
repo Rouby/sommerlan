@@ -18,11 +18,10 @@ import {
   TypographyStylesProvider,
 } from "@mantine/core";
 import { DatePickerInput, TimeInput } from "@mantine/dates";
-import { Dropzone, FileWithPath, IMAGE_MIME_TYPE } from "@mantine/dropzone";
+import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { RichTextEditor } from "@mantine/tiptap";
 import type { Event, User } from "@sommerlan-app/server/src/data";
 import { IconCheck, IconPencil } from "@tabler/icons-react";
-import { useMutation } from "@tanstack/react-query";
 import Highlight from "@tiptap/extension-highlight";
 import Placeholder from "@tiptap/extension-placeholder";
 import { useEditor } from "@tiptap/react";
@@ -31,7 +30,8 @@ import dayjs from "dayjs";
 import { useAtomValue } from "jotai";
 import { useRef, useState } from "react";
 import { Can, UserAvatar } from ".";
-import { tokenAtom, userAtom } from "../state";
+import { useUploadFileMutation } from "../hooks";
+import { userAtom } from "../state";
 import { trpc } from "../utils";
 
 export function NextPartyEventsList() {
@@ -261,26 +261,8 @@ function CreateEventForm({
 
   const openRef = useRef<() => void>(null);
 
-  const token = useAtomValue(tokenAtom);
-
-  const { mutateAsync: uploadFile, isLoading: isUploading } = useMutation(
-    async (file: FileWithPath) => {
-      const formData = new FormData();
-      formData.append(file.name, file);
-
-      const response = await fetch("/uploads", {
-        method: "PUT",
-        body: formData,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const data = await response.json();
-
-      return data.url as string;
-    }
-  );
+  const { mutateAsync: uploadFile, isLoading: isUploading } =
+    useUploadFileMutation();
 
   return (
     <form
