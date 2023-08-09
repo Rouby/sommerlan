@@ -51,23 +51,14 @@ export function UserButton() {
             Mein Profil
           </Menu.Item>
 
-          <Menu.Label>Application</Menu.Label>
+          <Menu.Label>Anwendung</Menu.Label>
 
           <Menu.Item
             icon={<IconQrcode size={14} />}
             onClick={() => setShowAuthorizeOtherDevice(true)}
           >
-            {canScanQRCodes ? "QR Code einscannen" : "QR Code anzeigen"}
+            {canScanQRCodes ? "QR Code scannen" : "QR Code anzeigen"}
           </Menu.Item>
-
-          {user.devices.length !== -1 && (
-            <Menu.Item
-              icon={<IconLock size={14} />}
-              onClick={() => setShowPasskeyOptions(true)}
-            >
-              Passkey erstellen
-            </Menu.Item>
-          )}
 
           <Can I="manage" a="User">
             <Menu.Label>Admin</Menu.Label>

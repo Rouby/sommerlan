@@ -17,6 +17,7 @@ export function CreatePasskeyFlow() {
   const { mutateAsync: registerPasskey } =
     trpc.auth.registerPasskey.useMutation();
 
+  const context = trpc.useContext();
   const {
     mutate: createPasskey,
     error,
@@ -40,6 +41,9 @@ export function CreatePasskeyFlow() {
       });
 
       if (token) setToken(token);
+    },
+    onSuccess: () => {
+      context.user.devices.invalidate();
     },
   });
 

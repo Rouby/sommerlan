@@ -1,6 +1,5 @@
 import z from "zod";
 import { User } from "../../data";
-import { signToken } from "../../signToken";
 import { protectedProcedure, router } from "../trpc";
 
 export const userRouter = router({
@@ -10,6 +9,10 @@ export const userRouter = router({
     return (await User.all()).filter((user) =>
       req.ctx.ability.can("read", user)
     );
+  }),
+
+  devices: protectedProcedure.query(async (req) => {
+    return req.ctx.user.devices;
   }),
 
   updateDevice: protectedProcedure
@@ -32,7 +35,7 @@ export const userRouter = router({
 
       await user.save();
 
-      return signToken(user);
+      return device;
     }),
 
   deleteDevice: protectedProcedure
@@ -48,7 +51,5 @@ export const userRouter = router({
       );
 
       await user.save();
-
-      return signToken(user);
     }),
 });

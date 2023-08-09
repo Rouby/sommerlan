@@ -35,6 +35,8 @@ export class User extends Base {
   public avatarUrl = "";
 
   get avatar() {
+    if (this.avatarUrl) return this.avatarUrl;
+
     const hash = createHash("md5")
       .update(this.email.toLowerCase())
       .digest("hex");

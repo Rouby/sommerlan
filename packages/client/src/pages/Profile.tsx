@@ -1,9 +1,11 @@
 import {
   ActionIcon,
   Badge,
+  Box,
   Button,
   Container,
   Group,
+  Loader,
   Modal,
   Paper,
   Stack,
@@ -12,14 +14,12 @@ import {
 } from "@mantine/core";
 import { IconEdit, IconKey, IconTrashX } from "@tabler/icons-react";
 import dayjs from "dayjs";
-import { useAtomValue, useSetAtom } from "jotai";
 import { useState } from "react";
 import { CreatePasskeyFlow } from "../components";
-import { tokenAtom, userAtom } from "../state";
 import { formatDate, trpc } from "../utils";
 
 export function Profile() {
-  const user = useAtomValue(userAtom);
+  const { data: devices, isLoading } = trpc.user.devices.useQuery();
 
   const [showPasskeyOptions, setShowPasskeyOptions] = useState(false);
 
@@ -43,7 +43,8 @@ export function Profile() {
         </Group>
 
         <Stack p="xs" spacing="xs">
-          {user?.devices.map((device, idx) => (
+          {isLoading && <Loader />}
+          {devices?.map((device, idx) => (
             <DeviceInfos
               key={idx}
               name={device.name}
@@ -78,16 +79,28 @@ function DeviceInfos({
   lastUsedAt?: string;
   credentialID: number[];
 }) {
-  const setToken = useSetAtom(tokenAtom);
   const [edit, setEdit] = useState(false);
 
+  const context = trpc.useContext();
   const { mutateAsync: updateDevice, isLoading } =
     trpc.user.updateDevice.useMutation({
-      onSuccess: (token) => setToken(token),
+      onSuccess: (newDevice) =>
+        context.user.devices.setData(undefined, (prev) =>
+          prev?.map((device) =>
+            device.credentialID.join(",") === credentialID.join(",")
+              ? newDevice
+              : device
+          )
+        ),
     });
   const { mutateAsync: deleteDevice, isLoading: isDeleting } =
     trpc.user.deleteDevice.useMutation({
-      onSuccess: (token) => setToken(token),
+      onSuccess: () =>
+        context.user.devices.setData(undefined, (prev) =>
+          prev?.filter(
+            (device) => device.credentialID.join(",") !== credentialID.join(",")
+          )
+        ),
     });
 
   return (
@@ -103,7 +116,7 @@ function DeviceInfos({
         setEdit(false);
       }}
     >
-      <Group position="apart">
+      <Group position="apart" noWrap>
         {edit ? (
           <>
             <TextInput
@@ -118,18 +131,37 @@ function DeviceInfos({
           </>
         ) : (
           <Stack spacing={0}>
-            <Group>
-              <IconKey />
-              {name ?? "Unnamed passkey"}
+            <Box
+              sx={(theme) => ({
+                display: "grid",
+                gridTemplateColumns: "auto 1fr auto",
+                alignItems: "center",
+                gap: theme.spacing.md,
+              })}
+            >
+              <IconKey size={16} />
+              <Text
+                sx={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  flex: "1 1 0",
+                }}
+              >
+                {name ?? "Unnamed passkey"}
+              </Text>
               {localStorage.getItem("credentialID") ===
                 credentialID.join(",") && (
                 <Badge color="gray">Von diesem Browser benutzt</Badge>
               )}
-            </Group>
+            </Box>
             {(createdAt || lastUsedAt) && (
               <Text color="dimmed">
                 {createdAt ? (
-                  <>Erstellt am {formatDate(new Date(createdAt))} | </>
+                  <>
+                    Erstellt am {formatDate(new Date(createdAt))}
+                    {lastUsedAt ? " | " : null}
+                  </>
                 ) : null}
                 {lastUsedAt ? (
                   <>Zuletzt genutzt {dayjs().to(lastUsedAt, false)}</>
@@ -138,7 +170,7 @@ function DeviceInfos({
             )}
           </Stack>
         )}
-        <Group>
+        <Group noWrap>
           {edit ? (
             <>
               <Button type="submit" loading={isLoading}>

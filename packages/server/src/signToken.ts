@@ -4,7 +4,14 @@ import { createAbility } from "./router/ability";
 
 async function tokenPayload(user: User) {
   return {
-    user,
+    user: {
+      id: user.id,
+      email: user.email,
+      displayName: user.displayName,
+      discordUserId: user.discordUserId,
+      name: user.name,
+      avatar: user.avatar,
+    },
     abilityRules: (await createAbility(user)).rules,
   };
 }
