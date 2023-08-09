@@ -13,7 +13,6 @@ import {
   IconCalendar,
   IconCloudComputing,
   IconDeviceGamepad,
-  IconGavel,
   IconHome,
 } from "@tabler/icons-react";
 import { Link, Outlet } from "@tanstack/router";
@@ -80,9 +79,6 @@ export function Root() {
               </Link>
               <Link to="/events" activeProps={linkActiveProps}>
                 <NavButton icon={<IconCalendar />} label="Events" />
-              </Link>
-              <Link to="/imprint" activeProps={linkActiveProps}>
-                <NavButton icon={<IconGavel />} label="Imprint" />
               </Link>
             </Group>
           </MediaQuery>
