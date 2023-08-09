@@ -69,7 +69,7 @@ export function App() {
           >
             <RouterProvider router={router} />
           </MantineProvider>
-        </QueryClientProvider>{" "}
+        </QueryClientProvider>
       </trpc.Provider>
     </Provider>
   );

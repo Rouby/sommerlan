@@ -74,7 +74,7 @@ export function NextPartyAttending() {
           [theme.fn.smallerThan("xs")]: {
             gridTemplateColumns: "auto auto 1fr",
 
-            "& > *:nth-child(4n)": {
+            "& > *:nth-child(5n)": {
               gridColumn: "1 / span 3",
             },
           },
