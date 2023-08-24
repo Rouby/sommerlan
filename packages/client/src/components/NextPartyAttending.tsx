@@ -15,8 +15,10 @@ import {
   Menu,
   Popover,
   Stack,
+  Text,
   Tooltip,
 } from "@mantine/core";
+import { useInterval } from "@mantine/hooks";
 import type { User } from "@sommerlan-app/server/src/data/users";
 import {
   IconCheck,
@@ -26,7 +28,7 @@ import {
 } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { useAtomValue } from "jotai";
-import { Fragment } from "react";
+import { Fragment, useEffect, useReducer } from "react";
 import { Can, UserAvatar } from ".";
 import { userAtom } from "../state";
 import { formatRange, trpc } from "../utils";
@@ -45,11 +47,11 @@ export function NextPartyAttending() {
   }
 
   if (!party?.startDate || !party?.endDate) {
-    return <Center>No Party planned</Center>;
+    return <Center>Bisher ist noch keine Party geplant</Center>;
   }
 
-  const startDate = dayjs(party.startDate, "YYYY-MM-DD");
-  const endDate = dayjs(party.endDate, "YYYY-MM-DD");
+  const startDate = dayjs(party.startDate, "YYYY-MM-DD").add(12, "hours");
+  const endDate = dayjs(party.endDate, "YYYY-MM-DD").add(20, "hours");
 
   const dates = Array.from(
     { length: endDate.diff(startDate, "days") + 1 },
@@ -58,9 +60,7 @@ export function NextPartyAttending() {
 
   return (
     <>
-      Die nächste Party ist vom{" "}
-      {formatRange(startDate.toDate(), endDate.toDate())} (noch ca{" "}
-      {startDate.toNow(true)})
+      <Countdown />
       <Rooms />
       <Box
         p="xs"
@@ -119,12 +119,14 @@ export function NextPartyAttending() {
                 })}
               >
                 <Group>
-                  <Badge>
-                    {3 -
-                      attendingsOnDate.filter((att) => att.room === "granted")
-                        .length}{" "}
-                    / 3 rooms available
-                  </Badge>
+                  {party.roomsAvailable ? (
+                    <Badge>
+                      {party.roomsAvailable -
+                        attendingsOnDate.filter((att) => att.room === "granted")
+                          .length}{" "}
+                      / {party.roomsAvailable} rooms available
+                    </Badge>
+                  ) : null}
                   <Badge>{attendingsOnDate.length} an diesem Tag da</Badge>
                 </Group>
                 <Divider mt="sm" />
@@ -357,6 +359,54 @@ function AttendingToggle({
   );
 }
 
+function Countdown() {
+  const { data: party, isLoading } = trpc.party.nextParty.useQuery();
+
+  const [, rerender] = useReducer((x) => x + 1, 0);
+  const { start, stop } = useInterval(() => {
+    rerender();
+  }, 1000);
+
+  useEffect(() => {
+    if (!party) return;
+    start();
+    return () => stop();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [party]);
+
+  if (isLoading || !party) {
+    return null;
+  }
+
+  const startDate = dayjs(party.startDate, "YYYY-MM-DD").add(12, "hours");
+  const endDate = dayjs(party.endDate, "YYYY-MM-DD").add(20, "hours");
+
+  const numberFormat = new Intl.NumberFormat();
+
+  const parts = [
+    [startDate.diff(dayjs(), "months"), "Monate"] as const,
+    [startDate.diff(dayjs(), "days"), "Tage"] as const,
+    [startDate.diff(dayjs(), "hours"), "Stunden"] as const,
+    [startDate.diff(dayjs(), "minutes"), "Minuten"] as const,
+    [startDate.diff(dayjs(), "seconds"), "Sekunden"] as const,
+  ].filter(([value]) => value > 0);
+
+  return (
+    <>
+      <Text>
+        Die nächste Party ist{" "}
+        <strong>vom {formatRange(startDate.toDate(), endDate.toDate())}</strong>
+      </Text>
+      {parts.map(([value, unit], idx) => (
+        <Text key={unit}>
+          {idx === 0 ? "Das sind noch " : "... oder "}
+          <strong>{numberFormat.format(value)}</strong> {unit}
+        </Text>
+      ))}
+    </>
+  );
+}
+
 function Rooms() {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const user = useAtomValue(userAtom)!;
@@ -385,7 +435,7 @@ function Rooms() {
   const isRequestingRoom = myAttending?.room === "requested";
   const isGrantedRoom = myAttending?.room === "granted";
 
-  if (!party) return null;
+  if (!party?.roomsAvailable) return null;
 
   return (
     <>
