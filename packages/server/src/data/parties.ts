@@ -20,8 +20,15 @@ export class Party extends Base {
 
   public iframeSrc = "";
 
+  public roomsAvailable = 0;
+
   constructor(props?: Values<Party>) {
     super();
     if (props) Object.assign(this, props);
+  }
+
+  static async findNext() {
+    const parties = await Party.all();
+    return parties.sort((a, b) => (a.startDate < b.startDate ? 1 : -1)).at(0);
   }
 }

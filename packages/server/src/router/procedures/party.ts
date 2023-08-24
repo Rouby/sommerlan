@@ -1,16 +1,16 @@
 import { TRPCError } from "@trpc/server";
+import dayjs from "dayjs";
 import z from "zod";
 import { Attending, Event, Game, Party, User } from "../../data";
 import { protectedProcedure, router } from "../trpc";
 
 export const partyRouter = router({
   nextParty: protectedProcedure.query(async () => {
-    const parties = await Party.all();
-    const party = parties
-      .sort((a, b) => (a.startDate < b.startDate ? -1 : 1))
-      .at(0);
+    const party = await Party.findNext();
 
     if (!party) return null;
+
+    if (dayjs().isAfter(party.endDate, "day")) return null;
 
     return {
       ...party,
@@ -170,9 +170,7 @@ export const partyRouter = router({
     .query(async (req) => {
       const party = req.input.partyId
         ? await Party.findById(req.input.partyId)
-        : (await Party.all())
-            .sort((a, b) => (a.startDate < b.startDate ? -1 : 1))
-            .at(0);
+        : await Party.findNext();
 
       if (!party) return null;
 
@@ -271,9 +269,7 @@ export const partyRouter = router({
     .query(async (req) => {
       const party = req.input.partyId
         ? await Party.findById(req.input.partyId)
-        : (await Party.all())
-            .sort((a, b) => (a.startDate < b.startDate ? -1 : 1))
-            .at(0);
+        : await Party.findNext();
 
       if (!party) return null;
 
