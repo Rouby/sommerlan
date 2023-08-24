@@ -100,11 +100,11 @@ jobs:
         run: |
           echo "Running on branch ${{ github.ref }}"
           if [ "${{ github.ref }}" = "refs/heads/main" ]; then
-            echo "::set-output name=env_name::production"
-            echo "::set-output name=env_url::https://sommerlan.rocks"
+            echo "env_name=production" >> $GITHUB_OUTPUT
+            echo "env_url=https://sommerlan.rocks" >> $GITHUB_OUTPUT
           elif [ "${{ github.ref }}" = "refs/heads/dev" ]; then
-            echo "::set-output name=env_name::staging"
-            echo "::set-output name=env_url::https://staging.sommerlan.rocks"
+            echo "env_name=staging" >> $GITHUB_OUTPUT
+            echo "env_url=https://staging.sommerlan.rocks" >> $GITHUB_OUTPUT
           fi
 
   deploy:
