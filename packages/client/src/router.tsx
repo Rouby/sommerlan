@@ -1,7 +1,17 @@
 import { RootRoute, Route, Router } from "@tanstack/router";
 import { Authenticate } from "./Auth";
 import { Root } from "./Root";
-import { Events, Games, Imprint, Intro, Party, Profile } from "./pages";
+import {
+  Admin,
+  Cache,
+  Events,
+  Games,
+  Imprint,
+  Intro,
+  Party,
+  Profile,
+  Users,
+} from "./pages";
 
 const rootRoute = new RootRoute({
   component: Root,
@@ -54,6 +64,24 @@ const profileRoute = new Route({
   component: Profile,
 });
 
+const adminRoute = new Route({
+  getParentRoute: () => authRoute,
+  path: "admin",
+  component: Admin,
+});
+
+const usersRoute = new Route({
+  getParentRoute: () => adminRoute,
+  path: "users",
+  component: Users,
+});
+
+const cacheRoute = new Route({
+  getParentRoute: () => adminRoute,
+  path: "cache",
+  component: Cache,
+});
+
 const routeTree = rootRoute.addChildren([
   authRoute.addChildren([
     indexRoute,
@@ -62,6 +90,7 @@ const routeTree = rootRoute.addChildren([
     eventsRoute,
     imprintRoute,
     profileRoute,
+    adminRoute.addChildren([usersRoute, cacheRoute]),
   ]),
 ]);
 

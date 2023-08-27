@@ -7,7 +7,7 @@ import { Attending, Event, User } from "../data";
 
 export type AbilityTuple = [
   string,
-  User | "User" | Attending | "Attending" | Event | "Event"
+  User | "User" | Attending | "Attending" | Event | "Event" | "Cache"
 ];
 export type AppAbility = MongoAbility<AbilityTuple>;
 
@@ -25,6 +25,7 @@ export async function createAbility(user?: User) {
       can("update", "Attending");
       can("grantRoom", "Attending");
       can("update", "Event");
+      can("manage", "Cache");
     }
   }
 

@@ -10,7 +10,6 @@ import {
   Input,
   Loader,
   Modal,
-  Paper,
   Space,
   Stack,
   Text,
@@ -21,7 +20,7 @@ import { IconEdit, IconKey, IconTrashX } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useRef, useState } from "react";
-import { CreatePasskeyFlow } from "../components";
+import { CardWithHeader, CreatePasskeyFlow } from "../components";
 import { useUploadFileMutation } from "../hooks";
 import { tokenAtom, userAtom } from "../state";
 import { formatDate, trpc } from "../utils";
@@ -68,20 +67,7 @@ function ProfileSettings() {
         setToken(token);
       }}
     >
-      <Paper withBorder>
-        <Group
-          position="apart"
-          p="xs"
-          sx={(theme) => ({
-            background:
-              theme.colorScheme === "dark"
-                ? theme.colors.dark[6]
-                : theme.colors.gray[2],
-          })}
-        >
-          <Text>Deine Profil</Text>
-        </Group>
-
+      <CardWithHeader header="Deine Profil">
         <Stack p="xs" spacing="xs">
           <Input.Wrapper label="Dein Name">
             <Input
@@ -168,7 +154,7 @@ function ProfileSettings() {
             </Button>
           </Group>
         </Stack>
-      </Paper>
+      </CardWithHeader>
     </form>
   );
 }
@@ -179,23 +165,14 @@ function PasskeySettings() {
   const [showPasskeyOptions, setShowPasskeyOptions] = useState(false);
 
   return (
-    <Paper withBorder>
-      <Group
-        position="apart"
-        p="xs"
-        sx={(theme) => ({
-          background:
-            theme.colorScheme === "dark"
-              ? theme.colors.dark[6]
-              : theme.colors.gray[2],
-        })}
-      >
-        <Text>Deine Passkeys</Text>
+    <CardWithHeader
+      header="Deine Passkeys"
+      actions={
         <Button onClick={() => setShowPasskeyOptions(true)}>
           Passkey erstellen
         </Button>
-      </Group>
-
+      }
+    >
       {isLoading ? (
         <Loader />
       ) : (
@@ -220,7 +197,7 @@ function PasskeySettings() {
       >
         <CreatePasskeyFlow />
       </Modal>
-    </Paper>
+    </CardWithHeader>
   );
 }
 

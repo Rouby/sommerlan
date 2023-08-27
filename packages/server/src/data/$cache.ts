@@ -98,9 +98,14 @@ export async function allRows<T extends Base>(
   });
 }
 
-export async function syncCache() {
+let syncingCache: Promise<void> | undefined;
+export async function syncCache(clearCache = false) {
+  if (syncingCache) {
+    return syncingCache;
+  }
+
   logger.trace("Syncing cache");
-  await newrelic.startSegment(`syncCache`, true, async () => {
+  syncingCache = newrelic.startSegment(`syncCache`, true, async () => {
     for (const [cls, entities] of patches.entries()) {
       const sheetName = cls.prototype.sheetName;
       await newrelic.startSegment(`syncCache.${sheetName}`, true, async () => {
@@ -165,9 +170,13 @@ export async function syncCache() {
       });
     }
   });
+  await syncingCache;
   logger.trace("Synced cache");
   patches.clear();
-  cache.clear();
+  if (clearCache) {
+    cache.clear();
+  }
+  syncingCache = undefined;
 }
 
 const fillingCache = new Map<string, Promise<void>>();
