@@ -7,5 +7,6 @@ export * from "./NextPartyEventsList";
 export * from "./NextPartyGamesList";
 export * from "./NextPartyLocation";
 export * from "./SignUpButton";
+export * from "./TextLink";
 export * from "./UserAvatar";
 export * from "./UserButton";

@@ -7,10 +7,6 @@ import svgr from "vite-plugin-svgr";
 export default defineConfig(async ({ mode }) => ({
   plugins: [
     svgr(),
-    await import("@mdx-js/rollup").then(({ default: mdx }) => ({
-      enforce: "pre",
-      ...mdx(),
-    })),
     react(),
     createHtmlPlugin({
       minify: mode !== "development",
