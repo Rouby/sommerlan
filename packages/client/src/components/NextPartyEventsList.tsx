@@ -274,7 +274,7 @@ function CreateEventForm({
 
         const description = editor?.getHTML() ?? "";
 
-        const date = form["date"].value;
+        const date = dayjs(form["date"].value).format("YYYY-MM-DD");
         const dateUncertain = form["dateUncertain"].checked || !date;
 
         const startTime = form["startTime"].value;
