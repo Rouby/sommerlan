@@ -7,7 +7,7 @@ export function ArchivedParty() {
     params: { id },
   } = useMatch({ from: "/auth/party/archive/$id" });
 
-  const { data, isLoading } = trpc.party.get.useQuery(id);
+  const { isLoading } = trpc.party.get.useQuery(id);
 
   if (isLoading) {
     return (
