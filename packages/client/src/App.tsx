@@ -1,4 +1,5 @@
 import { MantineProvider } from "@mantine/core";
+import { DatesProvider } from "@mantine/dates";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider } from "@tanstack/router";
 import { createWSClient, httpBatchLink, splitLink, wsLink } from "@trpc/client";
@@ -67,7 +68,13 @@ export function App() {
             withNormalizeCSS
             theme={{ colorScheme }}
           >
-            <RouterProvider router={router} />
+            <DatesProvider
+              settings={{
+                locale: navigator.language,
+              }}
+            >
+              <RouterProvider router={router} />
+            </DatesProvider>
           </MantineProvider>
         </QueryClientProvider>
       </trpc.Provider>

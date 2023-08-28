@@ -7,6 +7,7 @@ import {
   Center,
   Group,
   Loader,
+  MediaQuery,
   NumberInput,
   Popover,
   Table,
@@ -45,7 +46,9 @@ export function PartyList() {
             <th></th>
             <th>Datum</th>
             <th>Dauer</th>
-            <th>Ort</th>
+            <MediaQuery smallerThan="md" styles={{ display: "none" }}>
+              <th>Ort</th>
+            </MediaQuery>
             <th>Teilnehmer</th>
           </tr>
         </thead>
@@ -64,20 +67,19 @@ export function PartyList() {
               <Box
                 key={party.id}
                 component="tr"
-                sx={
-                  isInFuture
-                    ? (theme) => ({
-                        backgroundImage:
-                          theme.colorScheme === "dark"
-                            ? `linear-gradient(45deg, ${theme.colors.dark[6]} 25%, transparent 25%, transparent 50%, ${theme.colors.dark[6]} 50%, ${theme.colors.dark[6]} 75%, transparent 75%, transparent 100%)`
-                            : theme.black,
-                        backgroundSize: "56.57px 56.57px",
-                      })
-                    : undefined
-                }
+                sx={(theme) => ({
+                  ...(isInFuture && {
+                    backgroundImage:
+                      theme.colorScheme === "dark"
+                        ? `linear-gradient(45deg, ${theme.colors.dark[6]} 25%, transparent 25%, transparent 50%, ${theme.colors.dark[6]} 50%, ${theme.colors.dark[6]} 75%, transparent 75%, transparent 100%)`
+                        : theme.black,
+                    backgroundSize: "56.57px 56.57px",
+                  }),
+                  whiteSpace: "nowrap",
+                })}
               >
                 <td>
-                  <Group spacing={0}>
+                  <Group noWrap spacing={0}>
                     <ActionIconLink
                       to={`/party/archive/$id`}
                       params={{ id: party.id }}
@@ -85,7 +87,7 @@ export function PartyList() {
                       <IconEye size={18} />
                     </ActionIconLink>
                     <Can I="update" this={subject("Party", party)}>
-                      <Popover position="right" withArrow trapFocus>
+                      <Popover position="bottom-start" withArrow trapFocus>
                         <Popover.Target>
                           <ActionIcon>
                             <IconPencil size={18} />
@@ -112,9 +114,44 @@ export function PartyList() {
                     .duration(dayjs(party.endDate).diff(party.startDate))
                     .humanize()}
                 </td>
-                <td>{party.location}</td>
+                <MediaQuery smallerThan="md" styles={{ display: "none" }}>
+                  <td>{party.location}</td>
+                </MediaQuery>
                 <td>
                   <Avatar.Group spacing="sm" sx={{ flexWrap: "wrap" }}>
+                    {party.attendings.map((attending) => (
+                      <UserAvatar key={attending.id} user={attending.user} />
+                    ))}
+                    {party.attendings.map((attending) => (
+                      <UserAvatar key={attending.id} user={attending.user} />
+                    ))}
+                    {party.attendings.map((attending) => (
+                      <UserAvatar key={attending.id} user={attending.user} />
+                    ))}
+                    {party.attendings.map((attending) => (
+                      <UserAvatar key={attending.id} user={attending.user} />
+                    ))}
+                    {party.attendings.map((attending) => (
+                      <UserAvatar key={attending.id} user={attending.user} />
+                    ))}
+                    {party.attendings.map((attending) => (
+                      <UserAvatar key={attending.id} user={attending.user} />
+                    ))}
+                    {party.attendings.map((attending) => (
+                      <UserAvatar key={attending.id} user={attending.user} />
+                    ))}
+                    {party.attendings.map((attending) => (
+                      <UserAvatar key={attending.id} user={attending.user} />
+                    ))}
+                    {party.attendings.map((attending) => (
+                      <UserAvatar key={attending.id} user={attending.user} />
+                    ))}
+                    {party.attendings.map((attending) => (
+                      <UserAvatar key={attending.id} user={attending.user} />
+                    ))}
+                    {party.attendings.map((attending) => (
+                      <UserAvatar key={attending.id} user={attending.user} />
+                    ))}
                     {party.attendings.map((attending) => (
                       <UserAvatar key={attending.id} user={attending.user} />
                     ))}
@@ -176,7 +213,19 @@ function PartyForm({
         });
       }}
     >
-      <Group align="end">
+      <Box
+        sx={(theme) => ({
+          display: "grid",
+          gridAutoColumns: "auto",
+          gridAutoFlow: "column",
+          gap: theme.spacing.sm,
+          alignItems: "end",
+
+          [theme.fn.smallerThan("md")]: {
+            gridAutoFlow: "row",
+          },
+        })}
+      >
         <DatePickerInput
           name="times"
           defaultValue={[new Date(startDate), new Date(endDate)]}
@@ -200,7 +249,7 @@ function PartyForm({
         <Button type="submit" loading={isLoading}>
           Speichern
         </Button>
-      </Group>
+      </Box>
     </form>
   );
 }
