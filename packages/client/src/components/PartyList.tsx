@@ -122,39 +122,6 @@ export function PartyList() {
                     {party.attendings.map((attending) => (
                       <UserAvatar key={attending.id} user={attending.user} />
                     ))}
-                    {party.attendings.map((attending) => (
-                      <UserAvatar key={attending.id} user={attending.user} />
-                    ))}
-                    {party.attendings.map((attending) => (
-                      <UserAvatar key={attending.id} user={attending.user} />
-                    ))}
-                    {party.attendings.map((attending) => (
-                      <UserAvatar key={attending.id} user={attending.user} />
-                    ))}
-                    {party.attendings.map((attending) => (
-                      <UserAvatar key={attending.id} user={attending.user} />
-                    ))}
-                    {party.attendings.map((attending) => (
-                      <UserAvatar key={attending.id} user={attending.user} />
-                    ))}
-                    {party.attendings.map((attending) => (
-                      <UserAvatar key={attending.id} user={attending.user} />
-                    ))}
-                    {party.attendings.map((attending) => (
-                      <UserAvatar key={attending.id} user={attending.user} />
-                    ))}
-                    {party.attendings.map((attending) => (
-                      <UserAvatar key={attending.id} user={attending.user} />
-                    ))}
-                    {party.attendings.map((attending) => (
-                      <UserAvatar key={attending.id} user={attending.user} />
-                    ))}
-                    {party.attendings.map((attending) => (
-                      <UserAvatar key={attending.id} user={attending.user} />
-                    ))}
-                    {party.attendings.map((attending) => (
-                      <UserAvatar key={attending.id} user={attending.user} />
-                    ))}
                   </Avatar.Group>
                 </td>
               </Box>
