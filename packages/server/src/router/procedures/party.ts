@@ -5,6 +5,86 @@ import { Attending, Event, Game, Party, User } from "../../data";
 import { protectedProcedure, router } from "../trpc";
 
 export const partyRouter = router({
+  all: protectedProcedure.query(async () => {
+    return Promise.all(
+      (await Party.all())
+        .sort((a, b) => {
+          if (a.startDate < b.startDate) return 1;
+          if (a.startDate > b.startDate) return -1;
+          return 0;
+        })
+        .map(async (party) => ({
+          ...party,
+          attendings: await Promise.all(
+            (
+              await Attending.filterByPartyId(party.id)
+            ).map(async (attending) => ({
+              ...attending,
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              user: (await User.findById(attending.userId))!,
+            }))
+          ),
+        }))
+    );
+  }),
+
+  get: protectedProcedure.input(z.string()).query(async (req) => {
+    const party = await Party.findById(req.input);
+
+    if (!party) return null;
+
+    return {
+      ...party,
+      attendings: await Promise.all(
+        (
+          await Attending.filterByPartyId(party.id)
+        ).map(async (attending) => ({
+          ...attending,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          user: (await User.findById(attending.userId))!,
+        }))
+      ),
+    };
+  }),
+
+  update: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        startDate: z.string(),
+        endDate: z.string(),
+        location: z.string(),
+        roomsAvailable: z.number(),
+      })
+    )
+    .mutation(async (req) => {
+      const party = await Party.findById(req.input.id);
+
+      if (!party) throw new TRPCError({ code: "NOT_FOUND" });
+
+      req.ctx.forbidden.throwUnlessCan("update", party);
+
+      party.startDate = req.input.startDate;
+      party.endDate = req.input.endDate;
+      party.location = req.input.location;
+      party.roomsAvailable = req.input.roomsAvailable;
+
+      await party.save();
+
+      return {
+        ...party,
+        attendings: await Promise.all(
+          (
+            await Attending.filterByPartyId(party.id)
+          ).map(async (attending) => ({
+            ...attending,
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            user: (await User.findById(attending.userId))!,
+          }))
+        ),
+      };
+    }),
+
   nextParty: protectedProcedure.query(async () => {
     const party = await Party.findNext();
 

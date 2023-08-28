@@ -3,11 +3,22 @@ import {
   MongoAbility,
   createMongoAbility,
 } from "@casl/ability";
-import { Attending, Event, User } from "../data";
+import { Attending, Event, Party, User } from "../data";
+import { Values } from "../data/$base";
 
 export type AbilityTuple = [
   string,
-  User | "User" | Attending | "Attending" | Event | "Event" | "Cache"
+  (
+    | Values<User>
+    | "User"
+    | Values<Party>
+    | "Party"
+    | Values<Attending>
+    | "Attending"
+    | Values<Event>
+    | "Event"
+    | "Cache"
+  )
 ];
 export type AppAbility = MongoAbility<AbilityTuple>;
 
@@ -21,6 +32,7 @@ export async function createAbility(user?: User) {
     can("update", "Event", { organizerId: user.id });
 
     if (user.roles.includes(User.Role.Admin)) {
+      can("manage", "Party");
       can("manage", "User");
       can("update", "Attending");
       can("grantRoom", "Attending");

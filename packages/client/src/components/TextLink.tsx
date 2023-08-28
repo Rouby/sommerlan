@@ -10,8 +10,6 @@ export function TextLink<
 >(props: MakeLinkOptions<TFrom, TTo> & RefAttributes<HTMLAnchorElement>) {
   return (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    <Text component={Link} variant="gradient" {...(props as any)}>
-      hier
-    </Text>
+    <Text component={Link} variant="text" color="indigo" {...(props as any)} />
   );
 }

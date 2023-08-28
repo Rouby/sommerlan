@@ -12,6 +12,11 @@ export function Intro() {
         Informationen zur nächsten LAN findest du{" "}
         <TextLink to="/party">hier</TextLink>.
       </Text>
+
+      <Text component="p">
+        Informationen zu vergangenen LANs findest du{" "}
+        <TextLink to="/party/archive">im Archiv</TextLink>.
+      </Text>
     </Container>
   );
 }

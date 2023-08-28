@@ -3,12 +3,14 @@ import { Authenticate } from "./Auth";
 import { Root } from "./Root";
 import {
   Admin,
+  ArchivedParty,
   Cache,
   Events,
   Games,
   Imprint,
   Intro,
   Party,
+  PartyArchive,
   Profile,
   Users,
 } from "./pages";
@@ -37,7 +39,24 @@ const indexRoute = new Route({
 const partyRoute = new Route({
   getParentRoute: () => authRoute,
   path: "party",
+});
+
+const nextPartyRoute = new Route({
+  getParentRoute: () => partyRoute,
+  path: "/",
   component: Party,
+});
+
+const partyArchiveRoute = new Route({
+  getParentRoute: () => partyRoute,
+  path: "archive",
+  component: PartyArchive,
+});
+
+const archivedPartyRoute = new Route({
+  getParentRoute: () => partyArchiveRoute,
+  path: "$id",
+  component: ArchivedParty,
 });
 
 const gamesRoute = new Route({
@@ -85,7 +104,10 @@ const cacheRoute = new Route({
 const routeTree = rootRoute.addChildren([
   authRoute.addChildren([
     indexRoute,
-    partyRoute,
+    partyRoute.addChildren([
+      nextPartyRoute,
+      partyArchiveRoute.addChildren([archivedPartyRoute]),
+    ]),
     gamesRoute,
     eventsRoute,
     imprintRoute,
