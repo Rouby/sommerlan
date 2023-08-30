@@ -49,7 +49,12 @@ const nextPartyRoute = new Route({
 
 const partyArchiveRoute = new Route({
   getParentRoute: () => partyRoute,
-  path: "archive",
+  path: "archive/",
+});
+
+const partyArchiveListRoute = new Route({
+  getParentRoute: () => partyArchiveRoute,
+  path: "/",
   component: PartyArchive,
 });
 
@@ -106,7 +111,10 @@ const routeTree = rootRoute.addChildren([
     indexRoute,
     partyRoute.addChildren([
       nextPartyRoute,
-      partyArchiveRoute.addChildren([archivedPartyRoute]),
+      partyArchiveRoute.addChildren([
+        partyArchiveListRoute,
+        archivedPartyRoute,
+      ]),
     ]),
     gamesRoute,
     eventsRoute,

@@ -147,6 +147,38 @@ export const partyRouter = router({
       );
     }),
 
+  attendDates: protectedProcedure
+    .input(
+      z.object({
+        partyId: z.string(),
+        dates: z.array(z.string()),
+        userId: z.string().optional(),
+      })
+    )
+    .mutation(async (req) => {
+      const userId = req.input.userId || req.ctx.user.id;
+
+      const attending =
+        (await Attending.findByPartyIdAndUserId(req.input.partyId, userId)) ??
+        new Attending({ userId: userId, partyId: req.input.partyId });
+
+      req.ctx.forbidden.throwUnlessCan("update", attending);
+
+      attending.dates = req.input.dates;
+
+      await attending.save();
+
+      return await Promise.all(
+        (
+          await Attending.filterByPartyId(req.input.partyId)
+        ).map(async (attending) => ({
+          ...attending,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          user: (await User.findById(attending.userId))!,
+        }))
+      );
+    }),
+
   requestRoom: protectedProcedure
     .input(
       z.object({

@@ -3,23 +3,33 @@ import {
   ActionIcon,
   Avatar,
   Box,
+  BoxProps,
   Button,
   Center,
+  Divider,
   Group,
   Loader,
   MediaQuery,
   NumberInput,
   Popover,
+  Skeleton,
   Table,
   TextInput,
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
-import { IconEye, IconPencil } from "@tabler/icons-react";
+import { IconArrowLeft, IconEye, IconPencil } from "@tabler/icons-react";
 import dayjs from "dayjs";
+import { motion } from "framer-motion";
 import { useAtomValue } from "jotai";
 import { ActionIconLink, Can, UserAvatar } from ".";
 import { abilityAtom } from "../state";
 import { trpc } from "../utils";
+import { PartyInfo } from "./PartyInfo";
+
+const MotionBox = motion<
+  import("@mantine/utils").PolymorphicComponentProps<"tr" | "div", BoxProps>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+>(Box as any);
 
 const dateFormat = new Intl.DateTimeFormat(navigator.language, {
   dateStyle: "long",
@@ -64,9 +74,11 @@ export function PartyList() {
             }
 
             return (
-              <Box
+              <MotionBox
                 key={party.id}
                 component="tr"
+                layoutId={`party-${party.id}`}
+                layout="position"
                 sx={(theme) => ({
                   ...(isInFuture && {
                     backgroundImage:
@@ -119,17 +131,72 @@ export function PartyList() {
                 </MediaQuery>
                 <td>
                   <Avatar.Group spacing="sm" sx={{ flexWrap: "wrap" }}>
-                    {party.attendings.map((attending) => (
-                      <UserAvatar key={attending.id} user={attending.user} />
-                    ))}
+                    {party.attendings
+                      .filter((attending) => attending.dates.length > 0)
+                      .map((attending) => (
+                        <UserAvatar key={attending.id} user={attending.user} />
+                      ))}
                   </Avatar.Group>
                 </td>
-              </Box>
+              </MotionBox>
             );
           })}
         </tbody>
       </Table>
     </>
+  );
+}
+
+export function PartyRowStandalone({ id }: { id: string }) {
+  const { data, isLoading } = trpc.party.get.useQuery(id);
+
+  return (
+    <MotionBox layoutId={`party-${id}`} layout="position" component="div">
+      <Box
+        p="sm"
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "max-content 1fr",
+        }}
+      >
+        <Group noWrap spacing={0} mr="md">
+          <ActionIcon onClick={() => history.back()}>
+            <IconArrowLeft size={18} />
+          </ActionIcon>
+        </Group>
+        {isLoading || !data ? (
+          <Skeleton />
+        ) : (
+          <Box
+            sx={(theme) => ({
+              display: "grid",
+              gap: theme.spacing.md,
+              gridTemplateColumns: "auto auto auto",
+            })}
+          >
+            <div>
+              {dateFormat
+                .formatToParts(new Date(data.startDate))
+                .filter((part) => part.type === "month" || part.type === "year")
+                .map((part) => part.value)
+                .join(" ")}
+            </div>
+
+            <div>
+              {dayjs
+                .duration(dayjs(data.endDate).diff(data.startDate))
+                .humanize()}
+            </div>
+
+            <div>{data.location}</div>
+          </Box>
+        )}
+      </Box>
+
+      <Divider mb="md" />
+
+      <PartyInfo id={id} />
+    </MotionBox>
   );
 }
 

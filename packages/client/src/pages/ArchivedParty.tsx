@@ -1,21 +1,25 @@
-import { Center, Loader } from "@mantine/core";
+import { Center, Container } from "@mantine/core";
 import { useMatch } from "@tanstack/router";
-import { trpc } from "../utils";
+import { Can, PartyRowStandalone } from "../components";
 
 export function ArchivedParty() {
   const {
     params: { id },
   } = useMatch({ from: "/auth/party/archive/$id" });
 
-  const { isLoading } = trpc.party.get.useQuery(id);
-
-  if (isLoading) {
-    return (
-      <Center>
-        <Loader />
-      </Center>
-    );
-  }
-
-  return <>read all about this party... someday</>;
+  return (
+    <Container>
+      <Can
+        I="read"
+        a="User"
+        otherwise={
+          <Center>
+            Logge dich ein um Informationen zur Party zu bekommen!
+          </Center>
+        }
+      >
+        <PartyRowStandalone id={id} />
+      </Can>
+    </Container>
+  );
 }

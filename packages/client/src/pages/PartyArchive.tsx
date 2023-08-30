@@ -1,5 +1,4 @@
-import { Center, Container, Space } from "@mantine/core";
-import { Outlet } from "@tanstack/router";
+import { Center, Container } from "@mantine/core";
 import { Can, PartyList } from "../components";
 
 export function PartyArchive() {
@@ -15,10 +14,6 @@ export function PartyArchive() {
         }
       >
         <PartyList />
-
-        <Space my="md" />
-
-        <Outlet />
       </Can>
     </Container>
   );
