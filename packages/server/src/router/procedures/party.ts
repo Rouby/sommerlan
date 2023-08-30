@@ -254,7 +254,7 @@ export const partyRouter = router({
 
       if (!party) return null;
 
-      const games = await Game.filterByPartyId(party.id);
+      const games = await Game.all();
 
       return {
         party: {
@@ -273,10 +273,10 @@ export const partyRouter = router({
           games.map(async (game) => ({
             ...game,
             players: await Promise.all(
-              game.playerIds.map(
+              game.partyPeople[party.id]?.map(
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 async (playerId) => (await User.findById(playerId))!
-              )
+              ) ?? []
             ),
           }))
         ),
@@ -287,9 +287,8 @@ export const partyRouter = router({
     .input(z.object({ partyId: z.string(), name: z.string() }))
     .mutation(async (req) => {
       const game = new Game({
-        partyId: req.input.partyId,
         name: req.input.name,
-        playerIds: [req.ctx.user.id],
+        partyPeople: { [req.input.partyId]: [req.ctx.user.id] },
       });
 
       await game.save();
@@ -297,10 +296,10 @@ export const partyRouter = router({
       return {
         ...game,
         players: await Promise.all(
-          game.playerIds.map(
+          game.partyPeople[req.input.partyId]?.map(
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             async (playerId) => (await User.findById(playerId))!
-          )
+          ) ?? []
         ),
       };
     }),
@@ -319,12 +318,16 @@ export const partyRouter = router({
         });
       }
 
+      if (!game.partyPeople[req.input.partyId]) {
+        game.partyPeople[req.input.partyId] = [];
+      }
+
       if (req.input.played) {
-        game.playerIds.push(req.ctx.user.id);
+        game.partyPeople[req.input.partyId]?.push(req.ctx.user.id);
       } else {
-        game.playerIds = game.playerIds.filter(
-          (playerId) => playerId !== req.ctx.user.id
-        );
+        game.partyPeople[req.input.partyId] = game.partyPeople[
+          req.input.partyId
+        ]?.filter((playerId) => playerId !== req.ctx.user.id);
       }
 
       await game.save();
@@ -332,10 +335,10 @@ export const partyRouter = router({
       return {
         ...game,
         players: await Promise.all(
-          game.playerIds.map(
+          game.partyPeople[req.input.partyId]?.map(
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             async (playerId) => (await User.findById(playerId))!
-          )
+          ) ?? []
         ),
       };
     }),

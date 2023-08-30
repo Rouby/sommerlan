@@ -8,9 +8,7 @@ export class Game extends Base {
 
   public id = randomUUID();
 
-  public partyId = "";
-
-  public playerIds: string[] = [];
+  public partyPeople: { [partyId: string]: string[] | undefined } = {};
 
   public name = "";
 
@@ -22,6 +20,6 @@ export class Game extends Base {
   }
 
   static async filterByPartyId(partyId: string) {
-    return Game.filter((game) => game.partyId === partyId);
+    return Game.filter((game) => partyId in game.partyPeople);
   }
 }
