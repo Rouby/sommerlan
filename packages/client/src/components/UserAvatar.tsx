@@ -1,12 +1,11 @@
 import { Avatar, AvatarProps, Tooltip, useMantineTheme } from "@mantine/core";
-import type { User } from "@sommerlan-app/server/src/data/users";
 
 export function UserAvatar({
   user,
   size,
   innerRef,
 }: {
-  user: User;
+  user: { id: string; avatar: string; displayName: string };
   size?: AvatarProps["size"];
   innerRef?: React.ForwardedRef<HTMLDivElement>;
 }) {

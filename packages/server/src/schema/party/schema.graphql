@@ -1,0 +1,25 @@
+extend type Query {
+  party(id: ID!): Party
+  parties: [Party!]!
+  nextParty: Party
+}
+
+type Party {
+  id: ID!
+  startDate: Date!
+  endDate: Date!
+  roomsAvailable: Int!
+  attendings: [Attending!]!
+}
+
+type Attending {
+  id: ID!
+  party: Party!
+  dates: [Date!]!
+  room: RoomStatus
+}
+
+enum RoomStatus {
+  REQUESTED
+  GRANTED
+}

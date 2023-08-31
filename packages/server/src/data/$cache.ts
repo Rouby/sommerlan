@@ -24,11 +24,11 @@ export async function deleteRow<T extends Base>(
   if (!patches.has(cls)) {
     patches.set(cls, new Map());
   }
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
   if (!patches.get(cls)!.has(id)) {
     patches.set(cls, new Map());
   }
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
   patches.get(cls)!.set(id, deleteMarker);
 
   cache.set(sheetName, cache.get(sheetName)?.filter((d) => d.id !== id) ?? []);
@@ -52,12 +52,11 @@ export async function updateRow<T extends Base>(
   if (!patches.has(cls)) {
     patches.set(cls, new Map());
   }
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
   if (!patches.get(cls)!.has(id)) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     patches.get(cls)!.set(id, []);
   }
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
   const storedOperations = patches.get(cls)!.get(id)!;
 
   if (Array.isArray(storedOperations)) {

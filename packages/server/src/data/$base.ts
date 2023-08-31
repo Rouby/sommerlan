@@ -1,7 +1,6 @@
 import { allRows, deleteRow, updateRow } from "./$cache";
 
 export type Values<T> = Partial<
-  // eslint-disable-next-line @typescript-eslint/ban-types
   Pick<T, { [K in keyof T]: T[K] extends Function ? never : K }[keyof T]>
 >;
 
@@ -45,15 +44,15 @@ export abstract class Base {
   static async find<T extends Base>(
     this: StaticThis<T>,
     predicate: (v: T) => boolean
-  ): Promise<T | undefined> {
-    return (await Base.allRows(this)).find(predicate);
+  ): Promise<T | null> {
+    return (await Base.allRows(this)).find(predicate) ?? null;
   }
 
   static async findById<T extends Base>(
     this: StaticThis<T>,
     id: string
-  ): Promise<T | undefined> {
-    return (await Base.allRows(this)).find((d) => d.id === id);
+  ): Promise<T | null> {
+    return (await Base.allRows(this)).find((d) => d.id === id) ?? null;
   }
 
   private static async allRows<T extends Base>(cls: new () => T) {

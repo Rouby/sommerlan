@@ -3,7 +3,6 @@ import { Link, MakeLinkOptions, RegisteredRoutesInfo } from "@tanstack/router";
 import { ElementType, RefAttributes, forwardRef } from "react";
 
 export const ActionIconLink = forwardRef(function ActionIconLink(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   props: any,
   ref
 ) {

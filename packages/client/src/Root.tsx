@@ -25,7 +25,6 @@ export function Root() {
     style: {
       "--active-background-color": theme.fn.primaryColor(),
       "--active-color": theme.white,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any,
   };
 

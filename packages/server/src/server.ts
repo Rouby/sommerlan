@@ -3,11 +3,13 @@ import cors from "@fastify/cors";
 import multipart from "@fastify/multipart";
 import staticfs from "@fastify/static";
 import ws from "@fastify/websocket";
+import { useJWT } from "@graphql-yoga/plugin-jwt";
 import { fastifyTRPCPlugin } from "@trpc/server/adapters/fastify";
 import { randomUUID } from "crypto";
 import fastify from "fastify";
 import { createWriteStream, existsSync } from "fs";
 import { mkdir } from "fs/promises";
+import { createSchema, createYoga } from "graphql-yoga";
 import { join } from "path";
 import { pipeline } from "stream/promises";
 import { cron } from "./cron";
@@ -18,6 +20,8 @@ import { logger } from "./logger";
 import { transporter } from "./mail";
 import { appRouter } from "./router";
 import { createContext } from "./router/context";
+import { resolvers } from "./schema/resolvers.generated";
+import { typeDefs } from "./schema/typeDefs.generated";
 import { validateToken } from "./validateToken";
 
 export interface ServerOptions {
@@ -33,6 +37,37 @@ export function createServer(opts: ServerOptions) {
   const server = fastify({
     logger,
     disableRequestLogging: true,
+  });
+
+  const yoga = createYoga({
+    schema: createSchema({ typeDefs, resolvers }),
+    logging: logger,
+    plugins: [
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      useJWT({
+        issuer: expectedOrigin,
+        signingKey: process.env.SESSION_SECRET!,
+        algorithms: ["HS256"],
+      }),
+    ],
+  });
+
+  server.route({
+    url: yoga.graphqlEndpoint,
+    method: ["GET", "POST", "OPTIONS"],
+    handler: async (req, reply) => {
+      // Second parameter adds Fastify's `req` and `reply` to the GraphQL Context
+      const response = await yoga.handleNodeRequest(req);
+      response.headers.forEach((value, key) => {
+        reply.header(key, value);
+      });
+
+      reply.status(response.status);
+
+      reply.send(response.body);
+
+      return reply;
+    },
   });
 
   server.register(multipart);

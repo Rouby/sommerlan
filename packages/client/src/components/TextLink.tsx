@@ -9,7 +9,6 @@ export function TextLink<
   TTo extends string = TDefaultTo
 >(props: MakeLinkOptions<TFrom, TTo> & RefAttributes<HTMLAnchorElement>) {
   return (
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     <Text component={Link} variant="text" color="indigo" {...(props as any)} />
   );
 }

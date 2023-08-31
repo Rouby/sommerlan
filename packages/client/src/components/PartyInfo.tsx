@@ -11,14 +11,38 @@ import {
 import { IconCalendar } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { useAtomValue } from "jotai";
+import { useQuery } from "urql";
 import { UserAvatar } from ".";
+import { graphql } from "../gql";
 import { userAtom } from "../state";
 import { trpc } from "../utils";
 
 export function PartyInfo({ id }: { id: string }) {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const user = useAtomValue(userAtom)!;
-  const { data: party, isLoading } = trpc.party.get.useQuery(id);
+
+  const [{ data, fetching }] = useQuery({
+    query: graphql(/* GraphQL */ `
+      query party($id: ID!) {
+        party(id: $id) {
+          id
+          startDate
+          endDate
+          attendings {
+            id
+            dates
+            user {
+              id
+              displayName
+              avatar
+            }
+          }
+        }
+      }
+    `),
+    variables: {
+      id,
+    },
+  });
 
   const context = trpc.useContext();
   const { mutateAsync: attendDates, isLoading: savingAttending } =
@@ -35,7 +59,7 @@ export function PartyInfo({ id }: { id: string }) {
       },
     });
 
-  if (isLoading) {
+  if (fetching) {
     return (
       <Center>
         <Loader />
@@ -43,9 +67,11 @@ export function PartyInfo({ id }: { id: string }) {
     );
   }
 
-  if (!party) {
+  if (!data?.party) {
     return null;
   }
+
+  const { party } = data;
 
   const startDate = dayjs(party.startDate, "YYYY-MM-DD").add(12, "hours");
   const endDate = dayjs(party.endDate, "YYYY-MM-DD").add(20, "hours");
@@ -70,8 +96,9 @@ export function PartyInfo({ id }: { id: string }) {
         <Popover.Dropdown>
           <Checkbox.Group
             defaultValue={
-              party.attendings.find((attending) => attending.userId === user.id)
-                ?.dates
+              party.attendings.find(
+                (attending) => attending.user.id === user.id
+              )?.dates
             }
             onChange={(dates) => {
               attendDates({

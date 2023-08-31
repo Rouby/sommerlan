@@ -11,7 +11,7 @@ export async function createContext({ req, res }: CreateFastifyContextOptions) {
     [, token] = req.headers.authorization.split(" ");
   }
 
-  let user: User | undefined = undefined;
+  let user: User | null = null;
   try {
     if (token) {
       const decodedToken = validateToken(token);

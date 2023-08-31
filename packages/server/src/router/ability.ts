@@ -22,7 +22,7 @@ export type AbilityTuple = [
 ];
 export type AppAbility = MongoAbility<AbilityTuple>;
 
-export async function createAbility(user?: User) {
+export async function createAbility(user?: User | null) {
   const { can, build } = new AbilityBuilder<AppAbility>(createMongoAbility);
 
   if (user) {

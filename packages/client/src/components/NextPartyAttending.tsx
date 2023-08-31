@@ -35,7 +35,6 @@ import { formatRange, trpc } from "../utils";
 
 export function NextPartyAttending() {
   const { data: party, isLoading } = trpc.party.nextParty.useQuery();
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const user = useAtomValue(userAtom)!;
 
   if (isLoading) {
@@ -151,7 +150,6 @@ function AddUserMenu({
   return (
     <Can
       I="update"
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       this={subject("Attending", { userId: "any" } as any)}
       otherwise={<div />}
     >
@@ -408,7 +406,6 @@ function Countdown() {
 }
 
 function Rooms() {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const user = useAtomValue(userAtom)!;
 
   const { data: party, isLoading } = trpc.party.nextParty.useQuery();

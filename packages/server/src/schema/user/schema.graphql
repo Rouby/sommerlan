@@ -1,0 +1,16 @@
+extend type Query {
+  me: User
+}
+
+type User {
+  id: ID!
+  name: String!
+  displayName: String!
+  email: String!
+  avatar: String!
+  avatarUrl: String
+}
+
+extend type Attending {
+  user: User!
+}

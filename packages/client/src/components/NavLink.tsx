@@ -22,9 +22,7 @@ export function NavLink<
   return (
     <MantineNavLink
       component={Link}
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       active={matchRoute(props as any)}
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       {...(props as any)}
     />
   );

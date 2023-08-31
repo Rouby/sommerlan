@@ -11,7 +11,6 @@ export function validateToken(token: string) {
   }
 
   try {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     verify(token, process.env.SESSION_SECRET!);
   } catch {
     throw new TRPCError({ code: "UNAUTHORIZED", message: "Invalid token" });

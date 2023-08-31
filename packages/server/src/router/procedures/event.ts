@@ -32,7 +32,6 @@ export const eventRouter = router({
         organizer: await User.findById(event.organizerId),
         participants: await Promise.all(
           event.participantIds.map(
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             async (userId) => (await User.findById(userId))!
           )
         ),
@@ -84,7 +83,6 @@ export const eventRouter = router({
         organizer: await User.findById(event.organizerId),
         participants: await Promise.all(
           event.participantIds.map(
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             async (userId) => (await User.findById(userId))!
           )
         ),

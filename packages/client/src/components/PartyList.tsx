@@ -28,7 +28,6 @@ import { PartyInfo } from "./PartyInfo";
 
 const MotionBox = motion<
   import("@mantine/utils").PolymorphicComponentProps<"tr" | "div", BoxProps>
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 >(Box as any);
 
 const dateFormat = new Intl.DateTimeFormat(navigator.language, {

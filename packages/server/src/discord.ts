@@ -11,9 +11,7 @@ import { getEnv } from "./env";
 import { logger } from "./logger";
 import { issueMagicLink } from "./magicLinks";
 
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const token = process.env.DISCORD_BOT_TOKEN!;
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const guildId = process.env.DISCORD_GUILD_ID!;
 
 const rest = new REST({ version: "10" }).setToken(token);

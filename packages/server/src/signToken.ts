@@ -1,5 +1,6 @@
 import { sign } from "jsonwebtoken";
 import { User } from "./data";
+import { expectedOrigin } from "./env";
 import { createAbility } from "./router/ability";
 
 async function tokenPayload(user: User) {
@@ -18,16 +19,12 @@ async function tokenPayload(user: User) {
 }
 
 export async function signToken(user: User) {
-  return sign(
-    await tokenPayload(user),
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    process.env.SESSION_SECRET!,
-    {
-      algorithm: "HS256",
-      subject: user.id,
-      expiresIn: "1y",
-    }
-  );
+  return sign(await tokenPayload(user), process.env.SESSION_SECRET!, {
+    issuer: expectedOrigin,
+    algorithm: "HS256",
+    subject: user.id,
+    expiresIn: "1y",
+  });
 }
 
 export type JWTPayload = Awaited<ReturnType<typeof tokenPayload>>;

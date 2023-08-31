@@ -20,7 +20,6 @@ export const partyRouter = router({
               await Attending.filterByPartyId(party.id)
             ).map(async (attending) => ({
               ...attending,
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               user: (await User.findById(attending.userId))!,
             }))
           ),
@@ -40,7 +39,6 @@ export const partyRouter = router({
           await Attending.filterByPartyId(party.id)
         ).map(async (attending) => ({
           ...attending,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           user: (await User.findById(attending.userId))!,
         }))
       ),
@@ -78,7 +76,6 @@ export const partyRouter = router({
             await Attending.filterByPartyId(party.id)
           ).map(async (attending) => ({
             ...attending,
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             user: (await User.findById(attending.userId))!,
           }))
         ),
@@ -86,7 +83,7 @@ export const partyRouter = router({
     }),
 
   nextParty: protectedProcedure.query(async () => {
-    const party = await Party.findNext();
+    const party = await Party.findLatest();
 
     if (!party) return null;
 
@@ -99,7 +96,6 @@ export const partyRouter = router({
           await Attending.filterByPartyId(party.id)
         ).map(async (attending) => ({
           ...attending,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           user: (await User.findById(attending.userId))!,
         }))
       ),
@@ -141,7 +137,6 @@ export const partyRouter = router({
           await Attending.filterByPartyId(req.input.partyId)
         ).map(async (attending) => ({
           ...attending,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           user: (await User.findById(attending.userId))!,
         }))
       );
@@ -173,7 +168,6 @@ export const partyRouter = router({
           await Attending.filterByPartyId(req.input.partyId)
         ).map(async (attending) => ({
           ...attending,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           user: (await User.findById(attending.userId))!,
         }))
       );
@@ -205,7 +199,6 @@ export const partyRouter = router({
           await Attending.filterByPartyId(req.input.partyId)
         ).map(async (attending) => ({
           ...attending,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           user: (await User.findById(attending.userId))!,
         }))
       );
@@ -236,7 +229,6 @@ export const partyRouter = router({
           await Attending.filterByPartyId(req.input.partyId)
         ).map(async (attending) => ({
           ...attending,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           user: (await User.findById(attending.userId))!,
         }))
       );
@@ -267,7 +259,6 @@ export const partyRouter = router({
           await Attending.filterByPartyId(req.input.partyId)
         ).map(async (attending) => ({
           ...attending,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           user: (await User.findById(attending.userId))!,
         }))
       );
@@ -282,7 +273,7 @@ export const partyRouter = router({
     .query(async (req) => {
       const party = req.input.partyId
         ? await Party.findById(req.input.partyId)
-        : await Party.findNext();
+        : await Party.findLatest();
 
       if (!party) return null;
 
@@ -296,7 +287,6 @@ export const partyRouter = router({
               await Attending.filterByPartyId(party.id)
             ).map(async (attending) => ({
               ...attending,
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               user: (await User.findById(attending.userId))!,
             }))
           ),
@@ -306,7 +296,6 @@ export const partyRouter = router({
             ...game,
             players: await Promise.all(
               game.partyPeople[party.id]?.map(
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 async (playerId) => (await User.findById(playerId))!
               ) ?? []
             ),
@@ -329,7 +318,6 @@ export const partyRouter = router({
         ...game,
         players: await Promise.all(
           game.partyPeople[req.input.partyId]?.map(
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             async (playerId) => (await User.findById(playerId))!
           ) ?? []
         ),
@@ -368,7 +356,6 @@ export const partyRouter = router({
         ...game,
         players: await Promise.all(
           game.partyPeople[req.input.partyId]?.map(
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             async (playerId) => (await User.findById(playerId))!
           ) ?? []
         ),
@@ -384,7 +371,7 @@ export const partyRouter = router({
     .query(async (req) => {
       const party = req.input.partyId
         ? await Party.findById(req.input.partyId)
-        : await Party.findNext();
+        : await Party.findLatest();
 
       if (!party) return null;
 
@@ -398,7 +385,6 @@ export const partyRouter = router({
             organizer: await User.findById(event.organizerId),
             participants: await Promise.all(
               event.participantIds.map(
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 async (userId) => (await User.findById(userId))!
               )
             ),

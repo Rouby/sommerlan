@@ -23,7 +23,6 @@
   ],
   "devDependencies": {
     "@types/esprima": "^4",
-    "@typescript-eslint/eslint-plugin": "^5.60.0",
     "@typescript-eslint/parser": "^5.60.0",
     "concurrently": "^8.2.0",
     "eslint": "^8.43.0",
@@ -31,6 +30,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.1",
     "esprima": "^4.0.1",
+    "graphql-config": "^5.0.2",
     "prettier": "^2.8.8",
     "typescript": "^5.1.3"
   },
