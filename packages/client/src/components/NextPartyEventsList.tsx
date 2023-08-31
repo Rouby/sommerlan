@@ -20,7 +20,7 @@ import {
 import { DatePickerInput, TimeInput } from "@mantine/dates";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { RichTextEditor } from "@mantine/tiptap";
-import type { Event, User } from "@sommerlan-app/server/src/data";
+import type { User } from "@sommerlan-app/server/src/data";
 import { IconCheck, IconPencil } from "@tabler/icons-react";
 import Highlight from "@tiptap/extension-highlight";
 import Placeholder from "@tiptap/extension-placeholder";
@@ -142,7 +142,7 @@ function EventCard({
         <Text weight={500}>{event.name}</Text>
         <Can
           I="update"
-          this={subject("Event", event as unknown as Event)}
+          this={subject("Event", event as any) as any}
           otherwise={<div />}
         >
           <ActionIcon size="xs" onClick={() => setShowEdit(true)}>

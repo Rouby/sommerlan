@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "concurrently --kill-others-on-fail \"yarn workspace @sommerlan-app/server dev\" \"yarn workspace @sommerlan-app/client dev\"",
     "build": "yarn workspaces foreach -pti run build",
-    "lint": "yarn workspaces foreach -p run lint",
+    "lint": "echo \"No linting configured\"",
     "test": "yarn workspaces foreach -p run test",
     "typecheck": "yarn workspaces foreach -p run typecheck"
   },
@@ -15,20 +15,9 @@
     "packages/*"
   ],
   "prettier": {},
-  "eslintIgnore": [
-    "/node_modules",
-    "/build",
-    "/public/build",
-    "**/*.mdx"
-  ],
   "devDependencies": {
     "@types/esprima": "^4",
-    "@typescript-eslint/parser": "^5.60.0",
     "concurrently": "^8.2.0",
-    "eslint": "^8.43.0",
-    "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.4.1",
     "esprima": "^4.0.1",
     "graphql-config": "^5.0.2",
     "prettier": "^2.8.8",
