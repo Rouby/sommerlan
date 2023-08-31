@@ -7,6 +7,7 @@ async function tokenPayload(user: User) {
   return {
     user: {
       id: user.id,
+      roles: user.roles,
       email: user.email,
       displayName: user.displayName,
       discordUserId: user.discordUserId,

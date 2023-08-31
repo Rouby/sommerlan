@@ -173,7 +173,30 @@ export function PartyList() {
 }
 
 export function PartyRowStandalone({ id }: { id: string }) {
-  const { data, isLoading } = trpc.party.get.useQuery(id);
+  const [{ data, fetching }] = useQuery({
+    query: graphql(/* GraphQL */ `
+      query partyRow($id: ID!) {
+        party(id: $id) {
+          id
+          startDate
+          endDate
+          location
+          attendings {
+            id
+            dates
+            user {
+              id
+              displayName
+              avatar
+            }
+          }
+        }
+      }
+    `),
+    variables: {
+      id,
+    },
+  });
 
   return (
     <MotionBox layoutId={`party-${id}`} layout="position" component="div">
@@ -189,7 +212,7 @@ export function PartyRowStandalone({ id }: { id: string }) {
             <IconArrowLeft size={18} />
           </ActionIcon>
         </Group>
-        {isLoading || !data ? (
+        {fetching || !data?.party ? (
           <Skeleton />
         ) : (
           <Box
@@ -201,7 +224,7 @@ export function PartyRowStandalone({ id }: { id: string }) {
           >
             <div>
               {dateFormat
-                .formatToParts(new Date(data.startDate))
+                .formatToParts(new Date(data.party.startDate))
                 .filter((part) => part.type === "month" || part.type === "year")
                 .map((part) => part.value)
                 .join(" ")}
@@ -209,11 +232,11 @@ export function PartyRowStandalone({ id }: { id: string }) {
 
             <div>
               {dayjs
-                .duration(dayjs(data.endDate).diff(data.startDate))
+                .duration(dayjs(data.party.endDate).diff(data.party.startDate))
                 .humanize()}
             </div>
 
-            <div>{data.location}</div>
+            <div>{data.party.location}</div>
           </Box>
         )}
       </Box>

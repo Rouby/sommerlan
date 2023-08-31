@@ -9,7 +9,7 @@ import { randomUUID } from "crypto";
 import fastify from "fastify";
 import { createWriteStream, existsSync } from "fs";
 import { mkdir } from "fs/promises";
-import { createSchema, createYoga } from "graphql-yoga";
+import { Plugin, createSchema, createYoga } from "graphql-yoga";
 import { join } from "path";
 import { pipeline } from "stream/promises";
 import { cron } from "./cron";
@@ -19,9 +19,11 @@ import { expectedOrigin } from "./env";
 import { logger } from "./logger";
 import { transporter } from "./mail";
 import { appRouter } from "./router";
+import { AppAbility, createAbility } from "./router/ability";
 import { createContext } from "./router/context";
 import { resolvers } from "./schema/resolvers.generated";
 import { typeDefs } from "./schema/typeDefs.generated";
+import { JWTPayload } from "./signToken";
 import { validateToken } from "./validateToken";
 
 export interface ServerOptions {
@@ -40,7 +42,10 @@ export function createServer(opts: ServerOptions) {
   });
 
   const yoga = createYoga({
-    schema: createSchema({ typeDefs, resolvers }),
+    schema: createSchema({
+      typeDefs,
+      resolvers,
+    }),
     logging: logger,
     plugins: [
       // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -49,6 +54,15 @@ export function createServer(opts: ServerOptions) {
         signingKey: process.env.SESSION_SECRET!,
         algorithms: ["HS256"],
       }),
+      {
+        onContextBuilding: async ({ context, extendContext }) => {
+          if (context.jwt) {
+            extendContext({
+              ability: await createAbility(context.jwt.user),
+            });
+          }
+        },
+      } as Plugin<{ ability: AppAbility; jwt: JWTPayload }>,
     ],
   });
 

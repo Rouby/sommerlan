@@ -1,9 +1,17 @@
+import { ForbiddenError } from "@casl/ability";
 import { Party } from "../../../../data";
 import type { QueryResolvers } from "./../../../types.generated";
+
 export const party: NonNullable<QueryResolvers["party"]> = async (
   _parent,
   { id },
-  _ctx
+  ctx
 ) => {
-  return Party.findById(id);
+  const party = Party.findById(id);
+
+  if (!party) return null;
+
+  ForbiddenError.from(ctx.ability).throwUnlessCan("read", party);
+
+  return party;
 };

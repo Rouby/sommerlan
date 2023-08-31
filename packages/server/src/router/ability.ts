@@ -22,7 +22,9 @@ export type AppAbility = MongoAbility<
   ]
 >;
 
-export async function createAbility(user?: User | null) {
+export async function createAbility(
+  user?: { id: User["id"]; roles: User["roles"] } | null
+) {
   const { can, build } = new AbilityBuilder<AppAbility>(createMongoAbility);
 
   if (user) {
