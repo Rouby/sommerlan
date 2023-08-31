@@ -369,7 +369,6 @@ function Countdown() {
     if (!party) return;
     start();
     return () => stop();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [party]);
 
   if (isLoading || !party) {

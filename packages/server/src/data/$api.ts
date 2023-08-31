@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { GoogleSpreadsheet } from "google-spreadsheet";
 import newrelic from "newrelic";
 

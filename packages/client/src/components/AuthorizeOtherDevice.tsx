@@ -26,7 +26,6 @@ function ProvideQRCode() {
   const token = useAtomValue(tokenAtom);
   const data = useMemo(
     () => ({ __$app: "SommerLAN", token }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [token?.split(".")[0]]
   );
 
@@ -68,7 +67,6 @@ function ScanQRCode({
         onClose();
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authorizeRequest, data]);
 
   return (

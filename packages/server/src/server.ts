@@ -48,7 +48,6 @@ export function createServer(opts: ServerOptions) {
     }),
     logging: logger,
     plugins: [
-      // eslint-disable-next-line react-hooks/rules-of-hooks
       useJWT({
         issuer: expectedOrigin,
         signingKey: process.env.SESSION_SECRET!,
