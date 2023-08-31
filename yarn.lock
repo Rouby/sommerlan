@@ -1784,6 +1784,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@mantine/carousel@npm:^6.0.13":
+  version: 6.0.19
+  resolution: "@mantine/carousel@npm:6.0.19"
+  dependencies:
+    "@mantine/utils": 6.0.19
+  peerDependencies:
+    "@mantine/core": 6.0.19
+    "@mantine/hooks": 6.0.19
+    embla-carousel-react: ^7.0.0
+    react: ">=16.8.0"
+  checksum: b056ec72d4053e1fc78d80b5b18c9ef243ae1870c5c851b36d072cd8302bb9f0c414c4773a9270bd993661ae574ca3de109eb0236eac9683bacb164605276fc9
+  languageName: node
+  linkType: hard
+
 "@mantine/core@npm:^6.0.16":
   version: 6.0.16
   resolution: "@mantine/core@npm:6.0.16"
@@ -1926,6 +1940,15 @@ __metadata:
   peerDependencies:
     react: ">=16.8.0"
   checksum: dc9e6690497fdc769cc4abaaa6152c6ed03408d0e1e8429d39ff6b084e03a525abe3b2bfcbe8a4fa69f5dd88a7e7743859b91811b8aa1808195549f6d803006d
+  languageName: node
+  linkType: hard
+
+"@mantine/utils@npm:6.0.19":
+  version: 6.0.19
+  resolution: "@mantine/utils@npm:6.0.19"
+  peerDependencies:
+    react: ">=16.8.0"
+  checksum: c33e2eba6d78e2b07c222c79a086da9d43a39a1fb8e409b10ab5775f6855325fd30c56b17fd67f9a827497eff2fdc22fff4b9190c2d7069b2c58565d63b3a450
   languageName: node
   linkType: hard
 
@@ -2968,6 +2991,7 @@ __metadata:
     "@casl/ability": ^6.5.0
     "@casl/react": ^3.1.0
     "@emotion/react": ^11.11.1
+    "@mantine/carousel": ^6.0.13
     "@mantine/core": ^6.0.16
     "@mantine/dates": ^6.0.13
     "@mantine/dropzone": ^6.0.13
@@ -2995,6 +3019,7 @@ __metadata:
     "@vitejs/plugin-react-swc": ^3.3.2
     base64url: ^3.0.1
     dayjs: ^1.11.8
+    embla-carousel-react: ^8.0.0-rc12
     framer-motion: ^10.12.16
     jotai: ^2.2.1
     jwt-decode: ^3.1.2
@@ -5864,6 +5889,34 @@ __metadata:
   version: 1.4.450
   resolution: "electron-to-chromium@npm:1.4.450"
   checksum: e89ea9711d3077e973cb0bdc7918eb0f78c7724091ae4d79f127f3653aac713b4de4aaf3a386ffca3badc6101c7d2af23341819297de5c0e853a71239626e065
+  languageName: node
+  linkType: hard
+
+"embla-carousel-react@npm:^8.0.0-rc12":
+  version: 8.0.0-rc12
+  resolution: "embla-carousel-react@npm:8.0.0-rc12"
+  dependencies:
+    embla-carousel: 8.0.0-rc12
+    embla-carousel-reactive-utils: 8.0.0-rc12
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.1 || ^18.0.0
+  checksum: 0628bc8f2dd0c83cef4720f6f10e1c35bf9b5130184882f04e2250a1a78ac1582992431b7fee602171399dcbcd72c1c6305f62887c0043cd09b2352501320ca4
+  languageName: node
+  linkType: hard
+
+"embla-carousel-reactive-utils@npm:8.0.0-rc12":
+  version: 8.0.0-rc12
+  resolution: "embla-carousel-reactive-utils@npm:8.0.0-rc12"
+  peerDependencies:
+    embla-carousel: 8.0.0-rc12
+  checksum: 0f6c005f8d09a00c681d9d5116a31a0702860bbb7eafd9ab348b68c206f58f45a14936fdaaec753690fbe9ee8cf98896bf941fd51989fe0d73d5d93233e3d535
+  languageName: node
+  linkType: hard
+
+"embla-carousel@npm:8.0.0-rc12":
+  version: 8.0.0-rc12
+  resolution: "embla-carousel@npm:8.0.0-rc12"
+  checksum: 553f33f562458d7fd0cd4eff1db96ac3a02352b620705d892eb3d9a297924fa12fedaf5a5aa03418dd41905ce80997a99f8aeca955d024d5a49a56f5c7fbe63b
   languageName: node
   linkType: hard
 

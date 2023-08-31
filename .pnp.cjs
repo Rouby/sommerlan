@@ -622,6 +622,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:2.0.1"\
       ],\
       [\
+        "@mantine/carousel",\
+        "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:6.0.19"\
+      ],\
+      [\
         "@mantine/core",\
         "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:6.0.16"\
       ],\
@@ -2112,6 +2116,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [\
         "electron-to-chromium",\
         "npm:1.4.450"\
+      ],\
+      [\
+        "embla-carousel",\
+        "npm:8.0.0-rc12"\
+      ],\
+      [\
+        "embla-carousel-react",\
+        "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:8.0.0-rc12"\
+      ],\
+      [\
+        "embla-carousel-reactive-utils",\
+        "virtual:4c5fe0c3818da1ef42e640b93d4d86ab0c313661474bb3ca7419b238add42a68e0b1f4c4381291509cd51ad75ba42a1ade08c87b2b69bb99a1db6d04562dc3f9#npm:8.0.0-rc12"\
       ],\
       [\
         "emoji-regex",\
@@ -6293,6 +6309,41 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["@mantine/carousel", [\
+        ["npm:6.0.19", {\
+          "packageLocation": "./.yarn/cache/@mantine-carousel-npm-6.0.19-c99f55b2d8-b056ec72d4.zip/node_modules/@mantine/carousel/",\
+          "packageDependencies": [\
+            ["@mantine/carousel", "npm:6.0.19"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:6.0.19", {\
+          "packageLocation": "./.yarn/__virtual__/@mantine-carousel-virtual-aa0149def6/0/cache/@mantine-carousel-npm-6.0.19-c99f55b2d8-b056ec72d4.zip/node_modules/@mantine/carousel/",\
+          "packageDependencies": [\
+            ["@mantine/carousel", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:6.0.19"],\
+            ["@mantine/core", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:6.0.16"],\
+            ["@mantine/hooks", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:6.0.16"],\
+            ["@mantine/utils", "virtual:aa0149def617b9bf71c3b9773f70ec34792d689c562564e3b1da3ec6cb556df4b1cc2ab00c4796ec829b647feb11f8a3ca94810badb85754dad7ab74821f910f#npm:6.0.19"],\
+            ["@types/embla-carousel-react", null],\
+            ["@types/mantine__core", null],\
+            ["@types/mantine__hooks", null],\
+            ["@types/react", "npm:18.2.13"],\
+            ["embla-carousel-react", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:8.0.0-rc12"],\
+            ["react", "npm:18.2.0"]\
+          ],\
+          "packagePeers": [\
+            "@mantine/core",\
+            "@mantine/hooks",\
+            "@types/embla-carousel-react",\
+            "@types/mantine__core",\
+            "@types/mantine__hooks",\
+            "@types/react",\
+            "embla-carousel-react",\
+            "react"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["@mantine/core", [\
         ["npm:6.0.16", {\
           "packageLocation": "./.yarn/cache/@mantine-core-npm-6.0.16-175e3c4341-0bee880532.zip/node_modules/@mantine/core/",\
@@ -6609,6 +6660,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
+        ["npm:6.0.19", {\
+          "packageLocation": "./.yarn/cache/@mantine-utils-npm-6.0.19-52bb4a9ee8-c33e2eba6d.zip/node_modules/@mantine/utils/",\
+          "packageDependencies": [\
+            ["@mantine/utils", "npm:6.0.19"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
         ["virtual:08eda1cfc6beea5f1cf66bd5cdb93226ca211d2a0917ac277dfe4194cc3cfbc63d52f12568451120484ac7aac767d540787d4916c0e4d1d9ba6f5d4900c295a4#npm:6.0.13", {\
           "packageLocation": "./.yarn/__virtual__/@mantine-utils-virtual-2bd92bd674/0/cache/@mantine-utils-npm-6.0.13-6f4791405c-7b59db35a7.zip/node_modules/@mantine/utils/",\
           "packageDependencies": [\
@@ -6626,6 +6684,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/__virtual__/@mantine-utils-virtual-642f04c9ad/0/cache/@mantine-utils-npm-6.0.16-fd7af4c7f4-dc9e669049.zip/node_modules/@mantine/utils/",\
           "packageDependencies": [\
             ["@mantine/utils", "virtual:a76b9df27b8081a9d1109b4202befe7cd6dc1b63fbe4c5a76dc1416ba75e5350fe87d78336157b9e343843a435d1c8421103ad7ed74fa21ca6289cd9d3c288ed#npm:6.0.16"],\
+            ["@types/react", "npm:18.2.13"],\
+            ["react", "npm:18.2.0"]\
+          ],\
+          "packagePeers": [\
+            "@types/react",\
+            "react"\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["virtual:aa0149def617b9bf71c3b9773f70ec34792d689c562564e3b1da3ec6cb556df4b1cc2ab00c4796ec829b647feb11f8a3ca94810badb85754dad7ab74821f910f#npm:6.0.19", {\
+          "packageLocation": "./.yarn/__virtual__/@mantine-utils-virtual-be91ba83d7/0/cache/@mantine-utils-npm-6.0.19-52bb4a9ee8-c33e2eba6d.zip/node_modules/@mantine/utils/",\
+          "packageDependencies": [\
+            ["@mantine/utils", "virtual:aa0149def617b9bf71c3b9773f70ec34792d689c562564e3b1da3ec6cb556df4b1cc2ab00c4796ec829b647feb11f8a3ca94810badb85754dad7ab74821f910f#npm:6.0.19"],\
             ["@types/react", "npm:18.2.13"],\
             ["react", "npm:18.2.0"]\
           ],\
@@ -7950,6 +8021,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@casl/ability", "npm:6.5.0"],\
             ["@casl/react", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:3.1.0"],\
             ["@emotion/react", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:11.11.1"],\
+            ["@mantine/carousel", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:6.0.19"],\
             ["@mantine/core", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:6.0.16"],\
             ["@mantine/dates", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:6.0.13"],\
             ["@mantine/dropzone", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:6.0.13"],\
@@ -7977,6 +8049,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@vitejs/plugin-react-swc", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:3.3.2"],\
             ["base64url", "npm:3.0.1"],\
             ["dayjs", "npm:1.11.8"],\
+            ["embla-carousel-react", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:8.0.0-rc12"],\
             ["framer-motion", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:10.12.16"],\
             ["jotai", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.2.1"],\
             ["jwt-decode", "npm:3.1.2"],\
@@ -11864,6 +11937,61 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/electron-to-chromium-npm-1.4.450-19a29ae5c9-e89ea9711d.zip/node_modules/electron-to-chromium/",\
           "packageDependencies": [\
             ["electron-to-chromium", "npm:1.4.450"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["embla-carousel", [\
+        ["npm:8.0.0-rc12", {\
+          "packageLocation": "./.yarn/cache/embla-carousel-npm-8.0.0-rc12-0b5425d70a-553f33f562.zip/node_modules/embla-carousel/",\
+          "packageDependencies": [\
+            ["embla-carousel", "npm:8.0.0-rc12"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["embla-carousel-react", [\
+        ["npm:8.0.0-rc12", {\
+          "packageLocation": "./.yarn/cache/embla-carousel-react-npm-8.0.0-rc12-02612f74d7-0628bc8f2d.zip/node_modules/embla-carousel-react/",\
+          "packageDependencies": [\
+            ["embla-carousel-react", "npm:8.0.0-rc12"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:8.0.0-rc12", {\
+          "packageLocation": "./.yarn/__virtual__/embla-carousel-react-virtual-4c5fe0c381/0/cache/embla-carousel-react-npm-8.0.0-rc12-02612f74d7-0628bc8f2d.zip/node_modules/embla-carousel-react/",\
+          "packageDependencies": [\
+            ["embla-carousel-react", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:8.0.0-rc12"],\
+            ["@types/react", "npm:18.2.13"],\
+            ["embla-carousel", "npm:8.0.0-rc12"],\
+            ["embla-carousel-reactive-utils", "virtual:4c5fe0c3818da1ef42e640b93d4d86ab0c313661474bb3ca7419b238add42a68e0b1f4c4381291509cd51ad75ba42a1ade08c87b2b69bb99a1db6d04562dc3f9#npm:8.0.0-rc12"],\
+            ["react", "npm:18.2.0"]\
+          ],\
+          "packagePeers": [\
+            "@types/react",\
+            "react"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["embla-carousel-reactive-utils", [\
+        ["npm:8.0.0-rc12", {\
+          "packageLocation": "./.yarn/cache/embla-carousel-reactive-utils-npm-8.0.0-rc12-2e740bca59-0f6c005f8d.zip/node_modules/embla-carousel-reactive-utils/",\
+          "packageDependencies": [\
+            ["embla-carousel-reactive-utils", "npm:8.0.0-rc12"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:4c5fe0c3818da1ef42e640b93d4d86ab0c313661474bb3ca7419b238add42a68e0b1f4c4381291509cd51ad75ba42a1ade08c87b2b69bb99a1db6d04562dc3f9#npm:8.0.0-rc12", {\
+          "packageLocation": "./.yarn/__virtual__/embla-carousel-reactive-utils-virtual-5857b2b04c/0/cache/embla-carousel-reactive-utils-npm-8.0.0-rc12-2e740bca59-0f6c005f8d.zip/node_modules/embla-carousel-reactive-utils/",\
+          "packageDependencies": [\
+            ["embla-carousel-reactive-utils", "virtual:4c5fe0c3818da1ef42e640b93d4d86ab0c313661474bb3ca7419b238add42a68e0b1f4c4381291509cd51ad75ba42a1ade08c87b2b69bb99a1db6d04562dc3f9#npm:8.0.0-rc12"],\
+            ["@types/embla-carousel", null],\
+            ["embla-carousel", "npm:8.0.0-rc12"]\
+          ],\
+          "packagePeers": [\
+            "@types/embla-carousel",\
+            "embla-carousel"\
           ],\
           "linkType": "HARD"\
         }]\
