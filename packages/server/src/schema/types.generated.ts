@@ -34,6 +34,7 @@ export type Party = {
   attendings: Array<Attending>;
   endDate: Scalars['Date']['output'];
   id: Scalars['ID']['output'];
+  location: Scalars['String']['output'];
   roomsAvailable: Scalars['Int']['output'];
   startDate: Scalars['Date']['output'];
 };
@@ -141,12 +142,12 @@ export type ResolversTypes = {
   Date: ResolverTypeWrapper<Scalars['Date']['output']>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
   Party: ResolverTypeWrapper<PartyMapper>;
+  String: ResolverTypeWrapper<Scalars['String']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Query: ResolverTypeWrapper<{}>;
   RoomStatus: RoomStatus;
   Time: ResolverTypeWrapper<Scalars['Time']['output']>;
   User: ResolverTypeWrapper<User>;
-  String: ResolverTypeWrapper<Scalars['String']['output']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
 };
 
@@ -157,11 +158,11 @@ export type ResolversParentTypes = {
   Date: Scalars['Date']['output'];
   DateTime: Scalars['DateTime']['output'];
   Party: PartyMapper;
+  String: Scalars['String']['output'];
   Int: Scalars['Int']['output'];
   Query: {};
   Time: Scalars['Time']['output'];
   User: User;
-  String: Scalars['String']['output'];
   Boolean: Scalars['Boolean']['output'];
 };
 
@@ -186,6 +187,7 @@ export type PartyResolvers<ContextType = any, ParentType extends ResolversParent
   attendings?: Resolver<Array<ResolversTypes['Attending']>, ParentType, ContextType>;
   endDate?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  location?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   roomsAvailable?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   startDate?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;

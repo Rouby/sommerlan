@@ -3,7 +3,10 @@ import { Base, Values } from "./$base";
 
 export class Game extends Base {
   get sheetName() {
-    return "Games";
+    return "Games" as const;
+  }
+  get kind() {
+    return "Game" as const;
   }
 
   public id = randomUUID();

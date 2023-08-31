@@ -4,23 +4,23 @@ import {
   createMongoAbility,
 } from "@casl/ability";
 import { Attending, Event, Party, User } from "../data";
-import { Values } from "../data/$base";
 
-export type AbilityTuple = [
-  string,
-  (
-    | Values<User>
-    | "User"
-    | Values<Party>
-    | "Party"
-    | Values<Attending>
-    | "Attending"
-    | Values<Event>
-    | "Event"
-    | "Cache"
-  )
-];
-export type AppAbility = MongoAbility<AbilityTuple>;
+export type AppAbility = MongoAbility<
+  [
+    string,
+    (
+      | User
+      | "User"
+      | Party
+      | "Party"
+      | Attending
+      | "Attending"
+      | Event
+      | "Event"
+      | "Cache"
+    )
+  ]
+>;
 
 export async function createAbility(user?: User | null) {
   const { can, build } = new AbilityBuilder<AppAbility>(createMongoAbility);
@@ -41,5 +41,9 @@ export async function createAbility(user?: User | null) {
     }
   }
 
-  return build();
+  return build({
+    detectSubjectType(subject) {
+      return subject.kind;
+    },
+  });
 }

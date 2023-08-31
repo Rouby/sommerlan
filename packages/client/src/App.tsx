@@ -67,6 +67,13 @@ const gqlClient = new Client({
     devtoolsExchange,
     cacheExchange({
       schema,
+      resolvers: {
+        Query: {
+          party: (_, { id }) => {
+            return { __typename: "Party", id };
+          },
+        },
+      },
     }),
     authExchange(async (utils) => {
       let token: string | undefined;
@@ -95,6 +102,7 @@ const gqlClient = new Client({
     }),
     fetchExchange,
   ],
+  requestPolicy: "cache-first",
 });
 
 export function App() {

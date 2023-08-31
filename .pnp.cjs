@@ -11907,6 +11907,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@fastify/static", "npm:6.10.2"],\
             ["@fastify/websocket", "npm:8.1.0"],\
             ["@graphql-codegen/cli", "virtual:f9aaeb0ff5026b521d6a9b424ffbc3c34990b6972b440282c9eb836880cb71f3dfd141e9455e392c98abc5918762c91d12bf17451df331903d8e149b2f873a01#npm:5.0.0"],\
+            ["@graphql-tools/utils", "virtual:ff2d7a6bdf673dce4c0ed922499d9fd315c518b65c0ae0fdb6de398e1e0a80b05cbcae7c5b49e43415b582b4e6d0aefaa046bb8d75ae5d030b50907dd4cf14ad#npm:10.0.5"],\
             ["@graphql-yoga/plugin-jwt", "virtual:f9aaeb0ff5026b521d6a9b424ffbc3c34990b6972b440282c9eb836880cb71f3dfd141e9455e392c98abc5918762c91d12bf17451df331903d8e149b2f873a01#npm:1.0.1"],\
             ["@newrelic/pino-enricher", "virtual:f9aaeb0ff5026b521d6a9b424ffbc3c34990b6972b440282c9eb836880cb71f3dfd141e9455e392c98abc5918762c91d12bf17451df331903d8e149b2f873a01#npm:1.1.1"],\
             ["@parcel/watcher", "npm:2.3.0"],\

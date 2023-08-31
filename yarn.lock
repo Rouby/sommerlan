@@ -4713,6 +4713,7 @@ __metadata:
     "@fastify/static": ^6.10.2
     "@fastify/websocket": ^8.1.0
     "@graphql-codegen/cli": ^5.0.0
+    "@graphql-tools/utils": ^10.0.5
     "@graphql-yoga/plugin-jwt": ^1.0.1
     "@newrelic/pino-enricher": ^1.1.1
     "@parcel/watcher": ^2.3.0

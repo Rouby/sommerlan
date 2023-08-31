@@ -7,7 +7,10 @@ enum Role {
 
 export class User extends Base {
   get sheetName() {
-    return "Users";
+    return "Users" as const;
+  }
+  get kind() {
+    return "User" as const;
   }
 
   public id = randomUUID();

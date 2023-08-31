@@ -20,6 +20,7 @@
     "@fastify/multipart": "^7.7.3",
     "@fastify/static": "^6.10.2",
     "@fastify/websocket": "^8.1.0",
+    "@graphql-tools/utils": "^10.0.5",
     "@graphql-yoga/plugin-jwt": "^1.0.1",
     "@newrelic/pino-enricher": "^1.1.1",
     "@simplewebauthn/server": "^7.3.0",

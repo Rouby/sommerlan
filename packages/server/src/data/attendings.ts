@@ -2,9 +2,11 @@ import { randomUUID } from "crypto";
 import { Base, Values } from "./$base";
 
 export class Attending extends Base {
-  static sheetName = "Attendings";
   get sheetName() {
-    return Attending.sheetName;
+    return "Attendings" as const;
+  }
+  get kind() {
+    return "Attending" as const;
   }
 
   public id = randomUUID();

@@ -33,6 +33,7 @@ export type Party = {
   attendings: Array<Attending>;
   endDate: Scalars['Date']['output'];
   id: Scalars['ID']['output'];
+  location: Scalars['String']['output'];
   roomsAvailable: Scalars['Int']['output'];
   startDate: Scalars['Date']['output'];
 };
@@ -72,5 +73,11 @@ export type PartyQueryVariables = Exact<{
 
 export type PartyQuery = { __typename?: 'Query', party?: { __typename?: 'Party', id: string, startDate: any, endDate: any, attendings: Array<{ __typename?: 'Attending', id: string, dates: Array<any>, user: { __typename?: 'User', id: string, displayName: string, avatar: string } }> } | null };
 
+export type PartiesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PartiesQuery = { __typename?: 'Query', parties: Array<{ __typename: 'Party', id: string, startDate: any, endDate: any, location: string, roomsAvailable: number, attendings: Array<{ __typename?: 'Attending', id: string, dates: Array<any>, user: { __typename?: 'User', id: string, displayName: string, avatar: string } }> }> };
+
 
 export const PartyDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"party"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"party"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"attendings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"dates"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}}]}}]}}]}}]}}]} as unknown as DocumentNode<PartyQuery, PartyQueryVariables>;
+export const PartiesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"parties"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"parties"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"roomsAvailable"}},{"kind":"Field","name":{"kind":"Name","value":"attendings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"dates"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}}]}}]}}]}}]}}]} as unknown as DocumentNode<PartiesQuery, PartiesQueryVariables>;

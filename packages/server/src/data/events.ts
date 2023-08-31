@@ -3,7 +3,10 @@ import { Base, Values } from "./$base";
 
 export class Event extends Base {
   get sheetName() {
-    return "Events";
+    return "Events" as const;
+  }
+  get kind() {
+    return "Event" as const;
   }
 
   public id = randomUUID();

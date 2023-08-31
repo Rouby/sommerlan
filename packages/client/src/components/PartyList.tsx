@@ -1,4 +1,3 @@
-import { subject } from "@casl/ability";
 import {
   ActionIcon,
   Avatar,
@@ -21,7 +20,9 @@ import { IconArrowLeft, IconEye, IconPencil } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { motion } from "framer-motion";
 import { useAtomValue } from "jotai";
+import { useQuery } from "urql";
 import { ActionIconLink, Can, UserAvatar } from ".";
+import { graphql } from "../gql";
 import { abilityAtom } from "../state";
 import { trpc } from "../utils";
 import { PartyInfo } from "./PartyInfo";
@@ -37,15 +38,43 @@ const dateFormat = new Intl.DateTimeFormat(navigator.language, {
 export function PartyList() {
   const ability = useAtomValue(abilityAtom);
 
-  const { data, isLoading } = trpc.party.all.useQuery();
+  const [{ data, fetching }] = useQuery({
+    query: graphql(/* GraphQL */ `
+      query parties {
+        parties {
+          __typename
+          id
+          startDate
+          endDate
+          location
+          roomsAvailable
+          attendings {
+            id
+            dates
+            user {
+              id
+              displayName
+              avatar
+            }
+          }
+        }
+      }
+    `),
+  });
 
-  if (isLoading) {
+  if (fetching) {
     return (
       <Center>
         <Loader />
       </Center>
     );
   }
+
+  if (!data) {
+    return null;
+  }
+
+  const { parties } = data;
 
   return (
     <>
@@ -62,13 +91,10 @@ export function PartyList() {
           </tr>
         </thead>
         <tbody>
-          {data?.map((party) => {
+          {parties?.map((party) => {
             const isInFuture = dayjs().isBefore(party.endDate);
 
-            if (
-              isInFuture &&
-              ability.cannot("update", subject("Party", party))
-            ) {
+            if (isInFuture && ability.cannot("update", party)) {
               return null;
             }
 
@@ -97,7 +123,7 @@ export function PartyList() {
                     >
                       <IconEye size={18} />
                     </ActionIconLink>
-                    <Can I="update" this={subject("Party", party)}>
+                    <Can I="update" this={party}>
                       <Popover position="bottom-start" withArrow trapFocus>
                         <Popover.Target>
                           <ActionIcon>
