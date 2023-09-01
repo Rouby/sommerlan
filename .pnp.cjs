@@ -1515,39 +1515,111 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@tiptap/core",\
-        "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.1.7"\
+        "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"\
+      ],\
+      [\
+        "@tiptap/extension-blockquote",\
+        "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"\
+      ],\
+      [\
+        "@tiptap/extension-bold",\
+        "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"\
       ],\
       [\
         "@tiptap/extension-bubble-menu",\
-        "virtual:a9c373436e3ea7f9df72439fe2b2289ad38acc1c4fd2026f899ea03e4b7d8be3854930b487ee173df87105f660b6fe13ae3cbfff72d3d0c8325c809e66b9fdd5#npm:2.0.3"\
+        "virtual:86d80cedb8664e19d36e9ee42d955d41b50324101798f7e094deec66ebcc0fb22df5eb11fe236725066c5be806278cb67875da19a8e9c1372fc729e7c18ca876#npm:2.1.7"\
+      ],\
+      [\
+        "@tiptap/extension-bullet-list",\
+        "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"\
+      ],\
+      [\
+        "@tiptap/extension-code",\
+        "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"\
+      ],\
+      [\
+        "@tiptap/extension-code-block",\
+        "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"\
+      ],\
+      [\
+        "@tiptap/extension-document",\
+        "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"\
+      ],\
+      [\
+        "@tiptap/extension-dropcursor",\
+        "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"\
       ],\
       [\
         "@tiptap/extension-floating-menu",\
-        "virtual:a9c373436e3ea7f9df72439fe2b2289ad38acc1c4fd2026f899ea03e4b7d8be3854930b487ee173df87105f660b6fe13ae3cbfff72d3d0c8325c809e66b9fdd5#npm:2.0.3"\
+        "virtual:86d80cedb8664e19d36e9ee42d955d41b50324101798f7e094deec66ebcc0fb22df5eb11fe236725066c5be806278cb67875da19a8e9c1372fc729e7c18ca876#npm:2.1.7"\
+      ],\
+      [\
+        "@tiptap/extension-gapcursor",\
+        "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"\
+      ],\
+      [\
+        "@tiptap/extension-hard-break",\
+        "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"\
+      ],\
+      [\
+        "@tiptap/extension-heading",\
+        "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"\
       ],\
       [\
         "@tiptap/extension-highlight",\
-        "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.0.3"\
+        "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.1.7"\
+      ],\
+      [\
+        "@tiptap/extension-history",\
+        "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"\
+      ],\
+      [\
+        "@tiptap/extension-horizontal-rule",\
+        "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"\
+      ],\
+      [\
+        "@tiptap/extension-italic",\
+        "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"\
       ],\
       [\
         "@tiptap/extension-link",\
-        "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.0.3"\
+        "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.1.7"\
+      ],\
+      [\
+        "@tiptap/extension-list-item",\
+        "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"\
+      ],\
+      [\
+        "@tiptap/extension-ordered-list",\
+        "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"\
+      ],\
+      [\
+        "@tiptap/extension-paragraph",\
+        "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"\
       ],\
       [\
         "@tiptap/extension-placeholder",\
-        "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.0.3"\
+        "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.1.7"\
+      ],\
+      [\
+        "@tiptap/extension-strike",\
+        "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"\
+      ],\
+      [\
+        "@tiptap/extension-text",\
+        "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"\
       ],\
       [\
         "@tiptap/pm",\
-        "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.0.3"\
+        "npm:2.1.7"\
       ],\
       [\
         "@tiptap/react",\
-        "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.0.3"\
+        "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.1.7"\
       ],\
       [\
         "@tiptap/starter-kit",\
-        "npm:2.0.3"\
+        "npm:2.1.7"\
       ],\
       [\
         "@tokenizer/token",\
@@ -9462,8 +9534,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@mantine/hooks", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:6.0.19"],\
             ["@mantine/utils", "virtual:aa0149def617b9bf71c3b9773f70ec34792d689c562564e3b1da3ec6cb556df4b1cc2ab00c4796ec829b647feb11f8a3ca94810badb85754dad7ab74821f910f#npm:6.0.19"],\
             ["@tabler/icons-react", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.24.0"],\
-            ["@tiptap/extension-link", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.0.3"],\
-            ["@tiptap/react", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.0.3"],\
+            ["@tiptap/extension-link", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.1.7"],\
+            ["@tiptap/react", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.1.7"],\
             ["@types/mantine__core", null],\
             ["@types/mantine__hooks", null],\
             ["@types/react", "npm:18.2.13"],\
@@ -11009,13 +11081,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@tabler/icons-react", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.24.0"],\
             ["@tanstack/react-query", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:4.29.14"],\
             ["@tanstack/router", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:0.0.1-beta.86"],\
-            ["@tiptap/core", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.1.7"],\
-            ["@tiptap/extension-highlight", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.0.3"],\
-            ["@tiptap/extension-link", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.0.3"],\
-            ["@tiptap/extension-placeholder", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.0.3"],\
-            ["@tiptap/pm", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.0.3"],\
-            ["@tiptap/react", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.0.3"],\
-            ["@tiptap/starter-kit", "npm:2.0.3"],\
+            ["@tiptap/core", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/extension-highlight", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.1.7"],\
+            ["@tiptap/extension-link", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.1.7"],\
+            ["@tiptap/extension-placeholder", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.1.7"],\
+            ["@tiptap/pm", "npm:2.1.7"],\
+            ["@tiptap/react", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.1.7"],\
+            ["@tiptap/starter-kit", "npm:2.1.7"],\
             ["@trpc/client", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:10.31.0"],\
             ["@trpc/react-query", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:10.31.0"],\
             ["@trpc/server", "npm:10.31.0"],\
@@ -11652,13 +11724,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@tiptap/core", [\
-        ["npm:2.0.3", {\
-          "packageLocation": "./.yarn/cache/@tiptap-core-npm-2.0.3-558af1cdd0-70429ce3d5.zip/node_modules/@tiptap/core/",\
-          "packageDependencies": [\
-            ["@tiptap/core", "npm:2.0.3"]\
-          ],\
-          "linkType": "SOFT"\
-        }],\
         ["npm:2.1.7", {\
           "packageLocation": "./.yarn/cache/@tiptap-core-npm-2.1.7-2b6a4a5e02-c27ae35553.zip/node_modules/@tiptap/core/",\
           "packageDependencies": [\
@@ -11666,23 +11731,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.1.7", {\
-          "packageLocation": "./.yarn/__virtual__/@tiptap-core-virtual-4847b77c91/0/cache/@tiptap-core-npm-2.1.7-2b6a4a5e02-c27ae35553.zip/node_modules/@tiptap/core/",\
+        ["virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7", {\
+          "packageLocation": "./.yarn/__virtual__/@tiptap-core-virtual-d1a6eaed21/0/cache/@tiptap-core-npm-2.1.7-2b6a4a5e02-c27ae35553.zip/node_modules/@tiptap/core/",\
           "packageDependencies": [\
-            ["@tiptap/core", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.1.7"],\
-            ["@tiptap/pm", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.0.3"],\
-            ["@types/tiptap__pm", null]\
-          ],\
-          "packagePeers": [\
-            "@tiptap/pm",\
-            "@types/tiptap__pm"\
-          ],\
-          "linkType": "HARD"\
-        }],\
-        ["virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3", {\
-          "packageLocation": "./.yarn/__virtual__/@tiptap-core-virtual-2aaf1cfb2d/0/cache/@tiptap-core-npm-2.0.3-558af1cdd0-70429ce3d5.zip/node_modules/@tiptap/core/",\
-          "packageDependencies": [\
-            ["@tiptap/core", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
+            ["@tiptap/core", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
             ["@tiptap/pm", "npm:2.1.7"],\
             ["@types/tiptap__pm", null]\
           ],\
@@ -11694,18 +11746,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@tiptap/extension-blockquote", [\
-        ["npm:2.0.3", {\
-          "packageLocation": "./.yarn/cache/@tiptap-extension-blockquote-npm-2.0.3-15aa536b82-e27a104dd5.zip/node_modules/@tiptap/extension-blockquote/",\
+        ["npm:2.1.7", {\
+          "packageLocation": "./.yarn/cache/@tiptap-extension-blockquote-npm-2.1.7-bf835b147c-c8634de261.zip/node_modules/@tiptap/extension-blockquote/",\
           "packageDependencies": [\
-            ["@tiptap/extension-blockquote", "npm:2.0.3"]\
+            ["@tiptap/extension-blockquote", "npm:2.1.7"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3", {\
-          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-blockquote-virtual-84e4dd47ad/0/cache/@tiptap-extension-blockquote-npm-2.0.3-15aa536b82-e27a104dd5.zip/node_modules/@tiptap/extension-blockquote/",\
+        ["virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7", {\
+          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-blockquote-virtual-8327c334d7/0/cache/@tiptap-extension-blockquote-npm-2.1.7-bf835b147c-c8634de261.zip/node_modules/@tiptap/extension-blockquote/",\
           "packageDependencies": [\
-            ["@tiptap/extension-blockquote", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
-            ["@tiptap/core", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
+            ["@tiptap/extension-blockquote", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/core", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
             ["@types/tiptap__core", null]\
           ],\
           "packagePeers": [\
@@ -11716,18 +11768,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@tiptap/extension-bold", [\
-        ["npm:2.0.3", {\
-          "packageLocation": "./.yarn/cache/@tiptap-extension-bold-npm-2.0.3-eb74827e41-11f215b732.zip/node_modules/@tiptap/extension-bold/",\
+        ["npm:2.1.7", {\
+          "packageLocation": "./.yarn/cache/@tiptap-extension-bold-npm-2.1.7-b8e3966ead-3dbcf9f83e.zip/node_modules/@tiptap/extension-bold/",\
           "packageDependencies": [\
-            ["@tiptap/extension-bold", "npm:2.0.3"]\
+            ["@tiptap/extension-bold", "npm:2.1.7"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3", {\
-          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-bold-virtual-46f793f3c0/0/cache/@tiptap-extension-bold-npm-2.0.3-eb74827e41-11f215b732.zip/node_modules/@tiptap/extension-bold/",\
+        ["virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7", {\
+          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-bold-virtual-f9913c2d37/0/cache/@tiptap-extension-bold-npm-2.1.7-b8e3966ead-3dbcf9f83e.zip/node_modules/@tiptap/extension-bold/",\
           "packageDependencies": [\
-            ["@tiptap/extension-bold", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
-            ["@tiptap/core", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
+            ["@tiptap/extension-bold", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/core", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
             ["@types/tiptap__core", null]\
           ],\
           "packagePeers": [\
@@ -11738,19 +11790,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@tiptap/extension-bubble-menu", [\
-        ["npm:2.0.3", {\
-          "packageLocation": "./.yarn/cache/@tiptap-extension-bubble-menu-npm-2.0.3-1c559d1137-80c483f1aa.zip/node_modules/@tiptap/extension-bubble-menu/",\
+        ["npm:2.1.7", {\
+          "packageLocation": "./.yarn/cache/@tiptap-extension-bubble-menu-npm-2.1.7-b620dab8c0-4fa7103716.zip/node_modules/@tiptap/extension-bubble-menu/",\
           "packageDependencies": [\
-            ["@tiptap/extension-bubble-menu", "npm:2.0.3"]\
+            ["@tiptap/extension-bubble-menu", "npm:2.1.7"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:a9c373436e3ea7f9df72439fe2b2289ad38acc1c4fd2026f899ea03e4b7d8be3854930b487ee173df87105f660b6fe13ae3cbfff72d3d0c8325c809e66b9fdd5#npm:2.0.3", {\
-          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-bubble-menu-virtual-8f601db184/0/cache/@tiptap-extension-bubble-menu-npm-2.0.3-1c559d1137-80c483f1aa.zip/node_modules/@tiptap/extension-bubble-menu/",\
+        ["virtual:86d80cedb8664e19d36e9ee42d955d41b50324101798f7e094deec66ebcc0fb22df5eb11fe236725066c5be806278cb67875da19a8e9c1372fc729e7c18ca876#npm:2.1.7", {\
+          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-bubble-menu-virtual-b2d0a08371/0/cache/@tiptap-extension-bubble-menu-npm-2.1.7-b620dab8c0-4fa7103716.zip/node_modules/@tiptap/extension-bubble-menu/",\
           "packageDependencies": [\
-            ["@tiptap/extension-bubble-menu", "virtual:a9c373436e3ea7f9df72439fe2b2289ad38acc1c4fd2026f899ea03e4b7d8be3854930b487ee173df87105f660b6fe13ae3cbfff72d3d0c8325c809e66b9fdd5#npm:2.0.3"],\
-            ["@tiptap/core", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.1.7"],\
-            ["@tiptap/pm", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.0.3"],\
+            ["@tiptap/extension-bubble-menu", "virtual:86d80cedb8664e19d36e9ee42d955d41b50324101798f7e094deec66ebcc0fb22df5eb11fe236725066c5be806278cb67875da19a8e9c1372fc729e7c18ca876#npm:2.1.7"],\
+            ["@tiptap/core", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/pm", "npm:2.1.7"],\
             ["@types/tiptap__core", null],\
             ["@types/tiptap__pm", null],\
             ["tippy.js", "npm:6.3.7"]\
@@ -11765,18 +11817,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@tiptap/extension-bullet-list", [\
-        ["npm:2.0.3", {\
-          "packageLocation": "./.yarn/cache/@tiptap-extension-bullet-list-npm-2.0.3-6ecaebb1a7-75aa4d7c57.zip/node_modules/@tiptap/extension-bullet-list/",\
+        ["npm:2.1.7", {\
+          "packageLocation": "./.yarn/cache/@tiptap-extension-bullet-list-npm-2.1.7-67d6702f30-22701a1d39.zip/node_modules/@tiptap/extension-bullet-list/",\
           "packageDependencies": [\
-            ["@tiptap/extension-bullet-list", "npm:2.0.3"]\
+            ["@tiptap/extension-bullet-list", "npm:2.1.7"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3", {\
-          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-bullet-list-virtual-2c2a51154d/0/cache/@tiptap-extension-bullet-list-npm-2.0.3-6ecaebb1a7-75aa4d7c57.zip/node_modules/@tiptap/extension-bullet-list/",\
+        ["virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7", {\
+          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-bullet-list-virtual-28cb7216c5/0/cache/@tiptap-extension-bullet-list-npm-2.1.7-67d6702f30-22701a1d39.zip/node_modules/@tiptap/extension-bullet-list/",\
           "packageDependencies": [\
-            ["@tiptap/extension-bullet-list", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
-            ["@tiptap/core", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
+            ["@tiptap/extension-bullet-list", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/core", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
             ["@types/tiptap__core", null]\
           ],\
           "packagePeers": [\
@@ -11787,18 +11839,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@tiptap/extension-code", [\
-        ["npm:2.0.3", {\
-          "packageLocation": "./.yarn/cache/@tiptap-extension-code-npm-2.0.3-7826461500-313c229c65.zip/node_modules/@tiptap/extension-code/",\
+        ["npm:2.1.7", {\
+          "packageLocation": "./.yarn/cache/@tiptap-extension-code-npm-2.1.7-6d3ee46c70-3f53aa40ae.zip/node_modules/@tiptap/extension-code/",\
           "packageDependencies": [\
-            ["@tiptap/extension-code", "npm:2.0.3"]\
+            ["@tiptap/extension-code", "npm:2.1.7"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3", {\
-          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-code-virtual-2bb54f2b46/0/cache/@tiptap-extension-code-npm-2.0.3-7826461500-313c229c65.zip/node_modules/@tiptap/extension-code/",\
+        ["virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7", {\
+          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-code-virtual-26e4611293/0/cache/@tiptap-extension-code-npm-2.1.7-6d3ee46c70-3f53aa40ae.zip/node_modules/@tiptap/extension-code/",\
           "packageDependencies": [\
-            ["@tiptap/extension-code", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
-            ["@tiptap/core", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
+            ["@tiptap/extension-code", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/core", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
             ["@types/tiptap__core", null]\
           ],\
           "packagePeers": [\
@@ -11809,18 +11861,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@tiptap/extension-code-block", [\
-        ["npm:2.0.3", {\
-          "packageLocation": "./.yarn/cache/@tiptap-extension-code-block-npm-2.0.3-2d9ec3a685-6c295979e3.zip/node_modules/@tiptap/extension-code-block/",\
+        ["npm:2.1.7", {\
+          "packageLocation": "./.yarn/cache/@tiptap-extension-code-block-npm-2.1.7-400aea2cdd-7006243fcf.zip/node_modules/@tiptap/extension-code-block/",\
           "packageDependencies": [\
-            ["@tiptap/extension-code-block", "npm:2.0.3"]\
+            ["@tiptap/extension-code-block", "npm:2.1.7"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3", {\
-          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-code-block-virtual-9391170d4d/0/cache/@tiptap-extension-code-block-npm-2.0.3-2d9ec3a685-6c295979e3.zip/node_modules/@tiptap/extension-code-block/",\
+        ["virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7", {\
+          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-code-block-virtual-4803120415/0/cache/@tiptap-extension-code-block-npm-2.1.7-400aea2cdd-7006243fcf.zip/node_modules/@tiptap/extension-code-block/",\
           "packageDependencies": [\
-            ["@tiptap/extension-code-block", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
-            ["@tiptap/core", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
+            ["@tiptap/extension-code-block", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/core", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
             ["@tiptap/pm", "npm:2.1.7"],\
             ["@types/tiptap__core", null],\
             ["@types/tiptap__pm", null]\
@@ -11835,18 +11887,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@tiptap/extension-document", [\
-        ["npm:2.0.3", {\
-          "packageLocation": "./.yarn/cache/@tiptap-extension-document-npm-2.0.3-386ba3411d-dda25336a5.zip/node_modules/@tiptap/extension-document/",\
+        ["npm:2.1.7", {\
+          "packageLocation": "./.yarn/cache/@tiptap-extension-document-npm-2.1.7-ee78745afd-c11ad64c16.zip/node_modules/@tiptap/extension-document/",\
           "packageDependencies": [\
-            ["@tiptap/extension-document", "npm:2.0.3"]\
+            ["@tiptap/extension-document", "npm:2.1.7"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3", {\
-          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-document-virtual-be593391c4/0/cache/@tiptap-extension-document-npm-2.0.3-386ba3411d-dda25336a5.zip/node_modules/@tiptap/extension-document/",\
+        ["virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7", {\
+          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-document-virtual-1b127066e8/0/cache/@tiptap-extension-document-npm-2.1.7-ee78745afd-c11ad64c16.zip/node_modules/@tiptap/extension-document/",\
           "packageDependencies": [\
-            ["@tiptap/extension-document", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
-            ["@tiptap/core", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
+            ["@tiptap/extension-document", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/core", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
             ["@types/tiptap__core", null]\
           ],\
           "packagePeers": [\
@@ -11857,18 +11909,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@tiptap/extension-dropcursor", [\
-        ["npm:2.0.3", {\
-          "packageLocation": "./.yarn/cache/@tiptap-extension-dropcursor-npm-2.0.3-c1cbe1f79a-1d6edd0ef8.zip/node_modules/@tiptap/extension-dropcursor/",\
+        ["npm:2.1.7", {\
+          "packageLocation": "./.yarn/cache/@tiptap-extension-dropcursor-npm-2.1.7-b3cd36f3b1-32b7b626dc.zip/node_modules/@tiptap/extension-dropcursor/",\
           "packageDependencies": [\
-            ["@tiptap/extension-dropcursor", "npm:2.0.3"]\
+            ["@tiptap/extension-dropcursor", "npm:2.1.7"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3", {\
-          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-dropcursor-virtual-cfaa0d8bb5/0/cache/@tiptap-extension-dropcursor-npm-2.0.3-c1cbe1f79a-1d6edd0ef8.zip/node_modules/@tiptap/extension-dropcursor/",\
+        ["virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7", {\
+          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-dropcursor-virtual-f1abd5ab15/0/cache/@tiptap-extension-dropcursor-npm-2.1.7-b3cd36f3b1-32b7b626dc.zip/node_modules/@tiptap/extension-dropcursor/",\
           "packageDependencies": [\
-            ["@tiptap/extension-dropcursor", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
-            ["@tiptap/core", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
+            ["@tiptap/extension-dropcursor", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/core", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
             ["@tiptap/pm", "npm:2.1.7"],\
             ["@types/tiptap__core", null],\
             ["@types/tiptap__pm", null]\
@@ -11883,19 +11935,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@tiptap/extension-floating-menu", [\
-        ["npm:2.0.3", {\
-          "packageLocation": "./.yarn/cache/@tiptap-extension-floating-menu-npm-2.0.3-a694748e5c-c5b3ef0e32.zip/node_modules/@tiptap/extension-floating-menu/",\
+        ["npm:2.1.7", {\
+          "packageLocation": "./.yarn/cache/@tiptap-extension-floating-menu-npm-2.1.7-0f8fb9d57a-d451c22fe5.zip/node_modules/@tiptap/extension-floating-menu/",\
           "packageDependencies": [\
-            ["@tiptap/extension-floating-menu", "npm:2.0.3"]\
+            ["@tiptap/extension-floating-menu", "npm:2.1.7"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:a9c373436e3ea7f9df72439fe2b2289ad38acc1c4fd2026f899ea03e4b7d8be3854930b487ee173df87105f660b6fe13ae3cbfff72d3d0c8325c809e66b9fdd5#npm:2.0.3", {\
-          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-floating-menu-virtual-17b216386b/0/cache/@tiptap-extension-floating-menu-npm-2.0.3-a694748e5c-c5b3ef0e32.zip/node_modules/@tiptap/extension-floating-menu/",\
+        ["virtual:86d80cedb8664e19d36e9ee42d955d41b50324101798f7e094deec66ebcc0fb22df5eb11fe236725066c5be806278cb67875da19a8e9c1372fc729e7c18ca876#npm:2.1.7", {\
+          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-floating-menu-virtual-967dbe87ca/0/cache/@tiptap-extension-floating-menu-npm-2.1.7-0f8fb9d57a-d451c22fe5.zip/node_modules/@tiptap/extension-floating-menu/",\
           "packageDependencies": [\
-            ["@tiptap/extension-floating-menu", "virtual:a9c373436e3ea7f9df72439fe2b2289ad38acc1c4fd2026f899ea03e4b7d8be3854930b487ee173df87105f660b6fe13ae3cbfff72d3d0c8325c809e66b9fdd5#npm:2.0.3"],\
-            ["@tiptap/core", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.1.7"],\
-            ["@tiptap/pm", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.0.3"],\
+            ["@tiptap/extension-floating-menu", "virtual:86d80cedb8664e19d36e9ee42d955d41b50324101798f7e094deec66ebcc0fb22df5eb11fe236725066c5be806278cb67875da19a8e9c1372fc729e7c18ca876#npm:2.1.7"],\
+            ["@tiptap/core", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/pm", "npm:2.1.7"],\
             ["@types/tiptap__core", null],\
             ["@types/tiptap__pm", null],\
             ["tippy.js", "npm:6.3.7"]\
@@ -11910,18 +11962,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@tiptap/extension-gapcursor", [\
-        ["npm:2.0.3", {\
-          "packageLocation": "./.yarn/cache/@tiptap-extension-gapcursor-npm-2.0.3-1b9789b8f6-9d096405a3.zip/node_modules/@tiptap/extension-gapcursor/",\
+        ["npm:2.1.7", {\
+          "packageLocation": "./.yarn/cache/@tiptap-extension-gapcursor-npm-2.1.7-6fba366609-bff0c6c9c3.zip/node_modules/@tiptap/extension-gapcursor/",\
           "packageDependencies": [\
-            ["@tiptap/extension-gapcursor", "npm:2.0.3"]\
+            ["@tiptap/extension-gapcursor", "npm:2.1.7"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3", {\
-          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-gapcursor-virtual-fdbd5c6e88/0/cache/@tiptap-extension-gapcursor-npm-2.0.3-1b9789b8f6-9d096405a3.zip/node_modules/@tiptap/extension-gapcursor/",\
+        ["virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7", {\
+          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-gapcursor-virtual-692956b396/0/cache/@tiptap-extension-gapcursor-npm-2.1.7-6fba366609-bff0c6c9c3.zip/node_modules/@tiptap/extension-gapcursor/",\
           "packageDependencies": [\
-            ["@tiptap/extension-gapcursor", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
-            ["@tiptap/core", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
+            ["@tiptap/extension-gapcursor", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/core", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
             ["@tiptap/pm", "npm:2.1.7"],\
             ["@types/tiptap__core", null],\
             ["@types/tiptap__pm", null]\
@@ -11936,18 +11988,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@tiptap/extension-hard-break", [\
-        ["npm:2.0.3", {\
-          "packageLocation": "./.yarn/cache/@tiptap-extension-hard-break-npm-2.0.3-df8ea18a00-ed1e096cee.zip/node_modules/@tiptap/extension-hard-break/",\
+        ["npm:2.1.7", {\
+          "packageLocation": "./.yarn/cache/@tiptap-extension-hard-break-npm-2.1.7-9bc0619ee3-44e68ac957.zip/node_modules/@tiptap/extension-hard-break/",\
           "packageDependencies": [\
-            ["@tiptap/extension-hard-break", "npm:2.0.3"]\
+            ["@tiptap/extension-hard-break", "npm:2.1.7"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3", {\
-          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-hard-break-virtual-6b1daa63d0/0/cache/@tiptap-extension-hard-break-npm-2.0.3-df8ea18a00-ed1e096cee.zip/node_modules/@tiptap/extension-hard-break/",\
+        ["virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7", {\
+          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-hard-break-virtual-281a724d5e/0/cache/@tiptap-extension-hard-break-npm-2.1.7-9bc0619ee3-44e68ac957.zip/node_modules/@tiptap/extension-hard-break/",\
           "packageDependencies": [\
-            ["@tiptap/extension-hard-break", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
-            ["@tiptap/core", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
+            ["@tiptap/extension-hard-break", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/core", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
             ["@types/tiptap__core", null]\
           ],\
           "packagePeers": [\
@@ -11958,18 +12010,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@tiptap/extension-heading", [\
-        ["npm:2.0.3", {\
-          "packageLocation": "./.yarn/cache/@tiptap-extension-heading-npm-2.0.3-c17ea5cdf0-5a71632f2d.zip/node_modules/@tiptap/extension-heading/",\
+        ["npm:2.1.7", {\
+          "packageLocation": "./.yarn/cache/@tiptap-extension-heading-npm-2.1.7-e39720f660-eae9ac634d.zip/node_modules/@tiptap/extension-heading/",\
           "packageDependencies": [\
-            ["@tiptap/extension-heading", "npm:2.0.3"]\
+            ["@tiptap/extension-heading", "npm:2.1.7"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3", {\
-          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-heading-virtual-dbffe5c545/0/cache/@tiptap-extension-heading-npm-2.0.3-c17ea5cdf0-5a71632f2d.zip/node_modules/@tiptap/extension-heading/",\
+        ["virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7", {\
+          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-heading-virtual-b5abd75e8e/0/cache/@tiptap-extension-heading-npm-2.1.7-e39720f660-eae9ac634d.zip/node_modules/@tiptap/extension-heading/",\
           "packageDependencies": [\
-            ["@tiptap/extension-heading", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
-            ["@tiptap/core", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
+            ["@tiptap/extension-heading", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/core", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
             ["@types/tiptap__core", null]\
           ],\
           "packagePeers": [\
@@ -11980,18 +12032,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@tiptap/extension-highlight", [\
-        ["npm:2.0.3", {\
-          "packageLocation": "./.yarn/cache/@tiptap-extension-highlight-npm-2.0.3-7bf83f9fce-1cd56c186b.zip/node_modules/@tiptap/extension-highlight/",\
+        ["npm:2.1.7", {\
+          "packageLocation": "./.yarn/cache/@tiptap-extension-highlight-npm-2.1.7-f85d26f613-4af7336bb6.zip/node_modules/@tiptap/extension-highlight/",\
           "packageDependencies": [\
-            ["@tiptap/extension-highlight", "npm:2.0.3"]\
+            ["@tiptap/extension-highlight", "npm:2.1.7"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.0.3", {\
-          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-highlight-virtual-5943359a37/0/cache/@tiptap-extension-highlight-npm-2.0.3-7bf83f9fce-1cd56c186b.zip/node_modules/@tiptap/extension-highlight/",\
+        ["virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.1.7", {\
+          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-highlight-virtual-0e496faa8a/0/cache/@tiptap-extension-highlight-npm-2.1.7-f85d26f613-4af7336bb6.zip/node_modules/@tiptap/extension-highlight/",\
           "packageDependencies": [\
-            ["@tiptap/extension-highlight", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.0.3"],\
-            ["@tiptap/core", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.1.7"],\
+            ["@tiptap/extension-highlight", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.1.7"],\
+            ["@tiptap/core", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
             ["@types/tiptap__core", null]\
           ],\
           "packagePeers": [\
@@ -12002,18 +12054,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@tiptap/extension-history", [\
-        ["npm:2.0.3", {\
-          "packageLocation": "./.yarn/cache/@tiptap-extension-history-npm-2.0.3-ade7af84eb-2a9bb3e9bd.zip/node_modules/@tiptap/extension-history/",\
+        ["npm:2.1.7", {\
+          "packageLocation": "./.yarn/cache/@tiptap-extension-history-npm-2.1.7-6ce17bb0ab-52ee7bfcb1.zip/node_modules/@tiptap/extension-history/",\
           "packageDependencies": [\
-            ["@tiptap/extension-history", "npm:2.0.3"]\
+            ["@tiptap/extension-history", "npm:2.1.7"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3", {\
-          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-history-virtual-8c941683c2/0/cache/@tiptap-extension-history-npm-2.0.3-ade7af84eb-2a9bb3e9bd.zip/node_modules/@tiptap/extension-history/",\
+        ["virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7", {\
+          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-history-virtual-a2bd8a26eb/0/cache/@tiptap-extension-history-npm-2.1.7-6ce17bb0ab-52ee7bfcb1.zip/node_modules/@tiptap/extension-history/",\
           "packageDependencies": [\
-            ["@tiptap/extension-history", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
-            ["@tiptap/core", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
+            ["@tiptap/extension-history", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/core", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
             ["@tiptap/pm", "npm:2.1.7"],\
             ["@types/tiptap__core", null],\
             ["@types/tiptap__pm", null]\
@@ -12028,18 +12080,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@tiptap/extension-horizontal-rule", [\
-        ["npm:2.0.3", {\
-          "packageLocation": "./.yarn/cache/@tiptap-extension-horizontal-rule-npm-2.0.3-571d90be12-844d101988.zip/node_modules/@tiptap/extension-horizontal-rule/",\
+        ["npm:2.1.7", {\
+          "packageLocation": "./.yarn/cache/@tiptap-extension-horizontal-rule-npm-2.1.7-862b915e90-8181d0d5e2.zip/node_modules/@tiptap/extension-horizontal-rule/",\
           "packageDependencies": [\
-            ["@tiptap/extension-horizontal-rule", "npm:2.0.3"]\
+            ["@tiptap/extension-horizontal-rule", "npm:2.1.7"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3", {\
-          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-horizontal-rule-virtual-411ef65da7/0/cache/@tiptap-extension-horizontal-rule-npm-2.0.3-571d90be12-844d101988.zip/node_modules/@tiptap/extension-horizontal-rule/",\
+        ["virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7", {\
+          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-horizontal-rule-virtual-0a6cafe2cb/0/cache/@tiptap-extension-horizontal-rule-npm-2.1.7-862b915e90-8181d0d5e2.zip/node_modules/@tiptap/extension-horizontal-rule/",\
           "packageDependencies": [\
-            ["@tiptap/extension-horizontal-rule", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
-            ["@tiptap/core", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
+            ["@tiptap/extension-horizontal-rule", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/core", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
             ["@tiptap/pm", "npm:2.1.7"],\
             ["@types/tiptap__core", null],\
             ["@types/tiptap__pm", null]\
@@ -12054,18 +12106,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@tiptap/extension-italic", [\
-        ["npm:2.0.3", {\
-          "packageLocation": "./.yarn/cache/@tiptap-extension-italic-npm-2.0.3-706332404f-8a635993d8.zip/node_modules/@tiptap/extension-italic/",\
+        ["npm:2.1.7", {\
+          "packageLocation": "./.yarn/cache/@tiptap-extension-italic-npm-2.1.7-eb8a03366f-058f334567.zip/node_modules/@tiptap/extension-italic/",\
           "packageDependencies": [\
-            ["@tiptap/extension-italic", "npm:2.0.3"]\
+            ["@tiptap/extension-italic", "npm:2.1.7"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3", {\
-          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-italic-virtual-14c9ed3373/0/cache/@tiptap-extension-italic-npm-2.0.3-706332404f-8a635993d8.zip/node_modules/@tiptap/extension-italic/",\
+        ["virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7", {\
+          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-italic-virtual-fd62d0339a/0/cache/@tiptap-extension-italic-npm-2.1.7-eb8a03366f-058f334567.zip/node_modules/@tiptap/extension-italic/",\
           "packageDependencies": [\
-            ["@tiptap/extension-italic", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
-            ["@tiptap/core", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
+            ["@tiptap/extension-italic", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/core", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
             ["@types/tiptap__core", null]\
           ],\
           "packagePeers": [\
@@ -12076,19 +12128,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@tiptap/extension-link", [\
-        ["npm:2.0.3", {\
-          "packageLocation": "./.yarn/cache/@tiptap-extension-link-npm-2.0.3-e27f84c36d-f1b49628ff.zip/node_modules/@tiptap/extension-link/",\
+        ["npm:2.1.7", {\
+          "packageLocation": "./.yarn/cache/@tiptap-extension-link-npm-2.1.7-c50e17fbb9-82486299d7.zip/node_modules/@tiptap/extension-link/",\
           "packageDependencies": [\
-            ["@tiptap/extension-link", "npm:2.0.3"]\
+            ["@tiptap/extension-link", "npm:2.1.7"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.0.3", {\
-          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-link-virtual-a635c6e21c/0/cache/@tiptap-extension-link-npm-2.0.3-e27f84c36d-f1b49628ff.zip/node_modules/@tiptap/extension-link/",\
+        ["virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.1.7", {\
+          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-link-virtual-6c025744c9/0/cache/@tiptap-extension-link-npm-2.1.7-c50e17fbb9-82486299d7.zip/node_modules/@tiptap/extension-link/",\
           "packageDependencies": [\
-            ["@tiptap/extension-link", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.0.3"],\
-            ["@tiptap/core", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.1.7"],\
-            ["@tiptap/pm", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.0.3"],\
+            ["@tiptap/extension-link", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.1.7"],\
+            ["@tiptap/core", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/pm", "npm:2.1.7"],\
             ["@types/tiptap__core", null],\
             ["@types/tiptap__pm", null],\
             ["linkifyjs", "npm:4.1.1"]\
@@ -12103,18 +12155,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@tiptap/extension-list-item", [\
-        ["npm:2.0.3", {\
-          "packageLocation": "./.yarn/cache/@tiptap-extension-list-item-npm-2.0.3-4126bf3c54-df3774d8e9.zip/node_modules/@tiptap/extension-list-item/",\
+        ["npm:2.1.7", {\
+          "packageLocation": "./.yarn/cache/@tiptap-extension-list-item-npm-2.1.7-1834c6cedb-f5a6564194.zip/node_modules/@tiptap/extension-list-item/",\
           "packageDependencies": [\
-            ["@tiptap/extension-list-item", "npm:2.0.3"]\
+            ["@tiptap/extension-list-item", "npm:2.1.7"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3", {\
-          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-list-item-virtual-806717e013/0/cache/@tiptap-extension-list-item-npm-2.0.3-4126bf3c54-df3774d8e9.zip/node_modules/@tiptap/extension-list-item/",\
+        ["virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7", {\
+          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-list-item-virtual-32f91272d6/0/cache/@tiptap-extension-list-item-npm-2.1.7-1834c6cedb-f5a6564194.zip/node_modules/@tiptap/extension-list-item/",\
           "packageDependencies": [\
-            ["@tiptap/extension-list-item", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
-            ["@tiptap/core", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
+            ["@tiptap/extension-list-item", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/core", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
             ["@types/tiptap__core", null]\
           ],\
           "packagePeers": [\
@@ -12125,18 +12177,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@tiptap/extension-ordered-list", [\
-        ["npm:2.0.3", {\
-          "packageLocation": "./.yarn/cache/@tiptap-extension-ordered-list-npm-2.0.3-9e6552d1db-e8b15ee742.zip/node_modules/@tiptap/extension-ordered-list/",\
+        ["npm:2.1.7", {\
+          "packageLocation": "./.yarn/cache/@tiptap-extension-ordered-list-npm-2.1.7-5cc8e09326-8b026cba45.zip/node_modules/@tiptap/extension-ordered-list/",\
           "packageDependencies": [\
-            ["@tiptap/extension-ordered-list", "npm:2.0.3"]\
+            ["@tiptap/extension-ordered-list", "npm:2.1.7"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3", {\
-          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-ordered-list-virtual-f68ccad8a4/0/cache/@tiptap-extension-ordered-list-npm-2.0.3-9e6552d1db-e8b15ee742.zip/node_modules/@tiptap/extension-ordered-list/",\
+        ["virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7", {\
+          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-ordered-list-virtual-67dacc419d/0/cache/@tiptap-extension-ordered-list-npm-2.1.7-5cc8e09326-8b026cba45.zip/node_modules/@tiptap/extension-ordered-list/",\
           "packageDependencies": [\
-            ["@tiptap/extension-ordered-list", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
-            ["@tiptap/core", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
+            ["@tiptap/extension-ordered-list", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/core", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
             ["@types/tiptap__core", null]\
           ],\
           "packagePeers": [\
@@ -12147,18 +12199,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@tiptap/extension-paragraph", [\
-        ["npm:2.0.3", {\
-          "packageLocation": "./.yarn/cache/@tiptap-extension-paragraph-npm-2.0.3-40ae7f14b1-a039685b57.zip/node_modules/@tiptap/extension-paragraph/",\
+        ["npm:2.1.7", {\
+          "packageLocation": "./.yarn/cache/@tiptap-extension-paragraph-npm-2.1.7-5afd98aa9f-c52480a40f.zip/node_modules/@tiptap/extension-paragraph/",\
           "packageDependencies": [\
-            ["@tiptap/extension-paragraph", "npm:2.0.3"]\
+            ["@tiptap/extension-paragraph", "npm:2.1.7"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3", {\
-          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-paragraph-virtual-d11f1c06eb/0/cache/@tiptap-extension-paragraph-npm-2.0.3-40ae7f14b1-a039685b57.zip/node_modules/@tiptap/extension-paragraph/",\
+        ["virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7", {\
+          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-paragraph-virtual-8923021c32/0/cache/@tiptap-extension-paragraph-npm-2.1.7-5afd98aa9f-c52480a40f.zip/node_modules/@tiptap/extension-paragraph/",\
           "packageDependencies": [\
-            ["@tiptap/extension-paragraph", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
-            ["@tiptap/core", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
+            ["@tiptap/extension-paragraph", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/core", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
             ["@types/tiptap__core", null]\
           ],\
           "packagePeers": [\
@@ -12169,19 +12221,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@tiptap/extension-placeholder", [\
-        ["npm:2.0.3", {\
-          "packageLocation": "./.yarn/cache/@tiptap-extension-placeholder-npm-2.0.3-f1261ec30b-be5c77aef4.zip/node_modules/@tiptap/extension-placeholder/",\
+        ["npm:2.1.7", {\
+          "packageLocation": "./.yarn/cache/@tiptap-extension-placeholder-npm-2.1.7-a4a887766c-1991f1f9ea.zip/node_modules/@tiptap/extension-placeholder/",\
           "packageDependencies": [\
-            ["@tiptap/extension-placeholder", "npm:2.0.3"]\
+            ["@tiptap/extension-placeholder", "npm:2.1.7"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.0.3", {\
-          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-placeholder-virtual-3bb4368216/0/cache/@tiptap-extension-placeholder-npm-2.0.3-f1261ec30b-be5c77aef4.zip/node_modules/@tiptap/extension-placeholder/",\
+        ["virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.1.7", {\
+          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-placeholder-virtual-48b699fd93/0/cache/@tiptap-extension-placeholder-npm-2.1.7-a4a887766c-1991f1f9ea.zip/node_modules/@tiptap/extension-placeholder/",\
           "packageDependencies": [\
-            ["@tiptap/extension-placeholder", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.0.3"],\
-            ["@tiptap/core", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.1.7"],\
-            ["@tiptap/pm", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.0.3"],\
+            ["@tiptap/extension-placeholder", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.1.7"],\
+            ["@tiptap/core", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/pm", "npm:2.1.7"],\
             ["@types/tiptap__core", null],\
             ["@types/tiptap__pm", null]\
           ],\
@@ -12195,18 +12247,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@tiptap/extension-strike", [\
-        ["npm:2.0.3", {\
-          "packageLocation": "./.yarn/cache/@tiptap-extension-strike-npm-2.0.3-8402abf6f8-1c552e314d.zip/node_modules/@tiptap/extension-strike/",\
+        ["npm:2.1.7", {\
+          "packageLocation": "./.yarn/cache/@tiptap-extension-strike-npm-2.1.7-4bb044b170-8932f89865.zip/node_modules/@tiptap/extension-strike/",\
           "packageDependencies": [\
-            ["@tiptap/extension-strike", "npm:2.0.3"]\
+            ["@tiptap/extension-strike", "npm:2.1.7"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3", {\
-          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-strike-virtual-0aba3fd714/0/cache/@tiptap-extension-strike-npm-2.0.3-8402abf6f8-1c552e314d.zip/node_modules/@tiptap/extension-strike/",\
+        ["virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7", {\
+          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-strike-virtual-fd9d49a7dd/0/cache/@tiptap-extension-strike-npm-2.1.7-4bb044b170-8932f89865.zip/node_modules/@tiptap/extension-strike/",\
           "packageDependencies": [\
-            ["@tiptap/extension-strike", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
-            ["@tiptap/core", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
+            ["@tiptap/extension-strike", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/core", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
             ["@types/tiptap__core", null]\
           ],\
           "packagePeers": [\
@@ -12217,18 +12269,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@tiptap/extension-text", [\
-        ["npm:2.0.3", {\
-          "packageLocation": "./.yarn/cache/@tiptap-extension-text-npm-2.0.3-29bc4680e2-0cc133326c.zip/node_modules/@tiptap/extension-text/",\
+        ["npm:2.1.7", {\
+          "packageLocation": "./.yarn/cache/@tiptap-extension-text-npm-2.1.7-d90919974f-f5768aaec4.zip/node_modules/@tiptap/extension-text/",\
           "packageDependencies": [\
-            ["@tiptap/extension-text", "npm:2.0.3"]\
+            ["@tiptap/extension-text", "npm:2.1.7"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3", {\
-          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-text-virtual-47e1f4454e/0/cache/@tiptap-extension-text-npm-2.0.3-29bc4680e2-0cc133326c.zip/node_modules/@tiptap/extension-text/",\
+        ["virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7", {\
+          "packageLocation": "./.yarn/__virtual__/@tiptap-extension-text-virtual-b581e0d9cc/0/cache/@tiptap-extension-text-npm-2.1.7-d90919974f-f5768aaec4.zip/node_modules/@tiptap/extension-text/",\
           "packageDependencies": [\
-            ["@tiptap/extension-text", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
-            ["@tiptap/core", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
+            ["@tiptap/extension-text", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/core", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
             ["@types/tiptap__core", null]\
           ],\
           "packagePeers": [\
@@ -12239,13 +12291,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@tiptap/pm", [\
-        ["npm:2.0.3", {\
-          "packageLocation": "./.yarn/cache/@tiptap-pm-npm-2.0.3-681f5f26f2-7acca1d3da.zip/node_modules/@tiptap/pm/",\
-          "packageDependencies": [\
-            ["@tiptap/pm", "npm:2.0.3"]\
-          ],\
-          "linkType": "SOFT"\
-        }],\
         ["npm:2.1.7", {\
           "packageLocation": "./.yarn/cache/@tiptap-pm-npm-2.1.7-4718843e5f-8de62f8400.zip/node_modules/@tiptap/pm/",\
           "packageDependencies": [\
@@ -12270,55 +12315,24 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["prosemirror-view", "npm:1.31.5"]\
           ],\
           "linkType": "HARD"\
-        }],\
-        ["virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.0.3", {\
-          "packageLocation": "./.yarn/__virtual__/@tiptap-pm-virtual-ad52c19086/0/cache/@tiptap-pm-npm-2.0.3-681f5f26f2-7acca1d3da.zip/node_modules/@tiptap/pm/",\
-          "packageDependencies": [\
-            ["@tiptap/pm", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.0.3"],\
-            ["@tiptap/core", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.1.7"],\
-            ["@types/tiptap__core", null],\
-            ["prosemirror-changeset", "npm:2.2.1"],\
-            ["prosemirror-collab", "npm:1.3.1"],\
-            ["prosemirror-commands", "npm:1.5.2"],\
-            ["prosemirror-dropcursor", "npm:1.8.1"],\
-            ["prosemirror-gapcursor", "npm:1.3.2"],\
-            ["prosemirror-history", "npm:1.3.2"],\
-            ["prosemirror-inputrules", "npm:1.2.1"],\
-            ["prosemirror-keymap", "npm:1.2.2"],\
-            ["prosemirror-markdown", "npm:1.11.1"],\
-            ["prosemirror-menu", "npm:1.2.2"],\
-            ["prosemirror-model", "npm:1.19.2"],\
-            ["prosemirror-schema-basic", "npm:1.2.2"],\
-            ["prosemirror-schema-list", "npm:1.3.0"],\
-            ["prosemirror-state", "npm:1.4.3"],\
-            ["prosemirror-tables", "npm:1.3.4"],\
-            ["prosemirror-trailing-node", "virtual:4718843e5f78c12541805e149b7eb422d68c4d7893f4eaf9d4ef486d467cc03f76a038c248684effb3bd2de213a635a27cba5ade76dd02130b4b1c44a1db3fdf#npm:2.0.4"],\
-            ["prosemirror-transform", "npm:1.7.3"],\
-            ["prosemirror-view", "npm:1.31.5"]\
-          ],\
-          "packagePeers": [\
-            "@tiptap/core",\
-            "@types/tiptap__core"\
-          ],\
-          "linkType": "HARD"\
         }]\
       ]],\
       ["@tiptap/react", [\
-        ["npm:2.0.3", {\
-          "packageLocation": "./.yarn/cache/@tiptap-react-npm-2.0.3-d5061e81ca-904878c403.zip/node_modules/@tiptap/react/",\
+        ["npm:2.1.7", {\
+          "packageLocation": "./.yarn/cache/@tiptap-react-npm-2.1.7-26286d7a3f-4ba79776d6.zip/node_modules/@tiptap/react/",\
           "packageDependencies": [\
-            ["@tiptap/react", "npm:2.0.3"]\
+            ["@tiptap/react", "npm:2.1.7"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.0.3", {\
-          "packageLocation": "./.yarn/__virtual__/@tiptap-react-virtual-a9c373436e/0/cache/@tiptap-react-npm-2.0.3-d5061e81ca-904878c403.zip/node_modules/@tiptap/react/",\
+        ["virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.1.7", {\
+          "packageLocation": "./.yarn/__virtual__/@tiptap-react-virtual-86d80cedb8/0/cache/@tiptap-react-npm-2.1.7-26286d7a3f-4ba79776d6.zip/node_modules/@tiptap/react/",\
           "packageDependencies": [\
-            ["@tiptap/react", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.0.3"],\
-            ["@tiptap/core", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.1.7"],\
-            ["@tiptap/extension-bubble-menu", "virtual:a9c373436e3ea7f9df72439fe2b2289ad38acc1c4fd2026f899ea03e4b7d8be3854930b487ee173df87105f660b6fe13ae3cbfff72d3d0c8325c809e66b9fdd5#npm:2.0.3"],\
-            ["@tiptap/extension-floating-menu", "virtual:a9c373436e3ea7f9df72439fe2b2289ad38acc1c4fd2026f899ea03e4b7d8be3854930b487ee173df87105f660b6fe13ae3cbfff72d3d0c8325c809e66b9fdd5#npm:2.0.3"],\
-            ["@tiptap/pm", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.0.3"],\
+            ["@tiptap/react", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.1.7"],\
+            ["@tiptap/core", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/extension-bubble-menu", "virtual:86d80cedb8664e19d36e9ee42d955d41b50324101798f7e094deec66ebcc0fb22df5eb11fe236725066c5be806278cb67875da19a8e9c1372fc729e7c18ca876#npm:2.1.7"],\
+            ["@tiptap/extension-floating-menu", "virtual:86d80cedb8664e19d36e9ee42d955d41b50324101798f7e094deec66ebcc0fb22df5eb11fe236725066c5be806278cb67875da19a8e9c1372fc729e7c18ca876#npm:2.1.7"],\
+            ["@tiptap/pm", "npm:2.1.7"],\
             ["@types/react", "npm:18.2.13"],\
             ["@types/react-dom", "npm:18.2.6"],\
             ["@types/tiptap__core", null],\
@@ -12340,29 +12354,29 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@tiptap/starter-kit", [\
-        ["npm:2.0.3", {\
-          "packageLocation": "./.yarn/cache/@tiptap-starter-kit-npm-2.0.3-5a424ccbea-89ce4dbf76.zip/node_modules/@tiptap/starter-kit/",\
+        ["npm:2.1.7", {\
+          "packageLocation": "./.yarn/cache/@tiptap-starter-kit-npm-2.1.7-2ce3bcb32c-f89fd425c1.zip/node_modules/@tiptap/starter-kit/",\
           "packageDependencies": [\
-            ["@tiptap/starter-kit", "npm:2.0.3"],\
-            ["@tiptap/core", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
-            ["@tiptap/extension-blockquote", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
-            ["@tiptap/extension-bold", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
-            ["@tiptap/extension-bullet-list", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
-            ["@tiptap/extension-code", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
-            ["@tiptap/extension-code-block", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
-            ["@tiptap/extension-document", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
-            ["@tiptap/extension-dropcursor", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
-            ["@tiptap/extension-gapcursor", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
-            ["@tiptap/extension-hard-break", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
-            ["@tiptap/extension-heading", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
-            ["@tiptap/extension-history", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
-            ["@tiptap/extension-horizontal-rule", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
-            ["@tiptap/extension-italic", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
-            ["@tiptap/extension-list-item", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
-            ["@tiptap/extension-ordered-list", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
-            ["@tiptap/extension-paragraph", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
-            ["@tiptap/extension-strike", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
-            ["@tiptap/extension-text", "virtual:5a424ccbea46f9fdc489d74efefe3317b1cd5d21d546e0788a235d891e69cbbc35bfcfdf79e5fae2eb457cb934dc004d685806db27e79e7ec27831a719b28266#npm:2.0.3"],\
+            ["@tiptap/starter-kit", "npm:2.1.7"],\
+            ["@tiptap/core", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/extension-blockquote", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/extension-bold", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/extension-bullet-list", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/extension-code", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/extension-code-block", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/extension-document", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/extension-dropcursor", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/extension-gapcursor", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/extension-hard-break", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/extension-heading", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/extension-history", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/extension-horizontal-rule", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/extension-italic", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/extension-list-item", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/extension-ordered-list", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/extension-paragraph", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/extension-strike", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
+            ["@tiptap/extension-text", "virtual:2ce3bcb32c2cf79d0dc5fd8d44071a12217d722e7ca7ee3e8c7314787e300483a13d584003351cc93fd0df7ee94bf5ed48b821aeaf1840b61103121d60202009#npm:2.1.7"],\
             ["@tiptap/pm", "npm:2.1.7"]\
           ],\
           "linkType": "HARD"\
