@@ -15,7 +15,7 @@ import {
 import { TRPCClientError } from "@trpc/client";
 import { useSetAtom } from "jotai";
 import { useEffect, useMemo, useState } from "react";
-import { useMutation as urlMutation } from "urql";
+import { useMutation as urlMutation, useMutation } from "urql";
 import { graphql } from "../gql";
 import { usePasskeyAuthFlow, useQRCodeScanner } from "../hooks";
 import { ReactComponent as FingerprintIllustration } from "../illustrations/undraw_fingerprint_login_re_t71l.svg";
@@ -68,7 +68,7 @@ export function SignUpButton() {
 
 function RegisterForm() {
   const [{ fetching, error }, register] = urlMutation(
-    /* GraphQL */ graphql(`
+    graphql(`
       mutation register(
         $userName: String!
         $email: String!
@@ -257,7 +257,7 @@ function SignInViaPasskey() {
 
 function SignInViaPassword() {
   const [{ fetching, error }, register] = urlMutation(
-    /* GraphQL */ graphql(`
+    graphql(`
       mutation loginPassword($email: String!, $password: String!) {
         loginPassword(email: $email, password: $password) {
           token
@@ -410,12 +410,13 @@ function ScanQRCode() {
 }
 
 function SignInViaEmail() {
-  const {
-    mutateAsync: sendLink,
-    isLoading,
-    isSuccess,
-    error,
-  } = trpc.auth.sendMagicLink.useMutation();
+  const [{ fetching, data, error }, sendLink] = useMutation(
+    graphql(`
+      mutation sendEmailLink($email: String!) {
+        sendMagicLink(email: $email)
+      }
+    `)
+  );
 
   return (
     <form
@@ -429,14 +430,10 @@ function SignInViaEmail() {
       }}
     >
       <Alert color="red" hidden={!error}>
-        {error instanceof TRPCClientError && error.data.code === "NOT_FOUND"
-          ? "User with that email does not exist, try signing up first."
-          : error instanceof Error
-          ? error.message
-          : `${error}`}
+        {error?.message}
       </Alert>
 
-      {isSuccess ? (
+      {data?.sendMagicLink ? (
         <>
           <Alert color="green">
             Es wurde eine Email mit einem Login-Link versandt, schau
@@ -462,7 +459,7 @@ function SignInViaEmail() {
               placeholder="Deine Email-Adresse"
             />
 
-            <Button type="submit" disabled={isLoading}>
+            <Button type="submit" disabled={fetching}>
               Link zuschicken
             </Button>
           </Group>

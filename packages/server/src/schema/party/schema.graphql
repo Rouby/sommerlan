@@ -4,6 +4,14 @@ extend type Query {
   nextParty: Party
 }
 
+extend type Mutation {
+  setAttendance(partyId: ID!, dates: [Date!]!): Attending
+  requestRoom(partyId: ID!): Attending
+  recindRoom(partyId: ID!): Attending
+  grantRoom(attendingId: ID!): Attending
+  denyRoom(attendingId: ID!): Attending
+}
+
 type Party {
   id: ID!
   startDate: Date!

@@ -14,7 +14,7 @@ export function Authenticate() {
   const navigate = useNavigate();
 
   const [, loginMagicLink] = useMutation(
-    /* GraphQL */ graphql(`
+    graphql(`
       mutation loginMagicLink($magicLinkId: String!) {
         loginMagicLink(magicLinkId: $magicLinkId) {
           token

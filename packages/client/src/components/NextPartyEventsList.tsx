@@ -315,7 +315,7 @@ function CreateEventForm({
             alignItems: "center",
             gap: theme.spacing.md,
 
-            "& > *:nth-child(2)": {
+            "& > *:nth-of-type(2)": {
               gridColumn: "span 2",
             },
           })}

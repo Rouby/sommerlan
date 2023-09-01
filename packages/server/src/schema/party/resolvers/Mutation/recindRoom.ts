@@ -1,0 +1,2 @@
+import type   { MutationResolvers } from './../../../types.generated';
+        export const recindRoom: NonNullable<MutationResolvers['recindRoom']> = async (_parent, _arg, _ctx) => { /* Implement Mutation.recindRoom resolver logic here */ };

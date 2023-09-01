@@ -1,0 +1,2 @@
+import type   { MutationResolvers } from './../../../types.generated';
+        export const requestRoom: NonNullable<MutationResolvers['requestRoom']> = async (_parent, _arg, _ctx) => { /* Implement Mutation.requestRoom resolver logic here */ };

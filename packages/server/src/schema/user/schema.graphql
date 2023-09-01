@@ -1,5 +1,7 @@
 extend type Query {
   me: User
+
+  users: [User!]!
 }
 
 extend type Mutation {
@@ -10,7 +12,11 @@ extend type Mutation {
   ): RegisterResponse!
 
   generatePasskeyRegisterOptions(userId: String!): JSON!
-  registerPasskey(userId: String!, name: String!, response: JSON!): JSON!
+  registerPasskey(
+    userId: String!
+    name: String!
+    response: JSON!
+  ): RegisterDeviceResponse!
 
   generatePasskeyLoginOptions(userId: String): JSON!
   loginPasskey(response: JSON!): LoginResponse!
@@ -21,6 +27,9 @@ extend type Mutation {
   loginMagicLink(magicLinkId: String!): AuthResponse!
 
   refreshLogin(refreshToken: String!): AuthResponse!
+
+  updateAuthDevice(id: ID!, name: String!): AuthDevice!
+  deleteAuthDevice(id: ID!): AuthDevice!
 }
 
 type AuthResponse {
@@ -40,6 +49,11 @@ type LoginResponse {
   refreshToken: String!
 }
 
+type RegisterDeviceResponse {
+  token: String!
+  device: AuthDevice!
+}
+
 type User {
   id: ID!
   name: String!
@@ -47,6 +61,14 @@ type User {
   email: String!
   avatar: String!
   avatarUrl: String
+  devices: [AuthDevice!]!
+}
+
+type AuthDevice {
+  id: ID!
+  name: String!
+  createdAt: DateTime
+  lastUsedAt: DateTime
 }
 
 extend type Attending {

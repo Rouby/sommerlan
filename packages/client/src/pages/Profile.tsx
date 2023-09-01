@@ -8,8 +8,8 @@ import {
   Container,
   Group,
   Input,
-  Loader,
   Modal,
+  Skeleton,
   Space,
   Stack,
   Text,
@@ -20,7 +20,9 @@ import { IconEdit, IconKey, IconTrashX } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useRef, useState } from "react";
+import { useMutation, useQuery } from "urql";
 import { CardWithHeader, CreatePasskeyFlow } from "../components";
+import { graphql } from "../gql";
 import { useUploadFileMutation } from "../hooks";
 import { tokenAtom, userAtom } from "../state";
 import { formatDate, trpc } from "../utils";
@@ -160,7 +162,21 @@ function ProfileSettings() {
 }
 
 function PasskeySettings() {
-  const { data: devices, isLoading } = trpc.user.devices.useQuery();
+  const [{ data }] = useQuery({
+    query: graphql(`
+      query myDevices {
+        me {
+          id
+          devices {
+            id
+            name
+            createdAt
+            lastUsedAt
+          }
+        }
+      }
+    `),
+  });
 
   const [showPasskeyOptions, setShowPasskeyOptions] = useState(false);
 
@@ -173,21 +189,17 @@ function PasskeySettings() {
         </Button>
       }
     >
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <Stack p="xs" spacing="xs">
-          {devices?.map((device, idx) => (
-            <DeviceInfos
-              key={idx}
-              name={device.name}
-              createdAt={device.createdAt}
-              lastUsedAt={device.lastUsedAt}
-              credentialID={device.credentialID}
-            />
-          ))}
-        </Stack>
-      )}
+      <Stack p="xs" spacing="xs">
+        {data?.me?.devices.map((device, idx) => (
+          <DeviceInfos
+            key={idx}
+            id={device.id}
+            name={device.name}
+            createdAt={device.createdAt}
+            lastUsedAt={device.lastUsedAt}
+          />
+        )) ?? <Skeleton />}
+      </Stack>
 
       <Modal
         size="lg"
@@ -202,39 +214,38 @@ function PasskeySettings() {
 }
 
 function DeviceInfos({
+  id,
   name,
   createdAt,
   lastUsedAt,
-  credentialID,
 }: {
+  id: string;
   name?: string;
   createdAt?: string;
   lastUsedAt?: string;
-  credentialID: number[];
 }) {
   const [edit, setEdit] = useState(false);
 
-  const context = trpc.useContext();
-  const { mutateAsync: updateDevice, isLoading } =
-    trpc.user.updateDevice.useMutation({
-      onSuccess: (newDevice) =>
-        context.user.devices.setData(undefined, (prev) =>
-          prev?.map((device) =>
-            device.credentialID.join(",") === credentialID.join(",")
-              ? newDevice
-              : device
-          )
-        ),
-    });
-  const { mutateAsync: deleteDevice, isLoading: isDeleting } =
-    trpc.user.deleteDevice.useMutation({
-      onSuccess: () =>
-        context.user.devices.setData(undefined, (prev) =>
-          prev?.filter(
-            (device) => device.credentialID.join(",") !== credentialID.join(",")
-          )
-        ),
-    });
+  const [{ fetching: isUpdating }, updateDevice] = useMutation(
+    graphql(`
+      mutation updateAuthDevice($id: ID!, $name: String!) {
+        updateAuthDevice(id: $id, name: $name) {
+          id
+          name
+        }
+      }
+    `)
+  );
+  const [{ fetching: isDeleting }, deleteDevice] = useMutation(
+    graphql(`
+      mutation deleteAuthDevice($id: ID!) {
+        deleteAuthDevice(id: $id) {
+          id
+          name
+        }
+      }
+    `)
+  );
 
   return (
     <form
@@ -244,7 +255,7 @@ function DeviceInfos({
 
         const deviceName = form["deviceName"].value;
 
-        await updateDevice({ credentialID, name: deviceName });
+        await updateDevice({ id, name: deviceName });
 
         setEdit(false);
       }}
@@ -259,7 +270,7 @@ function DeviceInfos({
               sx={{ flex: 1 }}
               defaultValue={name}
               placeholder="Unnamed passkey"
-              disabled={isLoading}
+              disabled={isUpdating}
             />
           </>
         ) : (
@@ -283,8 +294,7 @@ function DeviceInfos({
               >
                 {name ?? "Unnamed passkey"}
               </Text>
-              {localStorage.getItem("credentialID") ===
-                credentialID.join(",") && (
+              {localStorage.getItem("credentialID") === id && (
                 <Badge color="gray">Von diesem Browser benutzt</Badge>
               )}
             </Box>
@@ -306,10 +316,10 @@ function DeviceInfos({
         <Group noWrap>
           {edit ? (
             <>
-              <Button type="submit" loading={isLoading}>
+              <Button type="submit" loading={isUpdating}>
                 Speichern
               </Button>
-              <Button onClick={() => setEdit(false)} disabled={isLoading}>
+              <Button onClick={() => setEdit(false)} disabled={isUpdating}>
                 Abbrechen
               </Button>
             </>
@@ -327,7 +337,7 @@ function DeviceInfos({
                 variant="light"
                 color="red"
                 loading={isDeleting}
-                onClick={() => deleteDevice({ credentialID })}
+                onClick={() => deleteDevice({ id })}
               >
                 <IconTrashX size={16} />
               </ActionIcon>

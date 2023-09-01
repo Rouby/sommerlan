@@ -14,7 +14,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import weekday from "dayjs/plugin/weekday";
 import { Provider, useAtom, useAtomValue } from "jotai";
 import jwtDecode from "jwt-decode";
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import {
   Client,
   Operation,
@@ -100,6 +100,8 @@ export function App() {
 function Urql({ children }: { children: React.ReactNode }) {
   const [token, setToken] = useAtom(tokenAtom);
   const [refreshToken, setRefreshToken] = useAtom(refreshTokenAtom);
+  const authState = useRef({ token, refreshToken });
+  authState.current = { token, refreshToken };
 
   const gqlClient = useMemo(
     () =>
@@ -116,14 +118,63 @@ function Urql({ children }: { children: React.ReactNode }) {
                 },
               },
             },
+            updates: {
+              Mutation: {
+                register: (result, _args, cache) => {
+                  if (
+                    typeof result.register === "object" &&
+                    result.register &&
+                    "user" in result.register &&
+                    result.register?.user
+                  ) {
+                    const users = cache.resolve("Query", "users");
+                    if (Array.isArray(users)) {
+                      users.push(result.register.user);
+                      cache.link("Query", "users", users as any[]);
+                    }
+                  }
+                },
+                registerPasskey: (result, args, cache, _info) => {
+                  if (
+                    typeof result.registerPasskey === "object" &&
+                    result.registerPasskey &&
+                    "device" in result.registerPasskey &&
+                    result.registerPasskey?.device
+                  ) {
+                    const devices = cache.resolve(
+                      { __typename: "User", id: `${args.userId}` },
+                      "devices"
+                    ) as unknown[];
+                    cache.link(
+                      { __typename: "User", id: `${args.userId}` },
+                      "devices",
+                      [...devices, result.registerPasskey.device]
+                    );
+                  }
+                },
+              },
+            },
+            optimistic: {
+              setAttendance: (args, _cache, info) => {
+                return {
+                  __typename: "Attending",
+                  id: info.variables.attendingId,
+                  dates: args.dates,
+                };
+              },
+            },
           }),
           authExchange(async (utils) => {
             return {
               addAuthToOperation(operation) {
-                if (!token || isOperationWithoutAuth(operation))
+                if (
+                  !authState.current.token ||
+                  isOperationWithoutAuth(operation)
+                ) {
                   return operation;
+                }
                 return utils.appendHeaders(operation, {
-                  Authorization: `Bearer ${token}`,
+                  Authorization: `Bearer ${authState.current.token}`,
                 });
               },
               didAuthError(error, _operation) {
@@ -147,9 +198,9 @@ function Urql({ children }: { children: React.ReactNode }) {
                 });
               },
               async refreshAuth() {
-                if (refreshToken) {
+                if (authState.current.refreshToken) {
                   const result = await utils.mutate(
-                    /* GraphQL */ graphql(`
+                    graphql(`
                       mutation refreshLogin($refreshToken: String!) {
                         refreshLogin(refreshToken: $refreshToken) {
                           token
@@ -157,12 +208,14 @@ function Urql({ children }: { children: React.ReactNode }) {
                         }
                       }
                     `),
-                    { refreshToken }
+                    { refreshToken: authState.current.refreshToken }
                   );
 
                   if (result.data?.refreshLogin) {
                     setToken(result.data.refreshLogin.token);
                     setRefreshToken(result.data.refreshLogin.refreshToken);
+
+                    authState.current = result.data.refreshLogin;
 
                     return;
                   }
@@ -173,22 +226,27 @@ function Urql({ children }: { children: React.ReactNode }) {
               willAuthError(operation) {
                 if (isOperationWithoutAuth(operation)) {
                   return false;
-                } else {
-                  try {
-                    const decoded = jwtDecode(token!) as { exp: number };
-
-                    return dayjs()
-                      .add(1, "minute")
-                      .isAfter(dayjs.unix(decoded.exp));
-                  } catch {}
-                  return false;
                 }
+
+                try {
+                  const decoded = jwtDecode(authState.current.token!) as {
+                    exp: number;
+                  };
+
+                  return dayjs()
+                    .add(1, "minute")
+                    .isAfter(dayjs.unix(decoded.exp));
+                } catch {}
+
+                return false;
               },
             };
 
             function logout() {
               setToken(null);
               setRefreshToken(null);
+
+              authState.current = { token: null, refreshToken: null };
             }
 
             function isOperationWithoutAuth(operation: Operation) {
@@ -219,9 +277,9 @@ function Urql({ children }: { children: React.ReactNode }) {
           }),
           fetchExchange,
         ],
-        requestPolicy: "cache-first",
+        requestPolicy: "cache-and-network",
       }),
-    [token, refreshToken]
+    []
   );
 
   return <UrqlProvider value={gqlClient}>{children}</UrqlProvider>;

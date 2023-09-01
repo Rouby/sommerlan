@@ -39,18 +39,24 @@ export const registerPasskey: NonNullable<
       const { credentialPublicKey, credentialID, counter } =
         verification.registrationInfo;
 
-      user.devices.push({
+      const device = {
         name,
         createdAt: new Date().toISOString(),
         credentialPublicKey: Array.from(credentialPublicKey),
         credentialID: Array.from(credentialID),
         counter,
         transports: response.response.transports,
-      });
+      };
+      user.devices.push(device);
       await user.save();
 
-      return signToken(user);
+      return {
+        device,
+        token: await signToken(user),
+      };
     }
+
+    throw createGraphQLError("Registration failed");
   } finally {
     issuedChallenges.delete(expectedChallenge);
   }

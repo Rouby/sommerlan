@@ -10,14 +10,14 @@ export function usePasskeyAuthFlow() {
   const setRefreshToken = useSetAtom(refreshTokenAtom);
 
   const [, generateLoginOptions] = useMutation(
-    /* GraphQL */ graphql(`
+    graphql(`
       mutation generateLoginOptions($userId: String) {
         generatePasskeyLoginOptions(userId: $userId)
       }
     `)
   );
   const [, loginPasskey] = useMutation(
-    /* GraphQL */ graphql(`
+    graphql(`
       mutation loginPasskey($response: JSON!) {
         loginPasskey(response: $response) {
           token

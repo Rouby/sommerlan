@@ -21,7 +21,7 @@ export function PartyInfo({ id }: { id: string }) {
   const user = useAtomValue(userAtom)!;
 
   const [{ data, fetching }] = useQuery({
-    query: graphql(/* GraphQL */ `
+    query: graphql(`
       query party($id: ID!) {
         party(id: $id) {
           id

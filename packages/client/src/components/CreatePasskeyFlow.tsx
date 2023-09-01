@@ -1,51 +1,17 @@
 import { Alert, Box, Button, Group, Text } from "@mantine/core";
-import { startRegistration } from "@simplewebauthn/browser";
-import { useMutation } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
-import { useAtomValue, useSetAtom } from "jotai";
+import { usePasskeyCreateFlow } from "../hooks/usePasskeyCreateFlow";
 import { ReactComponent as FingerprintIllustration } from "../illustrations/undraw_fingerprint_login_re_t71l.svg";
 import { ReactComponent as OrderConfirmedIllustration } from "../illustrations/undraw_order_confirmed_re_g0if.svg";
-import { tokenAtom, userAtom } from "../state";
-import { trpc } from "../utils";
 
 export function CreatePasskeyFlow() {
-  const user = useAtomValue(userAtom);
-  const setToken = useSetAtom(tokenAtom);
-
-  const { mutateAsync: generateRegistrationOptions } =
-    trpc.auth.generateRegistrationOptions.useMutation();
-  const { mutateAsync: registerPasskey } =
-    trpc.auth.registerPasskey.useMutation();
-
-  const context = trpc.useContext();
   const {
     mutate: createPasskey,
     error,
     reset,
     isLoading,
     isSuccess,
-  } = useMutation({
-    mutationFn: async () => {
-      if (!user) return;
-
-      const options = await generateRegistrationOptions({
-        userID: user.id,
-      });
-
-      const response = await startRegistration(options);
-
-      const token = await registerPasskey({
-        name: navigator.userAgent,
-        userID: user.id,
-        response,
-      });
-
-      if (token) setToken(token);
-    },
-    onSuccess: () => {
-      context.user.devices.invalidate();
-    },
-  });
+  } = usePasskeyCreateFlow();
 
   return (
     <>

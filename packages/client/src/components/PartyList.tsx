@@ -39,7 +39,7 @@ export function PartyList() {
   const ability = useAtomValue(abilityAtom);
 
   const [{ data, fetching }] = useQuery({
-    query: graphql(/* GraphQL */ `
+    query: graphql(`
       query parties {
         parties {
           __typename
@@ -174,7 +174,7 @@ export function PartyList() {
 
 export function PartyRowStandalone({ id }: { id: string }) {
   const [{ data, fetching }] = useQuery({
-    query: graphql(/* GraphQL */ `
+    query: graphql(`
       query partyRow($id: ID!) {
         party(id: $id) {
           id

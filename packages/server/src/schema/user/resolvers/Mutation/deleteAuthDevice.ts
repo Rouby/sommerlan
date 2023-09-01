@@ -1,0 +1,2 @@
+import type   { MutationResolvers } from './../../../types.generated';
+        export const deleteAuthDevice: NonNullable<MutationResolvers['deleteAuthDevice']> = async (_parent, _arg, _ctx) => { /* Implement Mutation.deleteAuthDevice resolver logic here */ };
