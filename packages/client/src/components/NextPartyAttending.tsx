@@ -33,7 +33,7 @@ import { useMutation, useQuery } from "urql";
 import { Can, UserAvatar } from ".";
 import { graphql } from "../gql";
 import { userAtom } from "../state";
-import { formatRange, trpc } from "../utils";
+import { formatRange } from "../utils";
 
 export function NextPartyAttending() {
   return (
@@ -302,7 +302,10 @@ function Attendings() {
       mutation setAttendance($partyId: ID!, $dates: [Date!]!) {
         setAttendance(partyId: $partyId, dates: $dates) {
           id
-          dates
+          attendings {
+            id
+            dates
+          }
         }
       }
     `)
@@ -383,7 +386,7 @@ function Attendings() {
               <Checkbox value={date.format("YYYY-MM-DD")} />
 
               <AddUserMenu
-                usersAttending={attendingsOnDate.map((att) => att.user)}
+                attendings={nextParty.attendings}
                 partyId={nextParty.id}
                 date={date.format("YYYY-MM-DD")}
               />
@@ -428,11 +431,11 @@ function Attendings() {
 function AddUserMenu({
   partyId,
   date,
-  usersAttending,
+  attendings,
 }: {
   partyId: string;
   date: string;
-  usersAttending: { id: string }[];
+  attendings: { id: string; dates: string[]; user: { id: string } }[];
 }) {
   const [addUserOpen, setAddUserOpen] = useState(false);
 
@@ -453,11 +456,7 @@ function AddUserMenu({
 
         <Menu.Dropdown sx={{ overflow: "hidden auto", maxHeight: 340 }}>
           <Menu.Label>Nutzer</Menu.Label>
-          <MenuOptions
-            usersAttending={usersAttending}
-            partyId={partyId}
-            date={date}
-          />
+          <MenuOptions attendings={attendings} partyId={partyId} date={date} />
 
           <Box
             sx={(theme) => ({
@@ -573,11 +572,11 @@ function AddUserForm({ onAdd }: { onAdd: () => void }) {
 function MenuOptions({
   partyId,
   date,
-  usersAttending,
+  attendings,
 }: {
   partyId: string;
   date: string;
-  usersAttending: { id: string }[];
+  attendings: { id: string; dates: string[]; user: { id: string } }[];
 }) {
   const [{ data, fetching }] = useQuery({
     query: graphql(`
@@ -598,7 +597,7 @@ function MenuOptions({
         <MenuItem
           key={user.id}
           user={user}
-          attending={usersAttending.some((att) => att.id === user.id)}
+          attending={attendings.find((att) => att.user.id === user.id)}
           partyId={partyId}
           date={date}
         />
@@ -615,32 +614,49 @@ function MenuItem({
 }: {
   partyId: string;
   date: string;
-  attending: boolean;
+  attending?: { id: string; dates: string[]; user: { id: string } };
   user: { id: string; avatar: string; displayName: string };
 }) {
-  const context = trpc.useContext();
-  const { mutateAsync: attend, isLoading } = trpc.party.attend.useMutation({
-    onSuccess: (data) => {
-      context.party.nextParty.setData(
-        void 0,
-        (prev) =>
-          prev && {
-            ...prev,
-            attendings: data,
+  const [{ fetching }, setAttendance] = useMutation(
+    graphql(`
+      mutation setOthersAttendance(
+        $partyId: ID!
+        $userId: ID
+        $dates: [Date!]!
+      ) {
+        setAttendance(partyId: $partyId, userId: $userId, dates: $dates) {
+          id
+          attendings {
+            id
+            dates
           }
-      );
-    },
-  });
+        }
+      }
+    `)
+  );
 
   return (
     <Menu.Item
       icon={<UserAvatar user={user} size={32} />}
       onClick={() =>
-        attend({ partyId, date, attending: !attending, userId: user.id })
+        setAttendance({
+          partyId,
+          dates: (attending?.dates.includes(date)
+            ? attending.dates.filter((d) => d !== date)
+            : [...(attending?.dates ?? []), date]
+          ).sort(),
+          userId: user.id,
+          // @ts-expect-error
+          attendingId: attending?.id,
+        })
       }
       closeMenuOnClick={false}
       rightSection={
-        isLoading ? <Loader size={24} /> : attending ? <IconCheck /> : null
+        fetching ? (
+          <Loader size={24} />
+        ) : attending?.dates.includes(date) ? (
+          <IconCheck />
+        ) : null
       }
     >
       {user.displayName}

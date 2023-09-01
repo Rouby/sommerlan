@@ -5,7 +5,7 @@ extend type Query {
 }
 
 extend type Mutation {
-  setAttendance(partyId: ID!, dates: [Date!]!): Attending
+  setAttendance(partyId: ID!, userId: ID, dates: [Date!]!): Party!
   requestRoom(partyId: ID!): Attending
   recindRoom(partyId: ID!): Attending
   grantRoom(attendingId: ID!): Attending

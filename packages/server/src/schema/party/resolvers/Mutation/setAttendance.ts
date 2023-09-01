@@ -1,12 +1,19 @@
-import { Attending } from "../../../../data";
+import { createGraphQLError } from "graphql-yoga";
+import { Attending, Party } from "../../../../data";
 import type { MutationResolvers } from "./../../../types.generated";
 
 export const setAttendance: NonNullable<
   MutationResolvers["setAttendance"]
-> = async (_parent, { partyId, dates }, ctx) => {
+> = async (_parent, { partyId, userId, dates }, ctx) => {
+  const party = await Party.findById(partyId);
+
+  if (!party) {
+    throw createGraphQLError("Party not found");
+  }
+
   const attending =
-    (await Attending.findByPartyIdAndUserId(partyId, ctx.jwt.sub)) ??
-    new Attending({ partyId, userId: ctx.jwt.sub });
+    (await Attending.findByPartyIdAndUserId(partyId, userId ?? ctx.jwt.sub)) ??
+    new Attending({ partyId, userId: userId ?? ctx.jwt.sub });
 
   attending.dates = dates.map((date) =>
     typeof date === "string" ? date : date.toISOString().substring(0, 10)
@@ -14,5 +21,5 @@ export const setAttendance: NonNullable<
 
   await attending.save();
 
-  return attending;
+  return party;
 };

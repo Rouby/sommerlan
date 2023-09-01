@@ -157,9 +157,14 @@ function Urql({ children }: { children: React.ReactNode }) {
             optimistic: {
               setAttendance: (args, _cache, info) => {
                 return {
-                  __typename: "Attending",
-                  id: info.variables.attendingId,
-                  dates: args.dates,
+                  __typename: "Party",
+                  attendings: [
+                    {
+                      __typename: "Attending",
+                      id: info.variables.attendingId,
+                      dates: args.dates,
+                    },
+                  ],
                 };
               },
             },
