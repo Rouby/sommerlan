@@ -7045,7 +7045,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@graphql-codegen/typescript-resolvers", "virtual:7890453314191becf8a71a774958909b60ff666a955312bbdad2e7b756426d9f9cfd63e3cc391679624078e67405e84e13e2dc90129c41cb8473244ec86f2c65#npm:4.0.1"],\
             ["@types/graphql", null],\
             ["graphql", "npm:16.8.0"],\
-            ["ts-morph", "npm:19.0.0"]\
+            ["graphql-scalars", "virtual:f9aaeb0ff5026b521d6a9b424ffbc3c34990b6972b440282c9eb836880cb71f3dfd141e9455e392c98abc5918762c91d12bf17451df331903d8e149b2f873a01#npm:1.22.2"],\
+            ["ts-morph", "npm:19.0.0"],\
+            ["tslib", "npm:2.6.2"]\
           ],\
           "packagePeers": [\
             "@types/graphql",\
@@ -16144,11 +16146,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["follow-redirects", "virtual:e278873748b4e9d158db595d2f6cb0351c74052f52b53924aec4d9299e7b6babfb62aead374cf2f6e453bc8bea3b052380dc6b1137a162bbfc102bbb1c8cac42#npm:1.15.2"],\
             ["@types/debug", null],\
-            ["debug", null]\
+            ["debug", "virtual:943379a3fb7a8f8a46cbf3db9430d83e3fbf355972a42717c29ffa7ad0b781d4b49cbfe149a34675846d588c0e8b08549f0d646881bc26268edf71060c10f336#npm:4.3.4"]\
           ],\
           "packagePeers": [\
-            "@types/debug",\
-            "debug"\
+            "@types/debug"\
           ],\
           "linkType": "HARD"\
         }]\
