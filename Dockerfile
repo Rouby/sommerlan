@@ -24,6 +24,7 @@ FROM build as client-build
 ENV NEW_RELIC_LOADER_CONFIG $NEW_RELIC_LOADER_CONFIG
 ENV NEW_RELIC_INFO $NEW_RELIC_INFO
 ADD ./packages/client ./packages/client
+ADD ./packages/server/src/schema ./packages/server/src/schema
 RUN yarn workspace @sommerlan-app/client build
 
 
