@@ -73,9 +73,7 @@ function ScanQRCode({
     <Group position="center">
       <LoadingOverlay visible={isLoading} />
 
-      <Text>
-        Scanne diesen Code mit einem Gerät auf dem du bereits eingeloggt bist
-      </Text>
+      <Text>Scanne einen Code</Text>
 
       <video ref={video} width={300} />
     </Group>

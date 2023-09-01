@@ -37,6 +37,8 @@ export class User extends Base {
 
   public avatarUrl = "";
 
+  public password = "";
+
   get avatar() {
     if (this.avatarUrl) return this.avatarUrl;
 

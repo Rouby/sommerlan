@@ -46,7 +46,12 @@ export function createServer(opts: ServerOptions) {
       typeDefs,
       resolvers,
     }),
-    logging: logger,
+    logging: {
+      debug: (...args) => args.forEach((arg) => server.log.debug(arg)),
+      info: (...args) => args.forEach((arg) => server.log.info(arg)),
+      warn: (...args) => args.forEach((arg) => server.log.warn(arg)),
+      error: (...args) => args.forEach((arg) => server.log.error(arg)),
+    },
     plugins: [
       useJWT({
         issuer: expectedOrigin,
@@ -69,15 +74,14 @@ export function createServer(opts: ServerOptions) {
     url: yoga.graphqlEndpoint,
     method: ["GET", "POST", "OPTIONS"],
     handler: async (req, reply) => {
-      // Second parameter adds Fastify's `req` and `reply` to the GraphQL Context
-      const response = await yoga.handleNodeRequest(req);
+      const response = await yoga.handleNodeRequest(req, { req, reply });
       response.headers.forEach((value, key) => {
         reply.header(key, value);
       });
 
       reply.status(response.status);
 
-      reply.send(response.body);
+      reply.send(console.log(await response.text()));
 
       return reply;
     },

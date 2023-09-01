@@ -2,6 +2,34 @@ extend type Query {
   me: User
 }
 
+extend type Mutation {
+  register(
+    userName: String!
+    email: String!
+    password: String
+  ): RegisterResponse!
+
+  generatePasskeyRegisterOptions(userId: String!): JSON!
+  registerPasskey(userId: String!, name: String!, response: JSON!): JSON!
+
+  generatePasskeyLoginOptions(userId: String): JSON!
+  loginPasskey(response: JSON!): LoginResponse!
+  loginPassword(email: String!, password: String!): JWT!
+
+  sendMagicLink(email: String!): Boolean!
+  loginWithMagicLink(magicLinkId: String!): JWT!
+}
+
+type RegisterResponse {
+  user: User!
+  token: String!
+}
+
+type LoginResponse {
+  credentialID: [Int!]!
+  token: String!
+}
+
 type User {
   id: ID!
   name: String!

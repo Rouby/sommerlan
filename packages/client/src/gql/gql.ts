@@ -16,6 +16,10 @@ const documents = {
     "\n      query party($id: ID!) {\n        party(id: $id) {\n          id\n          startDate\n          endDate\n          attendings {\n            id\n            dates\n            user {\n              id\n              displayName\n              avatar\n            }\n          }\n        }\n      }\n    ": types.PartyDocument,
     "\n      query parties {\n        parties {\n          __typename\n          id\n          startDate\n          endDate\n          location\n          roomsAvailable\n          attendings {\n            id\n            dates\n            user {\n              id\n              displayName\n              avatar\n            }\n          }\n        }\n      }\n    ": types.PartiesDocument,
     "\n      query partyRow($id: ID!) {\n        party(id: $id) {\n          id\n          startDate\n          endDate\n          location\n          attendings {\n            id\n            dates\n            user {\n              id\n              displayName\n              avatar\n            }\n          }\n        }\n      }\n    ": types.PartyRowDocument,
+    "\n      mutation register(\n        $userName: String!\n        $email: String!\n        $password: String\n      ) {\n        register(userName: $userName, email: $email, password: $password) {\n          token\n        }\n      }\n    ": types.RegisterDocument,
+    "\n      mutation loginPassword($email: String!, $password: String!) {\n        loginPassword(email: $email, password: $password)\n      }\n    ": types.LoginPasswordDocument,
+    "\n      mutation generateLoginOptions($userId: String) {\n        generatePasskeyLoginOptions(userId: $userId)\n      }\n    ": types.GenerateLoginOptionsDocument,
+    "\n      mutation loginPasskey($response: JSON!) {\n        loginPasskey(response: $response) {\n          token\n          credentialID\n        }\n      }\n    ": types.LoginPasskeyDocument,
 };
 
 /**
@@ -44,6 +48,22 @@ export function graphql(source: "\n      query parties {\n        parties {\n   
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n      query partyRow($id: ID!) {\n        party(id: $id) {\n          id\n          startDate\n          endDate\n          location\n          attendings {\n            id\n            dates\n            user {\n              id\n              displayName\n              avatar\n            }\n          }\n        }\n      }\n    "): (typeof documents)["\n      query partyRow($id: ID!) {\n        party(id: $id) {\n          id\n          startDate\n          endDate\n          location\n          attendings {\n            id\n            dates\n            user {\n              id\n              displayName\n              avatar\n            }\n          }\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      mutation register(\n        $userName: String!\n        $email: String!\n        $password: String\n      ) {\n        register(userName: $userName, email: $email, password: $password) {\n          token\n        }\n      }\n    "): (typeof documents)["\n      mutation register(\n        $userName: String!\n        $email: String!\n        $password: String\n      ) {\n        register(userName: $userName, email: $email, password: $password) {\n          token\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      mutation loginPassword($email: String!, $password: String!) {\n        loginPassword(email: $email, password: $password)\n      }\n    "): (typeof documents)["\n      mutation loginPassword($email: String!, $password: String!) {\n        loginPassword(email: $email, password: $password)\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      mutation generateLoginOptions($userId: String) {\n        generatePasskeyLoginOptions(userId: $userId)\n      }\n    "): (typeof documents)["\n      mutation generateLoginOptions($userId: String) {\n        generatePasskeyLoginOptions(userId: $userId)\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      mutation loginPasskey($response: JSON!) {\n        loginPasskey(response: $response) {\n          token\n          credentialID\n        }\n      }\n    "): (typeof documents)["\n      mutation loginPasskey($response: JSON!) {\n        loginPasskey(response: $response) {\n          token\n          credentialID\n        }\n      }\n    "];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

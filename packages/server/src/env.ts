@@ -1,5 +1,8 @@
 export const expectedOrigin = process.env.APP_ORIGIN ?? "http://localhost:5173";
 
+export const rpID =
+  expectedOrigin.match(/^https?:\/\/(.*?)\/?(:\d+)?$/)?.[1] ?? "localhost";
+
 const originToEnv = {
   "https://sommerlan.rocks": "production",
   "https://staging.sommerlan.rocks": "staging",

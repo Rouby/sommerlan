@@ -7,15 +7,17 @@ import {
   LoadingOverlay,
   MediaQuery,
   Modal,
+  PasswordInput,
   Stack,
   Text,
+  TextInput,
 } from "@mantine/core";
-import { startAuthentication } from "@simplewebauthn/browser";
-import { useMutation } from "@tanstack/react-query";
 import { TRPCClientError } from "@trpc/client";
 import { useSetAtom } from "jotai";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useQRCodeScanner } from "../hooks";
+import { useEffect, useMemo, useState } from "react";
+import { useMutation as urlMutation } from "urql";
+import { graphql } from "../gql";
+import { usePasskeyAuthFlow, useQRCodeScanner } from "../hooks";
 import { ReactComponent as FingerprintIllustration } from "../illustrations/undraw_fingerprint_login_re_t71l.svg";
 import { ReactComponent as MessageSentIllustration } from "../illustrations/undraw_message_sent_re_q2kl.svg";
 import { ReactComponent as SignUpIllustration } from "../illustrations/undraw_sign_up_n6im.svg";
@@ -65,11 +67,19 @@ export function SignUpButton() {
 }
 
 function RegisterForm() {
-  const {
-    mutateAsync: register,
-    isLoading,
-    error,
-  } = trpc.auth.register.useMutation();
+  const [{ fetching, error }, register] = urlMutation(
+    /* GraphQL */ graphql(`
+      mutation register(
+        $userName: String!
+        $email: String!
+        $password: String
+      ) {
+        register(userName: $userName, email: $email, password: $password) {
+          token
+        }
+      }
+    `)
+  );
 
   const [signInFromOtherDevice, setSignInFromOtherDevice] = useState(false);
 
@@ -87,14 +97,19 @@ function RegisterForm() {
 
         const userName = form["username"].value;
         const email = form["email"].value;
+        const password = form["new-password"].value;
 
-        const { token } = await register({ userName, email });
+        const { data } = await register({ userName, email, password });
 
-        setToken(token);
+        if (data?.register.token) {
+          setToken(data.register.token);
+        }
       }}
     >
       <Alert mb="md" hidden={!error} color="red">
-        {error instanceof TRPCClientError && error.data.code === "NOT_FOUND"
+        {error?.graphQLErrors?.some(
+          (gql) => gql.extensions.code === "PASSKEY_NOT_FOUND"
+        )
           ? "Der Passkey ist auf dieser Seite nicht vorhanden."
           : `${error?.message}`}
       </Alert>
@@ -113,23 +128,39 @@ function RegisterForm() {
         </MediaQuery>
 
         <Stack>
-          <Input required name="username" placeholder="Dein Nutzername" />
-
-          <Input
+          <TextInput
             required
+            withAsterisk
+            label="Nutzername"
+            name="username"
+            placeholder="Dein Nutzername"
+          />
+
+          <TextInput
+            required
+            withAsterisk
+            label="Email"
             type="email"
             name="email"
             placeholder="Deine Email-Adresse"
           />
 
+          <PasswordInput
+            name="new-password"
+            autoComplete="new-password"
+            label="Optionales Passwort"
+            description="Das Passwort wird im Klartext gespeichert!"
+            placeholder="Dein Passwort"
+          />
+
           <Group>
-            <Button type="submit" disabled={isLoading}>
+            <Button type="submit" disabled={fetching}>
               Anmelden
             </Button>
 
             <Button
               variant="subtle"
-              disabled={isLoading}
+              disabled={fetching}
               onClick={() => setSignInFromOtherDevice(true)}
             >
               Mit einem anderen Gerät anmelden
@@ -143,11 +174,16 @@ function RegisterForm() {
 
 function LoginForm() {
   const [signInViaPasskey, setSignInViaPasskey] = useState(false);
+  const [signInViaPassword, setSignInViaPassword] = useState(false);
   const [signInFromOtherDevice, setSignInFromOtherDevice] = useState(false);
   const [signInViaEmail, setSignInViaEmail] = useState(false);
 
   if (signInViaPasskey) {
     return <SignInViaPasskey />;
+  }
+
+  if (signInViaPassword) {
+    return <SignInViaPassword />;
   }
 
   if (signInFromOtherDevice) {
@@ -178,6 +214,9 @@ function LoginForm() {
           <Button onClick={() => setSignInViaPasskey(true)}>
             Mit Passkey anmelden
           </Button>
+          <Button variant="subtle" onClick={() => setSignInViaPassword(true)}>
+            Mit Passwort anmelden
+          </Button>
           <Button
             variant="subtle"
             onClick={() => setSignInFromOtherDevice(true)}
@@ -194,38 +233,7 @@ function LoginForm() {
 }
 
 function SignInViaPasskey() {
-  const setToken = useSetAtom(tokenAtom);
-
-  const { mutateAsync: generateLoginOptions } =
-    trpc.auth.generateLoginOptions.useMutation();
-  const { mutateAsync: login } = trpc.auth.login.useMutation();
-
-  const { mutate, isLoading, error } = useMutation({
-    mutationFn: async () => {
-      const { options } = await generateLoginOptions({});
-
-      const response = await startAuthentication(options);
-
-      const info = await login({ response });
-
-      if (info) {
-        setToken(info.token);
-        localStorage.setItem("credentialID", info.credentialID.join(","));
-      }
-    },
-  });
-
-  const isRequesting = useRef(false);
-  useEffect(() => {
-    if (isRequesting.current) return;
-    isRequesting.current = true;
-
-    mutate();
-
-    return () => {
-      isRequesting.current = false;
-    };
-  }, [mutate]);
+  const { isLoading, error } = usePasskeyAuthFlow();
 
   return (
     <>
@@ -241,6 +249,94 @@ function SignInViaPasskey() {
 
       <FingerprintIllustration />
     </>
+  );
+}
+
+function SignInViaPassword() {
+  const [{ fetching, error }, register] = urlMutation(
+    /* GraphQL */ graphql(`
+      mutation loginPassword($email: String!, $password: String!) {
+        loginPassword(email: $email, password: $password)
+      }
+    `)
+  );
+
+  const [signInFromOtherDevice, setSignInFromOtherDevice] = useState(false);
+
+  const setToken = useSetAtom(tokenAtom);
+
+  if (signInFromOtherDevice) {
+    return <SignInFromOtherDevice />;
+  }
+
+  return (
+    <form
+      onSubmit={async (event) => {
+        event.preventDefault();
+        const form = event.target as HTMLFormElement;
+
+        const email = form["email"].value;
+        const password = form["password"].value;
+
+        const { data } = await register({ email, password });
+
+        if (data?.loginPassword) {
+          setToken(data.loginPassword);
+        }
+      }}
+    >
+      <Alert mb="md" hidden={!error} color="red">
+        {error?.message}
+      </Alert>
+
+      <Box
+        sx={(theme) => ({
+          display: "grid",
+          gridTemplateColumns: "1fr auto",
+          [theme.fn.smallerThan("sm")]: {
+            gridTemplateColumns: "1fr",
+          },
+        })}
+      >
+        <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
+          <SignUpIllustration />
+        </MediaQuery>
+
+        <Stack>
+          <TextInput
+            required
+            withAsterisk
+            label="Email"
+            type="email"
+            name="email"
+            placeholder="Deine Email-Adresse"
+          />
+
+          <PasswordInput
+            required
+            withAsterisk
+            name="password"
+            autoComplete="password"
+            label="Passwort"
+            placeholder="Dein Passwort"
+          />
+
+          <Group>
+            <Button type="submit" disabled={fetching}>
+              Anmelden
+            </Button>
+
+            <Button
+              variant="subtle"
+              disabled={fetching}
+              onClick={() => setSignInFromOtherDevice(true)}
+            >
+              Mit einem anderen Gerät anmelden
+            </Button>
+          </Group>
+        </Stack>
+      </Box>
+    </form>
   );
 }
 

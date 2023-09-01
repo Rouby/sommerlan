@@ -17,6 +17,8 @@ export type Scalars = {
   Float: { input: number; output: number; }
   Date: { input: Date | string; output: Date | string; }
   DateTime: { input: Date | string; output: Date | string; }
+  JSON: { input: any; output: any; }
+  JWT: { input: string; output: string; }
   Time: { input: Date | string; output: Date | string; }
 };
 
@@ -27,6 +29,69 @@ export type Attending = {
   party: Party;
   room?: Maybe<RoomStatus>;
   user: User;
+};
+
+export type LoginResponse = {
+  __typename?: 'LoginResponse';
+  credentialID: Array<Scalars['Int']['output']>;
+  token: Scalars['String']['output'];
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  generatePasskeyLoginOptions: Scalars['JSON']['output'];
+  generatePasskeyRegisterOptions: Scalars['JSON']['output'];
+  loginPasskey: LoginResponse;
+  loginPassword: Scalars['JWT']['output'];
+  loginWithMagicLink: Scalars['JWT']['output'];
+  register: RegisterResponse;
+  registerPasskey: Scalars['JSON']['output'];
+  sendMagicLink: Scalars['Boolean']['output'];
+};
+
+
+export type MutationGeneratePasskeyLoginOptionsArgs = {
+  userId?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationGeneratePasskeyRegisterOptionsArgs = {
+  userId: Scalars['String']['input'];
+};
+
+
+export type MutationLoginPasskeyArgs = {
+  response: Scalars['JSON']['input'];
+};
+
+
+export type MutationLoginPasswordArgs = {
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+};
+
+
+export type MutationLoginWithMagicLinkArgs = {
+  magicLinkId: Scalars['String']['input'];
+};
+
+
+export type MutationRegisterArgs = {
+  email: Scalars['String']['input'];
+  password?: InputMaybe<Scalars['String']['input']>;
+  userName: Scalars['String']['input'];
+};
+
+
+export type MutationRegisterPasskeyArgs = {
+  name: Scalars['String']['input'];
+  response: Scalars['JSON']['input'];
+  userId: Scalars['String']['input'];
+};
+
+
+export type MutationSendMagicLinkArgs = {
+  email: Scalars['String']['input'];
 };
 
 export type Party = {
@@ -50,6 +115,12 @@ export type Query = {
 
 export type QueryPartyArgs = {
   id: Scalars['ID']['input'];
+};
+
+export type RegisterResponse = {
+  __typename?: 'RegisterResponse';
+  token: Scalars['String']['output'];
+  user: User;
 };
 
 export type RoomStatus =
@@ -141,14 +212,19 @@ export type ResolversTypes = {
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Date: ResolverTypeWrapper<Scalars['Date']['output']>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
-  Party: ResolverTypeWrapper<PartyMapper>;
-  String: ResolverTypeWrapper<Scalars['String']['output']>;
+  JSON: ResolverTypeWrapper<Scalars['JSON']['output']>;
+  JWT: ResolverTypeWrapper<Scalars['JWT']['output']>;
+  LoginResponse: ResolverTypeWrapper<LoginResponse>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
+  String: ResolverTypeWrapper<Scalars['String']['output']>;
+  Mutation: ResolverTypeWrapper<{}>;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  Party: ResolverTypeWrapper<PartyMapper>;
   Query: ResolverTypeWrapper<{}>;
+  RegisterResponse: ResolverTypeWrapper<RegisterResponse>;
   RoomStatus: RoomStatus;
   Time: ResolverTypeWrapper<Scalars['Time']['output']>;
   User: ResolverTypeWrapper<User>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -157,13 +233,18 @@ export type ResolversParentTypes = {
   ID: Scalars['ID']['output'];
   Date: Scalars['Date']['output'];
   DateTime: Scalars['DateTime']['output'];
-  Party: PartyMapper;
-  String: Scalars['String']['output'];
+  JSON: Scalars['JSON']['output'];
+  JWT: Scalars['JWT']['output'];
+  LoginResponse: LoginResponse;
   Int: Scalars['Int']['output'];
+  String: Scalars['String']['output'];
+  Mutation: {};
+  Boolean: Scalars['Boolean']['output'];
+  Party: PartyMapper;
   Query: {};
+  RegisterResponse: RegisterResponse;
   Time: Scalars['Time']['output'];
   User: User;
-  Boolean: Scalars['Boolean']['output'];
 };
 
 export type AttendingResolvers<ContextType = any, ParentType extends ResolversParentTypes['Attending'] = ResolversParentTypes['Attending']> = {
@@ -183,6 +264,31 @@ export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversT
   name: 'DateTime';
 }
 
+export interface JsonScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['JSON'], any> {
+  name: 'JSON';
+}
+
+export interface JwtScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['JWT'], any> {
+  name: 'JWT';
+}
+
+export type LoginResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['LoginResponse'] = ResolversParentTypes['LoginResponse']> = {
+  credentialID?: Resolver<Array<ResolversTypes['Int']>, ParentType, ContextType>;
+  token?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  generatePasskeyLoginOptions?: Resolver<ResolversTypes['JSON'], ParentType, ContextType, Partial<MutationGeneratePasskeyLoginOptionsArgs>>;
+  generatePasskeyRegisterOptions?: Resolver<ResolversTypes['JSON'], ParentType, ContextType, RequireFields<MutationGeneratePasskeyRegisterOptionsArgs, 'userId'>>;
+  loginPasskey?: Resolver<ResolversTypes['LoginResponse'], ParentType, ContextType, RequireFields<MutationLoginPasskeyArgs, 'response'>>;
+  loginPassword?: Resolver<ResolversTypes['JWT'], ParentType, ContextType, RequireFields<MutationLoginPasswordArgs, 'email' | 'password'>>;
+  loginWithMagicLink?: Resolver<ResolversTypes['JWT'], ParentType, ContextType, RequireFields<MutationLoginWithMagicLinkArgs, 'magicLinkId'>>;
+  register?: Resolver<ResolversTypes['RegisterResponse'], ParentType, ContextType, RequireFields<MutationRegisterArgs, 'email' | 'userName'>>;
+  registerPasskey?: Resolver<ResolversTypes['JSON'], ParentType, ContextType, RequireFields<MutationRegisterPasskeyArgs, 'name' | 'response' | 'userId'>>;
+  sendMagicLink?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationSendMagicLinkArgs, 'email'>>;
+};
+
 export type PartyResolvers<ContextType = any, ParentType extends ResolversParentTypes['Party'] = ResolversParentTypes['Party']> = {
   attendings?: Resolver<Array<ResolversTypes['Attending']>, ParentType, ContextType>;
   endDate?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
@@ -198,6 +304,12 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   nextParty?: Resolver<Maybe<ResolversTypes['Party']>, ParentType, ContextType>;
   parties?: Resolver<Array<ResolversTypes['Party']>, ParentType, ContextType>;
   party?: Resolver<Maybe<ResolversTypes['Party']>, ParentType, ContextType, RequireFields<QueryPartyArgs, 'id'>>;
+};
+
+export type RegisterResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['RegisterResponse'] = ResolversParentTypes['RegisterResponse']> = {
+  token?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export interface TimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Time'], any> {
@@ -218,8 +330,13 @@ export type Resolvers<ContextType = any> = {
   Attending?: AttendingResolvers<ContextType>;
   Date?: GraphQLScalarType;
   DateTime?: GraphQLScalarType;
+  JSON?: GraphQLScalarType;
+  JWT?: GraphQLScalarType;
+  LoginResponse?: LoginResponseResolvers<ContextType>;
+  Mutation?: MutationResolvers<ContextType>;
   Party?: PartyResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  RegisterResponse?: RegisterResponseResolvers<ContextType>;
   Time?: GraphQLScalarType;
   User?: UserResolvers<ContextType>;
 };

@@ -1,6 +1,8 @@
 type Query
-# type Mutation
+type Mutation
 
 scalar DateTime
 scalar Date
 scalar Time
+scalar JSON
+scalar JWT

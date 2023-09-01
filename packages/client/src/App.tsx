@@ -61,6 +61,22 @@ const trpcClient = trpc.createClient({
   ],
 });
 
+function initializeAuthState() {
+  let token: string | undefined;
+  try {
+    token = JSON.parse(localStorage.getItem("token") ?? "");
+  } catch {
+    //
+  }
+  let refreshToken: string | undefined;
+  try {
+    refreshToken = JSON.parse(localStorage.getItem("refreshToken") ?? "");
+  } catch {
+    //
+  }
+  return { token, refreshToken };
+}
+
 const gqlClient = new Client({
   url: "/graphql",
   exchanges: [
@@ -76,12 +92,7 @@ const gqlClient = new Client({
       },
     }),
     authExchange(async (utils) => {
-      let token: string | undefined;
-      try {
-        token = JSON.parse(localStorage.getItem("token") ?? "");
-      } catch {
-        //
-      }
+      let { token, refreshToken } = initializeAuthState();
 
       return {
         addAuthToOperation(operation) {
@@ -91,9 +102,24 @@ const gqlClient = new Client({
           });
         },
         didAuthError(error, _operation) {
-          return error.graphQLErrors.some(
-            (e) => e.extensions?.code === "FORBIDDEN"
-          );
+          return error.graphQLErrors.some((e) => {
+            const { code, http } = e.extensions ?? {};
+
+            if (code === "UNAUTHENTICATED") {
+              return true;
+            }
+            if (code === "FORBIDDEN") {
+              return true;
+            }
+            if (
+              typeof http === "object" &&
+              http &&
+              "status" in http &&
+              http?.status === 401
+            ) {
+              return true;
+            }
+          });
         },
         async refreshAuth() {
           // logout();
