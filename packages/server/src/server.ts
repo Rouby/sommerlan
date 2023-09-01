@@ -60,11 +60,9 @@ export function createServer(opts: ServerOptions) {
       }),
       {
         onContextBuilding: async ({ context, extendContext }) => {
-          if (context.jwt) {
-            extendContext({
-              ability: await createAbility(context.jwt.user),
-            });
-          }
+          extendContext({
+            ability: await createAbility(context.jwt?.user),
+          });
         },
       } as Plugin<{ ability: AppAbility; jwt: JWTPayload }>,
     ],
@@ -81,7 +79,7 @@ export function createServer(opts: ServerOptions) {
 
       reply.status(response.status);
 
-      reply.send(console.log(await response.text()));
+      reply.send(response.body);
 
       return reply;
     },

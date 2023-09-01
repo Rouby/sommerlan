@@ -4,7 +4,7 @@ import { createGraphQLError } from "graphql-yoga";
 import { issuedChallenges } from "../../../../auth";
 import { User } from "../../../../data";
 import { expectedOrigin, rpID } from "../../../../env";
-import { signToken } from "../../../../signToken";
+import { signRefreshToken, signToken } from "../../../../signToken";
 import type { MutationResolvers } from "./../../../types.generated";
 
 export const loginPasskey: NonNullable<
@@ -50,6 +50,7 @@ export const loginPasskey: NonNullable<
 
       return {
         token: await signToken(user),
+        refreshToken: await signRefreshToken(user),
         credentialID: authenticator.credentialID,
       };
     }

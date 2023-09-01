@@ -12,12 +12,20 @@ import localizedFormat from "dayjs/plugin/localizedFormat";
 import minMax from "dayjs/plugin/minMax";
 import relativeTime from "dayjs/plugin/relativeTime";
 import weekday from "dayjs/plugin/weekday";
-import { Provider, useAtomValue } from "jotai";
-import { Client, Provider as UrqlProvider, fetchExchange } from "urql";
+import { Provider, useAtom, useAtomValue } from "jotai";
+import jwtDecode from "jwt-decode";
+import { useMemo } from "react";
+import {
+  Client,
+  Operation,
+  Provider as UrqlProvider,
+  fetchExchange,
+} from "urql";
 import { locales } from "./dayjs/locales";
+import { graphql } from "./gql";
 import schema from "./gql/introspection.json";
 import { router } from "./router";
-import { colorSchemeAtom } from "./state";
+import { colorSchemeAtom, refreshTokenAtom, tokenAtom } from "./state";
 import { trpc } from "./utils";
 
 dayjs.extend(duration);
@@ -61,82 +69,12 @@ const trpcClient = trpc.createClient({
   ],
 });
 
-function initializeAuthState() {
-  let token: string | undefined;
-  try {
-    token = JSON.parse(localStorage.getItem("token") ?? "");
-  } catch {
-    //
-  }
-  let refreshToken: string | undefined;
-  try {
-    refreshToken = JSON.parse(localStorage.getItem("refreshToken") ?? "");
-  } catch {
-    //
-  }
-  return { token, refreshToken };
-}
-
-const gqlClient = new Client({
-  url: "/graphql",
-  exchanges: [
-    devtoolsExchange,
-    cacheExchange({
-      schema,
-      resolvers: {
-        Query: {
-          party: (_, { id }) => {
-            return { __typename: "Party", id };
-          },
-        },
-      },
-    }),
-    authExchange(async (utils) => {
-      let { token, refreshToken } = initializeAuthState();
-
-      return {
-        addAuthToOperation(operation) {
-          if (!token) return operation;
-          return utils.appendHeaders(operation, {
-            Authorization: `Bearer ${token}`,
-          });
-        },
-        didAuthError(error, _operation) {
-          return error.graphQLErrors.some((e) => {
-            const { code, http } = e.extensions ?? {};
-
-            if (code === "UNAUTHENTICATED") {
-              return true;
-            }
-            if (code === "FORBIDDEN") {
-              return true;
-            }
-            if (
-              typeof http === "object" &&
-              http &&
-              "status" in http &&
-              http?.status === 401
-            ) {
-              return true;
-            }
-          });
-        },
-        async refreshAuth() {
-          // logout();
-        },
-      };
-    }),
-    fetchExchange,
-  ],
-  requestPolicy: "cache-first",
-});
-
 export function App() {
   const colorScheme = useAtomValue(colorSchemeAtom);
 
   return (
-    <UrqlProvider value={gqlClient}>
-      <Provider>
+    <Provider>
+      <Urql>
         <trpc.Provider client={trpcClient} queryClient={queryClient}>
           <QueryClientProvider client={queryClient}>
             <MantineProvider
@@ -154,7 +92,137 @@ export function App() {
             </MantineProvider>
           </QueryClientProvider>
         </trpc.Provider>
-      </Provider>
-    </UrqlProvider>
+      </Urql>
+    </Provider>
   );
+}
+
+function Urql({ children }: { children: React.ReactNode }) {
+  const [token, setToken] = useAtom(tokenAtom);
+  const [refreshToken, setRefreshToken] = useAtom(refreshTokenAtom);
+
+  const gqlClient = useMemo(
+    () =>
+      new Client({
+        url: "/graphql",
+        exchanges: [
+          devtoolsExchange,
+          cacheExchange({
+            schema,
+            resolvers: {
+              Query: {
+                party: (_, { id }) => {
+                  return { __typename: "Party", id };
+                },
+              },
+            },
+          }),
+          authExchange(async (utils) => {
+            return {
+              addAuthToOperation(operation) {
+                if (!token || isOperationWithoutAuth(operation))
+                  return operation;
+                return utils.appendHeaders(operation, {
+                  Authorization: `Bearer ${token}`,
+                });
+              },
+              didAuthError(error, _operation) {
+                return error.graphQLErrors.some((e) => {
+                  const { code, http } = e.extensions ?? {};
+
+                  if (code === "UNAUTHENTICATED") {
+                    return true;
+                  }
+                  if (code === "FORBIDDEN") {
+                    return true;
+                  }
+                  if (
+                    typeof http === "object" &&
+                    http &&
+                    "status" in http &&
+                    http?.status === 401
+                  ) {
+                    return true;
+                  }
+                });
+              },
+              async refreshAuth() {
+                if (refreshToken) {
+                  const result = await utils.mutate(
+                    /* GraphQL */ graphql(`
+                      mutation refreshLogin($refreshToken: String!) {
+                        refreshLogin(refreshToken: $refreshToken) {
+                          token
+                          refreshToken
+                        }
+                      }
+                    `),
+                    { refreshToken }
+                  );
+
+                  if (result.data?.refreshLogin) {
+                    setToken(result.data.refreshLogin.token);
+                    setRefreshToken(result.data.refreshLogin.refreshToken);
+
+                    return;
+                  }
+                }
+
+                logout();
+              },
+              willAuthError(operation) {
+                if (isOperationWithoutAuth(operation)) {
+                  return false;
+                } else {
+                  try {
+                    const decoded = jwtDecode(token!) as { exp: number };
+
+                    return dayjs()
+                      .add(1, "minute")
+                      .isAfter(dayjs.unix(decoded.exp));
+                  } catch {}
+                  return false;
+                }
+              },
+            };
+
+            function logout() {
+              setToken(null);
+              setRefreshToken(null);
+            }
+
+            function isOperationWithoutAuth(operation: Operation) {
+              return (
+                operation.kind === "mutation" &&
+                operation.query.definitions.some((definition) => {
+                  return (
+                    definition.kind === "OperationDefinition" &&
+                    definition.selectionSet.selections.some((node) => {
+                      const validOps = [
+                        "register",
+                        "generatePasskeyLoginOptions",
+                        "loginPasskey",
+                        "loginPassword",
+                        "sendMagicLink",
+                        "loginWithMagicLink",
+                        "refreshLogin",
+                      ];
+                      return (
+                        node.kind === "Field" &&
+                        validOps.includes(node.name.value)
+                      );
+                    })
+                  );
+                })
+              );
+            }
+          }),
+          fetchExchange,
+        ],
+        requestPolicy: "cache-first",
+      }),
+    [token, refreshToken]
+  );
+
+  return <UrqlProvider value={gqlClient}>{children}</UrqlProvider>;
 }

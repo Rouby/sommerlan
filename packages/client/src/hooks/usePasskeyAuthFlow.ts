@@ -3,10 +3,11 @@ import { useQuery } from "@tanstack/react-query";
 import { useSetAtom } from "jotai";
 import { CombinedError, useMutation } from "urql";
 import { graphql } from "../gql";
-import { tokenAtom } from "../state";
+import { refreshTokenAtom, tokenAtom } from "../state";
 
 export function usePasskeyAuthFlow() {
   const setToken = useSetAtom(tokenAtom);
+  const setRefreshToken = useSetAtom(refreshTokenAtom);
 
   const [, generateLoginOptions] = useMutation(
     /* GraphQL */ graphql(`
@@ -20,6 +21,7 @@ export function usePasskeyAuthFlow() {
       mutation loginPasskey($response: JSON!) {
         loginPasskey(response: $response) {
           token
+          refreshToken
           credentialID
         }
       }
@@ -46,6 +48,7 @@ export function usePasskeyAuthFlow() {
       }
 
       setToken(data1.loginPasskey.token);
+      setRefreshToken(data1.loginPasskey.refreshToken);
       localStorage.setItem(
         "credentialID",
         data1.loginPasskey.credentialID.join(",")

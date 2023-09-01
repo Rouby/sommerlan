@@ -1,7 +1,7 @@
 import { createGraphQLError } from "graphql-yoga";
 import { User } from "../../../../data";
 import { logger } from "../../../../logger";
-import { signToken } from "../../../../signToken";
+import { signRefreshToken, signToken } from "../../../../signToken";
 import type { MutationResolvers } from "./../../../types.generated";
 
 export const register: NonNullable<MutationResolvers["register"]> = async (
@@ -26,5 +26,6 @@ export const register: NonNullable<MutationResolvers["register"]> = async (
   return {
     user,
     token: await signToken(user),
+    refreshToken: await signRefreshToken(user),
   };
 };

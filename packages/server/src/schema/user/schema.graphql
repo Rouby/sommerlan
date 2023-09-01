@@ -14,20 +14,30 @@ extend type Mutation {
 
   generatePasskeyLoginOptions(userId: String): JSON!
   loginPasskey(response: JSON!): LoginResponse!
-  loginPassword(email: String!, password: String!): JWT!
+
+  loginPassword(email: String!, password: String!): AuthResponse!
 
   sendMagicLink(email: String!): Boolean!
-  loginWithMagicLink(magicLinkId: String!): JWT!
+  loginMagicLink(magicLinkId: String!): AuthResponse!
+
+  refreshLogin(refreshToken: String!): AuthResponse!
+}
+
+type AuthResponse {
+  token: JWT!
+  refreshToken: String!
 }
 
 type RegisterResponse {
   user: User!
   token: String!
+  refreshToken: String!
 }
 
 type LoginResponse {
   credentialID: [Int!]!
-  token: String!
+  token: JWT!
+  refreshToken: String!
 }
 
 type User {

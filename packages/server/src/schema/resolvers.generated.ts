@@ -1,12 +1,14 @@
 /* This file was automatically generated. DO NOT UPDATE MANUALLY. */
     import type   { Resolvers } from './types.generated';
     import    { Attending } from './user/resolvers/Attending';
+import    { AuthResponse } from './user/resolvers/AuthResponse';
 import    { LoginResponse } from './user/resolvers/LoginResponse';
 import    { generatePasskeyLoginOptions as Mutation_generatePasskeyLoginOptions } from './user/resolvers/Mutation/generatePasskeyLoginOptions';
 import    { generatePasskeyRegisterOptions as Mutation_generatePasskeyRegisterOptions } from './user/resolvers/Mutation/generatePasskeyRegisterOptions';
+import    { loginMagicLink as Mutation_loginMagicLink } from './user/resolvers/Mutation/loginMagicLink';
 import    { loginPasskey as Mutation_loginPasskey } from './user/resolvers/Mutation/loginPasskey';
 import    { loginPassword as Mutation_loginPassword } from './user/resolvers/Mutation/loginPassword';
-import    { loginWithMagicLink as Mutation_loginWithMagicLink } from './user/resolvers/Mutation/loginWithMagicLink';
+import    { refreshLogin as Mutation_refreshLogin } from './user/resolvers/Mutation/refreshLogin';
 import    { register as Mutation_register } from './user/resolvers/Mutation/register';
 import    { registerPasskey as Mutation_registerPasskey } from './user/resolvers/Mutation/registerPasskey';
 import    { sendMagicLink as Mutation_sendMagicLink } from './user/resolvers/Mutation/sendMagicLink';
@@ -20,9 +22,10 @@ import    { User } from './user/resolvers/User';
 import    { DateResolver,DateTimeResolver,JSONResolver,JWTResolver,TimeResolver } from 'graphql-scalars';
     export const resolvers: Resolvers = {
       Query: { me: Query_me,nextParty: Query_nextParty,parties: Query_parties,party: Query_party },
-      Mutation: { generatePasskeyLoginOptions: Mutation_generatePasskeyLoginOptions,generatePasskeyRegisterOptions: Mutation_generatePasskeyRegisterOptions,loginPasskey: Mutation_loginPasskey,loginPassword: Mutation_loginPassword,loginWithMagicLink: Mutation_loginWithMagicLink,register: Mutation_register,registerPasskey: Mutation_registerPasskey,sendMagicLink: Mutation_sendMagicLink },
+      Mutation: { generatePasskeyLoginOptions: Mutation_generatePasskeyLoginOptions,generatePasskeyRegisterOptions: Mutation_generatePasskeyRegisterOptions,loginMagicLink: Mutation_loginMagicLink,loginPasskey: Mutation_loginPasskey,loginPassword: Mutation_loginPassword,refreshLogin: Mutation_refreshLogin,register: Mutation_register,registerPasskey: Mutation_registerPasskey,sendMagicLink: Mutation_sendMagicLink },
       
       Attending: Attending,
+AuthResponse: AuthResponse,
 LoginResponse: LoginResponse,
 Party: Party,
 RegisterResponse: RegisterResponse,

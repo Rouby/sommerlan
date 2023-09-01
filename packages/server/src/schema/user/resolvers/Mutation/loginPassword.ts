@@ -1,6 +1,6 @@
 import { createGraphQLError } from "graphql-yoga";
 import { User } from "../../../../data";
-import { signToken } from "../../../../signToken";
+import { signRefreshToken, signToken } from "../../../../signToken";
 import type { MutationResolvers } from "./../../../types.generated";
 
 export const loginPassword: NonNullable<
@@ -12,5 +12,8 @@ export const loginPassword: NonNullable<
     throw createGraphQLError("Invalid login");
   }
 
-  return signToken(user);
+  return {
+    token: await signToken(user),
+    refreshToken: await signRefreshToken(user),
+  };
 };

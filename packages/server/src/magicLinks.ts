@@ -2,14 +2,20 @@ import { randomUUID } from "crypto";
 import { cron } from "./cron";
 import { User } from "./data";
 import { expectedOrigin } from "./env";
-import { signToken } from "./signToken";
+import { signRefreshToken, signToken } from "./signToken";
 
-const issuedMagicLinks = new Map<string, string>();
+const issuedMagicLinks = new Map<
+  string,
+  { token: string; refreshToken: string }
+>();
 
 export async function issueMagicLink(user: User) {
   const magicLinkId = randomUUID();
 
-  issuedMagicLinks.set(magicLinkId, await signToken(user));
+  issuedMagicLinks.set(magicLinkId, {
+    token: await signToken(user),
+    refreshToken: await signRefreshToken(user),
+  });
 
   cron.schedule(
     `@every 15m`,

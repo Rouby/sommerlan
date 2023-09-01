@@ -21,7 +21,7 @@ import { usePasskeyAuthFlow, useQRCodeScanner } from "../hooks";
 import { ReactComponent as FingerprintIllustration } from "../illustrations/undraw_fingerprint_login_re_t71l.svg";
 import { ReactComponent as MessageSentIllustration } from "../illustrations/undraw_message_sent_re_q2kl.svg";
 import { ReactComponent as SignUpIllustration } from "../illustrations/undraw_sign_up_n6im.svg";
-import { tokenAtom } from "../state";
+import { refreshTokenAtom, tokenAtom } from "../state";
 import { trpc } from "../utils";
 import { QRCode } from "./QRCode";
 
@@ -76,6 +76,7 @@ function RegisterForm() {
       ) {
         register(userName: $userName, email: $email, password: $password) {
           token
+          refreshToken
         }
       }
     `)
@@ -84,6 +85,7 @@ function RegisterForm() {
   const [signInFromOtherDevice, setSignInFromOtherDevice] = useState(false);
 
   const setToken = useSetAtom(tokenAtom);
+  const setRefreshToken = useSetAtom(refreshTokenAtom);
 
   if (signInFromOtherDevice) {
     return <SignInFromOtherDevice />;
@@ -103,6 +105,7 @@ function RegisterForm() {
 
         if (data?.register.token) {
           setToken(data.register.token);
+          setRefreshToken(data.register.refreshToken);
         }
       }}
     >
@@ -256,7 +259,10 @@ function SignInViaPassword() {
   const [{ fetching, error }, register] = urlMutation(
     /* GraphQL */ graphql(`
       mutation loginPassword($email: String!, $password: String!) {
-        loginPassword(email: $email, password: $password)
+        loginPassword(email: $email, password: $password) {
+          token
+          refreshToken
+        }
       }
     `)
   );
@@ -264,6 +270,7 @@ function SignInViaPassword() {
   const [signInFromOtherDevice, setSignInFromOtherDevice] = useState(false);
 
   const setToken = useSetAtom(tokenAtom);
+  const setRefreshToken = useSetAtom(refreshTokenAtom);
 
   if (signInFromOtherDevice) {
     return <SignInFromOtherDevice />;
@@ -281,7 +288,8 @@ function SignInViaPassword() {
         const { data } = await register({ email, password });
 
         if (data?.loginPassword) {
-          setToken(data.loginPassword);
+          setToken(data.loginPassword.token);
+          setRefreshToken(data.loginPassword.refreshToken);
         }
       }}
     >
@@ -389,6 +397,7 @@ function ScanQRCode() {
     if (data && typeof data.token === "string") {
       stopScanning();
       setToken(data.token);
+      // setRefreshToken(data.refreshToken);
     }
   }, [data]);
 
