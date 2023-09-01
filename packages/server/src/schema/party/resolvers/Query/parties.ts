@@ -9,5 +9,9 @@ export const parties: NonNullable<QueryResolvers["parties"]> = async (
 ) => {
   ForbiddenError.from(ctx.ability).throwUnlessCan("read", "Party");
 
-  return Party.filter((party) => ctx.ability.can("read", party));
+  const visibleParties = await Party.filter((party) =>
+    ctx.ability.can("read", party)
+  );
+
+  return visibleParties.sort((a, b) => (a.startDate < b.startDate ? 1 : -1));
 };
