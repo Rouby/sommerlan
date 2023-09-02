@@ -1,5 +1,4 @@
 export * from "./ActionIconLink";
-export * from "./AuthorizeOtherDevice";
 export * from "./Can";
 export * from "./CardWithHeader";
 export * from "./CreatePasskeyFlow";

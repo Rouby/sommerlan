@@ -1,33 +1,13 @@
-import {
-  Avatar,
-  Divider,
-  Group,
-  Menu,
-  Modal,
-  UnstyledButton,
-} from "@mantine/core";
-import {
-  IconClipboardCheck,
-  IconLock,
-  IconQrcode,
-  IconUsers,
-} from "@tabler/icons-react";
+import { Avatar, Divider, Group, Menu, UnstyledButton } from "@mantine/core";
+import { IconClipboardCheck, IconLock, IconUsers } from "@tabler/icons-react";
 import { Link } from "@tanstack/router";
 import { useAtomValue, useSetAtom } from "jotai";
-import { useState } from "react";
 import { abilityAtom, tokenAtom, userAtom } from "../state";
-import { AuthorizeOtherDevice, Can } from "./";
-import { CreatePasskeyFlow } from "./CreatePasskeyFlow";
+import { Can } from "./";
 
 export function UserButton() {
   const setToken = useSetAtom(tokenAtom);
   const user = useAtomValue(userAtom);
-
-  const canScanQRCodes = "BarcodeDetector" in window;
-  const [showAuthorizeOtherDevice, setShowAuthorizeOtherDevice] =
-    useState(false);
-
-  const [showPasskeyOptions, setShowPasskeyOptions] = useState(false);
 
   const ability = useAtomValue(abilityAtom);
 
@@ -56,15 +36,6 @@ export function UserButton() {
             params={{}}
           >
             Mein Profil
-          </Menu.Item>
-
-          <Menu.Label>Anwendung</Menu.Label>
-
-          <Menu.Item
-            icon={<IconQrcode size={14} />}
-            onClick={() => setShowAuthorizeOtherDevice(true)}
-          >
-            {canScanQRCodes ? "QR Code scannen" : "QR Code anzeigen"}
           </Menu.Item>
 
           {(ability.can("manage", "User") ||
@@ -108,26 +79,6 @@ export function UserButton() {
           </Menu.Item>
         </Menu.Dropdown>
       </Menu>
-
-      <Modal
-        size="lg"
-        opened={showAuthorizeOtherDevice}
-        onClose={() => setShowAuthorizeOtherDevice(false)}
-      >
-        <AuthorizeOtherDevice
-          active={showAuthorizeOtherDevice}
-          onClose={() => setShowAuthorizeOtherDevice(false)}
-        />
-      </Modal>
-
-      <Modal
-        size="lg"
-        opened={showPasskeyOptions}
-        withCloseButton={false}
-        onClose={() => setShowPasskeyOptions(false)}
-      >
-        <CreatePasskeyFlow />
-      </Modal>
     </>
   );
 }

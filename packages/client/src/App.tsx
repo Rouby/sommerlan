@@ -2,7 +2,7 @@ import { MantineProvider } from "@mantine/core";
 import { DatesProvider } from "@mantine/dates";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider } from "@tanstack/router";
-import { createWSClient, httpBatchLink, splitLink, wsLink } from "@trpc/client";
+import { httpBatchLink } from "@trpc/client";
 import { devtoolsExchange } from "@urql/devtools";
 import { authExchange } from "@urql/exchange-auth";
 import { Entity, Link, cacheExchange } from "@urql/exchange-graphcache";
@@ -38,33 +38,23 @@ locales[navigator.language.split("-")[0]]?.().then(() =>
   dayjs.locale(navigator.language)
 );
 
-const wsClient = createWSClient({
-  url: `ws${location.protocol === "https:" ? "s" : ""}://${location.host}/trpc`,
-});
-
 const queryClient = new QueryClient();
 
 const trpcClient = trpc.createClient({
   links: [
-    splitLink({
-      condition: (op) => op.type === "subscription",
-      true: wsLink({
-        client: wsClient,
-      }),
-      false: httpBatchLink({
-        url: "/trpc",
-        async headers() {
-          let token;
-          try {
-            token = JSON.parse(localStorage.getItem("token") ?? "");
-          } catch {
-            //
-          }
-          return {
-            Authorization: token ? `Bearer ${token}` : undefined,
-          };
-        },
-      }),
+    httpBatchLink({
+      url: "/trpc",
+      async headers() {
+        let token;
+        try {
+          token = JSON.parse(localStorage.getItem("token") ?? "");
+        } catch {
+          //
+        }
+        return {
+          Authorization: token ? `Bearer ${token}` : undefined,
+        };
+      },
     }),
   ],
 });

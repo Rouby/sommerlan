@@ -14,16 +14,14 @@ import {
 } from "@mantine/core";
 import { TRPCClientError } from "@trpc/client";
 import { useSetAtom } from "jotai";
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import { useMutation as urlMutation, useMutation } from "urql";
 import { graphql } from "../gql";
-import { usePasskeyAuthFlow, useQRCodeScanner } from "../hooks";
+import { usePasskeyAuthFlow } from "../hooks";
 import { ReactComponent as FingerprintIllustration } from "../illustrations/undraw_fingerprint_login_re_t71l.svg";
 import { ReactComponent as MessageSentIllustration } from "../illustrations/undraw_message_sent_re_q2kl.svg";
 import { ReactComponent as SignUpIllustration } from "../illustrations/undraw_sign_up_n6im.svg";
 import { refreshTokenAtom, tokenAtom } from "../state";
-import { trpc } from "../utils";
-import { QRCode } from "./QRCode";
 
 export function SignUpButton() {
   const [showAuthForm, setShowAuthForm] = useState(false);
@@ -82,14 +80,8 @@ function RegisterForm() {
     `)
   );
 
-  const [signInFromOtherDevice, setSignInFromOtherDevice] = useState(false);
-
   const setToken = useSetAtom(tokenAtom);
   const setRefreshToken = useSetAtom(refreshTokenAtom);
-
-  if (signInFromOtherDevice) {
-    return <SignInFromOtherDevice />;
-  }
 
   return (
     <form
@@ -120,7 +112,7 @@ function RegisterForm() {
       <Box
         sx={(theme) => ({
           display: "grid",
-          gridTemplateColumns: "1fr auto",
+          gridTemplateColumns: "1fr minmax(360px, auto)",
           [theme.fn.smallerThan("sm")]: {
             gridTemplateColumns: "1fr",
           },
@@ -156,17 +148,10 @@ function RegisterForm() {
             placeholder="Dein Passwort"
           />
 
-          <Group>
+          <Group position="apart">
+            <div />
             <Button type="submit" disabled={fetching}>
               Anmelden
-            </Button>
-
-            <Button
-              variant="subtle"
-              disabled={fetching}
-              onClick={() => setSignInFromOtherDevice(true)}
-            >
-              Mit einem anderen Gerät anmelden
             </Button>
           </Group>
         </Stack>
@@ -178,7 +163,6 @@ function RegisterForm() {
 function LoginForm() {
   const [signInViaPasskey, setSignInViaPasskey] = useState(false);
   const [signInViaPassword, setSignInViaPassword] = useState(false);
-  const [signInFromOtherDevice, setSignInFromOtherDevice] = useState(false);
   const [signInViaEmail, setSignInViaEmail] = useState(false);
 
   if (signInViaPasskey) {
@@ -187,10 +171,6 @@ function LoginForm() {
 
   if (signInViaPassword) {
     return <SignInViaPassword />;
-  }
-
-  if (signInFromOtherDevice) {
-    return <SignInFromOtherDevice />;
   }
 
   if (signInViaEmail) {
@@ -219,12 +199,6 @@ function LoginForm() {
           </Button>
           <Button variant="subtle" onClick={() => setSignInViaPassword(true)}>
             Mit Passwort anmelden
-          </Button>
-          <Button
-            variant="subtle"
-            onClick={() => setSignInFromOtherDevice(true)}
-          >
-            Mit einem anderen Gerät anmelden
           </Button>
           <Button variant="subtle" onClick={() => setSignInViaEmail(true)}>
             Einen Einmal-Link zum einloggen per Email anfordern
@@ -267,14 +241,8 @@ function SignInViaPassword() {
     `)
   );
 
-  const [signInFromOtherDevice, setSignInFromOtherDevice] = useState(false);
-
   const setToken = useSetAtom(tokenAtom);
   const setRefreshToken = useSetAtom(refreshTokenAtom);
-
-  if (signInFromOtherDevice) {
-    return <SignInFromOtherDevice />;
-  }
 
   return (
     <form
@@ -300,7 +268,7 @@ function SignInViaPassword() {
       <Box
         sx={(theme) => ({
           display: "grid",
-          gridTemplateColumns: "1fr auto",
+          gridTemplateColumns: "1fr minmax(360px, auto)",
           [theme.fn.smallerThan("sm")]: {
             gridTemplateColumns: "1fr",
           },
@@ -329,83 +297,15 @@ function SignInViaPassword() {
             placeholder="Dein Passwort"
           />
 
-          <Group>
+          <Group position="apart">
+            <div />
             <Button type="submit" disabled={fetching}>
               Anmelden
-            </Button>
-
-            <Button
-              variant="subtle"
-              disabled={fetching}
-              onClick={() => setSignInFromOtherDevice(true)}
-            >
-              Mit einem anderen Gerät anmelden
             </Button>
           </Group>
         </Stack>
       </Box>
     </form>
-  );
-}
-
-function SignInFromOtherDevice() {
-  const canScanQRCodes = "BarcodeDetector" in window;
-
-  if (canScanQRCodes) {
-    return <ScanQRCode />;
-  }
-
-  return <ProvideQRCode />;
-}
-
-function ProvideQRCode() {
-  const requestId = useMemo(() => crypto.randomUUID(), []);
-  const setToken = useSetAtom(tokenAtom);
-  const data = useMemo(() => ({ __$app: "SommerLAN", requestId }), [requestId]);
-
-  trpc.auth.loginFromOtherDevice.useSubscription(
-    { requestId },
-    {
-      onData: (data) => {
-        setToken(data.token);
-      },
-    }
-  );
-
-  return (
-    <Stack align="center">
-      <Text>
-        Scanne diesen Code mit einem Gerät auf dem du bereits eingeloggt bist
-      </Text>
-
-      <QRCode data={data} />
-    </Stack>
-  );
-}
-
-function ScanQRCode() {
-  const { video, startScanning, stopScanning, data } = useQRCodeScanner();
-
-  useEffect(() => {
-    startScanning();
-    return () => stopScanning();
-  }, [startScanning, stopScanning]);
-
-  const setToken = useSetAtom(tokenAtom);
-
-  useEffect(() => {
-    if (data && typeof data.token === "string") {
-      stopScanning();
-      setToken(data.token);
-      // setRefreshToken(data.refreshToken);
-    }
-  }, [data]);
-
-  return (
-    <Group position="center">
-      Scan QR code on another device to receive credentials.
-      <video ref={video} width={300} />
-    </Group>
   );
 }
 
