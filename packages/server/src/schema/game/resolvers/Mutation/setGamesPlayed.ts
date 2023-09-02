@@ -1,3 +1,4 @@
+import { ForbiddenError } from "@casl/ability";
 import { createGraphQLError } from "graphql-yoga";
 import { Attending, Game } from "../../../../data";
 import type { MutationResolvers } from "./../../../types.generated";
@@ -13,6 +14,8 @@ export const setGamesPlayed: NonNullable<
   if (!attending) {
     throw createGraphQLError("You are not attending this party");
   }
+
+  ForbiddenError.from(ctx.ability).throwUnlessCan("update", attending);
 
   const games = await Game.filterByPartyId(partyId);
 

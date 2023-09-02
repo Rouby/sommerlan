@@ -1,3 +1,4 @@
+import { ForbiddenError } from "@casl/ability";
 import { createGraphQLError } from "graphql-yoga";
 import { Attending, Party } from "../../../../data";
 import type { MutationResolvers } from "./../../../types.generated";
@@ -16,6 +17,8 @@ export const setAttendance: NonNullable<
       partyId,
       userId ?? ctx.jwt.user.id
     )) ?? new Attending({ partyId, userId: userId ?? ctx.jwt.user.id });
+
+  ForbiddenError.from(ctx.ability).throwUnlessCan("update", attending, "dates");
 
   attending.dates = dates.map((date) =>
     typeof date === "string" ? date : date.toISOString().substring(0, 10)

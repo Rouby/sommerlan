@@ -1,3 +1,4 @@
+import { ForbiddenError } from "@casl/ability";
 import { createGraphQLError } from "graphql-yoga";
 import { Attending, Game } from "../../../../data";
 import type { MutationResolvers } from "./../../../types.generated";
@@ -18,6 +19,8 @@ export const addGameToParty: NonNullable<
     name,
     partyPeople: { [partyId]: [ctx.jwt.user.id] },
   });
+
+  ForbiddenError.from(ctx.ability).throwUnlessCan("create", game);
 
   await game.save();
 

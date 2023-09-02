@@ -1,3 +1,4 @@
+import { ForbiddenError } from "@casl/ability";
 import { verifyRegistrationResponse } from "@simplewebauthn/server";
 import { createGraphQLError } from "graphql-yoga";
 import { issuedChallenges } from "../../../../auth";
@@ -21,6 +22,8 @@ export const registerPasskey: NonNullable<
   if (!user) {
     throw createGraphQLError("User not found");
   }
+
+  ForbiddenError.from(ctx.ability).throwUnlessCan("update", user, "devices");
 
   try {
     logger.trace(

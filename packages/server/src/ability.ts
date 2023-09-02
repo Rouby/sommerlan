@@ -3,7 +3,7 @@ import {
   MongoAbility,
   createMongoAbility,
 } from "@casl/ability";
-import { Attending, Event, Party, User } from "./data";
+import { Attending, Event, Game, Party, User } from "./data";
 
 export type AppAbility = MongoAbility<
   [
@@ -15,6 +15,8 @@ export type AppAbility = MongoAbility<
       | "Party"
       | Attending
       | "Attending"
+      | Game
+      | "Game"
       | Event
       | "Event"
       | "Cache"
@@ -28,17 +30,22 @@ export async function createAbility(
   const { can, build } = new AbilityBuilder<AppAbility>(createMongoAbility);
 
   if (user) {
+    can("read", "Party");
     can("read", "User", { id: user.id });
     can("update", "User", { id: user.id });
     can("update", "Attending", { userId: user.id });
+    can("read", "Event");
+    can("create", "Event", { organizerId: user.id });
     can("update", "Event", { organizerId: user.id });
+    can("read", "Game");
+    can("create", "Game");
 
     if (user.roles.includes(User.Role.Admin)) {
       can("manage", "Party");
       can("manage", "User");
       can("update", "Attending");
       can("grantRoom", "Attending");
-      can("update", "Event");
+      can("manage", "Event");
       can("manage", "Cache");
     }
   }
