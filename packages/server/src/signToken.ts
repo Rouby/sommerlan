@@ -1,7 +1,7 @@
 import { sign } from "jsonwebtoken";
+import { createAbility } from "./ability";
 import { User } from "./data";
 import { expectedOrigin } from "./env";
-import { createAbility } from "./router/ability";
 
 async function tokenPayload(user: User) {
   return {

@@ -3,7 +3,7 @@ import {
   MongoAbility,
   createMongoAbility,
 } from "@casl/ability";
-import { Attending, Event, Party, User } from "../data";
+import { Attending, Event, Party, User } from "./data";
 
 export type AppAbility = MongoAbility<
   [

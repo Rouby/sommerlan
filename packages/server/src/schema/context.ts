@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { AppAbility } from "../router/ability";
+import { AppAbility } from "../ability";
 import { JWTPayload } from "../signToken";
 
 export type Context = {

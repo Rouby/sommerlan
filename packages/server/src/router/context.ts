@@ -1,9 +1,9 @@
 import { ForbiddenError } from "@casl/ability";
 import { inferAsyncReturnType } from "@trpc/server";
 import { CreateFastifyContextOptions } from "@trpc/server/adapters/fastify";
+import { createAbility } from "../ability";
 import { User } from "../data";
 import { validateToken } from "../validateToken";
-import { createAbility } from "./ability";
 
 export async function createContext({ req, res }: CreateFastifyContextOptions) {
   let token: string | undefined;

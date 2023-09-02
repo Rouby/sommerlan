@@ -111,6 +111,9 @@ function Urql({ children }: { children: React.ReactNode }) {
           devtoolsExchange,
           cacheExchange({
             schema,
+            keys: {
+              AuthResponse: () => null,
+            },
             resolvers: {
               Query: {
                 party: (_, { id }) => {
