@@ -1,9 +1,13 @@
 /* This file was automatically generated. DO NOT UPDATE MANUALLY. */
     import type   { Resolvers } from './types.generated';
-    import    { Attending } from './user/resolvers/Attending';
+    import    { AddGameResult } from './game/resolvers/AddGameResult';
+import    { Attending } from './user/resolvers/Attending';
 import    { AuthDevice } from './user/resolvers/AuthDevice';
 import    { AuthResponse } from './user/resolvers/AuthResponse';
+import    { Game } from './game/resolvers/Game';
+import    { GameOnParty } from './game/resolvers/GameOnParty';
 import    { LoginResponse } from './user/resolvers/LoginResponse';
+import    { addGameToParty as Mutation_addGameToParty } from './game/resolvers/Mutation/addGameToParty';
 import    { deleteAuthDevice as Mutation_deleteAuthDevice } from './user/resolvers/Mutation/deleteAuthDevice';
 import    { denyRoom as Mutation_denyRoom } from './party/resolvers/Mutation/denyRoom';
 import    { generatePasskeyLoginOptions as Mutation_generatePasskeyLoginOptions } from './user/resolvers/Mutation/generatePasskeyLoginOptions';
@@ -19,8 +23,10 @@ import    { registerPasskey as Mutation_registerPasskey } from './user/resolvers
 import    { requestRoom as Mutation_requestRoom } from './party/resolvers/Mutation/requestRoom';
 import    { sendMagicLink as Mutation_sendMagicLink } from './user/resolvers/Mutation/sendMagicLink';
 import    { setAttendance as Mutation_setAttendance } from './party/resolvers/Mutation/setAttendance';
+import    { setGamesPlayed as Mutation_setGamesPlayed } from './game/resolvers/Mutation/setGamesPlayed';
 import    { updateAuthDevice as Mutation_updateAuthDevice } from './user/resolvers/Mutation/updateAuthDevice';
 import    { Party } from './party/resolvers/Party';
+import    { games as Query_games } from './game/resolvers/Query/games';
 import    { me as Query_me } from './user/resolvers/Query/me';
 import    { nextParty as Query_nextParty } from './party/resolvers/Query/nextParty';
 import    { parties as Query_parties } from './party/resolvers/Query/parties';
@@ -31,12 +37,15 @@ import    { RegisterResponse } from './user/resolvers/RegisterResponse';
 import    { User } from './user/resolvers/User';
 import    { DateResolver,DateTimeResolver,JSONResolver,JWTResolver,TimeResolver } from 'graphql-scalars';
     export const resolvers: Resolvers = {
-      Query: { me: Query_me,nextParty: Query_nextParty,parties: Query_parties,party: Query_party,users: Query_users },
-      Mutation: { deleteAuthDevice: Mutation_deleteAuthDevice,denyRoom: Mutation_denyRoom,generatePasskeyLoginOptions: Mutation_generatePasskeyLoginOptions,generatePasskeyRegisterOptions: Mutation_generatePasskeyRegisterOptions,grantRoom: Mutation_grantRoom,loginMagicLink: Mutation_loginMagicLink,loginPasskey: Mutation_loginPasskey,loginPassword: Mutation_loginPassword,recindRoom: Mutation_recindRoom,refreshLogin: Mutation_refreshLogin,register: Mutation_register,registerPasskey: Mutation_registerPasskey,requestRoom: Mutation_requestRoom,sendMagicLink: Mutation_sendMagicLink,setAttendance: Mutation_setAttendance,updateAuthDevice: Mutation_updateAuthDevice },
+      Query: { games: Query_games,me: Query_me,nextParty: Query_nextParty,parties: Query_parties,party: Query_party,users: Query_users },
+      Mutation: { addGameToParty: Mutation_addGameToParty,deleteAuthDevice: Mutation_deleteAuthDevice,denyRoom: Mutation_denyRoom,generatePasskeyLoginOptions: Mutation_generatePasskeyLoginOptions,generatePasskeyRegisterOptions: Mutation_generatePasskeyRegisterOptions,grantRoom: Mutation_grantRoom,loginMagicLink: Mutation_loginMagicLink,loginPasskey: Mutation_loginPasskey,loginPassword: Mutation_loginPassword,recindRoom: Mutation_recindRoom,refreshLogin: Mutation_refreshLogin,register: Mutation_register,registerPasskey: Mutation_registerPasskey,requestRoom: Mutation_requestRoom,sendMagicLink: Mutation_sendMagicLink,setAttendance: Mutation_setAttendance,setGamesPlayed: Mutation_setGamesPlayed,updateAuthDevice: Mutation_updateAuthDevice },
       
-      Attending: Attending,
+      AddGameResult: AddGameResult,
+Attending: Attending,
 AuthDevice: AuthDevice,
 AuthResponse: AuthResponse,
+Game: Game,
+GameOnParty: GameOnParty,
 LoginResponse: LoginResponse,
 Party: Party,
 RegisterDeviceResponse: RegisterDeviceResponse,

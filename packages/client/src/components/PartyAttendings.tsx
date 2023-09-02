@@ -15,130 +15,58 @@ import {
   Popover,
   Skeleton,
   Stack,
-  Text,
   TextInput,
   Tooltip,
 } from "@mantine/core";
-import { useInterval } from "@mantine/hooks";
-import {
-  IconCheck,
-  IconHourglassLow,
-  IconMan,
-  IconPlus,
-} from "@tabler/icons-react";
+import { IconCheck, IconMan, IconPlus } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { useAtomValue } from "jotai";
-import { Fragment, useEffect, useReducer, useState } from "react";
+import { Fragment, useState } from "react";
 import { useMutation, useQuery } from "urql";
 import { Can, UserAvatar } from ".";
-import { graphql } from "../gql";
+import { graphql, useFragment } from "../gql";
 import { userAtom } from "../state";
-import { formatRange } from "../utils";
 
-export function NextPartyAttending() {
-  return (
-    <>
-      <Countdown />
-
-      <Rooms />
-
-      <Attendings />
-    </>
-  );
-}
-
-function Countdown() {
-  const [{ data, fetching }] = useQuery({
-    query: graphql(`
-      query nextPartyCountdown {
-        nextParty {
-          id
-          startDate
-          endDate
-        }
-      }
-    `),
-  });
-
-  const { nextParty } = data ?? {};
-
-  const [, rerender] = useReducer((x) => x + 1, 0);
-  const { start, stop } = useInterval(() => {
-    rerender();
-  }, 1000);
-
-  useEffect(() => {
-    if (!nextParty) return;
-    start();
-    return () => stop();
-  }, [nextParty]);
-
-  if (fetching || !nextParty) {
-    return <Skeleton />;
-  }
-
-  const startDate = dayjs(nextParty.startDate, "YYYY-MM-DD").add(12, "hours");
-  const endDate = dayjs(nextParty.endDate, "YYYY-MM-DD").add(20, "hours");
-
-  const numberFormat = new Intl.NumberFormat();
-
-  const parts = [
-    [startDate.diff(dayjs(), "months"), "Monate"] as const,
-    [startDate.diff(dayjs(), "days"), "Tage"] as const,
-    [startDate.diff(dayjs(), "hours"), "Stunden"] as const,
-    [startDate.diff(dayjs(), "minutes"), "Minuten"] as const,
-    [startDate.diff(dayjs(), "seconds"), "Sekunden"] as const,
-  ].filter(([value]) => value > 0);
-
-  return (
-    <>
-      <Text>
-        Die nächste Party ist{" "}
-        <strong>vom {formatRange(startDate.toDate(), endDate.toDate())}</strong>
-      </Text>
-      {parts.map(([value, unit], idx) => (
-        <Text key={unit}>
-          {idx === 0 ? "Das sind noch " : "... oder "}
-          <strong>{numberFormat.format(value)}</strong> {unit}
-        </Text>
-      ))}
-    </>
-  );
-}
-
-function Rooms() {
+export function PartyAttendings({ partyId }: { partyId?: string }) {
   const user = useAtomValue(userAtom)!;
 
-  const [{ data, fetching }] = useQuery({
-    query: graphql(`
-      query nextPartyRooms {
-        nextParty {
+  const PartyAttendingInfo = graphql(`
+    fragment PartyAttendingInfo on Party {
+      id
+      startDate
+      endDate
+      roomsAvailable
+      attendings {
+        id
+        dates
+        room
+        user {
           id
-          roomsAvailable
-          attendings {
-            id
-            room
-            user {
-              id
-              displayName
-              avatar
-            }
-          }
+          displayName
+          avatar
         }
       }
-    `),
-  });
+    }
+  `);
 
-  const { nextParty } = data ?? {};
+  const [{ data, fetching }] = useQuery({
+    query: graphql(`
+      query partyAttending($nextParty: Boolean!, $partyId: ID!) {
+        nextParty @include(if: $nextParty) {
+          ...PartyAttendingInfo
+        }
 
-  const myAttending = nextParty?.attendings.find(
-    (attending) => attending.user.id === user.id
-  );
+        party(id: $partyId) @skip(if: $nextParty) {
+          ...PartyAttendingInfo
+        }
+      }
 
-  const [{ fetching: requesting }, requestRoom] = useMutation(
-    graphql(`
-      mutation requestRoom($partyId: ID!) {
-        requestRoom(partyId: $partyId) {
+      fragment PartyAttendingInfo on Party {
+        id
+        startDate
+        endDate
+        roomsAvailable
+        attendings {
           id
           dates
           room
@@ -149,152 +77,11 @@ function Rooms() {
           }
         }
       }
-    `)
-  );
-  const [{ fetching: recinding }, recindRoom] = useMutation(
-    graphql(`
-      mutation recindRoom($partyId: ID!) {
-        recindRoom(partyId: $partyId) {
-          id
-          dates
-          room
-          user {
-            id
-            displayName
-            avatar
-          }
-        }
-      }
-    `)
-  );
-
-  const isRequestingRoom = myAttending?.room === "REQUESTED";
-  const isGrantedRoom = myAttending?.room === "GRANTED";
-
-  if (!nextParty?.roomsAvailable) return null;
-
-  return (
-    <>
-      <Button
-        loading={fetching || requesting || recinding}
-        variant={!isGrantedRoom ? "light" : "filled"}
-        color={isGrantedRoom ? "green" : "blue"}
-        fullWidth
-        mt="md"
-        radius="md"
-        leftIcon={
-          isGrantedRoom ? (
-            <IconCheck />
-          ) : isRequestingRoom ? (
-            <IconHourglassLow />
-          ) : undefined
-        }
-        onClick={() =>
-          (isRequestingRoom ? requestRoom : recindRoom)({
-            partyId: nextParty.id,
-          })
-        }
-      >
-        Ich würde gerne einen Raum haben
-      </Button>
-
-      <Can I="grantRoom" an="Attending">
-        {nextParty.attendings
-          .filter((attending) => attending.room === "REQUESTED")
-          .map((attending) => (
-            <RoomRequest
-              key={attending.id}
-              attendingId={attending.id}
-              user={attending.user}
-            />
-          ))}
-      </Can>
-    </>
-  );
-}
-
-function RoomRequest({
-  attendingId,
-  user,
-}: {
-  attendingId: string;
-  user: { id: string; displayName: string; avatar: string };
-}) {
-  const [{ fetching: granting }, grantRoom] = useMutation(
-    graphql(`
-      mutation grantRoom($attendingId: ID!) {
-        grantRoom(attendingId: $attendingId) {
-          id
-          room
-        }
-      }
-    `)
-  );
-  const [{ fetching: denying }, denyRoom] = useMutation(
-    graphql(`
-      mutation denyRoom($attendingId: ID!) {
-        denyRoom(attendingId: $attendingId) {
-          id
-          room
-        }
-      }
-    `)
-  );
-
-  return (
-    <Box
-      m="sm"
-      sx={(theme) => ({
-        display: "grid",
-        gridTemplateColumns: "max-content max-content auto auto",
-        gap: theme.spacing.sm,
-        alignItems: "center",
-      })}
-    >
-      <UserAvatar user={user} />
-      {user.displayName} will einen Raum
-      <Button
-        loading={granting}
-        onClick={() => grantRoom({ attendingId })}
-        disabled={denying}
-      >
-        Ok
-      </Button>
-      <Button
-        loading={denying}
-        onClick={() => denyRoom({ attendingId })}
-        disabled={granting}
-      >
-        Ablehnen
-      </Button>
-    </Box>
-  );
-}
-
-function Attendings() {
-  const user = useAtomValue(userAtom)!;
-
-  const [{ data, fetching }] = useQuery({
-    query: graphql(`
-      query nextPartyAttending {
-        nextParty {
-          id
-          startDate
-          endDate
-          roomsAvailable
-          attendings {
-            id
-            dates
-            room
-            user {
-              id
-              displayName
-              avatar
-            }
-          }
-        }
-      }
     `),
+    variables: {
+      nextParty: !partyId,
+      partyId: partyId ?? "",
+    },
   });
 
   const [, setAttendance] = useMutation(
@@ -311,10 +98,11 @@ function Attendings() {
     `)
   );
 
-  const { nextParty } = data ?? {};
+  const { nextParty, party: specificParty } = data ?? {};
+  const party = useFragment(PartyAttendingInfo, nextParty ?? specificParty);
 
-  const startDate = dayjs(nextParty?.startDate, "YYYY-MM-DD").add(12, "hours");
-  const endDate = dayjs(nextParty?.endDate, "YYYY-MM-DD").add(20, "hours");
+  const startDate = dayjs(party?.startDate, "YYYY-MM-DD").add(12, "hours");
+  const endDate = dayjs(party?.endDate, "YYYY-MM-DD").add(20, "hours");
 
   const dates = !fetching
     ? Array.from({ length: endDate.diff(startDate, "days") + 1 }, (_, i) =>
@@ -322,7 +110,7 @@ function Attendings() {
       )
     : [dayjs(0), dayjs(1), dayjs(2)];
 
-  const myAttending = nextParty?.attendings.find(
+  const myAttending = party?.attendings.find(
     (attending) => attending.user.id === user.id
   );
 
@@ -331,9 +119,9 @@ function Attendings() {
       size="lg"
       value={myAttending?.dates}
       onChange={(dates) => {
-        nextParty &&
+        party &&
           setAttendance({
-            partyId: nextParty.id,
+            partyId: party.id,
             dates,
             // @ts-expect-error
             attendingId: myAttending?.id,
@@ -360,7 +148,7 @@ function Attendings() {
         })}
       >
         {dates.map((date, idx) => {
-          if (!nextParty) {
+          if (!party) {
             return (
               <Skeleton
                 key={idx}
@@ -376,7 +164,7 @@ function Attendings() {
             );
           }
 
-          const attendingsOnDate = nextParty.attendings.filter((attending) =>
+          const attendingsOnDate = party.attendings.filter((attending) =>
             attending.dates.includes(date.format("YYYY-MM-DD"))
           );
           return (
@@ -386,8 +174,8 @@ function Attendings() {
               <Checkbox value={date.format("YYYY-MM-DD")} />
 
               <AddUserMenu
-                attendings={nextParty.attendings}
-                partyId={nextParty.id}
+                attendings={party.attendings}
+                partyId={party.id}
                 date={date.format("YYYY-MM-DD")}
               />
 
@@ -408,12 +196,12 @@ function Attendings() {
                 })}
               >
                 <Group>
-                  {nextParty.roomsAvailable ? (
+                  {party.roomsAvailable ? (
                     <Badge>
-                      {nextParty.roomsAvailable -
+                      {party.roomsAvailable -
                         attendingsOnDate.filter((att) => att.room === "GRANTED")
                           .length}{" "}
-                      / {nextParty.roomsAvailable} rooms available
+                      / {party.roomsAvailable} rooms available
                     </Badge>
                   ) : null}
                   <Badge>{attendingsOnDate.length} an diesem Tag da</Badge>

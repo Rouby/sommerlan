@@ -41,6 +41,13 @@ export abstract class Base {
     return (await Base.allRows(this)).filter(predicate);
   }
 
+  static async filterByIds<T extends Base>(
+    this: StaticThis<T>,
+    ids: string[]
+  ): Promise<T[]> {
+    return (await Base.allRows(this)).filter((row) => ids.includes(row.id));
+  }
+
   static async find<T extends Base>(
     this: StaticThis<T>,
     predicate: (v: T) => boolean

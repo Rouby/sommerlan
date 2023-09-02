@@ -5,7 +5,7 @@ import { RouterProvider } from "@tanstack/router";
 import { createWSClient, httpBatchLink, splitLink, wsLink } from "@trpc/client";
 import { devtoolsExchange } from "@urql/devtools";
 import { authExchange } from "@urql/exchange-auth";
-import { cacheExchange } from "@urql/exchange-graphcache";
+import { Entity, Link, cacheExchange } from "@urql/exchange-graphcache";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import localizedFormat from "dayjs/plugin/localizedFormat";
@@ -152,6 +152,20 @@ function Urql({ children }: { children: React.ReactNode }) {
                     );
                   }
                 },
+                addGameToParty: (result, _args, cache, _info) => {
+                  if (
+                    typeof result.addGameToParty === "object" &&
+                    result.addGameToParty &&
+                    "game" in result.addGameToParty &&
+                    result.addGameToParty?.game
+                  ) {
+                    const games = cache.resolve("Query", "games");
+                    if (Array.isArray(games)) {
+                      games.push(result.addGameToParty.game);
+                      cache.link("Query", "games", games as Link<Entity>);
+                    }
+                  }
+                },
               },
             },
             optimistic: {
@@ -165,6 +179,17 @@ function Urql({ children }: { children: React.ReactNode }) {
                       dates: args.dates,
                     },
                   ],
+                };
+              },
+              setGamesPlayed: (args, _cache, info) => {
+                console.log(args);
+                return {
+                  __typename: "Attending",
+                  id: info.variables.attendingId,
+                  gamesPlayed: (args.gameIds as string[]).map((id) => ({
+                    __typename: "Game",
+                    id,
+                  })),
                 };
               },
             },

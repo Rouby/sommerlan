@@ -32,6 +32,10 @@ extend type Mutation {
   deleteAuthDevice(id: ID!): AuthDevice!
 }
 
+extend type Attending {
+  user: User!
+}
+
 type AuthResponse {
   token: JWT!
   refreshToken: String!
@@ -69,8 +73,4 @@ type AuthDevice {
   name: String!
   createdAt: DateTime
   lastUsedAt: DateTime
-}
-
-extend type Attending {
-  user: User!
 }

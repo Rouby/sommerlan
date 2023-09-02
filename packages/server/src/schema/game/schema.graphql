@@ -1,0 +1,35 @@
+extend type Query {
+  games: [Game!]!
+}
+
+extend type Mutation {
+  addGameToParty(partyId: ID!, name: String!): AddGameResult!
+  setGamesPlayed(partyId: ID!, gameIds: [ID!]!): Attending!
+}
+
+extend type Party {
+  gamesPlayed: [GameOnParty!]!
+}
+
+extend type Attending {
+  gamesPlayed: [Game!]!
+}
+
+type AddGameResult {
+  game: Game!
+  attending: Attending!
+}
+
+type Game {
+  id: ID!
+  name: String!
+  image: String!
+  players: [User!]!
+}
+
+type GameOnParty {
+  id: ID!
+  game: Game!
+  party: Party!
+  players: [User!]!
+}

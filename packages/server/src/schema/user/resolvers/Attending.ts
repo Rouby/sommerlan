@@ -1,4 +1,4 @@
-import { Party, User } from "../../../data";
+import { Game, Party, User } from "../../../data";
 import type { AttendingResolvers } from "./../../types.generated";
 export const Attending: AttendingResolvers = {
   party: async (parent, _arg, _ctx) => {
@@ -18,5 +18,10 @@ export const Attending: AttendingResolvers = {
       default:
         return null;
     }
+  },
+  gamesPlayed: (parent) => {
+    return Game.filter(
+      (game) => !!game.partyPeople[parent.partyId]?.includes(parent.userId)
+    );
   }
 };

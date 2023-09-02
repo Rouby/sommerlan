@@ -1,106 +1,167 @@
 import {
   Avatar,
   Box,
-  Center,
   Divider,
   Group,
   Indicator,
-  Loader,
   MultiSelect,
   Popover,
+  Skeleton,
   Text,
   Tooltip,
 } from "@mantine/core";
 import dayjs from "dayjs";
 import { useAtomValue } from "jotai";
 import { Fragment, forwardRef } from "react";
+import { useMutation, useQuery } from "urql";
 import { UserAvatar } from ".";
+import { graphql } from "../gql";
 import { userAtom } from "../state";
-import { trpc } from "../utils";
 
-export function NextPartyGamesList() {
-  const user = useAtomValue(userAtom);
-  const { data, isLoading } = trpc.party.gamesPlayed.useQuery({});
-  const context = trpc.useContext();
-  const { mutate: addGameToParty } = trpc.party.addGameToParty.useMutation({
-    onSuccess: (game) => {
-      context.party.gamesPlayed.setData(
-        {},
-        (prev) =>
-          prev && {
-            ...prev,
-            games: [...prev.games, game],
+export function NextPartyGamesList({ partyId }: { partyId?: string }) {
+  const user = useAtomValue(userAtom)!;
+
+  const [{ data, fetching }] = useQuery({
+    query: graphql(`
+      query partyGames($partyId: ID!, $nextParty: Boolean!) {
+        nextParty @include(if: $nextParty) {
+          id
+          startDate
+          endDate
+          attendings {
+            id
+            dates
+            user {
+              id
+              displayName
+              avatar
+            }
+            gamesPlayed {
+              id
+              name
+              image
+            }
           }
-      );
+        }
+
+        party(id: $partyId) @skip(if: $nextParty) {
+          id
+          startDate
+          endDate
+          attendings {
+            id
+            dates
+            user {
+              id
+              displayName
+              avatar
+            }
+            gamesPlayed {
+              id
+              name
+              image
+            }
+          }
+        }
+
+        games {
+          id
+          name
+          image
+        }
+      }
+    `),
+    variables: {
+      partyId: partyId ?? "",
+      nextParty: !partyId,
     },
   });
-  const { mutate: setGamePlayed } = trpc.party.setGamePlayed.useMutation({
-    onSuccess: (game) => {
-      context.party.gamesPlayed.setData(
-        {},
-        (prev) =>
-          prev && {
-            ...prev,
-            games: prev.games.map((old) => (old.id === game.id ? game : old)),
-          }
-      );
-    },
-  });
 
-  if (isLoading) {
-    return (
-      <Center>
-        <Loader />
-      </Center>
-    );
-  }
+  const { nextParty, party: specificParty, games } = data ?? {};
+  const party = nextParty ?? specificParty;
 
-  if (!data) {
-    return <Center>No Party planned</Center>;
-  }
+  const startDate = dayjs(party?.startDate, "YYYY-MM-DD");
+  const endDate = dayjs(party?.endDate, "YYYY-MM-DD");
 
-  const { party, games } = data;
+  const dates = party
+    ? Array.from({ length: endDate.diff(startDate, "days") + 1 }, (_, i) =>
+        startDate.add(i, "day")
+      )
+    : [dayjs(0), dayjs(1), dayjs(2)];
 
-  const startDate = dayjs(party.startDate, "YYYY-MM-DD");
-  const endDate = dayjs(party.endDate, "YYYY-MM-DD");
-
-  const dates = Array.from(
-    { length: endDate.diff(startDate, "days") + 1 },
-    (_, i) => startDate.add(i, "day")
+  const myAttending = party?.attendings.find(
+    (attending) => attending.user.id === user.id
   );
 
-  const gamesPlayed = data.games
-    .filter((game) => game.players.some((player) => player.id === user?.id))
-    .map((game) => game.id as string);
+  const gamesPlayedByMe = myAttending?.gamesPlayed.map(
+    (game) => game.id as string
+  );
+
+  const [, addGameToParty] = useMutation(
+    graphql(`
+      mutation addGameToParty($name: String!, $partyId: ID!) {
+        addGameToParty(name: $name, partyId: $partyId) {
+          game {
+            id
+            name
+            image
+          }
+          attending {
+            id
+            gamesPlayed {
+              id
+              name
+              image
+            }
+          }
+        }
+      }
+    `)
+  );
+
+  const [, setGamesPlayed] = useMutation(
+    graphql(`
+      mutation setGamesPlayed($partyId: ID!, $gameIds: [ID!]!) {
+        setGamesPlayed(partyId: $partyId, gameIds: $gameIds) {
+          id
+          gamesPlayed {
+            id
+            name
+            image
+          }
+        }
+      }
+    `)
+  );
 
   return (
     <>
       <MultiSelect
         label="Spiele die ich spielen will:"
-        value={gamesPlayed}
+        value={gamesPlayedByMe}
         onChange={(gameIds) => {
-          const added = gameIds.filter((id) => !gamesPlayed.includes(id));
-          const removed = gamesPlayed.filter((id) => !gameIds.includes(id));
-
-          added.forEach((gameId) => {
-            setGamePlayed({ gameId, partyId: party.id, played: true });
-          });
-          removed.forEach((gameId) => {
-            setGamePlayed({ gameId, partyId: party.id, played: false });
+          setGamesPlayed({
+            partyId: party!.id,
+            gameIds,
+            // @ts-expect-error
+            attendingId: myAttending?.id,
           });
         }}
-        data={data.games.map((game) => ({
-          value: game.id,
-          label: game.name,
-          image: game.imageUrl,
-        }))}
+        data={
+          games?.map((game) => ({
+            value: game.id,
+            label: game.name,
+            image: game.image,
+          })) ?? []
+        }
+        disabled={fetching}
         itemComponent={GameItem}
         searchable
         creatable
         getCreateLabel={(query) => `+ ${query} zur Liste hinzufügen`}
         onCreate={(query) => {
-          addGameToParty({ name: query, partyId: party.id });
-          return { value: "" };
+          addGameToParty({ name: query, partyId: party!.id });
+          return null;
         }}
       />
       <Box
@@ -118,19 +179,49 @@ export function NextPartyGamesList() {
         })}
       >
         {dates.map((date, idx, arr) => {
+          if (!party) {
+            return (
+              <Skeleton
+                key={idx}
+                height={40}
+                width="100%"
+                sx={(theme) => ({
+                  gridColumn: "1 / span 4",
+                  [theme.fn.smallerThan("xs")]: {
+                    gridColumn: "1 / span 3",
+                  },
+                })}
+              />
+            );
+          }
+
           const attendingsOnDate = party.attendings.filter((attending) =>
             attending.dates.includes(date.format("YYYY-MM-DD"))
           );
-          const gamesOnDate = games
-            .map((game) => ({
-              ...game,
-              players: game.players.filter((player) =>
-                attendingsOnDate.some(
-                  (attending) => attending.user.id === player.id
-                )
-              ),
-            }))
-            .filter((game) => game.players.length > 0);
+          const gamesOnDate = attendingsOnDate
+            .flatMap((attending) =>
+              attending.gamesPlayed.map((game) => ({
+                ...game,
+                player: attending.user,
+              }))
+            )
+            .reduce(
+              (acc, game) => {
+                const gamePlayed = acc.find((g) => g.id === game.id);
+                if (!gamePlayed) {
+                  acc.push({ ...game, players: [game.player] });
+                } else {
+                  gamePlayed.players.push(game.player);
+                }
+                return acc;
+              },
+              [] as {
+                id: string;
+                name: string;
+                image: string;
+                players: { id: string; displayName: string; avatar: string }[];
+              }[]
+            );
           return (
             <Fragment key={date.toString()}>
               <Box sx={{ whiteSpace: "nowrap" }}>{date.format("ddd, L")}</Box>
@@ -147,7 +238,7 @@ export function NextPartyGamesList() {
                             size={26}
                             offset={8}
                           >
-                            <Avatar radius="xl" src={game.imageUrl} size="xl">
+                            <Avatar radius="xl" src={game.image} size="xl">
                               {game.name
                                 .split(" ")
                                 .map((name) => name[0])
