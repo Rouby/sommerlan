@@ -17,6 +17,7 @@ type Party {
   startDate: Date!
   endDate: Date!
   location: String!
+  locationWidgetSrc: String
   roomsAvailable: Int!
   attendings: [Attending!]!
 }

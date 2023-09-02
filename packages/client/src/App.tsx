@@ -185,7 +185,6 @@ function Urql({ children }: { children: React.ReactNode }) {
                 };
               },
               setGamesPlayed: (args, _cache, info) => {
-                console.log(args);
                 return {
                   __typename: "Attending",
                   id: info.variables.attendingId,

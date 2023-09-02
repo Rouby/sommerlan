@@ -208,6 +208,7 @@ export type Party = {
   gamesPlayed: Array<GameOnParty>;
   id: Scalars['ID']['output'];
   location: Scalars['String']['output'];
+  locationWidgetSrc?: Maybe<Scalars['String']['output']>;
   roomsAvailable: Scalars['Int']['output'];
   startDate: Scalars['Date']['output'];
 };
@@ -473,6 +474,7 @@ export type PartyResolvers<ContextType = Context, ParentType extends ResolversPa
   gamesPlayed?: Resolver<Array<ResolversTypes['GameOnParty']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   location?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  locationWidgetSrc?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   roomsAvailable?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   startDate?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;

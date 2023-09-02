@@ -15,5 +15,8 @@ export const Party: PartyResolvers = {
         players: await User.filterByIds(game.partyPeople[parent.id] ?? []),
       }))
     );
-  }
+  },
+  locationWidgetSrc: (parent) => {
+    return parent.iframeSrc;
+  },
 };

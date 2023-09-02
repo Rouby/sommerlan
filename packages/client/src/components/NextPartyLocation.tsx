@@ -1,9 +1,19 @@
-import { trpc } from "../utils";
+import { useQuery } from "urql";
+import { graphql } from "../gql";
 
 export function NextPartyLocation() {
-  const { data: party, isLoading } = trpc.party.nextParty.useQuery();
+  const [{ data }] = useQuery({
+    query: graphql(`
+      query nextPartyLocation {
+        nextParty {
+          id
+          locationWidgetSrc
+        }
+      }
+    `),
+  });
 
-  if (isLoading || !party?.iframeSrc) {
+  if (!data?.nextParty?.locationWidgetSrc) {
     return null;
   }
 
@@ -12,7 +22,7 @@ export function NextPartyLocation() {
       <iframe
         width="100%"
         height="400"
-        src={party.iframeSrc}
+        src={data.nextParty.locationWidgetSrc}
         style={{ border: 0 }}
         allowFullScreen
         loading="lazy"
