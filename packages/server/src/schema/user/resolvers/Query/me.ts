@@ -5,7 +5,7 @@ export const me: NonNullable<QueryResolvers["me"]> = async (
   _arg,
   ctx
 ) => {
-  if (!ctx.jwt?.sub) return null;
+  if (!ctx.jwt) return null;
 
-  return User.findById(ctx.jwt.sub);
+  return User.findById(ctx.jwt.user.id);
 };

@@ -12,8 +12,10 @@ export const setAttendance: NonNullable<
   }
 
   const attending =
-    (await Attending.findByPartyIdAndUserId(partyId, userId ?? ctx.jwt.sub)) ??
-    new Attending({ partyId, userId: userId ?? ctx.jwt.sub });
+    (await Attending.findByPartyIdAndUserId(
+      partyId,
+      userId ?? ctx.jwt.user.id
+    )) ?? new Attending({ partyId, userId: userId ?? ctx.jwt.user.id });
 
   attending.dates = dates.map((date) =>
     typeof date === "string" ? date : date.toISOString().substring(0, 10)

@@ -1,2 +1,22 @@
-import type   { MutationResolvers } from './../../../types.generated';
-        export const requestRoom: NonNullable<MutationResolvers['requestRoom']> = async (_parent, _arg, _ctx) => { /* Implement Mutation.requestRoom resolver logic here */ };
+import { createGraphQLError } from "graphql-yoga";
+import { Attending } from "../../../../data";
+import type { MutationResolvers } from "./../../../types.generated";
+
+export const requestRoom: NonNullable<
+  MutationResolvers["requestRoom"]
+> = async (_parent, { partyId }, ctx) => {
+  const attending = await Attending.findByPartyIdAndUserId(
+    partyId,
+    ctx.jwt.user.id
+  );
+
+  if (!attending) {
+    throw createGraphQLError("Attending not found");
+  }
+
+  attending.room = "requested";
+
+  await attending.save();
+
+  return attending;
+};

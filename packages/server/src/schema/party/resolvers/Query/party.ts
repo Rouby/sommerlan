@@ -7,7 +7,7 @@ export const party: NonNullable<QueryResolvers["party"]> = async (
   { id },
   ctx
 ) => {
-  const party = Party.findById(id);
+  const party = await Party.findById(id);
 
   if (!party) return null;
 

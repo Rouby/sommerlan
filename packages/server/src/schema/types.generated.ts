@@ -1,6 +1,7 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 import { AttendingMapper, PartyMapper } from './party/schema.mappers';
 import { AuthDeviceMapper, UserMapper } from './user/schema.mappers';
+import { Context } from './context';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -330,7 +331,7 @@ export type ResolversParentTypes = {
   User: UserMapper;
 };
 
-export type AttendingResolvers<ContextType = any, ParentType extends ResolversParentTypes['Attending'] = ResolversParentTypes['Attending']> = {
+export type AttendingResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Attending'] = ResolversParentTypes['Attending']> = {
   dates?: Resolver<Array<ResolversTypes['Date']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   party?: Resolver<ResolversTypes['Party'], ParentType, ContextType>;
@@ -339,7 +340,7 @@ export type AttendingResolvers<ContextType = any, ParentType extends ResolversPa
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type AuthDeviceResolvers<ContextType = any, ParentType extends ResolversParentTypes['AuthDevice'] = ResolversParentTypes['AuthDevice']> = {
+export type AuthDeviceResolvers<ContextType = Context, ParentType extends ResolversParentTypes['AuthDevice'] = ResolversParentTypes['AuthDevice']> = {
   createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   lastUsedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
@@ -347,7 +348,7 @@ export type AuthDeviceResolvers<ContextType = any, ParentType extends ResolversP
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type AuthResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['AuthResponse'] = ResolversParentTypes['AuthResponse']> = {
+export type AuthResponseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['AuthResponse'] = ResolversParentTypes['AuthResponse']> = {
   refreshToken?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   token?: Resolver<ResolversTypes['JWT'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -369,14 +370,14 @@ export interface JwtScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes[
   name: 'JWT';
 }
 
-export type LoginResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['LoginResponse'] = ResolversParentTypes['LoginResponse']> = {
+export type LoginResponseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['LoginResponse'] = ResolversParentTypes['LoginResponse']> = {
   credentialID?: Resolver<Array<ResolversTypes['Int']>, ParentType, ContextType>;
   refreshToken?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   token?: Resolver<ResolversTypes['JWT'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   deleteAuthDevice?: Resolver<ResolversTypes['AuthDevice'], ParentType, ContextType, RequireFields<MutationDeleteAuthDeviceArgs, 'id'>>;
   denyRoom?: Resolver<Maybe<ResolversTypes['Attending']>, ParentType, ContextType, RequireFields<MutationDenyRoomArgs, 'attendingId'>>;
   generatePasskeyLoginOptions?: Resolver<ResolversTypes['JSON'], ParentType, ContextType, Partial<MutationGeneratePasskeyLoginOptionsArgs>>;
@@ -395,7 +396,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateAuthDevice?: Resolver<ResolversTypes['AuthDevice'], ParentType, ContextType, RequireFields<MutationUpdateAuthDeviceArgs, 'id' | 'name'>>;
 };
 
-export type PartyResolvers<ContextType = any, ParentType extends ResolversParentTypes['Party'] = ResolversParentTypes['Party']> = {
+export type PartyResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Party'] = ResolversParentTypes['Party']> = {
   attendings?: Resolver<Array<ResolversTypes['Attending']>, ParentType, ContextType>;
   endDate?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -405,7 +406,7 @@ export type PartyResolvers<ContextType = any, ParentType extends ResolversParent
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   nextParty?: Resolver<Maybe<ResolversTypes['Party']>, ParentType, ContextType>;
   parties?: Resolver<Array<ResolversTypes['Party']>, ParentType, ContextType>;
@@ -413,13 +414,13 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
 };
 
-export type RegisterDeviceResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['RegisterDeviceResponse'] = ResolversParentTypes['RegisterDeviceResponse']> = {
+export type RegisterDeviceResponseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['RegisterDeviceResponse'] = ResolversParentTypes['RegisterDeviceResponse']> = {
   device?: Resolver<ResolversTypes['AuthDevice'], ParentType, ContextType>;
   token?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type RegisterResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['RegisterResponse'] = ResolversParentTypes['RegisterResponse']> = {
+export type RegisterResponseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['RegisterResponse'] = ResolversParentTypes['RegisterResponse']> = {
   refreshToken?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   token?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
@@ -430,7 +431,7 @@ export interface TimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
   name: 'Time';
 }
 
-export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
+export type UserResolvers<ContextType = Context, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   avatar?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   avatarUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   devices?: Resolver<Array<ResolversTypes['AuthDevice']>, ParentType, ContextType>;
@@ -441,7 +442,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type Resolvers<ContextType = any> = {
+export type Resolvers<ContextType = Context> = {
   Attending?: AttendingResolvers<ContextType>;
   AuthDevice?: AuthDeviceResolvers<ContextType>;
   AuthResponse?: AuthResponseResolvers<ContextType>;

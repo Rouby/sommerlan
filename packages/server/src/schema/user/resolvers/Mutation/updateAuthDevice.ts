@@ -5,7 +5,7 @@ import type { MutationResolvers } from "./../../../types.generated";
 export const updateAuthDevice: NonNullable<
   MutationResolvers["updateAuthDevice"]
 > = async (_parent, { id, name }, ctx) => {
-  const user = await User.findById(ctx.jwt.sub);
+  const user = await User.findById(ctx.jwt.user.id);
 
   const device = user?.devices.find(
     (device) => device.credentialID.join(",") === id

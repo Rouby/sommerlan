@@ -11160,7 +11160,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["graphql-scalars", "virtual:f9aaeb0ff5026b521d6a9b424ffbc3c34990b6972b440282c9eb836880cb71f3dfd141e9455e392c98abc5918762c91d12bf17451df331903d8e149b2f873a01#npm:1.22.2"],\
             ["graphql-yoga", "virtual:f9aaeb0ff5026b521d6a9b424ffbc3c34990b6972b440282c9eb836880cb71f3dfd141e9455e392c98abc5918762c91d12bf17451df331903d8e149b2f873a01#npm:4.0.4"],\
             ["jsonwebtoken", "npm:9.0.0"],\
-            ["jwt-decode", "npm:3.1.2"],\
             ["newrelic", "npm:10.4.0"],\
             ["nodemailer", "npm:6.9.3"],\
             ["pino", "npm:8.14.1"],\
