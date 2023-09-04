@@ -6,3 +6,4 @@ scalar Date
 scalar Time
 scalar JSON
 scalar JWT
+scalar File

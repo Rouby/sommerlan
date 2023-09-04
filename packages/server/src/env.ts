@@ -1,3 +1,5 @@
+import { join } from "path";
+
 export const expectedOrigin = process.env.APP_ORIGIN ?? "http://localhost:5173";
 
 export const rpID =
@@ -15,3 +17,5 @@ export function getEnv() {
       : null) ?? "development"
   );
 }
+
+export const uploadDir = join(__dirname, "../client/uploads");

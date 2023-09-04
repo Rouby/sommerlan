@@ -8,9 +8,11 @@ import {
   Popover,
   Stack,
 } from "@mantine/core";
+import { Dropzone, FileWithPath, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { IconCalendar } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { useAtomValue } from "jotai";
+import { useState } from "react";
 import { useMutation, useQuery } from "urql";
 import { UserAvatar } from ".";
 import { graphql } from "../gql";
@@ -132,6 +134,59 @@ export function PartyInfo({ id }: { id: string }) {
         <Carousel.Slide>3</Carousel.Slide>
         {/* ...other slides */}
       </Carousel>
+
+      <ImageUpload partyId={id} />
+    </>
+  );
+}
+
+function ImageUpload({ partyId }: { partyId: string }) {
+  const [file, setFile] = useState<FileWithPath | null>(null);
+
+  const [{ fetching }, addPicture] = useMutation(
+    graphql(`
+      mutation addPicture($input: PictureInput!) {
+        addPicture(input: $input) {
+          id
+          url
+          party {
+            id
+          }
+          tags {
+            id
+            user {
+              id
+              displayName
+              avatar
+            }
+            boundingBox
+          }
+          meta {
+            width
+            height
+            takeAt
+          }
+        }
+      }
+    `)
+  );
+
+  console.log(file instanceof File);
+
+  return (
+    <>
+      <Dropzone
+        accept={IMAGE_MIME_TYPE}
+        onDrop={(files) => setFile(files[0])}
+        maxFiles={1}
+        sx={{ height: 100, display: "grid", alignItems: "center" }}
+        loading={fetching}
+      >
+        <Center>Alternativ kannst du ein Bild hochladen</Center>
+      </Dropzone>
+      <Button onClick={() => addPicture({ input: { partyId, file } })}>
+        Add
+      </Button>
     </>
   );
 }

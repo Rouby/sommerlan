@@ -5,7 +5,13 @@ const config: CodegenConfig = {
   schema: "**/schema.graphql",
   generates: {
     "src/schema": defineConfig({
-      typesPluginsConfig: { contextType: "./context#Context" },
+      typesPluginsConfig: {
+        contextType: "./context#Context",
+      },
+      scalarsOverrides: {
+        BoundingBox: { type: "{x:number;y:number;width:number;height:number}" },
+        File: { type: "File" },
+      },
     }),
   },
 };

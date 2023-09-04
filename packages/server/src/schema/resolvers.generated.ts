@@ -4,11 +4,14 @@
 import    { Attending } from './user/resolvers/Attending';
 import    { AuthDevice } from './user/resolvers/AuthDevice';
 import    { AuthResponse } from './user/resolvers/AuthResponse';
+import    { BoundingBox } from './party/resolvers/BoundingBox';
 import    { Event } from './events/resolvers/Event';
+import    { File } from './base/resolvers/File';
 import    { Game } from './game/resolvers/Game';
 import    { GameOnParty } from './game/resolvers/GameOnParty';
 import    { LoginResponse } from './user/resolvers/LoginResponse';
 import    { addGameToParty as Mutation_addGameToParty } from './game/resolvers/Mutation/addGameToParty';
+import    { addPicture as Mutation_addPicture } from './party/resolvers/Mutation/addPicture';
 import    { deleteAuthDevice as Mutation_deleteAuthDevice } from './user/resolvers/Mutation/deleteAuthDevice';
 import    { denyRoom as Mutation_denyRoom } from './party/resolvers/Mutation/denyRoom';
 import    { generatePasskeyLoginOptions as Mutation_generatePasskeyLoginOptions } from './user/resolvers/Mutation/generatePasskeyLoginOptions';
@@ -33,6 +36,9 @@ import    { updateAuthDevice as Mutation_updateAuthDevice } from './user/resolve
 import    { updateParty as Mutation_updateParty } from './party/resolvers/Mutation/updateParty';
 import    { updateProfile as Mutation_updateProfile } from './user/resolvers/Mutation/updateProfile';
 import    { Party } from './party/resolvers/Party';
+import    { Picture } from './party/resolvers/Picture';
+import    { PictureMeta } from './party/resolvers/PictureMeta';
+import    { PictureTag } from './party/resolvers/PictureTag';
 import    { games as Query_games } from './game/resolvers/Query/games';
 import    { me as Query_me } from './user/resolvers/Query/me';
 import    { nextParty as Query_nextParty } from './party/resolvers/Query/nextParty';
@@ -45,17 +51,22 @@ import    { User } from './user/resolvers/User';
 import    { DateResolver,DateTimeResolver,JSONResolver,JWTResolver,TimeResolver } from 'graphql-scalars';
     export const resolvers: Resolvers = {
       Query: { games: Query_games,me: Query_me,nextParty: Query_nextParty,parties: Query_parties,party: Query_party,users: Query_users },
-      Mutation: { addGameToParty: Mutation_addGameToParty,deleteAuthDevice: Mutation_deleteAuthDevice,denyRoom: Mutation_denyRoom,generatePasskeyLoginOptions: Mutation_generatePasskeyLoginOptions,generatePasskeyRegisterOptions: Mutation_generatePasskeyRegisterOptions,grantRoom: Mutation_grantRoom,leaveEvent: Mutation_leaveEvent,loginMagicLink: Mutation_loginMagicLink,loginPasskey: Mutation_loginPasskey,loginPassword: Mutation_loginPassword,participateInEvent: Mutation_participateInEvent,planEvent: Mutation_planEvent,recindRoom: Mutation_recindRoom,refreshLogin: Mutation_refreshLogin,register: Mutation_register,registerPasskey: Mutation_registerPasskey,requestRoom: Mutation_requestRoom,sendMagicLink: Mutation_sendMagicLink,setAttendance: Mutation_setAttendance,setGamesPlayed: Mutation_setGamesPlayed,syncCache: Mutation_syncCache,updateAuthDevice: Mutation_updateAuthDevice,updateParty: Mutation_updateParty,updateProfile: Mutation_updateProfile },
+      Mutation: { addGameToParty: Mutation_addGameToParty,addPicture: Mutation_addPicture,deleteAuthDevice: Mutation_deleteAuthDevice,denyRoom: Mutation_denyRoom,generatePasskeyLoginOptions: Mutation_generatePasskeyLoginOptions,generatePasskeyRegisterOptions: Mutation_generatePasskeyRegisterOptions,grantRoom: Mutation_grantRoom,leaveEvent: Mutation_leaveEvent,loginMagicLink: Mutation_loginMagicLink,loginPasskey: Mutation_loginPasskey,loginPassword: Mutation_loginPassword,participateInEvent: Mutation_participateInEvent,planEvent: Mutation_planEvent,recindRoom: Mutation_recindRoom,refreshLogin: Mutation_refreshLogin,register: Mutation_register,registerPasskey: Mutation_registerPasskey,requestRoom: Mutation_requestRoom,sendMagicLink: Mutation_sendMagicLink,setAttendance: Mutation_setAttendance,setGamesPlayed: Mutation_setGamesPlayed,syncCache: Mutation_syncCache,updateAuthDevice: Mutation_updateAuthDevice,updateParty: Mutation_updateParty,updateProfile: Mutation_updateProfile },
       
       AddGameResult: AddGameResult,
 Attending: Attending,
 AuthDevice: AuthDevice,
 AuthResponse: AuthResponse,
+BoundingBox: BoundingBox,
 Event: Event,
+File: File,
 Game: Game,
 GameOnParty: GameOnParty,
 LoginResponse: LoginResponse,
 Party: Party,
+Picture: Picture,
+PictureMeta: PictureMeta,
+PictureTag: PictureTag,
 RegisterDeviceResponse: RegisterDeviceResponse,
 RegisterResponse: RegisterResponse,
 User: User,

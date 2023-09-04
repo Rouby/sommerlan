@@ -1,4 +1,4 @@
-import { Attending, Event, Game, User } from "../../../data";
+import { Attending, Event, Game, Picture, User } from "../../../data";
 import type { PartyResolvers } from "./../../types.generated";
 export const Party: PartyResolvers = {
   attendings: async (parent, _arg, _ctx) => {
@@ -21,5 +21,8 @@ export const Party: PartyResolvers = {
   },
   events: (parent) => {
     return Event.filterByPartyId(parent.id);
+  },
+  pictures: (parent) => {
+    return Picture.filterByPartyId(parent.id);
   }
 };

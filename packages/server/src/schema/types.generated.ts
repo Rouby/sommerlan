@@ -1,5 +1,5 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
-import { AttendingMapper, PartyMapper } from './party/schema.mappers';
+import { AttendingMapper, PartyMapper, PictureMapper, PictureTagMapper } from './party/schema.mappers';
 import { AuthDeviceMapper, UserMapper } from './user/schema.mappers';
 import { EventMapper } from './events/schema.mappers';
 import { GameMapper } from './game/schema.mappers';
@@ -20,8 +20,10 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  BoundingBox: { input: {x:number;y:number;width:number;height:number}; output: {x:number;y:number;width:number;height:number}; }
   Date: { input: Date | string; output: Date | string; }
   DateTime: { input: Date | string; output: Date | string; }
+  File: { input: File; output: File; }
   JSON: { input: any; output: any; }
   JWT: { input: string; output: string; }
   Time: { input: Date | string; output: Date | string; }
@@ -108,6 +110,7 @@ export type LoginResponse = {
 export type Mutation = {
   __typename?: 'Mutation';
   addGameToParty: AddGameResult;
+  addPicture: Picture;
   deleteAuthDevice: AuthDevice;
   denyRoom?: Maybe<Attending>;
   generatePasskeyLoginOptions: Scalars['JSON']['output'];
@@ -137,6 +140,11 @@ export type Mutation = {
 export type MutationAddGameToPartyArgs = {
   name: Scalars['String']['input'];
   partyId: Scalars['ID']['input'];
+};
+
+
+export type MutationAddPictureArgs = {
+  input: PictureInput;
 };
 
 
@@ -272,6 +280,7 @@ export type Party = {
   id: Scalars['ID']['output'];
   location: Scalars['String']['output'];
   locationWidgetSrc?: Maybe<Scalars['String']['output']>;
+  pictures: Array<Picture>;
   roomsAvailable: Scalars['Int']['output'];
   startDate: Scalars['Date']['output'];
 };
@@ -283,6 +292,44 @@ export type PartyInput = {
   locationWidgetSrc?: InputMaybe<Scalars['String']['input']>;
   roomsAvailable: Scalars['Int']['input'];
   startDate: Scalars['Date']['input'];
+};
+
+export type Picture = {
+  __typename?: 'Picture';
+  id: Scalars['ID']['output'];
+  meta: PictureMeta;
+  party: Party;
+  tags: Array<PictureTag>;
+  url: Scalars['String']['output'];
+};
+
+export type PictureInput = {
+  file: Scalars['File']['input'];
+  partyId: Scalars['ID']['input'];
+  tags?: InputMaybe<Array<PictureTagInput>>;
+};
+
+export type PictureMeta = {
+  __typename?: 'PictureMeta';
+  altitude?: Maybe<Scalars['Float']['output']>;
+  height: Scalars['Int']['output'];
+  latitude?: Maybe<Scalars['Float']['output']>;
+  longitude?: Maybe<Scalars['Float']['output']>;
+  takeAt?: Maybe<Scalars['DateTime']['output']>;
+  width: Scalars['Int']['output'];
+};
+
+export type PictureTag = {
+  __typename?: 'PictureTag';
+  boundingBox: Scalars['BoundingBox']['output'];
+  id: Scalars['ID']['output'];
+  picture: Picture;
+  user: User;
+};
+
+export type PictureTagInput = {
+  boundingBox: Scalars['BoundingBox']['input'];
+  userId: Scalars['ID']['input'];
 };
 
 export type ProfileInput = {
@@ -413,10 +460,12 @@ export type ResolversTypes = {
   AuthDevice: ResolverTypeWrapper<AuthDeviceMapper>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   AuthResponse: ResolverTypeWrapper<AuthResponse>;
+  BoundingBox: ResolverTypeWrapper<Scalars['BoundingBox']['output']>;
   Date: ResolverTypeWrapper<Scalars['Date']['output']>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
   Event: ResolverTypeWrapper<EventMapper>;
   EventInput: EventInput;
+  File: ResolverTypeWrapper<Scalars['File']['output']>;
   Game: ResolverTypeWrapper<GameMapper>;
   GameOnParty: ResolverTypeWrapper<Omit<GameOnParty, 'game' | 'party' | 'players'> & { game: ResolversTypes['Game'], party: ResolversTypes['Party'], players: Array<ResolversTypes['User']> }>;
   JSON: ResolverTypeWrapper<Scalars['JSON']['output']>;
@@ -427,6 +476,12 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Party: ResolverTypeWrapper<PartyMapper>;
   PartyInput: PartyInput;
+  Picture: ResolverTypeWrapper<PictureMapper>;
+  PictureInput: PictureInput;
+  PictureMeta: ResolverTypeWrapper<PictureMeta>;
+  Float: ResolverTypeWrapper<Scalars['Float']['output']>;
+  PictureTag: ResolverTypeWrapper<PictureTagMapper>;
+  PictureTagInput: PictureTagInput;
   ProfileInput: ProfileInput;
   Query: ResolverTypeWrapper<{}>;
   RegisterDeviceResponse: ResolverTypeWrapper<Omit<RegisterDeviceResponse, 'device'> & { device: ResolversTypes['AuthDevice'] }>;
@@ -444,10 +499,12 @@ export type ResolversParentTypes = {
   AuthDevice: AuthDeviceMapper;
   String: Scalars['String']['output'];
   AuthResponse: AuthResponse;
+  BoundingBox: Scalars['BoundingBox']['output'];
   Date: Scalars['Date']['output'];
   DateTime: Scalars['DateTime']['output'];
   Event: EventMapper;
   EventInput: EventInput;
+  File: Scalars['File']['output'];
   Game: GameMapper;
   GameOnParty: Omit<GameOnParty, 'game' | 'party' | 'players'> & { game: ResolversParentTypes['Game'], party: ResolversParentTypes['Party'], players: Array<ResolversParentTypes['User']> };
   JSON: Scalars['JSON']['output'];
@@ -458,6 +515,12 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
   Party: PartyMapper;
   PartyInput: PartyInput;
+  Picture: PictureMapper;
+  PictureInput: PictureInput;
+  PictureMeta: PictureMeta;
+  Float: Scalars['Float']['output'];
+  PictureTag: PictureTagMapper;
+  PictureTagInput: PictureTagInput;
   ProfileInput: ProfileInput;
   Query: {};
   RegisterDeviceResponse: Omit<RegisterDeviceResponse, 'device'> & { device: ResolversParentTypes['AuthDevice'] };
@@ -496,6 +559,10 @@ export type AuthResponseResolvers<ContextType = Context, ParentType extends Reso
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export interface BoundingBoxScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['BoundingBox'], any> {
+  name: 'BoundingBox';
+}
+
 export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Date'], any> {
   name: 'Date';
 }
@@ -517,6 +584,10 @@ export type EventResolvers<ContextType = Context, ParentType extends ResolversPa
   startTime?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
+
+export interface FileScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['File'], any> {
+  name: 'File';
+}
 
 export type GameResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Game'] = ResolversParentTypes['Game']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -551,6 +622,7 @@ export type LoginResponseResolvers<ContextType = Context, ParentType extends Res
 
 export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   addGameToParty?: Resolver<ResolversTypes['AddGameResult'], ParentType, ContextType, RequireFields<MutationAddGameToPartyArgs, 'name' | 'partyId'>>;
+  addPicture?: Resolver<ResolversTypes['Picture'], ParentType, ContextType, RequireFields<MutationAddPictureArgs, 'input'>>;
   deleteAuthDevice?: Resolver<ResolversTypes['AuthDevice'], ParentType, ContextType, RequireFields<MutationDeleteAuthDeviceArgs, 'id'>>;
   denyRoom?: Resolver<Maybe<ResolversTypes['Attending']>, ParentType, ContextType, RequireFields<MutationDenyRoomArgs, 'attendingId'>>;
   generatePasskeyLoginOptions?: Resolver<ResolversTypes['JSON'], ParentType, ContextType, Partial<MutationGeneratePasskeyLoginOptionsArgs>>;
@@ -584,8 +656,36 @@ export type PartyResolvers<ContextType = Context, ParentType extends ResolversPa
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   location?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   locationWidgetSrc?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  pictures?: Resolver<Array<ResolversTypes['Picture']>, ParentType, ContextType>;
   roomsAvailable?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   startDate?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PictureResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Picture'] = ResolversParentTypes['Picture']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  meta?: Resolver<ResolversTypes['PictureMeta'], ParentType, ContextType>;
+  party?: Resolver<ResolversTypes['Party'], ParentType, ContextType>;
+  tags?: Resolver<Array<ResolversTypes['PictureTag']>, ParentType, ContextType>;
+  url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PictureMetaResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PictureMeta'] = ResolversParentTypes['PictureMeta']> = {
+  altitude?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  height?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  latitude?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  longitude?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  takeAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  width?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PictureTagResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PictureTag'] = ResolversParentTypes['PictureTag']> = {
+  boundingBox?: Resolver<ResolversTypes['BoundingBox'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  picture?: Resolver<ResolversTypes['Picture'], ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -631,9 +731,11 @@ export type Resolvers<ContextType = Context> = {
   Attending?: AttendingResolvers<ContextType>;
   AuthDevice?: AuthDeviceResolvers<ContextType>;
   AuthResponse?: AuthResponseResolvers<ContextType>;
+  BoundingBox?: GraphQLScalarType;
   Date?: GraphQLScalarType;
   DateTime?: GraphQLScalarType;
   Event?: EventResolvers<ContextType>;
+  File?: GraphQLScalarType;
   Game?: GameResolvers<ContextType>;
   GameOnParty?: GameOnPartyResolvers<ContextType>;
   JSON?: GraphQLScalarType;
@@ -641,6 +743,9 @@ export type Resolvers<ContextType = Context> = {
   LoginResponse?: LoginResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Party?: PartyResolvers<ContextType>;
+  Picture?: PictureResolvers<ContextType>;
+  PictureMeta?: PictureMetaResolvers<ContextType>;
+  PictureTag?: PictureTagResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   RegisterDeviceResponse?: RegisterDeviceResponseResolvers<ContextType>;
   RegisterResponse?: RegisterResponseResolvers<ContextType>;

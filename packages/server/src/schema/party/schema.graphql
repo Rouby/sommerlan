@@ -12,6 +12,8 @@ extend type Mutation {
   denyRoom(attendingId: ID!): Attending
 
   updateParty(input: PartyInput!): Party!
+
+  addPicture(input: PictureInput!): Picture!
 }
 
 type Party {
@@ -22,7 +24,34 @@ type Party {
   locationWidgetSrc: String
   roomsAvailable: Int!
   attendings: [Attending!]!
+  pictures: [Picture!]!
 }
+
+type Picture {
+  id: ID!
+  url: String!
+  party: Party!
+  tags: [PictureTag!]!
+  meta: PictureMeta!
+}
+
+type PictureMeta {
+  width: Int!
+  height: Int!
+  latitude: Float
+  longitude: Float
+  altitude: Float
+  takeAt: DateTime
+}
+
+type PictureTag {
+  id: ID!
+  user: User!
+  picture: Picture!
+  boundingBox: BoundingBox!
+}
+
+scalar BoundingBox
 
 input PartyInput {
   id: ID
@@ -31,6 +60,17 @@ input PartyInput {
   location: String!
   locationWidgetSrc: String
   roomsAvailable: Int!
+}
+
+input PictureInput {
+  partyId: ID!
+  file: File!
+  tags: [PictureTagInput!]
+}
+
+input PictureTagInput {
+  userId: ID!
+  boundingBox: BoundingBox!
 }
 
 type Attending {

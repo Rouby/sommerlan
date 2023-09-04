@@ -2658,6 +2658,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:4.1.1"\
       ],\
       [\
+        "exifr",\
+        "npm:7.1.3"\
+      ],\
+      [\
         "exponential-backoff",\
         "npm:3.1.1"\
       ],\
@@ -11121,6 +11125,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["base64url", "npm:3.0.1"],\
             ["dayjs", "npm:1.11.8"],\
             ["dotenv", "npm:16.3.1"],\
+            ["exifr", "npm:7.1.3"],\
             ["fast-json-patch", "npm:3.1.1"],\
             ["fastify", "npm:4.18.0"],\
             ["google-spreadsheet", "npm:3.3.0"],\
@@ -15548,6 +15553,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["executable", "npm:4.1.1"],\
             ["pify", "npm:2.3.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["exifr", [\
+        ["npm:7.1.3", {\
+          "packageLocation": "./.yarn/cache/exifr-npm-7.1.3-e3f1c7a57d-c75a21e700.zip/node_modules/exifr/",\
+          "packageDependencies": [\
+            ["exifr", "npm:7.1.3"]\
           ],\
           "linkType": "HARD"\
         }]\
