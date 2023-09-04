@@ -280,7 +280,7 @@ function Urql({ children }: { children: React.ReactNode }) {
         ],
         requestPolicy: "cache-and-network",
       }),
-    []
+    [token === null]
   );
 
   return <UrqlProvider value={gqlClient}>{children}</UrqlProvider>;
