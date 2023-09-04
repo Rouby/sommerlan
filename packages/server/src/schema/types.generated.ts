@@ -127,8 +127,10 @@ export type Mutation = {
   sendMagicLink: Scalars['Boolean']['output'];
   setAttendance: Party;
   setGamesPlayed: Attending;
+  syncCache?: Maybe<Scalars['Boolean']['output']>;
   updateAuthDevice: AuthDevice;
   updateParty: Party;
+  updateProfile: User;
 };
 
 
@@ -241,6 +243,11 @@ export type MutationSetGamesPlayedArgs = {
 };
 
 
+export type MutationSyncCacheArgs = {
+  clear?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
 export type MutationUpdateAuthDeviceArgs = {
   id: Scalars['ID']['input'];
   name: Scalars['String']['input'];
@@ -249,6 +256,11 @@ export type MutationUpdateAuthDeviceArgs = {
 
 export type MutationUpdatePartyArgs = {
   input: PartyInput;
+};
+
+
+export type MutationUpdateProfileArgs = {
+  input: ProfileInput;
 };
 
 export type Party = {
@@ -271,6 +283,14 @@ export type PartyInput = {
   locationWidgetSrc?: InputMaybe<Scalars['String']['input']>;
   roomsAvailable: Scalars['Int']['input'];
   startDate: Scalars['Date']['input'];
+};
+
+export type ProfileInput = {
+  avatarUrl?: InputMaybe<Scalars['String']['input']>;
+  displayName: Scalars['String']['input'];
+  email: Scalars['String']['input'];
+  id?: InputMaybe<Scalars['ID']['input']>;
+  name: Scalars['String']['input'];
 };
 
 export type Query = {
@@ -407,6 +427,7 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Party: ResolverTypeWrapper<PartyMapper>;
   PartyInput: PartyInput;
+  ProfileInput: ProfileInput;
   Query: ResolverTypeWrapper<{}>;
   RegisterDeviceResponse: ResolverTypeWrapper<Omit<RegisterDeviceResponse, 'device'> & { device: ResolversTypes['AuthDevice'] }>;
   RegisterResponse: ResolverTypeWrapper<Omit<RegisterResponse, 'user'> & { user: ResolversTypes['User'] }>;
@@ -437,6 +458,7 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
   Party: PartyMapper;
   PartyInput: PartyInput;
+  ProfileInput: ProfileInput;
   Query: {};
   RegisterDeviceResponse: Omit<RegisterDeviceResponse, 'device'> & { device: ResolversParentTypes['AuthDevice'] };
   RegisterResponse: Omit<RegisterResponse, 'user'> & { user: ResolversParentTypes['User'] };
@@ -548,8 +570,10 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
   sendMagicLink?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationSendMagicLinkArgs, 'email'>>;
   setAttendance?: Resolver<ResolversTypes['Party'], ParentType, ContextType, RequireFields<MutationSetAttendanceArgs, 'dates' | 'partyId'>>;
   setGamesPlayed?: Resolver<ResolversTypes['Attending'], ParentType, ContextType, RequireFields<MutationSetGamesPlayedArgs, 'gameIds' | 'partyId'>>;
+  syncCache?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, Partial<MutationSyncCacheArgs>>;
   updateAuthDevice?: Resolver<ResolversTypes['AuthDevice'], ParentType, ContextType, RequireFields<MutationUpdateAuthDeviceArgs, 'id' | 'name'>>;
   updateParty?: Resolver<ResolversTypes['Party'], ParentType, ContextType, RequireFields<MutationUpdatePartyArgs, 'input'>>;
+  updateProfile?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUpdateProfileArgs, 'input'>>;
 };
 
 export type PartyResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Party'] = ResolversParentTypes['Party']> = {

@@ -3,9 +3,7 @@ import cookie from "@fastify/cookie";
 import cors from "@fastify/cors";
 import multipart from "@fastify/multipart";
 import staticfs from "@fastify/static";
-import ws from "@fastify/websocket";
 import { useJWT } from "@graphql-yoga/plugin-jwt";
-import { fastifyTRPCPlugin } from "@trpc/server/adapters/fastify";
 import { randomUUID } from "crypto";
 import fastify from "fastify";
 import { createWriteStream, existsSync } from "fs";
@@ -27,8 +25,6 @@ import { discord } from "./discord";
 import { expectedOrigin } from "./env";
 import { logger } from "./logger";
 import { transporter } from "./mail";
-import { appRouter } from "./router";
-import { createContext } from "./router/context";
 import { resolvers } from "./schema/resolvers.generated";
 import { typeDefs } from "./schema/typeDefs.generated";
 import { JWTPayload } from "./signToken";
@@ -43,7 +39,6 @@ export interface ServerOptions {
 export function createServer(opts: ServerOptions) {
   const dev = opts.dev ?? true;
   const port = opts.port ?? 3000;
-  const prefix = opts.prefix ?? "/trpc";
   const server = fastify({
     logger,
     disableRequestLogging: true,
@@ -161,18 +156,7 @@ export function createServer(opts: ServerOptions) {
   }
   server.register(cookie, { secret: process.env.SESSION_SECRET });
   server.register(cors, {});
-  server.register(ws);
-  server.register(fastifyTRPCPlugin, {
-    prefix,
-    useWSS: true,
-    trpcOptions: {
-      router: appRouter,
-      createContext,
-      onError: ({ error }: { error: Error }): void => {
-        logger.error(error);
-      },
-    },
-  });
+
   if (!dev) {
     server.register(staticfs, {
       root: join(__dirname, "../client"),

@@ -35,7 +35,7 @@ export function UserButton() {
             search={{}}
             params={{}}
           >
-            Mein Profil
+            Einstellungen
           </Menu.Item>
 
           {(ability.can("manage", "User") ||

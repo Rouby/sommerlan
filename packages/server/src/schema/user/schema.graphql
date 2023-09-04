@@ -30,6 +30,8 @@ extend type Mutation {
 
   updateAuthDevice(id: ID!, name: String!): AuthDevice!
   deleteAuthDevice(id: ID!): AuthDevice!
+
+  updateProfile(input: ProfileInput!): User!
 }
 
 extend type Attending {
@@ -66,6 +68,14 @@ type User {
   avatar: String!
   avatarUrl: String
   devices: [AuthDevice!]!
+}
+
+input ProfileInput {
+  id: ID
+  name: String!
+  displayName: String!
+  email: String!
+  avatarUrl: String
 }
 
 type AuthDevice {

@@ -1,0 +1,3 @@
+extend type Mutation {
+  syncCache(clear: Boolean): Boolean
+}

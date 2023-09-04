@@ -674,10 +674,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:1.9.3"\
       ],\
       [\
-        "@fastify/websocket",\
-        "npm:8.1.0"\
-      ],\
-      [\
         "@floating-ui/core",\
         "npm:1.3.1"\
       ],\
@@ -1628,18 +1624,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [\
         "@tootallnate/once",\
         "npm:2.0.0"\
-      ],\
-      [\
-        "@trpc/client",\
-        "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:10.31.0"\
-      ],\
-      [\
-        "@trpc/react-query",\
-        "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:10.31.0"\
-      ],\
-      [\
-        "@trpc/server",\
-        "npm:10.31.0"\
       ],\
       [\
         "@ts-morph/common",\
@@ -7682,17 +7666,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
-      ["@fastify/websocket", [\
-        ["npm:8.1.0", {\
-          "packageLocation": "./.yarn/cache/@fastify-websocket-npm-8.1.0-700437cac5-aaaad8cd77.zip/node_modules/@fastify/websocket/",\
-          "packageDependencies": [\
-            ["@fastify/websocket", "npm:8.1.0"],\
-            ["fastify-plugin", "npm:4.5.0"],\
-            ["ws", "virtual:fca05dfadd1590ede45c6b43acf052206b02cc0e4632a9e128f714134eb94c950eb7006342cba2aefe5ad5a01911f21bae164022190922c2cb40066140598ee8#npm:8.13.0"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
       ["@floating-ui/core", [\
         ["npm:1.3.1", {\
           "packageLocation": "./.yarn/cache/@floating-ui-core-npm-1.3.1-d31cabf485-fe3b40fcae.zip/node_modules/@floating-ui/core/",\
@@ -11088,9 +11061,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@tiptap/pm", "npm:2.1.7"],\
             ["@tiptap/react", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:2.1.7"],\
             ["@tiptap/starter-kit", "npm:2.1.7"],\
-            ["@trpc/client", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:10.31.0"],\
-            ["@trpc/react-query", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:10.31.0"],\
-            ["@trpc/server", "npm:10.31.0"],\
             ["@types/qrcode", "npm:1.5.0"],\
             ["@types/react", "npm:18.2.13"],\
             ["@types/react-dom", "npm:18.2.6"],\
@@ -11133,7 +11103,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@fastify/cors", "npm:8.3.0"],\
             ["@fastify/multipart", "npm:7.7.3"],\
             ["@fastify/static", "npm:6.10.2"],\
-            ["@fastify/websocket", "npm:8.1.0"],\
             ["@graphql-codegen/cli", "virtual:f9aaeb0ff5026b521d6a9b424ffbc3c34990b6972b440282c9eb836880cb71f3dfd141e9455e392c98abc5918762c91d12bf17451df331903d8e149b2f873a01#npm:5.0.0"],\
             ["@graphql-tools/utils", "virtual:42cb8d6957b82d6800f3a46410aeed267068ea11b6c25d319aa63091cc84e678254c1a2bd50b466d22a52324bd4a1f518abbfe35627298292a556ff4a72b6ba3#npm:10.0.5"],\
             ["@graphql-yoga/plugin-jwt", "virtual:f9aaeb0ff5026b521d6a9b424ffbc3c34990b6972b440282c9eb836880cb71f3dfd141e9455e392c98abc5918762c91d12bf17451df331903d8e149b2f873a01#npm:1.0.1"],\
@@ -11142,7 +11111,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@simplewebauthn/server", "npm:7.3.0"],\
             ["@swc/cli", "virtual:f9aaeb0ff5026b521d6a9b424ffbc3c34990b6972b440282c9eb836880cb71f3dfd141e9455e392c98abc5918762c91d12bf17451df331903d8e149b2f873a01#npm:0.1.62"],\
             ["@swc/core", "virtual:fe4e29d9c44bb82cbddd7acef628867a51947088307101e3858c7b65d49bfd0631ffd9b70ae7925cb0fc356153abdb6a3d240f165e0190ac484f142550bea1ac#npm:1.3.67"],\
-            ["@trpc/server", "npm:10.31.0"],\
             ["@types/google-spreadsheet", "npm:3.3.2"],\
             ["@types/jsonwebtoken", "npm:9.0.2"],\
             ["@types/newrelic", "npm:9.14.0"],\
@@ -12395,75 +12363,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@tootallnate-once-npm-2.0.0-e36cf4f140-ad87447820.zip/node_modules/@tootallnate/once/",\
           "packageDependencies": [\
             ["@tootallnate/once", "npm:2.0.0"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["@trpc/client", [\
-        ["npm:10.31.0", {\
-          "packageLocation": "./.yarn/cache/@trpc-client-npm-10.31.0-2abb40af81-40dc7d07bb.zip/node_modules/@trpc/client/",\
-          "packageDependencies": [\
-            ["@trpc/client", "npm:10.31.0"]\
-          ],\
-          "linkType": "SOFT"\
-        }],\
-        ["virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:10.31.0", {\
-          "packageLocation": "./.yarn/__virtual__/@trpc-client-virtual-f952b2ae99/0/cache/@trpc-client-npm-10.31.0-2abb40af81-40dc7d07bb.zip/node_modules/@trpc/client/",\
-          "packageDependencies": [\
-            ["@trpc/client", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:10.31.0"],\
-            ["@trpc/server", "npm:10.31.0"],\
-            ["@types/trpc__server", null]\
-          ],\
-          "packagePeers": [\
-            "@trpc/server",\
-            "@types/trpc__server"\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["@trpc/react-query", [\
-        ["npm:10.31.0", {\
-          "packageLocation": "./.yarn/cache/@trpc-react-query-npm-10.31.0-5169a11503-b2b3df3342.zip/node_modules/@trpc/react-query/",\
-          "packageDependencies": [\
-            ["@trpc/react-query", "npm:10.31.0"]\
-          ],\
-          "linkType": "SOFT"\
-        }],\
-        ["virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:10.31.0", {\
-          "packageLocation": "./.yarn/__virtual__/@trpc-react-query-virtual-c6329ee203/0/cache/@trpc-react-query-npm-10.31.0-5169a11503-b2b3df3342.zip/node_modules/@trpc/react-query/",\
-          "packageDependencies": [\
-            ["@trpc/react-query", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:10.31.0"],\
-            ["@tanstack/react-query", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:4.29.14"],\
-            ["@trpc/client", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:10.31.0"],\
-            ["@trpc/server", "npm:10.31.0"],\
-            ["@types/react", "npm:18.2.13"],\
-            ["@types/react-dom", "npm:18.2.6"],\
-            ["@types/tanstack__react-query", null],\
-            ["@types/trpc__client", null],\
-            ["@types/trpc__server", null],\
-            ["react", "npm:18.2.0"],\
-            ["react-dom", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:18.2.0"]\
-          ],\
-          "packagePeers": [\
-            "@tanstack/react-query",\
-            "@trpc/client",\
-            "@trpc/server",\
-            "@types/react-dom",\
-            "@types/react",\
-            "@types/tanstack__react-query",\
-            "@types/trpc__client",\
-            "@types/trpc__server",\
-            "react-dom",\
-            "react"\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["@trpc/server", [\
-        ["npm:10.31.0", {\
-          "packageLocation": "./.yarn/cache/@trpc-server-npm-10.31.0-9ada3c97ee-2f8b946f3e.zip/node_modules/@trpc/server/",\
-          "packageDependencies": [\
-            ["@trpc/server", "npm:10.31.0"]\
           ],\
           "linkType": "HARD"\
         }]\

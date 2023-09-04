@@ -25,7 +25,7 @@ import { CardWithHeader, CreatePasskeyFlow } from "../components";
 import { graphql } from "../gql";
 import { useUploadFileMutation } from "../hooks";
 import { tokenAtom, userAtom } from "../state";
-import { formatDate, trpc } from "../utils";
+import { formatDate } from "../utils";
 
 export function Profile() {
   return (
@@ -45,8 +45,20 @@ function ProfileSettings() {
 
   const { mutateAsync: uploadFile, isLoading: isUploading } =
     useUploadFileMutation();
-  const { mutateAsync: updateProfile, isLoading } =
-    trpc.user.updateProfile.useMutation();
+  const [{ fetching }, updateProfile] = useMutation(
+    graphql(`
+      mutation updateProfile($input: ProfileInput!) {
+        updateProfile(input: $input) {
+          id
+          name
+          displayName
+          email
+          avatar
+          avatarUrl
+        }
+      }
+    `)
+  );
 
   return (
     <form
@@ -59,14 +71,16 @@ function ProfileSettings() {
         const email = form["email"].value;
         const avatarUrl = form["avatarUrl"].value;
 
-        const token = await updateProfile({
-          name,
-          displayName,
-          email,
-          avatarUrl,
+        await updateProfile({
+          input: {
+            name,
+            displayName,
+            email,
+            avatarUrl,
+          },
         });
 
-        setToken(token);
+        setToken(null);
       }}
     >
       <CardWithHeader header="Deine Profil">
@@ -151,7 +165,7 @@ function ProfileSettings() {
           </Button>
 
           <Group position="right">
-            <Button loading={isLoading} type="submit">
+            <Button loading={fetching} type="submit">
               Speichern
             </Button>
           </Group>
@@ -162,7 +176,7 @@ function ProfileSettings() {
 }
 
 function PasskeySettings() {
-  const [{ data }] = useQuery({
+  const [{ data, fetching }] = useQuery({
     query: graphql(`
       query myDevices {
         me {
@@ -190,6 +204,12 @@ function PasskeySettings() {
       }
     >
       <Stack p="xs" spacing="xs">
+        {fetching && (
+          <>
+            <Skeleton h={40} />
+            <Skeleton h={40} />
+          </>
+        )}
         {data?.me?.devices.map((device, idx) => (
           <DeviceInfos
             key={idx}
@@ -198,7 +218,7 @@ function PasskeySettings() {
             createdAt={device.createdAt}
             lastUsedAt={device.lastUsedAt}
           />
-        )) ?? <Skeleton />}
+        ))}
       </Stack>
 
       <Modal

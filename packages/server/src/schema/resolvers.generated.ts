@@ -28,8 +28,10 @@ import    { requestRoom as Mutation_requestRoom } from './party/resolvers/Mutati
 import    { sendMagicLink as Mutation_sendMagicLink } from './user/resolvers/Mutation/sendMagicLink';
 import    { setAttendance as Mutation_setAttendance } from './party/resolvers/Mutation/setAttendance';
 import    { setGamesPlayed as Mutation_setGamesPlayed } from './game/resolvers/Mutation/setGamesPlayed';
+import    { syncCache as Mutation_syncCache } from './admin/resolvers/Mutation/syncCache';
 import    { updateAuthDevice as Mutation_updateAuthDevice } from './user/resolvers/Mutation/updateAuthDevice';
 import    { updateParty as Mutation_updateParty } from './party/resolvers/Mutation/updateParty';
+import    { updateProfile as Mutation_updateProfile } from './user/resolvers/Mutation/updateProfile';
 import    { Party } from './party/resolvers/Party';
 import    { games as Query_games } from './game/resolvers/Query/games';
 import    { me as Query_me } from './user/resolvers/Query/me';
@@ -43,7 +45,7 @@ import    { User } from './user/resolvers/User';
 import    { DateResolver,DateTimeResolver,JSONResolver,JWTResolver,TimeResolver } from 'graphql-scalars';
     export const resolvers: Resolvers = {
       Query: { games: Query_games,me: Query_me,nextParty: Query_nextParty,parties: Query_parties,party: Query_party,users: Query_users },
-      Mutation: { addGameToParty: Mutation_addGameToParty,deleteAuthDevice: Mutation_deleteAuthDevice,denyRoom: Mutation_denyRoom,generatePasskeyLoginOptions: Mutation_generatePasskeyLoginOptions,generatePasskeyRegisterOptions: Mutation_generatePasskeyRegisterOptions,grantRoom: Mutation_grantRoom,leaveEvent: Mutation_leaveEvent,loginMagicLink: Mutation_loginMagicLink,loginPasskey: Mutation_loginPasskey,loginPassword: Mutation_loginPassword,participateInEvent: Mutation_participateInEvent,planEvent: Mutation_planEvent,recindRoom: Mutation_recindRoom,refreshLogin: Mutation_refreshLogin,register: Mutation_register,registerPasskey: Mutation_registerPasskey,requestRoom: Mutation_requestRoom,sendMagicLink: Mutation_sendMagicLink,setAttendance: Mutation_setAttendance,setGamesPlayed: Mutation_setGamesPlayed,updateAuthDevice: Mutation_updateAuthDevice,updateParty: Mutation_updateParty },
+      Mutation: { addGameToParty: Mutation_addGameToParty,deleteAuthDevice: Mutation_deleteAuthDevice,denyRoom: Mutation_denyRoom,generatePasskeyLoginOptions: Mutation_generatePasskeyLoginOptions,generatePasskeyRegisterOptions: Mutation_generatePasskeyRegisterOptions,grantRoom: Mutation_grantRoom,leaveEvent: Mutation_leaveEvent,loginMagicLink: Mutation_loginMagicLink,loginPasskey: Mutation_loginPasskey,loginPassword: Mutation_loginPassword,participateInEvent: Mutation_participateInEvent,planEvent: Mutation_planEvent,recindRoom: Mutation_recindRoom,refreshLogin: Mutation_refreshLogin,register: Mutation_register,registerPasskey: Mutation_registerPasskey,requestRoom: Mutation_requestRoom,sendMagicLink: Mutation_sendMagicLink,setAttendance: Mutation_setAttendance,setGamesPlayed: Mutation_setGamesPlayed,syncCache: Mutation_syncCache,updateAuthDevice: Mutation_updateAuthDevice,updateParty: Mutation_updateParty,updateProfile: Mutation_updateProfile },
       
       AddGameResult: AddGameResult,
 Attending: Attending,

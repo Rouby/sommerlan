@@ -3,7 +3,6 @@ import { DatesProvider } from "@mantine/dates";
 import { Notifications, notifications } from "@mantine/notifications";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider } from "@tanstack/router";
-import { httpBatchLink } from "@trpc/client";
 import { devtoolsExchange } from "@urql/devtools";
 import { authExchange } from "@urql/exchange-auth";
 import { Entity, Link, cacheExchange } from "@urql/exchange-graphcache";
@@ -27,7 +26,6 @@ import { graphql } from "./gql";
 import schema from "./gql/introspection.json";
 import { router } from "./router";
 import { colorSchemeAtom, refreshTokenAtom, tokenAtom } from "./state";
-import { trpc } from "./utils";
 
 dayjs.extend(duration);
 dayjs.extend(localizedFormat);
@@ -41,45 +39,24 @@ locales[navigator.language.split("-")[0]]?.().then(() =>
 
 const queryClient = new QueryClient();
 
-const trpcClient = trpc.createClient({
-  links: [
-    httpBatchLink({
-      url: "/trpc",
-      async headers() {
-        let token;
-        try {
-          token = JSON.parse(localStorage.getItem("token") ?? "");
-        } catch {
-          //
-        }
-        return {
-          Authorization: token ? `Bearer ${token}` : undefined,
-        };
-      },
-    }),
-  ],
-});
-
 export function App() {
   const colorScheme = useAtomValue(colorSchemeAtom);
 
   return (
     <Provider>
       <Urql>
-        <trpc.Provider client={trpcClient} queryClient={queryClient}>
-          <QueryClientProvider client={queryClient}>
-            <MantineProvider
-              withGlobalStyles
-              withNormalizeCSS
-              theme={{ colorScheme }}
-            >
-              <DatesProvider settings={{ locale: navigator.language }}>
-                <Notifications />
-                <RouterProvider router={router} />
-              </DatesProvider>
-            </MantineProvider>
-          </QueryClientProvider>
-        </trpc.Provider>
+        <QueryClientProvider client={queryClient}>
+          <MantineProvider
+            withGlobalStyles
+            withNormalizeCSS
+            theme={{ colorScheme }}
+          >
+            <DatesProvider settings={{ locale: navigator.language }}>
+              <Notifications />
+              <RouterProvider router={router} />
+            </DatesProvider>
+          </MantineProvider>
+        </QueryClientProvider>
       </Urql>
     </Provider>
   );
@@ -253,9 +230,9 @@ function Urql({ children }: { children: React.ReactNode }) {
                   return dayjs()
                     .add(1, "minute")
                     .isAfter(dayjs.unix(decoded.exp));
-                } catch {}
-
-                return false;
+                } catch {
+                  return true;
+                }
               },
             };
 

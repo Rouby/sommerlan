@@ -11,11 +11,10 @@ import {
 import { IconCalendar } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { useAtomValue } from "jotai";
-import { useQuery } from "urql";
+import { useMutation, useQuery } from "urql";
 import { UserAvatar } from ".";
 import { graphql } from "../gql";
 import { userAtom } from "../state";
-import { trpc } from "../utils";
 
 export function PartyInfo({ id }: { id: string }) {
   const user = useAtomValue(userAtom)!;
@@ -44,20 +43,19 @@ export function PartyInfo({ id }: { id: string }) {
     },
   });
 
-  const context = trpc.useContext();
-  const { mutateAsync: attendDates, isLoading: savingAttending } =
-    trpc.party.attendDates.useMutation({
-      onSuccess: (data) => {
-        context.party.get.setData(
-          id,
-          (prev) =>
-            prev && {
-              ...prev,
-              attendings: data,
-            }
-        );
-      },
-    });
+  const [{ fetching: savingAttendance }, attendDates] = useMutation(
+    graphql(`
+      mutation setAttendance($partyId: ID!, $dates: [Date!]!) {
+        setAttendance(partyId: $partyId, dates: $dates) {
+          id
+          attendings {
+            id
+            dates
+          }
+        }
+      }
+    `)
+  );
 
   if (fetching) {
     return (
@@ -87,7 +85,7 @@ export function PartyInfo({ id }: { id: string }) {
         <Popover.Target>
           <Button
             mb="md"
-            loading={savingAttending}
+            loading={savingAttendance}
             leftIcon={<IconCalendar size={18} />}
           >
             Wann war ich da?

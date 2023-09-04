@@ -1,9 +1,16 @@
 import { Box, Button } from "@mantine/core";
+import { useMutation } from "urql";
 import { CardWithHeader } from "../components";
-import { trpc } from "../utils";
+import { graphql } from "../gql";
 
 export function Cache() {
-  const { mutate: syncCache, isLoading } = trpc.cache.sync.useMutation();
+  const [{ fetching }, syncCache] = useMutation(
+    graphql(`
+      mutation syncCache {
+        syncCache(clear: true)
+      }
+    `)
+  );
 
   return (
     <CardWithHeader header="Cache">
@@ -11,8 +18,8 @@ export function Cache() {
         <Button
           variant="light"
           color="orange"
-          onClick={() => syncCache({ clear: true })}
-          loading={isLoading}
+          onClick={() => syncCache({})}
+          loading={fetching}
         >
           Cache aktualisieren
         </Button>
