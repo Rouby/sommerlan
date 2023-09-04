@@ -17,7 +17,9 @@ export const setGamesPlayed: NonNullable<
 
   ForbiddenError.from(ctx.ability).throwUnlessCan("update", attending);
 
-  const games = await Game.filterByPartyId(partyId);
+  const games = await Game.filter(
+    (game) => partyId in game.partyPeople || gameIds.includes(game.id)
+  );
 
   for (const game of games) {
     game.partyPeople[partyId] = game.partyPeople[partyId] ?? [];
