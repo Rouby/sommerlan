@@ -27,15 +27,9 @@ export default defineConfig(async ({ mode }) => ({
   },
   server: {
     proxy: {
-      "/trpc": {
-        target: "http://localhost:2022",
-        changeOrigin: true,
-        ws: true,
-      },
       "/graphql": {
         target: "http://localhost:2022",
         changeOrigin: true,
-        ws: true,
       },
       "/uploads": {
         target: "http://localhost:2022",

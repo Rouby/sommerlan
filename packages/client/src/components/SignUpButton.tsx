@@ -12,7 +12,6 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
-import { TRPCClientError } from "@trpc/client";
 import { useSetAtom } from "jotai";
 import { useState } from "react";
 import { useMutation as urlMutation, useMutation } from "urql";
@@ -217,11 +216,7 @@ function SignInViaPasskey() {
       <LoadingOverlay visible={isLoading} />
 
       <Alert mb="md" hidden={!error} color="red">
-        {error instanceof TRPCClientError && error.data.code === "NOT_FOUND"
-          ? "Der Passkey ist auf dieser Seite nicht vorhanden."
-          : error instanceof Error
-          ? error.message
-          : `${error}`}
+        {error?.message}
       </Alert>
 
       <FingerprintIllustration />
