@@ -60,23 +60,6 @@ export function PartyAttendings({ partyId }: { partyId?: string }) {
           ...PartyAttendingInfo
         }
       }
-
-      fragment PartyAttendingInfo on Party {
-        id
-        startDate
-        endDate
-        roomsAvailable
-        attendings {
-          id
-          dates
-          room
-          user {
-            id
-            displayName
-            avatar
-          }
-        }
-      }
     `),
     variables: {
       nextParty: !partyId,

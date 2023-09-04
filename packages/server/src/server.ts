@@ -1,3 +1,4 @@
+import { ForbiddenError } from "@casl/ability";
 import cookie from "@fastify/cookie";
 import cors from "@fastify/cors";
 import multipart from "@fastify/multipart";
@@ -9,7 +10,14 @@ import { randomUUID } from "crypto";
 import fastify from "fastify";
 import { createWriteStream, existsSync } from "fs";
 import { mkdir } from "fs/promises";
-import { Plugin, createSchema, createYoga } from "graphql-yoga";
+import { GraphQLError } from "graphql";
+import {
+  Plugin,
+  createGraphQLError,
+  createSchema,
+  createYoga,
+  maskError,
+} from "graphql-yoga";
 import { join } from "path";
 import { pipeline } from "stream/promises";
 import { AppAbility, createAbility } from "./ability";
@@ -66,6 +74,28 @@ export function createServer(opts: ServerOptions) {
         },
       } as Plugin<{ ability: AppAbility; jwt: JWTPayload }>,
     ],
+    maskedErrors: {
+      maskError: (error, message, isDev) => {
+        console.log(error);
+        console.log(
+          "err",
+          error instanceof ForbiddenError,
+          error instanceof GraphQLError
+        );
+
+        if (
+          error instanceof GraphQLError &&
+          error.originalError instanceof ForbiddenError
+        ) {
+          return createGraphQLError(error.message, {
+            originalError: error.originalError,
+            extensions: { code: "FORBIDDEN" },
+          });
+        }
+
+        return maskError(error, message, isDev);
+      },
+    },
   });
 
   server.route({

@@ -1,0 +1,33 @@
+extend type Mutation {
+  planEvent(input: EventInput!): Event!
+  participateInEvent(id: ID!): Event!
+  leaveEvent(id: ID!): Event!
+}
+
+extend type Party {
+  events: [Event!]!
+}
+
+type Event {
+  id: ID!
+  name: String!
+  party: Party!
+  date: Date
+  startTime: String
+  endTime: String
+  organizer: User!
+  participants: [User!]!
+  description: String
+  image: String!
+}
+
+input EventInput {
+  id: ID
+  name: String!
+  partyId: ID!
+  date: Date
+  startTime: String
+  endTime: String
+  description: String
+  imageUrl: String!
+}

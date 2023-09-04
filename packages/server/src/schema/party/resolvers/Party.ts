@@ -1,4 +1,4 @@
-import { Attending, Game, User } from "../../../data";
+import { Attending, Event, Game, User } from "../../../data";
 import type { PartyResolvers } from "./../../types.generated";
 export const Party: PartyResolvers = {
   attendings: async (parent, _arg, _ctx) => {
@@ -19,4 +19,7 @@ export const Party: PartyResolvers = {
   locationWidgetSrc: (parent) => {
     return parent.iframeSrc;
   },
+  events: (parent) => {
+    return Event.filterByPartyId(parent.id);
+  }
 };

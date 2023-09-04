@@ -1,5 +1,5 @@
 import { Center, Container } from "@mantine/core";
-import { Can, NextPartyEventsList } from "../components";
+import { Can, PartyEvents } from "../components";
 
 export function Events() {
   return (
@@ -13,7 +13,7 @@ export function Events() {
           </Center>
         }
       >
-        <NextPartyEventsList />
+        <PartyEvents />
       </Can>
     </Container>
   );

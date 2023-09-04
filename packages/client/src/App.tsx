@@ -1,5 +1,6 @@
 import { MantineProvider } from "@mantine/core";
 import { DatesProvider } from "@mantine/dates";
+import { Notifications, notifications } from "@mantine/notifications";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider } from "@tanstack/router";
 import { httpBatchLink } from "@trpc/client";
@@ -72,11 +73,8 @@ export function App() {
               withNormalizeCSS
               theme={{ colorScheme }}
             >
-              <DatesProvider
-                settings={{
-                  locale: navigator.language,
-                }}
-              >
+              <DatesProvider settings={{ locale: navigator.language }}>
+                <Notifications />
                 <RouterProvider router={router} />
               </DatesProvider>
             </MantineProvider>
@@ -203,10 +201,7 @@ function Urql({ children }: { children: React.ReactNode }) {
                 return error.graphQLErrors.some((e) => {
                   const { code, http } = e.extensions ?? {};
 
-                  if (code === "UNAUTHENTICATED") {
-                    return true;
-                  }
-                  if (code === "FORBIDDEN") {
+                  if (code === "UNAUTHORIZED") {
                     return true;
                   }
                   if (
@@ -269,6 +264,13 @@ function Urql({ children }: { children: React.ReactNode }) {
               setRefreshToken(null);
 
               authState.current = { token: null, refreshToken: null };
+
+              notifications.show({
+                title: "Authentifizierung",
+                message:
+                  "Deine Sitzung ist abgelaufen. Bitte melde dich erneut an.",
+                color: "red",
+              });
             }
 
             function isOperationWithoutAuth(operation: Operation) {

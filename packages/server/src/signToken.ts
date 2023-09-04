@@ -1,3 +1,4 @@
+import { MongoQuery } from "@casl/ability";
 import { sign } from "jsonwebtoken";
 import { createAbility } from "./ability";
 import { User } from "./data";
@@ -15,8 +16,26 @@ async function tokenPayload(user: User) {
       avatar: user.avatar,
       avatarUrl: user.avatarUrl,
     },
-    abilityRules: (await createAbility(user)).rules,
+    abilityRules: (await createAbility(user)).rules
+      // exclude read rules, as they are always checked server-side
+      .filter((rule) => rule.action !== "read")
+      // map relation-ids to match with objects on frontend (e.g. userId => user.id)
+      .map((rule) => ({ ...rule, conditions: replaceIdKeys(rule.conditions) })),
   };
+}
+
+function replaceIdKeys(conditions?: MongoQuery) {
+  if (!conditions) return conditions;
+
+  return Object.fromEntries(
+    Object.entries(conditions).map(([key, value]) => {
+      const match = key.match(/^(\w+)Id$/);
+      if (match) {
+        return [`${match[1]}.id`, value];
+      }
+      return [key, value];
+    })
+  );
 }
 
 export async function signToken(user: User) {

@@ -27,7 +27,9 @@ export type AppAbility = MongoAbility<
 export async function createAbility(
   user?: { id: User["id"]; roles: User["roles"] } | null
 ) {
-  const { can, build } = new AbilityBuilder<AppAbility>(createMongoAbility);
+  const { can, cannot, build } = new AbilityBuilder<AppAbility>(
+    createMongoAbility
+  );
 
   if (user) {
     can("read", "Party");
@@ -36,7 +38,8 @@ export async function createAbility(
     can("update", "Attending", { userId: user.id });
     can("read", "Event");
     can("create", "Event", { organizerId: user.id });
-    can("update", "Event", { organizerId: user.id });
+    can("update", "Event", { organizerId: user.id }); // TODO ids?
+    can("participate", "Event");
     can("read", "Game");
     can("create", "Game");
 
@@ -48,6 +51,10 @@ export async function createAbility(
       can("manage", "Event");
       can("manage", "Cache");
     }
+
+    cannot("participate", "Event", { organizerId: user.id }).because(
+      "Als Organisator kannst du deine Teilnahme nicht ändern."
+    );
   }
 
   return build({

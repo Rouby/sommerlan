@@ -1,6 +1,7 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 import { AttendingMapper, PartyMapper } from './party/schema.mappers';
 import { AuthDeviceMapper, UserMapper } from './user/schema.mappers';
+import { EventMapper } from './events/schema.mappers';
 import { GameMapper } from './game/schema.mappers';
 import { Context } from './context';
 export type Maybe<T> = T | null;
@@ -56,6 +57,31 @@ export type AuthResponse = {
   token: Scalars['JWT']['output'];
 };
 
+export type Event = {
+  __typename?: 'Event';
+  date?: Maybe<Scalars['Date']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  endTime?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  image: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  organizer: User;
+  participants: Array<User>;
+  party: Party;
+  startTime?: Maybe<Scalars['String']['output']>;
+};
+
+export type EventInput = {
+  date?: InputMaybe<Scalars['Date']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  endTime?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  imageUrl: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  partyId: Scalars['ID']['input'];
+  startTime?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type Game = {
   __typename?: 'Game';
   id: Scalars['ID']['output'];
@@ -87,9 +113,12 @@ export type Mutation = {
   generatePasskeyLoginOptions: Scalars['JSON']['output'];
   generatePasskeyRegisterOptions: Scalars['JSON']['output'];
   grantRoom?: Maybe<Attending>;
+  leaveEvent: Event;
   loginMagicLink: AuthResponse;
   loginPasskey: LoginResponse;
   loginPassword: AuthResponse;
+  participateInEvent: Event;
+  planEvent: Event;
   recindRoom?: Maybe<Attending>;
   refreshLogin: AuthResponse;
   register: RegisterResponse;
@@ -99,6 +128,7 @@ export type Mutation = {
   setAttendance: Party;
   setGamesPlayed: Attending;
   updateAuthDevice: AuthDevice;
+  updateParty: Party;
 };
 
 
@@ -133,6 +163,11 @@ export type MutationGrantRoomArgs = {
 };
 
 
+export type MutationLeaveEventArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
 export type MutationLoginMagicLinkArgs = {
   magicLinkId: Scalars['String']['input'];
 };
@@ -146,6 +181,16 @@ export type MutationLoginPasskeyArgs = {
 export type MutationLoginPasswordArgs = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
+};
+
+
+export type MutationParticipateInEventArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationPlanEventArgs = {
+  input: EventInput;
 };
 
 
@@ -201,16 +246,31 @@ export type MutationUpdateAuthDeviceArgs = {
   name: Scalars['String']['input'];
 };
 
+
+export type MutationUpdatePartyArgs = {
+  input: PartyInput;
+};
+
 export type Party = {
   __typename?: 'Party';
   attendings: Array<Attending>;
   endDate: Scalars['Date']['output'];
+  events: Array<Event>;
   gamesPlayed: Array<GameOnParty>;
   id: Scalars['ID']['output'];
   location: Scalars['String']['output'];
   locationWidgetSrc?: Maybe<Scalars['String']['output']>;
   roomsAvailable: Scalars['Int']['output'];
   startDate: Scalars['Date']['output'];
+};
+
+export type PartyInput = {
+  endDate: Scalars['Date']['input'];
+  id?: InputMaybe<Scalars['ID']['input']>;
+  location: Scalars['String']['input'];
+  locationWidgetSrc?: InputMaybe<Scalars['String']['input']>;
+  roomsAvailable: Scalars['Int']['input'];
+  startDate: Scalars['Date']['input'];
 };
 
 export type Query = {
@@ -335,6 +395,8 @@ export type ResolversTypes = {
   AuthResponse: ResolverTypeWrapper<AuthResponse>;
   Date: ResolverTypeWrapper<Scalars['Date']['output']>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
+  Event: ResolverTypeWrapper<EventMapper>;
+  EventInput: EventInput;
   Game: ResolverTypeWrapper<GameMapper>;
   GameOnParty: ResolverTypeWrapper<Omit<GameOnParty, 'game' | 'party' | 'players'> & { game: ResolversTypes['Game'], party: ResolversTypes['Party'], players: Array<ResolversTypes['User']> }>;
   JSON: ResolverTypeWrapper<Scalars['JSON']['output']>;
@@ -344,6 +406,7 @@ export type ResolversTypes = {
   Mutation: ResolverTypeWrapper<{}>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Party: ResolverTypeWrapper<PartyMapper>;
+  PartyInput: PartyInput;
   Query: ResolverTypeWrapper<{}>;
   RegisterDeviceResponse: ResolverTypeWrapper<Omit<RegisterDeviceResponse, 'device'> & { device: ResolversTypes['AuthDevice'] }>;
   RegisterResponse: ResolverTypeWrapper<Omit<RegisterResponse, 'user'> & { user: ResolversTypes['User'] }>;
@@ -362,6 +425,8 @@ export type ResolversParentTypes = {
   AuthResponse: AuthResponse;
   Date: Scalars['Date']['output'];
   DateTime: Scalars['DateTime']['output'];
+  Event: EventMapper;
+  EventInput: EventInput;
   Game: GameMapper;
   GameOnParty: Omit<GameOnParty, 'game' | 'party' | 'players'> & { game: ResolversParentTypes['Game'], party: ResolversParentTypes['Party'], players: Array<ResolversParentTypes['User']> };
   JSON: Scalars['JSON']['output'];
@@ -371,6 +436,7 @@ export type ResolversParentTypes = {
   Mutation: {};
   Boolean: Scalars['Boolean']['output'];
   Party: PartyMapper;
+  PartyInput: PartyInput;
   Query: {};
   RegisterDeviceResponse: Omit<RegisterDeviceResponse, 'device'> & { device: ResolversParentTypes['AuthDevice'] };
   RegisterResponse: Omit<RegisterResponse, 'user'> & { user: ResolversParentTypes['User'] };
@@ -416,6 +482,20 @@ export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversT
   name: 'DateTime';
 }
 
+export type EventResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Event'] = ResolversParentTypes['Event']> = {
+  date?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  endTime?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  image?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  organizer?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  participants?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
+  party?: Resolver<ResolversTypes['Party'], ParentType, ContextType>;
+  startTime?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type GameResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Game'] = ResolversParentTypes['Game']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   image?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -454,9 +534,12 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
   generatePasskeyLoginOptions?: Resolver<ResolversTypes['JSON'], ParentType, ContextType, Partial<MutationGeneratePasskeyLoginOptionsArgs>>;
   generatePasskeyRegisterOptions?: Resolver<ResolversTypes['JSON'], ParentType, ContextType, RequireFields<MutationGeneratePasskeyRegisterOptionsArgs, 'userId'>>;
   grantRoom?: Resolver<Maybe<ResolversTypes['Attending']>, ParentType, ContextType, RequireFields<MutationGrantRoomArgs, 'attendingId'>>;
+  leaveEvent?: Resolver<ResolversTypes['Event'], ParentType, ContextType, RequireFields<MutationLeaveEventArgs, 'id'>>;
   loginMagicLink?: Resolver<ResolversTypes['AuthResponse'], ParentType, ContextType, RequireFields<MutationLoginMagicLinkArgs, 'magicLinkId'>>;
   loginPasskey?: Resolver<ResolversTypes['LoginResponse'], ParentType, ContextType, RequireFields<MutationLoginPasskeyArgs, 'response'>>;
   loginPassword?: Resolver<ResolversTypes['AuthResponse'], ParentType, ContextType, RequireFields<MutationLoginPasswordArgs, 'email' | 'password'>>;
+  participateInEvent?: Resolver<ResolversTypes['Event'], ParentType, ContextType, RequireFields<MutationParticipateInEventArgs, 'id'>>;
+  planEvent?: Resolver<ResolversTypes['Event'], ParentType, ContextType, RequireFields<MutationPlanEventArgs, 'input'>>;
   recindRoom?: Resolver<Maybe<ResolversTypes['Attending']>, ParentType, ContextType, RequireFields<MutationRecindRoomArgs, 'partyId'>>;
   refreshLogin?: Resolver<ResolversTypes['AuthResponse'], ParentType, ContextType, RequireFields<MutationRefreshLoginArgs, 'refreshToken'>>;
   register?: Resolver<ResolversTypes['RegisterResponse'], ParentType, ContextType, RequireFields<MutationRegisterArgs, 'email' | 'userName'>>;
@@ -466,11 +549,13 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
   setAttendance?: Resolver<ResolversTypes['Party'], ParentType, ContextType, RequireFields<MutationSetAttendanceArgs, 'dates' | 'partyId'>>;
   setGamesPlayed?: Resolver<ResolversTypes['Attending'], ParentType, ContextType, RequireFields<MutationSetGamesPlayedArgs, 'gameIds' | 'partyId'>>;
   updateAuthDevice?: Resolver<ResolversTypes['AuthDevice'], ParentType, ContextType, RequireFields<MutationUpdateAuthDeviceArgs, 'id' | 'name'>>;
+  updateParty?: Resolver<ResolversTypes['Party'], ParentType, ContextType, RequireFields<MutationUpdatePartyArgs, 'input'>>;
 };
 
 export type PartyResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Party'] = ResolversParentTypes['Party']> = {
   attendings?: Resolver<Array<ResolversTypes['Attending']>, ParentType, ContextType>;
   endDate?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
+  events?: Resolver<Array<ResolversTypes['Event']>, ParentType, ContextType>;
   gamesPlayed?: Resolver<Array<ResolversTypes['GameOnParty']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   location?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -524,6 +609,7 @@ export type Resolvers<ContextType = Context> = {
   AuthResponse?: AuthResponseResolvers<ContextType>;
   Date?: GraphQLScalarType;
   DateTime?: GraphQLScalarType;
+  Event?: EventResolvers<ContextType>;
   Game?: GameResolvers<ContextType>;
   GameOnParty?: GameOnPartyResolvers<ContextType>;
   JSON?: GraphQLScalarType;

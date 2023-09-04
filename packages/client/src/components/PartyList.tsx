@@ -20,11 +20,10 @@ import { IconArrowLeft, IconEye, IconPencil } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { motion } from "framer-motion";
 import { useAtomValue } from "jotai";
-import { useQuery } from "urql";
+import { useMutation, useQuery } from "urql";
 import { ActionIconLink, Can, UserAvatar } from ".";
 import { graphql } from "../gql";
 import { abilityAtom } from "../state";
-import { trpc } from "../utils";
 import { PartyInfo } from "./PartyInfo";
 
 const MotionBox = motion<
@@ -263,14 +262,19 @@ function PartyForm({
 }) {
   const isInFuture = dayjs().isBefore(endDate);
 
-  const context = trpc.useContext();
-  const { mutateAsync: update, isLoading } = trpc.party.update.useMutation({
-    onSuccess: (party) => {
-      context.party.all.setData(undefined, (parties) =>
-        parties?.map((p) => (party.id === p.id ? party : p))
-      );
-    },
-  });
+  const [{ fetching }, update] = useMutation(
+    graphql(`
+      mutation updateParty($input: PartyInput!) {
+        updateParty(input: $input) {
+          id
+          startDate
+          endDate
+          location
+          roomsAvailable
+        }
+      }
+    `)
+  );
 
   return (
     <form
@@ -287,11 +291,13 @@ function PartyForm({
         const roomsAvailable = form["roomsAvailable"].valueAsNumber;
 
         await update({
-          id,
-          startDate,
-          endDate,
-          location,
-          roomsAvailable,
+          input: {
+            id,
+            startDate,
+            endDate,
+            location,
+            roomsAvailable,
+          },
         });
       }}
     >
@@ -313,22 +319,22 @@ function PartyForm({
           defaultValue={[new Date(startDate), new Date(endDate)]}
           label="Zeitraum"
           type="range"
-          disabled={isLoading}
+          disabled={fetching}
         />
         <TextInput
           name="location"
           defaultValue={location}
           label="Ort"
-          disabled={isLoading}
+          disabled={fetching}
         />
         <NumberInput
           name="roomsAvailable"
           defaultValue={roomsAvailable}
           label="reservierbare Schlafplätze"
           type="number"
-          disabled={!isInFuture || isLoading}
+          disabled={!isInFuture || fetching}
         />
-        <Button type="submit" loading={isLoading}>
+        <Button type="submit" loading={fetching}>
           Speichern
         </Button>
       </Box>

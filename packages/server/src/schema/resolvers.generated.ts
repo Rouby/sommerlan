@@ -4,6 +4,7 @@
 import    { Attending } from './user/resolvers/Attending';
 import    { AuthDevice } from './user/resolvers/AuthDevice';
 import    { AuthResponse } from './user/resolvers/AuthResponse';
+import    { Event } from './events/resolvers/Event';
 import    { Game } from './game/resolvers/Game';
 import    { GameOnParty } from './game/resolvers/GameOnParty';
 import    { LoginResponse } from './user/resolvers/LoginResponse';
@@ -13,9 +14,12 @@ import    { denyRoom as Mutation_denyRoom } from './party/resolvers/Mutation/den
 import    { generatePasskeyLoginOptions as Mutation_generatePasskeyLoginOptions } from './user/resolvers/Mutation/generatePasskeyLoginOptions';
 import    { generatePasskeyRegisterOptions as Mutation_generatePasskeyRegisterOptions } from './user/resolvers/Mutation/generatePasskeyRegisterOptions';
 import    { grantRoom as Mutation_grantRoom } from './party/resolvers/Mutation/grantRoom';
+import    { leaveEvent as Mutation_leaveEvent } from './events/resolvers/Mutation/leaveEvent';
 import    { loginMagicLink as Mutation_loginMagicLink } from './user/resolvers/Mutation/loginMagicLink';
 import    { loginPasskey as Mutation_loginPasskey } from './user/resolvers/Mutation/loginPasskey';
 import    { loginPassword as Mutation_loginPassword } from './user/resolvers/Mutation/loginPassword';
+import    { participateInEvent as Mutation_participateInEvent } from './events/resolvers/Mutation/participateInEvent';
+import    { planEvent as Mutation_planEvent } from './events/resolvers/Mutation/planEvent';
 import    { recindRoom as Mutation_recindRoom } from './party/resolvers/Mutation/recindRoom';
 import    { refreshLogin as Mutation_refreshLogin } from './user/resolvers/Mutation/refreshLogin';
 import    { register as Mutation_register } from './user/resolvers/Mutation/register';
@@ -25,6 +29,7 @@ import    { sendMagicLink as Mutation_sendMagicLink } from './user/resolvers/Mut
 import    { setAttendance as Mutation_setAttendance } from './party/resolvers/Mutation/setAttendance';
 import    { setGamesPlayed as Mutation_setGamesPlayed } from './game/resolvers/Mutation/setGamesPlayed';
 import    { updateAuthDevice as Mutation_updateAuthDevice } from './user/resolvers/Mutation/updateAuthDevice';
+import    { updateParty as Mutation_updateParty } from './party/resolvers/Mutation/updateParty';
 import    { Party } from './party/resolvers/Party';
 import    { games as Query_games } from './game/resolvers/Query/games';
 import    { me as Query_me } from './user/resolvers/Query/me';
@@ -38,12 +43,13 @@ import    { User } from './user/resolvers/User';
 import    { DateResolver,DateTimeResolver,JSONResolver,JWTResolver,TimeResolver } from 'graphql-scalars';
     export const resolvers: Resolvers = {
       Query: { games: Query_games,me: Query_me,nextParty: Query_nextParty,parties: Query_parties,party: Query_party,users: Query_users },
-      Mutation: { addGameToParty: Mutation_addGameToParty,deleteAuthDevice: Mutation_deleteAuthDevice,denyRoom: Mutation_denyRoom,generatePasskeyLoginOptions: Mutation_generatePasskeyLoginOptions,generatePasskeyRegisterOptions: Mutation_generatePasskeyRegisterOptions,grantRoom: Mutation_grantRoom,loginMagicLink: Mutation_loginMagicLink,loginPasskey: Mutation_loginPasskey,loginPassword: Mutation_loginPassword,recindRoom: Mutation_recindRoom,refreshLogin: Mutation_refreshLogin,register: Mutation_register,registerPasskey: Mutation_registerPasskey,requestRoom: Mutation_requestRoom,sendMagicLink: Mutation_sendMagicLink,setAttendance: Mutation_setAttendance,setGamesPlayed: Mutation_setGamesPlayed,updateAuthDevice: Mutation_updateAuthDevice },
+      Mutation: { addGameToParty: Mutation_addGameToParty,deleteAuthDevice: Mutation_deleteAuthDevice,denyRoom: Mutation_denyRoom,generatePasskeyLoginOptions: Mutation_generatePasskeyLoginOptions,generatePasskeyRegisterOptions: Mutation_generatePasskeyRegisterOptions,grantRoom: Mutation_grantRoom,leaveEvent: Mutation_leaveEvent,loginMagicLink: Mutation_loginMagicLink,loginPasskey: Mutation_loginPasskey,loginPassword: Mutation_loginPassword,participateInEvent: Mutation_participateInEvent,planEvent: Mutation_planEvent,recindRoom: Mutation_recindRoom,refreshLogin: Mutation_refreshLogin,register: Mutation_register,registerPasskey: Mutation_registerPasskey,requestRoom: Mutation_requestRoom,sendMagicLink: Mutation_sendMagicLink,setAttendance: Mutation_setAttendance,setGamesPlayed: Mutation_setGamesPlayed,updateAuthDevice: Mutation_updateAuthDevice,updateParty: Mutation_updateParty },
       
       AddGameResult: AddGameResult,
 Attending: Attending,
 AuthDevice: AuthDevice,
 AuthResponse: AuthResponse,
+Event: Event,
 Game: Game,
 GameOnParty: GameOnParty,
 LoginResponse: LoginResponse,

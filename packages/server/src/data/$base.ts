@@ -1,3 +1,4 @@
+import { createGraphQLError } from "graphql-yoga";
 import { allRows, deleteRow, updateRow } from "./$cache";
 
 export type Values<T> = Partial<
@@ -60,6 +61,15 @@ export abstract class Base {
     id: string
   ): Promise<T | null> {
     return (await Base.allRows(this)).find((d) => d.id === id) ?? null;
+  }
+
+  static async findByIdOrThrow<T extends Base>(
+    this: StaticThis<T>,
+    id: string
+  ): Promise<T> {
+    const val = (await Base.allRows(this)).find((d) => d.id === id);
+    if (!val) throw createGraphQLError(`No ${this.name} found with id ${id}`);
+    return val;
   }
 
   private static async allRows<T extends Base>(cls: new () => T) {

@@ -10,6 +10,8 @@ extend type Mutation {
   recindRoom(partyId: ID!): Attending
   grantRoom(attendingId: ID!): Attending
   denyRoom(attendingId: ID!): Attending
+
+  updateParty(input: PartyInput!): Party!
 }
 
 type Party {
@@ -20,6 +22,15 @@ type Party {
   locationWidgetSrc: String
   roomsAvailable: Int!
   attendings: [Attending!]!
+}
+
+input PartyInput {
+  id: ID
+  startDate: Date!
+  endDate: Date!
+  location: String!
+  locationWidgetSrc: String
+  roomsAvailable: Int!
 }
 
 type Attending {

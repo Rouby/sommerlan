@@ -1,6 +1,7 @@
 import { subject } from "@casl/ability";
 import {
   ActionIcon,
+  Alert,
   Avatar,
   Box,
   Button,
@@ -10,8 +11,8 @@ import {
   Group,
   Image,
   Input,
-  Loader,
   Modal,
+  Skeleton,
   Stack,
   Text,
   Tooltip,
@@ -20,7 +21,6 @@ import {
 import { DatePickerInput, TimeInput } from "@mantine/dates";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { RichTextEditor } from "@mantine/tiptap";
-import type { User } from "@sommerlan-app/server/src/data";
 import { IconCheck, IconPencil } from "@tabler/icons-react";
 import Highlight from "@tiptap/extension-highlight";
 import Placeholder from "@tiptap/extension-placeholder";
@@ -29,33 +29,67 @@ import StarterKit from "@tiptap/starter-kit";
 import dayjs from "dayjs";
 import { useAtomValue } from "jotai";
 import { useRef, useState } from "react";
+import { useMutation, useQuery } from "urql";
 import { Can, UserAvatar } from ".";
+import { graphql, useFragment } from "../gql";
 import { useUploadFileMutation } from "../hooks";
 import { userAtom } from "../state";
-import { trpc } from "../utils";
 
-export function NextPartyEventsList() {
-  const { data, isLoading } = trpc.party.eventsPlanned.useQuery({});
+export function PartyEvents({ partyId }: { partyId?: string }) {
+  const PartyEventsInfo = graphql(`
+    fragment PartyEventsInfo on Party {
+      id
+      events {
+        __typename
+        id
+        image
+        date
+        startTime
+        endTime
+        name
+        description
+        organizer {
+          id
+          displayName
+          avatar
+        }
+        participants {
+          id
+          displayName
+          avatar
+        }
+      }
+    }
+  `);
+
+  const [{ data, fetching }] = useQuery({
+    query: graphql(`
+      query partyEvents($nextParty: Boolean!, $partyId: ID!) {
+        nextParty @include(if: $nextParty) {
+          ...PartyEventsInfo
+        }
+
+        party(id: $partyId) @skip(if: $nextParty) {
+          ...PartyEventsInfo
+        }
+      }
+    `),
+    variables: {
+      nextParty: !partyId,
+      partyId: partyId ?? "",
+    },
+  });
+
+  const { nextParty, party: specificParty } = data ?? {};
+  const party = useFragment(PartyEventsInfo, nextParty ?? specificParty);
 
   const [showCreate, setShowCreate] = useState(false);
 
-  if (isLoading) {
-    return (
-      <Center>
-        <Loader />
-      </Center>
-    );
-  }
-
-  if (!data) {
-    return <Center>No Party planned</Center>;
-  }
-
-  const { party, events } = data;
-
   return (
     <>
-      <Button onClick={() => setShowCreate(true)}>Ein Event planen</Button>
+      <Center mb="md">
+        <Button onClick={() => setShowCreate(true)}>Ein Event eintragen</Button>
+      </Center>
       <Modal
         size="lg"
         opened={showCreate}
@@ -63,7 +97,7 @@ export function NextPartyEventsList() {
         withCloseButton={false}
       >
         <CreateEventForm
-          partyId={party.id}
+          partyId={party?.id ?? ""}
           onSubmit={() => setShowCreate(false)}
         />
       </Modal>
@@ -75,7 +109,13 @@ export function NextPartyEventsList() {
           justifyContent: "center",
         })}
       >
-        {events?.map((event) => (
+        {fetching && (
+          <>
+            <Skeleton mih={400} />
+            <Skeleton mih={400} />
+          </>
+        )}
+        {party?.events.map((event) => (
           <EventCard key={event.id} partyId={party.id} event={event} />
         ))}
       </Box>
@@ -89,34 +129,41 @@ function EventCard({
 }: {
   partyId: string;
   event: {
+    __typename: "Event";
     id: string;
-    imageUrl: string;
-    date: string;
-    startTime: string;
-    endTime: string;
+    image: string;
+    date?: string | null;
+    startTime?: string | null;
+    endTime?: string | null;
     name: string;
-    description: string;
-    organizerId: string;
-    participants: User[];
+    description?: string | null;
+    organizer: { id: string; displayName: string; avatar: string };
+    participants: { id: string; displayName: string; avatar: string }[];
   };
 }) {
   const user = useAtomValue(userAtom);
-  const context = trpc.useContext();
-  const { mutate: participate, isLoading } = trpc.event.participate.useMutation(
-    {
-      onSuccess: (event) => {
-        context.party.eventsPlanned.setData(
-          {},
-          (prev) =>
-            prev && {
-              ...prev,
-              events: prev.events.map((e) =>
-                e.id !== event.id ? e : { ...e, ...event }
-              ),
-            }
-        );
-      },
-    }
+
+  const [{ fetching, error }, participate] = useMutation(
+    graphql(`
+      mutation toggleEventParticipation($id: ID!, $participate: Boolean!) {
+        participateInEvent(id: $id) @include(if: $participate) {
+          id
+          participants {
+            id
+            displayName
+            avatar
+          }
+        }
+        leaveEvent(id: $id) @skip(if: $participate) {
+          id
+          participants {
+            id
+            displayName
+            avatar
+          }
+        }
+      }
+    `)
   );
 
   const [showEdit, setShowEdit] = useState(false);
@@ -135,7 +182,7 @@ function EventCard({
       sx={{ display: "flex", flexDirection: "column" }}
     >
       <Card.Section>
-        <Image src={event.imageUrl} height={300} />
+        <Image src={event.image} height={300} />
       </Card.Section>
 
       <Group mt="md" position="apart" noWrap>
@@ -169,26 +216,35 @@ function EventCard({
         )}
       </Box>
 
-      <Button
-        loading={isLoading}
-        variant={isParticipating ? "gradient" : "light"}
-        color="blue"
-        fullWidth
-        mt="md"
-        radius="md"
-        leftIcon={isParticipating ? <IconCheck /> : undefined}
-        onClick={() =>
-          participate({ eventId: event.id, participating: !isParticipating })
-        }
-      >
-        Ich will mitmachen
-      </Button>
+      <Can I="participate" this={event}>
+        <Stack spacing="xs" mt="md">
+          <Button
+            loading={fetching}
+            variant={isParticipating ? "gradient" : "light"}
+            color="blue"
+            fullWidth
+            radius="md"
+            leftIcon={isParticipating ? <IconCheck /> : undefined}
+            onClick={() =>
+              participate({ id: event.id, participate: !isParticipating })
+            }
+          >
+            Ich will mitmachen
+          </Button>
+          {error && (
+            <Alert color="red" onClose={() => {}}>
+              {error.graphQLErrors.at(0)?.message ?? error.message}
+            </Alert>
+          )}
+        </Stack>
+      </Can>
 
       <Tooltip.Group openDelay={300} closeDelay={100}>
         <Avatar.Group spacing="sm" sx={{ flexWrap: "wrap" }} mt="sm">
           {event.participants.map((user) => (
             <UserAvatar key={user.id} user={user} />
           ))}
+          <div />
         </Avatar.Group>
       </Tooltip.Group>
 
@@ -216,12 +272,12 @@ function CreateEventForm({
   partyId: string;
   defaultValues?: {
     id: string;
-    imageUrl: string;
-    date: string;
-    startTime: string;
-    endTime: string;
+    image: string;
+    date?: string | null;
+    startTime?: string | null;
+    endTime?: string | null;
     name: string;
-    description: string;
+    description?: string | null;
   };
   onSubmit: () => void;
 }) {
@@ -235,29 +291,37 @@ function CreateEventForm({
   });
 
   const [dateUncertain, setDateUncertain] = useState(
-    defaultValues ? !defaultValues.date : false
+    defaultValues ? !defaultValues.date : true
   );
   const [timeUncertain, setTimeUncertain] = useState(
     defaultValues ? !defaultValues.startTime : true
   );
 
-  const context = trpc.useContext();
-  const { mutateAsync: plan, isLoading } = trpc.event.plan.useMutation({
-    onSuccess: (event) => {
-      context.party.eventsPlanned.setData(
-        {},
-        (prev) =>
-          prev && {
-            ...prev,
-            events: defaultValues
-              ? prev.events.map((e) =>
-                  e.id !== event.id ? e : { ...e, ...event }
-                )
-              : [...prev.events, event],
+  const [{ fetching }, planEvent] = useMutation(
+    graphql(`
+      mutation planEvent($input: EventInput!) {
+        planEvent(input: $input) {
+          id
+          image
+          date
+          startTime
+          endTime
+          name
+          description
+          organizer {
+            id
+            displayName
+            avatar
           }
-      );
-    },
-  });
+          participants {
+            id
+            displayName
+            avatar
+          }
+        }
+      }
+    `)
+  );
 
   const openRef = useRef<() => void>(null);
 
@@ -283,15 +347,17 @@ function CreateEventForm({
 
         const imageUrl = form["imageUrl"].value;
 
-        await plan({
-          eventId: defaultValues?.id,
-          partyId,
-          date: dateUncertain ? "" : date,
-          startTime: timeUncertain ? "" : startTime,
-          endTime: timeUncertain ? "" : endTime,
-          name,
-          description,
-          imageUrl,
+        await planEvent({
+          input: {
+            id: defaultValues?.id,
+            partyId,
+            date: dateUncertain ? null : date,
+            startTime: timeUncertain ? null : startTime,
+            endTime: timeUncertain ? null : endTime,
+            name,
+            description,
+            imageUrl,
+          },
         });
 
         onSubmit();
@@ -350,14 +416,14 @@ function CreateEventForm({
             placeholder="Startzeit"
             disabled={timeUncertain}
             required={!timeUncertain}
-            defaultValue={defaultValues?.startTime}
+            defaultValue={defaultValues?.startTime ?? undefined}
           />
           <TimeInput
             name="endTime"
             placeholder="Endzeit"
             disabled={timeUncertain}
             required={!timeUncertain}
-            defaultValue={defaultValues?.endTime}
+            defaultValue={defaultValues?.endTime ?? undefined}
           />
         </Box>
 
@@ -388,7 +454,7 @@ function CreateEventForm({
             name="imageUrl"
             placeholder="https://example.com/image.jpg"
             pattern="https?://.*"
-            defaultValue={defaultValues?.imageUrl}
+            defaultValue={defaultValues?.image ?? undefined}
           />
         </Input.Wrapper>
 
@@ -414,7 +480,7 @@ function CreateEventForm({
         <Button onClick={() => openRef.current?.()}>Bild auswählen</Button>
 
         <Group position="right">
-          <Button type="submit" disabled={isLoading}>
+          <Button type="submit" disabled={fetching}>
             {defaultValues ? "Speichern" : "Event erstellen"}
           </Button>
         </Group>
