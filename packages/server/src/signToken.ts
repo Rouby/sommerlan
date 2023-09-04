@@ -5,6 +5,7 @@ import { User } from "./data";
 import { expectedOrigin } from "./env";
 
 async function tokenPayload(user: User) {
+  const ability = await createAbility(user);
   return {
     user: {
       id: user.id,
@@ -16,11 +17,14 @@ async function tokenPayload(user: User) {
       avatar: user.avatar,
       avatarUrl: user.avatarUrl,
     },
-    abilityRules: (await createAbility(user)).rules
+    abilityRules: ability.rules
       // exclude read rules, as they are always checked server-side
       .filter((rule) => rule.action !== "read")
       // map relation-ids to match with objects on frontend (e.g. userId => user.id)
-      .map((rule) => ({ ...rule, conditions: replaceIdKeys(rule.conditions) })),
+      .map((rule) => ({
+        ...rule,
+        conditions: replaceIdKeys(rule.conditions),
+      })),
   };
 }
 

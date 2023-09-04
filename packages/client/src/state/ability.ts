@@ -12,6 +12,8 @@ export type AppAbility = MongoAbility<
       | "Party"
       | { __typename: "Attending" }
       | "Attending"
+      | { __typename: "Game" }
+      | "Game"
       | { __typename: "Event" }
       | "Event"
       | "Cache"
