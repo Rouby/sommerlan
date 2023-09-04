@@ -12,6 +12,8 @@ export * from "./PartyCountdown";
 export * from "./PartyEvents";
 export * from "./PartyInfo";
 export * from "./PartyList";
+export * from "./PasskeySettings";
+export * from "./ProfileSettings";
 export * from "./SignUpButton";
 export * from "./TextLink";
 export * from "./UserAvatar";
