@@ -29,30 +29,32 @@ client.on(GatewayDispatchEvents.MessageCreate, async (message) => {
     // Dont handle bot messages
     return;
   }
-  logger.info({ message: { data: message.data } }, "Received discord message");
   const msgContent = message.data.content.toLowerCase();
-  if (msgContent.includes("login")) {
-    switch (getEnv()) {
-      case "development":
-        if (!msgContent.includes("dev")) {
-          // Dont handle this message
-          return;
-        }
-        break;
-      case "staging":
-        if (!msgContent.includes("staging")) {
-          // Dont handle this message
-          return;
-        }
-        break;
-      case "production":
-        if (msgContent.includes("dev") || msgContent.includes("staging")) {
-          // Dont handle this message
-          return;
-        }
-        break;
-    }
 
+  switch (getEnv()) {
+    case "development":
+      if (!msgContent.includes("dev")) {
+        // Dont handle this message
+        return;
+      }
+      break;
+    case "staging":
+      if (!msgContent.includes("staging")) {
+        // Dont handle this message
+        return;
+      }
+      break;
+    case "production":
+      if (msgContent.includes("dev") || msgContent.includes("staging")) {
+        // Dont handle this message
+        return;
+      }
+      break;
+  }
+
+  logger.info({ message: { data: message.data } }, "Received discord message");
+
+  if (msgContent.includes("login")) {
     await client.api.channels.showTyping(message.data.channel_id);
 
     const user = await User.findByDiscordId(message.data.author.id);
