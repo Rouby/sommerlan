@@ -25,7 +25,12 @@ import { locales } from "./dayjs/locales";
 import { graphql } from "./gql";
 import schema from "./gql/introspection.json";
 import { router } from "./router";
-import { colorSchemeAtom, refreshTokenAtom, tokenAtom } from "./state";
+import {
+  colorSchemeAtom,
+  refreshTokenAtom,
+  tokenAtom,
+  userAtom,
+} from "./state";
 
 dayjs.extend(duration);
 dayjs.extend(localizedFormat);
@@ -63,6 +68,7 @@ export function App() {
 }
 
 function Urql({ children }: { children: React.ReactNode }) {
+  const user = useAtomValue(userAtom);
   const [token, setToken] = useAtom(tokenAtom);
   const [refreshToken, setRefreshToken] = useAtom(refreshTokenAtom);
   const authState = useRef({ token, refreshToken });
@@ -302,7 +308,7 @@ function Urql({ children }: { children: React.ReactNode }) {
         ],
         requestPolicy: "cache-and-network",
       }),
-    [token === null]
+    [user?.id]
   );
 
   return <UrqlProvider value={gqlClient}>{children}</UrqlProvider>;

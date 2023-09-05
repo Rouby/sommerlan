@@ -71,21 +71,14 @@ export function createServer(opts: ServerOptions) {
     ],
     maskedErrors: {
       maskError: (error, message, isDev) => {
-        console.log(error);
-        console.log(
-          "err",
-          error instanceof ForbiddenError,
-          error instanceof GraphQLError
-        );
-
-        if (
-          error instanceof GraphQLError &&
-          error.originalError instanceof ForbiddenError
-        ) {
-          return createGraphQLError(error.message, {
-            originalError: error.originalError,
-            extensions: { code: "FORBIDDEN" },
-          });
+        if (error instanceof GraphQLError) {
+          if (error.originalError instanceof ForbiddenError) {
+            return createGraphQLError(error.message, {
+              originalError: error.originalError,
+              extensions: { code: "FORBIDDEN" },
+            });
+          }
+          return error;
         }
 
         return maskError(error, message, isDev);

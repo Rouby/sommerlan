@@ -19,5 +19,9 @@ export const refreshTokenAtom = atomWithStorage<string | null>(
 export const jwtPayloadAtom = atom((get) => {
   const token = get(tokenAtom);
   if (!token) return null;
-  return jwtDecode(token) as JWTPayload;
+  try {
+    return jwtDecode(token) as JWTPayload;
+  } catch {
+    return null;
+  }
 });
