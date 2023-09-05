@@ -17,6 +17,8 @@ export type AppAbility = MongoAbility<
       | { __typename: "Event" }
       | "Event"
       | "Cache"
+      | { __typename: "Picture" }
+      | "Picture"
     )
   ]
 >;
