@@ -163,7 +163,7 @@ export function createServer(opts: ServerOptions) {
 
   const stop = async () => {
     transporter.close();
-    await Promise.all([
+    await Promise.allSettled([
       await discord.destroy(),
       await cron.stop(),
       await syncCache(),

@@ -78,7 +78,7 @@ client.on(GatewayDispatchEvents.MessageCreate, async (message) => {
 
 export const discord = {
   connect: () => (token && guildId ? gateway.connect() : Promise.resolve()),
-  destroy: () => gateway.destroy(),
+  destroy: () => (token && guildId ? gateway.destroy() : Promise.resolve()),
 };
 
 export async function sendDiscordMessage(
