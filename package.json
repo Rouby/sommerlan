@@ -11,7 +11,7 @@
     "lint": "echo \"No linting configured\"",
     "test": "yarn workspaces foreach -p run test",
     "typecheck": "yarn workspaces foreach -p run typecheck",
-    "integrate": "FAKE_API=true PORT=3022 concurrently --success last --kill-others \"yarn start\" \"wait-on http://localhost:4173/ http://localhost:3022/health && yarn workspaces foreach -t run integrate\""
+    "integrate": "FAKE_API=true PORT=3022 concurrently --success last --kill-others \"yarn start\" \"wait-on -t 10000 http://localhost:4173/ http://localhost:3022/health && yarn workspaces foreach -t run integrate\""
   },
   "workspaces": [
     "packages/*"

@@ -172,7 +172,10 @@ export function createServer(opts: ServerOptions) {
   };
   const start = async () => {
     try {
-      await server.listen({ port, host: !dev ? "0.0.0.0" : undefined });
+      await server.listen({
+        port,
+        host: !dev || process.env.CI ? "0.0.0.0" : undefined,
+      });
 
       await cron.start();
 
