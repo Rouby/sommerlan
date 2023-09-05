@@ -174,7 +174,7 @@ export function createServer(opts: ServerOptions) {
     try {
       await server.listen({
         port,
-        host: !dev || process.env.CI ? "0.0.0.0" : undefined,
+        host: !dev ? "0.0.0.0" : process.env.CI ? "localhost" : undefined,
       });
 
       await cron.start();
