@@ -7,9 +7,11 @@
   "scripts": {
     "dev": "concurrently --kill-others-on-fail \"yarn workspace @sommerlan-app/server dev\" \"yarn workspace @sommerlan-app/client dev\"",
     "build": "yarn workspaces foreach -pti run build",
+    "start": "yarn workspaces foreach -pi run start",
     "lint": "echo \"No linting configured\"",
     "test": "yarn workspaces foreach -p run test",
-    "typecheck": "yarn workspaces foreach -p run typecheck"
+    "typecheck": "yarn workspaces foreach -p run typecheck",
+    "integrate": "FAKE_API=true PORT=3022 concurrently --success last --kill-others \"yarn start\" \"wait-on http://localhost:4173/ http://localhost:3022/health && yarn workspaces foreach -t run integrate\""
   },
   "workspaces": [
     "packages/*"
@@ -22,7 +24,8 @@
     "graphql": "^16.8.0",
     "graphql-config": "^5.0.2",
     "prettier": "^2.8.8",
-    "typescript": "^5.1.3"
+    "typescript": "^5.1.3",
+    "wait-on": "^7.0.1"
   },
   "engines": {
     "node": ">=18"

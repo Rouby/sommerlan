@@ -5,7 +5,7 @@ import multipart from "@fastify/multipart";
 import staticfs from "@fastify/static";
 import { useJWT } from "@graphql-yoga/plugin-jwt";
 import { randomUUID } from "crypto";
-import fastify from "fastify";
+import fastify, { FastifyInstance } from "fastify";
 import { createWriteStream, existsSync } from "fs";
 import { mkdir } from "fs/promises";
 import { GraphQLError } from "graphql";
@@ -21,6 +21,7 @@ import { pipeline } from "stream/promises";
 import { AppAbility, createAbility } from "./ability";
 import { cron } from "./cron";
 import { syncCache } from "./data";
+import { fakeGoogleSheetApi } from "./data/$api";
 import { discord } from "./discord";
 import { expectedOrigin } from "./env";
 import { logger } from "./logger";
@@ -43,6 +44,9 @@ export function createServer(opts: ServerOptions) {
     logger,
     disableRequestLogging: true,
   });
+
+  server.register(cookie, { secret: process.env.SESSION_SECRET });
+  server.register(cors, {});
 
   const yoga = createYoga({
     schema: createSchema({
@@ -90,6 +94,14 @@ export function createServer(opts: ServerOptions) {
   });
 
   server.route({
+    url: "/health",
+    method: "GET",
+    handler: async (_req, reply) => {
+      reply.send({ status: "ok" });
+    },
+  });
+
+  server.route({
     url: yoga.graphqlEndpoint,
     method: ["GET", "POST", "OPTIONS"],
     handler: async (req, reply) => {
@@ -117,6 +129,79 @@ export function createServer(opts: ServerOptions) {
     },
   });
 
+  setupUploads(server, dev);
+
+  if (!dev) {
+    server.register(staticfs, {
+      root: join(__dirname, "../client"),
+    });
+    logger.info("serving", join(__dirname, "../client"));
+    server.setNotFoundHandler((_, reply) => {
+      reply.sendFile("index.html");
+    });
+  }
+
+  if (dev) {
+    server.route({
+      url: "/seed",
+      method: "POST",
+      handler: async (req, reply) => {
+        // todo handle seeding
+        logger.info({ body: req.body }, "Receive seed request");
+
+        const dbo = await fakeGoogleSheetApi.seed(
+          (req.body as any).model,
+          (req.body as any).data
+        );
+
+        reply.send(dbo);
+
+        return reply;
+      },
+    });
+  }
+
+  const stop = async () => {
+    transporter.close();
+    await Promise.all([
+      await discord.destroy(),
+      await cron.stop(),
+      await syncCache(),
+      await server.close(),
+    ]);
+  };
+  const start = async () => {
+    try {
+      await server.listen({ port, host: !dev ? "0.0.0.0" : undefined });
+
+      await cron.start();
+
+      await discord.connect();
+
+      if (!dev) {
+        await new Promise<void>((resolve, reject) =>
+          transporter.verify((error) => {
+            if (error) {
+              logger.error(error);
+              reject(error);
+            } else {
+              resolve();
+            }
+          })
+        );
+      }
+
+      logger.info("Startup complete", port);
+    } catch (err) {
+      server.log.error(err);
+      process.exit(1);
+    }
+  };
+
+  return { server, start, stop };
+}
+
+function setupUploads(server: FastifyInstance, dev: boolean) {
   server.register(multipart);
   server.put("/uploads", async (req, reply) => {
     let token: string | undefined;
@@ -161,55 +246,4 @@ export function createServer(opts: ServerOptions) {
       prefix: "/uploads",
     });
   }
-  server.register(cookie, { secret: process.env.SESSION_SECRET });
-  server.register(cors, {});
-
-  if (!dev) {
-    server.register(staticfs, {
-      root: join(__dirname, "../client"),
-    });
-    logger.info("serving", join(__dirname, "../client"));
-    server.setNotFoundHandler((_, reply) => {
-      reply.sendFile("index.html");
-    });
-  }
-
-  const stop = async () => {
-    transporter.close();
-    await Promise.all([
-      await discord.destroy(),
-      await cron.stop(),
-      await syncCache(),
-      await server.close(),
-    ]);
-  };
-  const start = async () => {
-    try {
-      await server.listen({ port, host: !dev ? "0.0.0.0" : undefined });
-
-      await cron.start();
-
-      await discord.connect();
-
-      if (!dev) {
-        await new Promise<void>((resolve, reject) =>
-          transporter.verify((error) => {
-            if (error) {
-              logger.error(error);
-              reject(error);
-            } else {
-              resolve();
-            }
-          })
-        );
-      }
-
-      logger.info("Startup complete", port);
-    } catch (err) {
-      server.log.error(err);
-      process.exit(1);
-    }
-  };
-
-  return { server, start, stop };
 }

@@ -1,0 +1,24 @@
+{
+  "name": "@sommerlan-app/integration",
+  "private": true,
+  "description": "",
+  "license": "MIT",
+  "sideEffects": false,
+  "scripts": {
+    "lint": "echo \"No linting configured\"",
+    "cypress": "cypress open",
+    "integrate": "cypress run"
+  },
+  "dependencies": {
+    "@sommerlan-app/client": "workspace:*",
+    "@sommerlan-app/server": "workspace:*",
+    "concurrently": "^8.2.0",
+    "cypress": "^13.1.0",
+    "node-fetch": "^3.3.2",
+    "typescript": "^5.1.3"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "yarn@3.2.1"
+}

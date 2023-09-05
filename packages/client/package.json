@@ -8,6 +8,7 @@
     "codegen": "graphql-codegen",
     "dev": "vite",
     "build": "vite build",
+    "start": "vite preview",
     "lint": "echo \"No linting configured\"",
     "test": "vitest --passWithNoTests",
     "typecheck": "tsc --noEmit"
