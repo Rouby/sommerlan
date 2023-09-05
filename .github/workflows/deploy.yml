@@ -105,6 +105,11 @@ jobs:
 
       - name: 🔗 Run cypress
         run: yarn integrate
+        env:
+          SESSION_SECRET: kitty
+          NEW_RELIC_ENABLED: "false"
+          NEW_RELIC_LOGGING_ENABLED: "false"
+          LOG_LEVEL: trace
 
   branch:
     name: 🌿 Branch check
