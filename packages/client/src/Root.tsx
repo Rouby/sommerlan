@@ -50,7 +50,7 @@ export function Root() {
                 </Link>
               </Group>
             </MediaQuery>
-            <Can I="read" a="User" otherwise={<SignUpButton />}>
+            <Can I="update" a="User" otherwise={<SignUpButton />}>
               <UserButton />
             </Can>
           </Group>

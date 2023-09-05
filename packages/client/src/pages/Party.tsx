@@ -11,7 +11,7 @@ export function Party() {
   return (
     <Container>
       <Can
-        I="read"
+        I="update"
         a="User"
         otherwise={
           <Center>
