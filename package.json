@@ -7,11 +7,10 @@
   "scripts": {
     "dev": "concurrently --kill-others-on-fail \"yarn workspace @sommerlan-app/server dev\" \"yarn workspace @sommerlan-app/client dev\"",
     "build": "yarn workspaces foreach -pti run build",
-    "start": "yarn workspaces foreach -pi run start",
     "lint": "echo \"No linting configured\"",
     "test": "yarn workspaces foreach -p run test",
     "typecheck": "yarn workspaces foreach -p run typecheck",
-    "integrate": "FAKE_API=true PORT=3022 concurrently --success last --kill-others \"yarn start\" \"wait-on -t 30000 http://localhost:4173/ http://localhost:3022/health && yarn workspaces foreach -t run integrate\""
+    "integrate": "concurrently --success last --kill-others \"yarn workspace @sommerlan-app/client start\" \"FAKE_API=true PORT=3022 yarn workspace @sommerlan-app/server start\" \"wait-on -t 30000 http://localhost:4173/ http://localhost:3022/health && yarn workspaces foreach -t run integrate\""
   },
   "workspaces": [
     "packages/*"
