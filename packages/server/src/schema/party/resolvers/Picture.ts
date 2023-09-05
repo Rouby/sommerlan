@@ -1,9 +1,8 @@
 import exifr from "exifr";
 import { readFile } from "fs/promises";
 import { createGraphQLError } from "graphql-yoga";
-import { join } from "path";
 import { Party } from "../../../data";
-import { expectedOrigin, uploadDir } from "../../../env";
+import { expectedOrigin } from "../../../env";
 import type { PictureResolvers } from "./../../types.generated";
 
 export const Picture: PictureResolvers = {
@@ -25,9 +24,7 @@ export const Picture: PictureResolvers = {
     return `${expectedOrigin}/uploads/${parent.uploadName}`;
   },
   meta: async (parent) => {
-    const data = await exifr.parse(
-      await readFile(join(uploadDir, parent.uploadName))
-    );
+    const data = await exifr.parse(await readFile(parent.pathname));
 
     return {
       width: data?.ImageWidth ?? 0,
