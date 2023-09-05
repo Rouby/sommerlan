@@ -124,7 +124,7 @@ export function PartyAttendings({ partyId }: { partyId?: string }) {
           [theme.fn.smallerThan("xs")]: {
             gridTemplateColumns: "auto auto 1fr",
 
-            "& > *:nth-of-type(5n)": {
+            "& > *:nth(5n)": {
               gridColumn: "1 / span 3",
             },
           },
