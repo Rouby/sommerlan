@@ -71,7 +71,10 @@ export function createServer(opts: ServerOptions) {
     ],
     maskedErrors: {
       maskError: (error, message, isDev) => {
+        console.log("ERROR", error);
+
         if (error instanceof GraphQLError) {
+          console.log("is graphqlerror");
           if (error.originalError instanceof ForbiddenError) {
             return createGraphQLError(error.message, {
               originalError: error.originalError,
@@ -90,16 +93,27 @@ export function createServer(opts: ServerOptions) {
     url: yoga.graphqlEndpoint,
     method: ["GET", "POST", "OPTIONS"],
     handler: async (req, reply) => {
-      const response = await yoga.handleNodeRequest(req, { req, reply });
-      response.headers.forEach((value, key) => {
-        reply.header(key, value);
-      });
+      try {
+        const response = await yoga.handleNodeRequest(req, { req, reply });
+        response.headers.forEach((value, key) => {
+          reply.header(key, value);
+        });
 
-      reply.status(response.status);
+        reply.status(response.status);
 
-      reply.send(response.body);
+        reply.send(response.body);
 
-      return reply;
+        return reply;
+      } catch (err) {
+        if (err instanceof GraphQLError) {
+          reply.status(err.extensions.http?.status ?? 500);
+
+          reply.send({ data: null, errors: [err] });
+
+          return reply;
+        }
+        throw err;
+      }
     },
   });
 
