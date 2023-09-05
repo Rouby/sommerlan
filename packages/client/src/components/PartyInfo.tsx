@@ -199,26 +199,6 @@ function ImageUpload({ partyId }: { partyId: string }) {
 
   return (
     <>
-      <Box
-        sx={(theme) => ({
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, 220px)",
-          gap: theme.spacing.md,
-          marginBlock: theme.spacing.md,
-        })}
-      >
-        {files.map((file) => (
-          <ImageUploadProgress
-            key={file.path}
-            ref={(fileRefs.current[file.path ?? ""] ??= createRef())}
-            file={file}
-            onDelete={() => {
-              delete fileRefs.current[file.path ?? ""];
-              setFiles((files) => files.filter((f) => f !== file));
-            }}
-          />
-        ))}
-      </Box>
       <Dropzone
         accept={IMAGE_MIME_TYPE}
         onDrop={(files) =>
@@ -239,6 +219,26 @@ function ImageUpload({ partyId }: { partyId: string }) {
           Hochladen starten
         </Button>
       </Group>
+      <Box
+        sx={(theme) => ({
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, 220px)",
+          gap: theme.spacing.md,
+          marginBlock: theme.spacing.md,
+        })}
+      >
+        {files.map((file) => (
+          <ImageUploadProgress
+            key={file.path}
+            ref={(fileRefs.current[file.path ?? ""] ??= createRef())}
+            file={file}
+            onDelete={() => {
+              delete fileRefs.current[file.path ?? ""];
+              setFiles((files) => files.filter((f) => f !== file));
+            }}
+          />
+        ))}
+      </Box>
     </>
   );
 }
