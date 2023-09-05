@@ -63,6 +63,7 @@ input PartyInput {
 }
 
 input PictureInput {
+  name: String!
   partyId: ID!
   file: File!
   tags: [PictureTagInput!]

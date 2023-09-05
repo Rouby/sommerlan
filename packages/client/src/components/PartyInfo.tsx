@@ -1,22 +1,39 @@
 import { Carousel } from "@mantine/carousel";
 import {
+  ActionIcon,
   Avatar,
+  Box,
   Button,
   Center,
   Checkbox,
+  Group,
+  Image,
   Loader,
   Popover,
+  RingProgress,
   Stack,
+  Text,
+  ThemeIcon,
+  rem,
 } from "@mantine/core";
 import { Dropzone, FileWithPath, IMAGE_MIME_TYPE } from "@mantine/dropzone";
-import { IconCalendar } from "@tabler/icons-react";
+import { IconCalendar, IconCheck, IconTrash, IconX } from "@tabler/icons-react";
+import { useMutation as useNormalMutation } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { useAtomValue } from "jotai";
-import { useState } from "react";
+import {
+  createRef,
+  forwardRef,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useMutation, useQuery } from "urql";
 import { UserAvatar } from ".";
 import { graphql } from "../gql";
 import { userAtom } from "../state";
+import { formatDate } from "../utils";
 
 export function PartyInfo({ id }: { id: string }) {
   const user = useAtomValue(userAtom)!;
@@ -35,6 +52,13 @@ export function PartyInfo({ id }: { id: string }) {
               id
               displayName
               avatar
+            }
+          }
+          pictures {
+            id
+            url
+            meta {
+              takeAt
             }
           }
         }
@@ -128,11 +152,21 @@ export function PartyInfo({ id }: { id: string }) {
           ))}
       </Avatar.Group>
 
-      <Carousel withIndicators>
-        <Carousel.Slide>1</Carousel.Slide>
-        <Carousel.Slide>2</Carousel.Slide>
-        <Carousel.Slide>3</Carousel.Slide>
-        {/* ...other slides */}
+      <Carousel>
+        {party.pictures.map((picture) => (
+          <Carousel.Slide key={picture.id}>
+            <Image
+              src={picture.url}
+              height={rem(500)}
+              fit="contain"
+              caption={
+                picture.meta.takeAt
+                  ? formatDate(dayjs(picture.meta.takeAt).toDate())
+                  : undefined
+              }
+            />
+          </Carousel.Slide>
+        ))}
       </Carousel>
 
       <ImageUpload partyId={id} />
@@ -141,9 +175,85 @@ export function PartyInfo({ id }: { id: string }) {
 }
 
 function ImageUpload({ partyId }: { partyId: string }) {
-  const [file, setFile] = useState<FileWithPath | null>(null);
+  const [files, setFiles] = useState<FileWithPath[]>([]);
+  const fileRefs = useRef(
+    {} as Record<
+      string,
+      React.RefObject<{
+        file: FileWithPath;
+        upload: (partyId: string) => Promise<void>;
+      }>
+    >
+  );
 
-  const [{ fetching }, addPicture] = useMutation(
+  const { mutate: uploadAll, isLoading } = useNormalMutation(async () => {
+    await Promise.all(
+      Object.values(fileRefs.current).map(async (ref) => {
+        const { upload } = ref.current ?? {};
+        await upload?.(partyId).then(() => {});
+      })
+    );
+    // fileRefs.current = {};
+    // setFiles([]);
+  });
+
+  return (
+    <>
+      <Box
+        sx={(theme) => ({
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, 220px)",
+          gap: theme.spacing.md,
+          marginBlock: theme.spacing.md,
+        })}
+      >
+        {files.map((file) => (
+          <ImageUploadProgress
+            key={file.path}
+            ref={(fileRefs.current[file.path ?? ""] ??= createRef())}
+            file={file}
+            onDelete={() => {
+              delete fileRefs.current[file.path ?? ""];
+              setFiles((files) => files.filter((f) => f !== file));
+            }}
+          />
+        ))}
+      </Box>
+      <Dropzone
+        accept={IMAGE_MIME_TYPE}
+        onDrop={(files) =>
+          setFiles((previous) =>
+            [...previous, ...files].filter(
+              (file, index, self) =>
+                self.findIndex((f) => f.path === file.path) === index
+            )
+          )
+        }
+        sx={{ height: 100, display: "grid", alignItems: "center" }}
+        disabled={isLoading}
+      >
+        <Center>Ziehe Bilder zum hochladen hierher, oder klicke hier.</Center>
+      </Dropzone>
+      <Group position="right" mt="md">
+        <Button loading={isLoading} onClick={() => uploadAll()}>
+          Hochladen starten
+        </Button>
+      </Group>
+    </>
+  );
+}
+
+const ImageUploadProgress = forwardRef(function ImageUploadProgress(
+  {
+    file,
+    onDelete,
+  }: {
+    file: FileWithPath;
+    onDelete: () => void;
+  },
+  ref
+) {
+  const [{ fetching, data, error }, addPicture] = useMutation(
     graphql(`
       mutation addPicture($input: PictureInput!) {
         addPicture(input: $input) {
@@ -170,23 +280,122 @@ function ImageUpload({ partyId }: { partyId: string }) {
       }
     `)
   );
+  const [progress, setProgress] = useState(0);
 
-  console.log(file instanceof File);
+  useImperativeHandle(ref, () => ({
+    file,
+    upload: (partyId: string) =>
+      addPicture(
+        { input: { name: file.path ?? "", partyId, file } },
+        {
+          fetch: (req, init) => {
+            return new Promise<Response>((resolve, reject) => {
+              const url = req instanceof Request ? req.url : req.toString();
+
+              const xhr = new XMLHttpRequest();
+              xhr.open(init?.method ?? "GET", url);
+              xhr.onload = () => {
+                resolve(
+                  new Response(xhr.responseText, {
+                    status: xhr.status,
+                    statusText: xhr.statusText,
+                    headers: new Headers(
+                      xhr
+                        .getAllResponseHeaders()
+                        .split("\n")
+                        .map((header) => {
+                          const [name, value] = header.split(": ");
+                          return [name?.trim(), value?.trim()] as [
+                            string,
+                            string
+                          ];
+                        })
+                        .filter(([name]) => name)
+                    ),
+                  })
+                );
+              };
+              xhr.onerror = () => {
+                reject(new TypeError("Network request failed"));
+              };
+              xhr.withCredentials = init?.credentials === "include";
+              if (xhr.upload) {
+                xhr.upload.onprogress = (event) => {
+                  setProgress(event.loaded / event.total);
+                };
+              }
+
+              for (const [name, value] of Object.entries(init?.headers ?? {})) {
+                xhr.setRequestHeader(name, value as string);
+              }
+
+              xhr.send(init?.body as any);
+            });
+          },
+        }
+      ),
+  }));
+
+  const url = useMemo(() => URL.createObjectURL(file), [file]);
+
+  const uploading = fetching || data?.addPicture.id;
 
   return (
-    <>
-      <Dropzone
-        accept={IMAGE_MIME_TYPE}
-        onDrop={(files) => setFile(files[0])}
-        maxFiles={1}
-        sx={{ height: 100, display: "grid", alignItems: "center" }}
-        loading={fetching}
-      >
-        <Center>Alternativ kannst du ein Bild hochladen</Center>
-      </Dropzone>
-      <Button onClick={() => addPicture({ input: { partyId, file } })}>
-        Add
-      </Button>
-    </>
+    <Box sx={{ position: "relative" }}>
+      <Image
+        height={220}
+        src={url}
+        radius={uploading ? 220 : 0}
+        sx={(theme) => ({ transition: theme.transitionTimingFunction })}
+        imageProps={{ style: { transition: "border-radius 0.3s ease-in-out" } }}
+      />
+      <RingProgress
+        sx={{
+          position: "absolute",
+          top: -25,
+          left: -25,
+          opacity: uploading ? 100 : 0,
+          transition: "opacity 0.3s ease-in-out",
+        }}
+        size={270}
+        thickness={20}
+        sections={
+          progress === 1
+            ? [{ value: 100, color: "teal" }]
+            : error
+            ? [{ value: progress * 100, color: "red" }]
+            : [{ value: progress * 100, color: "blue" }]
+        }
+        label={
+          progress === 1 ? (
+            <Center>
+              <ThemeIcon color="teal" variant="light" radius={120} size={120}>
+                <IconCheck size={120} />
+              </ThemeIcon>
+            </Center>
+          ) : error ? (
+            <Center>
+              <ThemeIcon color="red" variant="light" radius={120} size={120}>
+                <IconX size={120} />
+              </ThemeIcon>
+            </Center>
+          ) : (
+            <Text align="center" color="blue" weight={700} size="xl">
+              {Math.floor(progress * 100)}%
+            </Text>
+          )
+        }
+      />
+      {!uploading && (
+        <Group
+          position="right"
+          sx={{ position: "absolute", bottom: 0, left: 0, right: 0 }}
+        >
+          <ActionIcon onClick={onDelete} variant="light">
+            <IconTrash size={16} />
+          </ActionIcon>
+        </Group>
+      )}
+    </Box>
   );
-}
+});

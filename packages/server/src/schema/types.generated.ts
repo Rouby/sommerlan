@@ -305,6 +305,7 @@ export type Picture = {
 
 export type PictureInput = {
   file: Scalars['File']['input'];
+  name: Scalars['String']['input'];
   partyId: Scalars['ID']['input'];
   tags?: InputMaybe<Array<PictureTagInput>>;
 };

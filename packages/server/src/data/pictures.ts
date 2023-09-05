@@ -11,9 +11,13 @@ export class Picture extends Base {
 
   public id = randomUUID();
 
+  public name = "";
+
   public uploadName = "";
 
   public partyId = "";
+
+  public uploaderId = "";
 
   public tags: PictureTag[] = [];
 

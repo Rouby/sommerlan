@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider } from "@tanstack/router";
 import { devtoolsExchange } from "@urql/devtools";
 import { authExchange } from "@urql/exchange-auth";
-import { Entity, Link, cacheExchange } from "@urql/exchange-graphcache";
+import { Data, Entity, Link, cacheExchange } from "@urql/exchange-graphcache";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import localizedFormat from "dayjs/plugin/localizedFormat";
@@ -78,6 +78,7 @@ function Urql({ children }: { children: React.ReactNode }) {
             schema,
             keys: {
               AuthResponse: () => null,
+              PictureMeta: () => null,
             },
             resolvers: {
               Query: {
@@ -131,6 +132,27 @@ function Urql({ children }: { children: React.ReactNode }) {
                     if (Array.isArray(games)) {
                       games.push(result.addGameToParty.game);
                       cache.link("Query", "games", games as Link<Entity>);
+                    }
+                  }
+                },
+                addPicture: (result, _args, cache, _info) => {
+                  if (
+                    typeof result.addPicture === "object" &&
+                    result.addPicture &&
+                    "party" in result.addPicture &&
+                    result.addPicture?.party
+                  ) {
+                    const pictures = cache.resolve(
+                      { __typename: "Party", id: result.addPicture.party.id },
+                      "pictures"
+                    );
+                    if (Array.isArray(pictures)) {
+                      pictures.push(result.addPicture as Data);
+                      cache.link(
+                        { __typename: "Party", id: result.addPicture.party.id },
+                        "pictures",
+                        pictures as Link<Entity>
+                      );
                     }
                   }
                 },

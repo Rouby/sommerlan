@@ -30,12 +30,12 @@ export const Picture: PictureResolvers = {
     );
 
     return {
-      width: data.ImageWidth ?? 0,
-      height: data.ImageHeight ?? 0,
-      latitude: data.latitude,
-      longitude: data.longitude,
-      altitude: data.GPSAltitude,
-      takeAt: data.DateTimeOriginal,
+      width: data?.ImageWidth ?? 0,
+      height: data?.ImageHeight ?? 0,
+      latitude: data?.latitude,
+      longitude: data?.longitude,
+      altitude: data?.GPSAltitude,
+      takeAt: data?.DateTimeOriginal,
     };
   },
 };

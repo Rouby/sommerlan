@@ -3,7 +3,7 @@ import {
   MongoAbility,
   createMongoAbility,
 } from "@casl/ability";
-import { Attending, Event, Game, Party, User } from "./data";
+import { Attending, Event, Game, Party, Picture, User } from "./data";
 
 export type AppAbility = MongoAbility<
   [
@@ -20,6 +20,8 @@ export type AppAbility = MongoAbility<
       | Event
       | "Event"
       | "Cache"
+      | Picture
+      | "Picture"
     )
   ]
 >;
@@ -42,6 +44,7 @@ export async function createAbility(
     can("participate", "Event");
     can("read", "Game");
     can("create", "Game");
+    can("create", "Picture");
 
     if (user.roles.includes(User.Role.Admin)) {
       can("manage", "Party");
@@ -50,6 +53,7 @@ export async function createAbility(
       can("grantRoom", "Attending");
       can("manage", "Event");
       can("manage", "Cache");
+      can("manage", "Picture");
     }
 
     cannot("participate", "Event", { organizerId: user.id }).because(
