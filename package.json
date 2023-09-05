@@ -10,7 +10,7 @@
     "lint": "echo \"No linting configured\"",
     "test": "yarn workspaces foreach -p run test",
     "typecheck": "yarn workspaces foreach -p run typecheck",
-    "integrate": "concurrently --success last --kill-others \"yarn workspace @sommerlan-app/client start\" \"FAKE_API=true PORT=3022 yarn workspace @sommerlan-app/server start\" \"wait-on -t 30000 http://localhost:4173/ http://localhost:3022/health && yarn workspaces foreach -t run integrate\""
+    "integrate": "concurrently --success first --kill-others --group \"yarn workspace @sommerlan-app/client start\" \"FAKE_API=true PORT=3022 yarn workspace @sommerlan-app/server start\" \"wait-on -t 30000 http://localhost:4173/ http://localhost:3022/health && yarn workspace @sommerlan-app/integration integrate\""
   },
   "workspaces": [
     "packages/*"
