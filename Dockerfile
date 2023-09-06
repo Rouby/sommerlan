@@ -15,8 +15,9 @@ WORKDIR /myapp
 ADD package.json yarn.lock .yarnrc.yml ./
 ADD ./packages/client/package.json ./packages/client/package.json
 ADD ./packages/server/package.json ./packages/server/package.json
+ADD ./packages/integration/package.json ./packages/integration/package.json
 COPY .yarn/ ./.yarn/
-RUN yarn install --immutable-cache
+RUN yarn install --immutable --immutable-cache
 
 
 FROM build as client-build
