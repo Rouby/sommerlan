@@ -16,7 +16,7 @@ ADD package.json yarn.lock .yarnrc.yml ./
 ADD ./packages/client/package.json ./packages/client/package.json
 ADD ./packages/server/package.json ./packages/server/package.json
 COPY .yarn/ ./.yarn/
-RUN yarn install --immutable
+RUN yarn install --immutable-cache
 
 
 FROM build as client-build
