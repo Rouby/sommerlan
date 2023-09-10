@@ -1,7 +1,6 @@
 import { GoogleSpreadsheet } from "google-spreadsheet";
 import newrelic from "newrelic";
 import * as Models from ".";
-import { logger } from "../logger";
 
 export async function getSheet() {
   if (process.env.FAKE_API) {
@@ -31,20 +30,33 @@ export const fakeGoogleSheetApi = {
     Games: fakeSheet("Game"),
     Events: fakeSheet("Event"),
   },
-  seed(clsName: string, data: any) {
+
+  seedRow(clsName: string, data: any) {
     return Object.values(this.sheetsByTitle)
       .find((sheet) => clsName === sheet.clsName)
       ?.seedRow(data);
   },
-
-  find(clsName: string, query: any) {
+  findRow(clsName: string, query: any) {
     return Object.values(this.sheetsByTitle)
       .find((sheet) => clsName === sheet.clsName)
       ?.findRow(query);
   },
-
+  seedData: async (clsName: string, data: any) => {
+    const Model = Models[clsName as "User"];
+    const dbo = new Model(data);
+    await dbo.save();
+    return dbo;
+  },
+  findData: async (clsName: string, query: any) => {
+    const Model = Models[clsName as "User"];
+    return Model.find((m) =>
+      Object.entries(query).every(
+        ([key, value]) => m[key as keyof typeof m] === value
+      )
+    );
+  },
   clear() {
-    Object.values(this.sheetsByTitle).forEach((sheet) => sheet.clear());
+    Object.values(this.sheetsByTitle).forEach((sheet) => sheet.clearRows());
   },
 };
 
@@ -72,21 +84,17 @@ function fakeSheet(clsName: string) {
 
     clsName,
     seedRow: async (data: any) => {
-      logger.debug({ clsName, data }, "Seeding row");
-      const Model = Models[clsName as "User"];
-      const dbo = new Model(data);
-      await dbo.save();
-      return dbo;
+      rows.push(data);
+      return data;
     },
     findRow: async (query: any) => {
-      const Model = Models[clsName as "User"];
-      return Model.find((m) =>
+      return rows.find((m) =>
         Object.entries(query).every(
           ([key, value]) => m[key as keyof typeof m] === value
         )
       );
     },
-    clear: () => {
+    clearRows: () => {
       rows.splice(0, rows.length);
     },
   };

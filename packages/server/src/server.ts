@@ -146,13 +146,17 @@ export function createServer(opts: ServerOptions) {
       url: "/seed",
       method: "POST",
       handler: async (req, reply) => {
-        // todo handle seeding
         logger.info({ body: req.body }, "Receive seed request");
 
-        const dbo = await fakeGoogleSheetApi.seed(
-          (req.body as any).model,
-          (req.body as any).data
-        );
+        const { model, data, asRow } = req.body as {
+          model: string;
+          data: any;
+          asRow: boolean;
+        };
+
+        const dbo = asRow
+          ? await fakeGoogleSheetApi.seedRow(model, data)
+          : await fakeGoogleSheetApi.seedData(model, data);
 
         reply.send(dbo);
 
@@ -164,13 +168,17 @@ export function createServer(opts: ServerOptions) {
       url: "/find",
       method: "POST",
       handler: async (req, reply) => {
-        // todo handle seeding
         logger.info({ body: req.body }, "Receive find request");
 
-        const dbo = await fakeGoogleSheetApi.find(
-          (req.body as any).model,
-          (req.body as any).query
-        );
+        const { model, query, asRow } = req.body as {
+          model: string;
+          query: any;
+          asRow: boolean;
+        };
+
+        const dbo = asRow
+          ? await fakeGoogleSheetApi.findRow(model, query)
+          : await fakeGoogleSheetApi.findData(model, query);
 
         reply.send(dbo);
 
@@ -182,7 +190,6 @@ export function createServer(opts: ServerOptions) {
       url: "/clear",
       method: "POST",
       handler: async (req, reply) => {
-        // todo handle seeding
         logger.info({ body: req.body }, "Receive clear request");
 
         await syncCache(true);
