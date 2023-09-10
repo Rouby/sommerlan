@@ -159,6 +159,40 @@ export function createServer(opts: ServerOptions) {
         return reply;
       },
     });
+
+    server.route({
+      url: "/find",
+      method: "POST",
+      handler: async (req, reply) => {
+        // todo handle seeding
+        logger.info({ body: req.body }, "Receive find request");
+
+        const dbo = await fakeGoogleSheetApi.find(
+          (req.body as any).model,
+          (req.body as any).query
+        );
+
+        reply.send(dbo);
+
+        return reply;
+      },
+    });
+
+    server.route({
+      url: "/clear",
+      method: "POST",
+      handler: async (req, reply) => {
+        // todo handle seeding
+        logger.info({ body: req.body }, "Receive clear request");
+
+        await syncCache(true);
+        fakeGoogleSheetApi.clear();
+
+        reply.send({ ok: true });
+
+        return reply;
+      },
+    });
   }
 
   const stop = async () => {

@@ -1,20 +1,93 @@
-// ***********************************************************
-// This example support/e2e.js is processed and
-// loaded automatically before your test files.
-//
-// This is a great place to put global configuration and
-// behavior that modifies Cypress.
-//
-// You can change the location of this file or turn off
-// automatically serving support files with the
-// 'supportFile' configuration option.
-//
-// You can read more here:
-// https://on.cypress.io/configuration
-// ***********************************************************
+/// <reference types="cypress" />
 
-// Import commands.js using ES2015 syntax:
-import './commands'
+Cypress.Commands.add("seedData", (model, data) => {
+  return cy.task("seedData", { model, data });
+});
 
-// Alternatively you can use CommonJS syntax:
-// require('./commands')
+Cypress.Commands.add("findData", (model, query) => {
+  return cy.task("findData", { model, query });
+});
+
+beforeEach(() => {
+  cy.task("clearData");
+});
+
+declare namespace Cypress {
+  interface Chainable {
+    seedData(
+      model: "User",
+      data: import("../../../server/src/data/$base").Values<
+        import("../../../server/src/data/users").User
+      >
+    ): Chainable<any>;
+    seedData(
+      model: "Party",
+      data: import("../../../server/src/data/$base").Values<
+        import("../../../server/src/data/parties").Party
+      >
+    ): Chainable<any>;
+    seedData(
+      model: "Picture",
+      data: import("../../../server/src/data/$base").Values<
+        import("../../../server/src/data/pictures").Picture
+      >
+    ): Chainable<any>;
+    seedData(
+      model: "Attending",
+      data: import("../../../server/src/data/$base").Values<
+        import("../../../server/src/data/attendings").Attending
+      >
+    ): Chainable<any>;
+    seedData(
+      model: "Game",
+      data: import("../../../server/src/data/$base").Values<
+        import("../../../server/src/data/games").Game
+      >
+    ): Chainable<any>;
+    seedData(
+      model: "Event",
+      data: import("../../../server/src/data/$base").Values<
+        import("../../../server/src/data/events").Event
+      >
+    ): Chainable<any>;
+    seedData(model: string, data: unknown): Chainable<any>;
+
+    findData(
+      model: "User",
+      data: import("../../../server/src/data/$base").Values<
+        import("../../../server/src/data/users").User
+      >
+    ): Chainable<any>;
+    findData(
+      model: "Party",
+      data: import("../../../server/src/data/$base").Values<
+        import("../../../server/src/data/parties").Party
+      >
+    ): Chainable<any>;
+    findData(
+      model: "Picture",
+      data: import("../../../server/src/data/$base").Values<
+        import("../../../server/src/data/pictures").Picture
+      >
+    ): Chainable<any>;
+    findData(
+      model: "Attending",
+      data: import("../../../server/src/data/$base").Values<
+        import("../../../server/src/data/attendings").Attending
+      >
+    ): Chainable<any>;
+    findData(
+      model: "Game",
+      data: import("../../../server/src/data/$base").Values<
+        import("../../../server/src/data/games").Game
+      >
+    ): Chainable<any>;
+    findData(
+      model: "Event",
+      data: import("../../../server/src/data/$base").Values<
+        import("../../../server/src/data/events").Event
+      >
+    ): Chainable<any>;
+    findData(model: string, data: unknown): Chainable<any>;
+  }
+}

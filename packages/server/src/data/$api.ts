@@ -1,6 +1,6 @@
 import { GoogleSpreadsheet } from "google-spreadsheet";
 import newrelic from "newrelic";
-import { logger } from "../logger.js";
+import { logger } from "../logger";
 
 export async function getSheet() {
   if (process.env.FAKE_API) {
@@ -35,6 +35,16 @@ export const fakeGoogleSheetApi = {
       .find((sheet) => clsName === sheet.clsName)
       ?.seedRow(data);
   },
+
+  find(clsName: string, query: any) {
+    return Object.values(this.sheetsByTitle)
+      .find((sheet) => clsName === sheet.clsName)
+      ?.findRow(query);
+  },
+
+  clear() {
+    Object.values(this.sheetsByTitle).forEach((sheet) => sheet.clear());
+  },
 };
 
 function fakeSheet(clsName: string) {
@@ -62,12 +72,25 @@ function fakeSheet(clsName: string) {
     clsName,
     seedRow: async (data: any) => {
       logger.debug({ clsName, data }, "Seeding row");
-      const Model = await import("./index.js").then(
+      const Model = await import("./index").then(
         (module) => module[clsName as "User"]
       );
       const dbo = new Model(data);
       await dbo.save();
       return dbo;
+    },
+    findRow: async (query: any) => {
+      const Model = await import("./index").then(
+        (module) => module[clsName as "User"]
+      );
+      return Model.find((m) =>
+        Object.entries(query).every(
+          ([key, value]) => m[key as keyof typeof m] === value
+        )
+      );
+    },
+    clear: () => {
+      rows.splice(0, rows.length);
     },
   };
 }

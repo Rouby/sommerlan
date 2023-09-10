@@ -76,10 +76,16 @@ client.on(GatewayDispatchEvents.MessageCreate, async (message) => {
   }
 });
 
-export const discord = {
-  connect: () => (token && guildId ? gateway.connect() : Promise.resolve()),
-  destroy: () => (token && guildId ? gateway.destroy() : Promise.resolve()),
-};
+export const discord =
+  process.env.FAKE_API || !token || !guildId
+    ? {
+        connect: () => Promise.resolve(),
+        destroy: () => Promise.resolve(),
+      }
+    : {
+        connect: () => gateway.connect(),
+        destroy: () => gateway.destroy(),
+      };
 
 export async function sendDiscordMessage(
   userId: string,
