@@ -2,7 +2,7 @@ const { defineConfig } = require("cypress");
 const fetch = (...args) =>
   import("node-fetch").then(({ default: fetch }) => fetch(...args));
 
-const backend = `http://localhost:${process.env.PORT}`;
+const backend = `http://localhost:${process.env.PORT ?? 3022}`;
 
 module.exports = defineConfig({
   e2e: {

@@ -28,11 +28,11 @@ export default defineConfig(async ({ mode }) => ({
   server: {
     proxy: {
       "/graphql": {
-        target: "http://localhost:2022",
+        target: `http://localhost:${process.env.PORT ?? 2022}`,
         changeOrigin: true,
       },
       "/uploads": {
-        target: "http://localhost:2022",
+        target: `http://localhost:${process.env.PORT ?? 2022}`,
         changeOrigin: true,
       },
     },

@@ -1,5 +1,6 @@
 import { GoogleSpreadsheet } from "google-spreadsheet";
 import newrelic from "newrelic";
+import * as Models from ".";
 import { logger } from "../logger";
 
 export async function getSheet() {
@@ -72,17 +73,13 @@ function fakeSheet(clsName: string) {
     clsName,
     seedRow: async (data: any) => {
       logger.debug({ clsName, data }, "Seeding row");
-      const Model = await import("./index").then(
-        (module) => module[clsName as "User"]
-      );
+      const Model = Models[clsName as "User"];
       const dbo = new Model(data);
       await dbo.save();
       return dbo;
     },
     findRow: async (query: any) => {
-      const Model = await import("./index").then(
-        (module) => module[clsName as "User"]
-      );
+      const Model = Models[clsName as "User"];
       return Model.find((m) =>
         Object.entries(query).every(
           ([key, value]) => m[key as keyof typeof m] === value
