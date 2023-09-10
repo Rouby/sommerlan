@@ -39,6 +39,16 @@ module.exports = defineConfig({
 
           return response.json();
         },
+
+        async getMailsSent() {
+          const response = await fetch(`${backend}/mails`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({}),
+          });
+
+          return response.json();
+        },
       });
     },
   },

@@ -19,6 +19,7 @@ export async function sendMail(options: SendMailOptions) {
     logger.info({ to: options.to }, "Sending mail");
     if (process.env.NODE_ENV !== "production") {
       logger.info({ options }, "Would send mail");
+      devMailsSent.push(options);
     } else {
       await transporter.sendMail({
         from: '"SommerLAN" <no-reply@sommerlan.rocks>',
@@ -27,3 +28,5 @@ export async function sendMail(options: SendMailOptions) {
     }
   });
 }
+
+export const devMailsSent: SendMailOptions[] = [];

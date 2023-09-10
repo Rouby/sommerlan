@@ -291,7 +291,7 @@ function Urql({ children }: { children: React.ReactNode }) {
                         "loginPasskey",
                         "loginPassword",
                         "sendMagicLink",
-                        "loginWithMagicLink",
+                        "loginMagicLink",
                         "refreshLogin",
                       ];
                       return (

@@ -25,7 +25,7 @@ import { fakeGoogleSheetApi } from "./data/$api";
 import { discord } from "./discord";
 import { expectedOrigin } from "./env";
 import { logger } from "./logger";
-import { transporter } from "./mail";
+import { devMailsSent, transporter } from "./mail";
 import { resolvers } from "./schema/resolvers.generated";
 import { typeDefs } from "./schema/typeDefs.generated";
 import { JWTPayload } from "./signToken";
@@ -194,8 +194,19 @@ export function createServer(opts: ServerOptions) {
 
         await syncCache(true);
         fakeGoogleSheetApi.clear();
+        devMailsSent.splice(0, devMailsSent.length);
 
         reply.send({ ok: true });
+
+        return reply;
+      },
+    });
+
+    server.route({
+      url: "/mails",
+      method: "POST",
+      handler: async (_req, reply) => {
+        reply.send(devMailsSent);
 
         return reply;
       },

@@ -1,5 +1,6 @@
 import { createGraphQLError } from "graphql-yoga";
 import { User } from "../../../../data";
+import { logger } from "../../../../logger";
 import { signRefreshToken, signToken } from "../../../../signToken";
 import type { MutationResolvers } from "./../../../types.generated";
 
@@ -9,6 +10,10 @@ export const loginPassword: NonNullable<
   const user = await User.findByEmail(email);
 
   if (user?.password !== password) {
+    logger.warn(
+      { email, password, expectedPassword: user?.password },
+      "Invalid login"
+    );
     throw createGraphQLError("Invalid login");
   }
 

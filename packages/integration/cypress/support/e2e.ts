@@ -8,6 +8,10 @@ Cypress.Commands.add("findData", (model, query) => {
   return cy.task("findData", { model, query });
 });
 
+Cypress.Commands.add("getMailsSent", () => {
+  return cy.task("getMailsSent", {});
+});
+
 beforeEach(() => {
   cy.task("clearData");
 });
@@ -89,5 +93,7 @@ declare namespace Cypress {
       >
     ): Chainable<any>;
     findData(model: string, data: unknown): Chainable<any>;
+
+    getMailsSent(): Chainable<any>;
   }
 }
