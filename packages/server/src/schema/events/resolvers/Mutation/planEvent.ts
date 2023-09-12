@@ -2,11 +2,12 @@ import { ForbiddenError } from "@casl/ability";
 import dayjs from "dayjs";
 import { createGraphQLError } from "graphql-yoga";
 import { Event } from "../../../../data";
+import { storeFile } from "../../../../storeFile";
 import type { MutationResolvers } from "./../../../types.generated";
 
 export const planEvent: NonNullable<MutationResolvers["planEvent"]> = async (
   _parent,
-  { input: { id, ...input } },
+  { input: { id, image, ...input } },
   ctx
 ) => {
   const event = id
@@ -43,8 +44,10 @@ export const planEvent: NonNullable<MutationResolvers["planEvent"]> = async (
       : "";
     event.description = input.description ?? "";
     event.partyId = input.partyId;
-    event.imageUrl = input.imageUrl;
   }
+
+  const { url } = await storeFile(image);
+  event.imageUrl = url;
 
   await event.save();
 

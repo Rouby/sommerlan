@@ -19,7 +19,7 @@ import {
   TypographyStylesProvider,
 } from "@mantine/core";
 import { DatePickerInput, TimeInput } from "@mantine/dates";
-import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
+import { Dropzone, FileWithPath, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { RichTextEditor } from "@mantine/tiptap";
 import { IconCheck, IconPencil } from "@tabler/icons-react";
 import Highlight from "@tiptap/extension-highlight";
@@ -32,7 +32,7 @@ import { useRef, useState } from "react";
 import { useMutation, useQuery } from "urql";
 import { Can, UserAvatar } from ".";
 import { graphql, useFragment } from "../gql";
-import { useUploadFileMutation } from "../hooks";
+import { useFetchWithProgress } from "../hooks";
 import { userAtom } from "../state";
 
 export function PartyEvents({ partyId }: { partyId?: string }) {
@@ -175,6 +175,7 @@ function EventCard({
   return (
     <Card
       key={event.id}
+      data-cy="event"
       shadow="sm"
       padding="lg"
       radius="md"
@@ -297,6 +298,7 @@ function CreateEventForm({
     defaultValues ? !defaultValues.startTime : true
   );
 
+  const [, fetch] = useFetchWithProgress();
   const [{ fetching }, planEvent] = useMutation(
     graphql(`
       mutation planEvent($input: EventInput!) {
@@ -325,8 +327,7 @@ function CreateEventForm({
 
   const openRef = useRef<() => void>(null);
 
-  const { mutateAsync: uploadFile, isLoading: isUploading } =
-    useUploadFileMutation();
+  const [image, setImage] = useState<FileWithPath | null>(null);
 
   return (
     <form
@@ -345,20 +346,21 @@ function CreateEventForm({
         const endTime = form["endTime"].value;
         const timeUncertain = form["timeUncertain"].checked || !startTime;
 
-        const imageUrl = form["imageUrl"].value;
-
-        await planEvent({
-          input: {
-            id: defaultValues?.id,
-            partyId,
-            date: dateUncertain ? null : date,
-            startTime: timeUncertain ? null : startTime,
-            endTime: timeUncertain ? null : endTime,
-            name,
-            description,
-            imageUrl,
+        await planEvent(
+          {
+            input: {
+              id: defaultValues?.id,
+              partyId,
+              date: dateUncertain ? null : date,
+              startTime: timeUncertain ? null : startTime,
+              endTime: timeUncertain ? null : endTime,
+              name,
+              description,
+              image,
+            },
           },
-        });
+          { fetch }
+        );
 
         onSubmit();
       }}
@@ -442,38 +444,15 @@ function CreateEventForm({
           <RichTextEditor.Content />
         </RichTextEditor>
 
-        <Input.Wrapper
-          id="imageUrl"
-          withAsterisk
-          label="Bild"
-          description="Gib die Adresse zu einem Bild an, das auf der Event-Seite erscheint."
-        >
-          <Input
-            id="imageUrl"
-            required
-            name="imageUrl"
-            placeholder="https://example.com/image.jpg"
-            pattern="https?://.*"
-            defaultValue={defaultValues?.image ?? undefined}
-          />
-        </Input.Wrapper>
-
         <Dropzone
+          name="image"
+          data-cy="dropzone"
           accept={IMAGE_MIME_TYPE}
-          onDrop={(files) => {
-            uploadFile(files[0]).then((url) => {
-              const imageElem = document.getElementById(
-                "imageUrl"
-              ) as HTMLInputElement;
-              if (imageElem) {
-                imageElem.value = url;
-              }
-            });
-          }}
+          onDrop={(files) => setImage(files[0])}
           maxFiles={1}
           openRef={openRef}
           sx={{ height: 100, display: "grid", alignItems: "center" }}
-          loading={isUploading}
+          loading={fetching}
         >
           <Center>Alternativ kannst du ein Bild hochladen</Center>
         </Dropzone>

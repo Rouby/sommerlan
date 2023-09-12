@@ -127,6 +127,28 @@ function Urql({ children }: { children: React.ReactNode }) {
                     );
                   }
                 },
+                planEvent: (result, args, cache, _info) => {
+                  if (
+                    typeof result.planEvent === "object" &&
+                    result.planEvent &&
+                    typeof args.input === "object" &&
+                    args.input &&
+                    "partyId" in args.input
+                  ) {
+                    const events = cache.resolve(
+                      { __typename: "Party", id: args.input.partyId },
+                      "events"
+                    );
+                    if (Array.isArray(events)) {
+                      events.push(result.planEvent as Data);
+                      cache.link(
+                        { __typename: "Party", id: args.input.partyId },
+                        "events",
+                        events as Link<Entity>
+                      );
+                    }
+                  }
+                },
                 addGameToParty: (result, _args, cache, _info) => {
                   if (
                     typeof result.addGameToParty === "object" &&

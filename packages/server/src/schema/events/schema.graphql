@@ -29,5 +29,5 @@ input EventInput {
   startTime: String
   endTime: String
   description: String
-  imageUrl: String!
+  image: File!
 }
