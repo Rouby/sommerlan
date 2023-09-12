@@ -32,6 +32,7 @@ import {
 import { useMutation, useQuery } from "urql";
 import { UserAvatar } from ".";
 import { graphql } from "../gql";
+import { useFetchWithProgress } from "../hooks";
 import { userAtom } from "../state";
 import { formatDate } from "../utils";
 
@@ -280,59 +281,14 @@ const ImageUploadProgress = forwardRef(function ImageUploadProgress(
       }
     `)
   );
-  const [progress, setProgress] = useState(0);
+  const [progress, fetch] = useFetchWithProgress();
 
   useImperativeHandle(ref, () => ({
     file,
     upload: (partyId: string) =>
       addPicture(
         { input: { name: file.path ?? "", partyId, file } },
-        {
-          fetch: (req, init) => {
-            return new Promise<Response>((resolve, reject) => {
-              const url = req instanceof Request ? req.url : req.toString();
-
-              const xhr = new XMLHttpRequest();
-              xhr.open(init?.method ?? "GET", url);
-              xhr.onload = () => {
-                resolve(
-                  new Response(xhr.responseText, {
-                    status: xhr.status,
-                    statusText: xhr.statusText,
-                    headers: new Headers(
-                      xhr
-                        .getAllResponseHeaders()
-                        .split("\n")
-                        .map((header) => {
-                          const [name, value] = header.split(": ");
-                          return [name?.trim(), value?.trim()] as [
-                            string,
-                            string
-                          ];
-                        })
-                        .filter(([name]) => name)
-                    ),
-                  })
-                );
-              };
-              xhr.onerror = () => {
-                reject(new TypeError("Network request failed"));
-              };
-              xhr.withCredentials = init?.credentials === "include";
-              if (xhr.upload) {
-                xhr.upload.onprogress = (event) => {
-                  setProgress(event.loaded / event.total);
-                };
-              }
-
-              for (const [name, value] of Object.entries(init?.headers ?? {})) {
-                xhr.setRequestHeader(name, value as string);
-              }
-
-              xhr.send(init?.body as any);
-            });
-          },
-        }
+        { fetch }
       ),
   }));
 

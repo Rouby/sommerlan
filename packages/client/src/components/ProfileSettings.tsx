@@ -1,11 +1,11 @@
 import { Anchor, Button, Center, Group, Input, Stack } from "@mantine/core";
-import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
+import { Dropzone, FileWithPath, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { useAtomValue, useSetAtom } from "jotai";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useMutation } from "urql";
 import { CardWithHeader } from "../components";
 import { graphql } from "../gql";
-import { useUploadFileMutation } from "../hooks";
+import { useFetchWithProgress } from "../hooks";
 import { tokenAtom, userAtom } from "../state";
 
 export function ProfileSettings() {
@@ -14,8 +14,7 @@ export function ProfileSettings() {
 
   const openRef = useRef<() => void>(null);
 
-  const { mutateAsync: uploadFile, isLoading: isUploading } =
-    useUploadFileMutation();
+  const [, fetch] = useFetchWithProgress();
   const [{ fetching }, updateProfile] = useMutation(
     graphql(`
       mutation updateProfile($input: ProfileInput!) {
@@ -31,6 +30,8 @@ export function ProfileSettings() {
     `)
   );
 
+  const [avatarImage, setAvtarImage] = useState<FileWithPath | null>(null);
+
   return (
     <form
       onSubmit={async (evt) => {
@@ -40,16 +41,18 @@ export function ProfileSettings() {
         const name = form["userName"].value;
         const displayName = form["displayName"].value;
         const email = form["email"].value;
-        const avatarUrl = form["avatarUrl"].value;
 
-        await updateProfile({
-          input: {
-            name,
-            displayName,
-            email,
-            avatarUrl,
+        await updateProfile(
+          {
+            input: {
+              name,
+              displayName,
+              email,
+              avatar: avatarImage,
+            },
           },
-        });
+          { fetch }
+        );
 
         setToken(null);
       }}
@@ -117,19 +120,12 @@ export function ProfileSettings() {
             data-cy="dropzone"
             accept={IMAGE_MIME_TYPE}
             onDrop={(files) => {
-              uploadFile(files[0]).then((url) => {
-                const imageElem = document.getElementById(
-                  "avatarUrl"
-                ) as HTMLInputElement;
-                if (imageElem) {
-                  imageElem.value = url;
-                }
-              });
+              setAvtarImage(files[0]);
             }}
             maxFiles={1}
             openRef={openRef}
             sx={{ height: 100, display: "grid", alignItems: "center" }}
-            loading={isUploading}
+            loading={fetching}
           >
             <Center>Alternativ kannst du ein Bild hochladen</Center>
           </Dropzone>

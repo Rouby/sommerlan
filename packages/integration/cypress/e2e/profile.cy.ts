@@ -9,10 +9,10 @@ describe("profile", () => {
 
     cy.visit("/profile");
 
-    cy.contains("[data-cy=dropzone]", "Alternativ kannst du ein Bild hochladen")
-      .selectFile("cypress/fixtures/avatar.png", { action: "drag-drop" })
-      // todo remove wait once this does not upload immediately
-      .wait(500);
+    cy.contains(
+      "[data-cy=dropzone]",
+      "Alternativ kannst du ein Bild hochladen"
+    ).selectFile("cypress/fixtures/avatar.png", { action: "drag-drop" });
 
     cy.contains("button", "Speichern").click();
 

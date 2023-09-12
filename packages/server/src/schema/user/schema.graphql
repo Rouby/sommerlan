@@ -75,7 +75,7 @@ input ProfileInput {
   name: String!
   displayName: String!
   email: String!
-  avatarUrl: String
+  avatar: File
 }
 
 type AuthDevice {

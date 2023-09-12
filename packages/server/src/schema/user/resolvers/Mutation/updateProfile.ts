@@ -1,6 +1,7 @@
 import { ForbiddenError } from "@casl/ability";
 import { createGraphQLError } from "graphql-yoga";
 import { User } from "../../../../data";
+import { storeFile } from "../../../../storeFile";
 import type { MutationResolvers } from "./../../../types.generated";
 
 export const updateProfile: NonNullable<
@@ -17,7 +18,10 @@ export const updateProfile: NonNullable<
   user.name = input.name;
   user.displayName = input.displayName;
   user.email = input.email;
-  user.avatarUrl = input.avatarUrl ?? "";
+  if (input.avatar) {
+    const { url } = await storeFile(input.avatar);
+    user.avatarUrl = url;
+  }
 
   await user.save();
 

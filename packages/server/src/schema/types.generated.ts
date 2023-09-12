@@ -334,7 +334,7 @@ export type PictureTagInput = {
 };
 
 export type ProfileInput = {
-  avatarUrl?: InputMaybe<Scalars['String']['input']>;
+  avatar?: InputMaybe<Scalars['File']['input']>;
   displayName: Scalars['String']['input'];
   email: Scalars['String']['input'];
   id?: InputMaybe<Scalars['ID']['input']>;

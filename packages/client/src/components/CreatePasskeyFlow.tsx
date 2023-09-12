@@ -1,6 +1,6 @@
 import { Alert, Box, Button, Group, Text } from "@mantine/core";
 import { AnimatePresence, motion } from "framer-motion";
-import { usePasskeyCreateFlow } from "../hooks/usePasskeyCreateFlow";
+import { usePasskeyCreateFlow } from "../hooks";
 import { ReactComponent as FingerprintIllustration } from "../illustrations/undraw_fingerprint_login_re_t71l.svg";
 import { ReactComponent as OrderConfirmedIllustration } from "../illustrations/undraw_order_confirmed_re_g0if.svg";
 
