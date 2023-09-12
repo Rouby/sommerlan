@@ -4,10 +4,7 @@ import cors from "@fastify/cors";
 import multipart from "@fastify/multipart";
 import staticfs from "@fastify/static";
 import { useJWT } from "@graphql-yoga/plugin-jwt";
-import { randomUUID } from "crypto";
-import fastify, { FastifyInstance } from "fastify";
-import { createWriteStream, existsSync } from "fs";
-import { mkdir } from "fs/promises";
+import fastify from "fastify";
 import { GraphQLError } from "graphql";
 import {
   Plugin,
@@ -17,7 +14,6 @@ import {
   maskError,
 } from "graphql-yoga";
 import { join } from "path";
-import { pipeline } from "stream/promises";
 import { AppAbility, createAbility } from "./ability";
 import { User, syncCache } from "./data";
 import { fakeGoogleSheetApi } from "./data/$api";
@@ -27,7 +23,6 @@ import { resolvers } from "./schema/resolvers.generated";
 import { typeDefs } from "./schema/typeDefs.generated";
 import { devMailsSent, discord, mail, scheduler } from "./services";
 import { JWTPayload, signRefreshToken, signToken } from "./signToken";
-import { validateToken } from "./validateToken";
 
 export interface ServerOptions {
   dev?: boolean;
@@ -45,6 +40,7 @@ export function createServer(opts: ServerOptions) {
 
   server.register(cookie, { secret: process.env.SESSION_SECRET });
   server.register(cors, {});
+  server.register(multipart);
 
   const yoga = createYoga({
     schema: createSchema({
@@ -127,8 +123,6 @@ export function createServer(opts: ServerOptions) {
     },
   });
 
-  setupUploads(server, dev);
-
   if (!dev) {
     server.register(staticfs, {
       root: join(__dirname, "../client"),
@@ -136,6 +130,11 @@ export function createServer(opts: ServerOptions) {
     logger.info("serving", join(__dirname, "../client"));
     server.setNotFoundHandler((_, reply) => {
       reply.sendFile("index.html");
+    });
+  } else {
+    server.register(staticfs, {
+      root: join(__dirname, "../client/uploads"),
+      prefix: "/uploads",
     });
   }
 
@@ -261,51 +260,4 @@ export function createServer(opts: ServerOptions) {
   };
 
   return { server, start, stop };
-}
-
-function setupUploads(server: FastifyInstance, dev: boolean) {
-  server.register(multipart);
-  server.put("/uploads", async (req, reply) => {
-    let token: string | undefined;
-    if (req.headers.authorization) {
-      [, token] = req.headers.authorization.split(" ");
-    }
-
-    if (!token) {
-      reply.send({ error: "No token provided" });
-      return;
-    }
-
-    validateToken(token);
-
-    const data = await req.file({
-      limits: {
-        files: 1,
-        fileSize: 10 * 1024 * 1024, // 10MB
-      },
-    });
-
-    if (!data) {
-      reply.send({ error: "No file uploaded" });
-      return;
-    }
-
-    const uploadName = `${randomUUID()}.${data.filename.split(".").pop()}`;
-
-    if (!existsSync(join(__dirname, "../client/uploads"))) {
-      await mkdir(join(__dirname, "../client/uploads"), { recursive: true });
-    }
-    await pipeline(
-      data.file,
-      createWriteStream(join(__dirname, "../client/uploads", uploadName))
-    );
-
-    reply.send({ url: `${expectedOrigin}/uploads/${uploadName}` });
-  });
-  if (dev) {
-    server.register(staticfs, {
-      root: join(__dirname, "../client/uploads"),
-      prefix: "/uploads",
-    });
-  }
 }
