@@ -1,11 +1,7 @@
 import { ForbiddenError } from "@casl/ability";
-import { randomUUID } from "crypto";
-import { existsSync } from "fs";
-import { mkdir, writeFile } from "fs/promises";
 import { createGraphQLError } from "graphql-yoga";
-import { join } from "path";
 import { Party, Picture } from "../../../../data";
-import { uploadDir } from "../../../../env";
+import { storeFile } from "../../../../storeFile";
 import type { MutationResolvers } from "./../../../types.generated";
 
 export const addPicture: NonNullable<MutationResolvers["addPicture"]> = async (
@@ -21,16 +17,7 @@ export const addPicture: NonNullable<MutationResolvers["addPicture"]> = async (
     throw createGraphQLError("Party not found");
   }
 
-  const id = randomUUID();
-  const uploadName = `${id}.${file.name.split(".").pop()}`;
-
-  if (!existsSync(uploadDir)) {
-    await mkdir(uploadDir, { recursive: true });
-  }
-  await writeFile(
-    join(uploadDir, uploadName),
-    Buffer.from(await file.arrayBuffer())
-  );
+  const { id, uploadName } = await storeFile(file);
 
   const picture = new Picture({
     id,
