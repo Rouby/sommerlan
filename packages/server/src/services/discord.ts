@@ -5,11 +5,11 @@ import {
 } from "@discordjs/core";
 import { REST } from "@discordjs/rest";
 import { WebSocketManager } from "@discordjs/ws";
-import { cron } from "./cron";
-import { User } from "./data";
-import { getEnv } from "./env";
-import { logger } from "./logger";
+import { User } from "../data";
+import { getEnv } from "../env";
+import { logger } from "../logger";
 import { issueMagicLink } from "./magicLinks";
+import { scheduleTimeout } from "./scheduler";
 
 const token = process.env.DISCORD_BOT_TOKEN!;
 const guildId = process.env.DISCORD_GUILD_ID!;
@@ -99,13 +99,9 @@ export async function sendDiscordMessage(
   });
 
   if (ttl) {
-    cron.schedule(
-      `@every ${ttl}`,
-      async () => {
-        await client.api.channels.deleteMessage(channel.id, message.id);
-      },
-      { oneshot: true }
-    );
+    scheduleTimeout(ttl, async () => {
+      await client.api.channels.deleteMessage(channel.id, message.id);
+    });
   }
 }
 

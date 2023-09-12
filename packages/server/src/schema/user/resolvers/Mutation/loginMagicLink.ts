@@ -1,5 +1,5 @@
 import { createGraphQLError } from "graphql-yoga";
-import { getTokenFromMagicLink } from "../../../../magicLinks";
+import { getTokenFromMagicLink } from "../../../../services";
 import type { MutationResolvers } from "./../../../types.generated";
 
 export const loginMagicLink: NonNullable<

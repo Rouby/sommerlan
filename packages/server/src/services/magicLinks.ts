@@ -1,8 +1,8 @@
 import { randomUUID } from "crypto";
-import { cron } from "./cron";
-import { User } from "./data";
-import { expectedOrigin } from "./env";
-import { signRefreshToken, signToken } from "./signToken";
+import { User } from "../data";
+import { expectedOrigin } from "../env";
+import { signRefreshToken, signToken } from "../signToken";
+import { scheduleTimeout } from "./scheduler";
 
 const issuedMagicLinks = new Map<
   string,
@@ -17,13 +17,9 @@ export async function issueMagicLink(user: User) {
     refreshToken: await signRefreshToken(user),
   });
 
-  cron.schedule(
-    `@every 15m`,
-    async () => {
-      issuedMagicLinks.delete(magicLinkId);
-    },
-    { oneshot: true }
-  );
+  scheduleTimeout("15m", async () => {
+    issuedMagicLinks.delete(magicLinkId);
+  });
 
   return `${expectedOrigin}?auth=${magicLinkId}`;
 }

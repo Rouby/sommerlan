@@ -19,15 +19,13 @@ import {
 import { join } from "path";
 import { pipeline } from "stream/promises";
 import { AppAbility, createAbility } from "./ability";
-import { cron } from "./cron";
 import { syncCache } from "./data";
 import { fakeGoogleSheetApi } from "./data/$api";
-import { discord } from "./discord";
 import { expectedOrigin } from "./env";
 import { logger } from "./logger";
-import { devMailsSent, transporter } from "./mail";
 import { resolvers } from "./schema/resolvers.generated";
 import { typeDefs } from "./schema/typeDefs.generated";
+import { devMailsSent, discord, mail, scheduler } from "./services";
 import { JWTPayload } from "./signToken";
 import { validateToken } from "./validateToken";
 
@@ -214,10 +212,10 @@ export function createServer(opts: ServerOptions) {
   }
 
   const stop = async () => {
-    transporter.close();
     await Promise.allSettled([
+      await scheduler.stop(),
       await discord.destroy(),
-      await cron.stop(),
+      await mail.destroy(),
       await syncCache(),
       await server.close(),
     ]);
@@ -229,22 +227,11 @@ export function createServer(opts: ServerOptions) {
         host: !dev ? "0.0.0.0" : process.env.CI ? "localhost" : undefined,
       });
 
-      await cron.start();
+      await scheduler.start();
 
       await discord.connect();
 
-      if (!dev) {
-        await new Promise<void>((resolve, reject) =>
-          transporter.verify((error) => {
-            if (error) {
-              logger.error(error);
-              reject(error);
-            } else {
-              resolve();
-            }
-          })
-        );
-      }
+      await mail.connect();
 
       logger.info("Startup complete", port);
     } catch (err) {

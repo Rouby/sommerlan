@@ -1,8 +1,31 @@
 import newrelic from "newrelic";
 import { createTransport, SendMailOptions } from "nodemailer";
-import { logger } from "./logger";
+import { logger } from "../logger";
 
-export const transporter = createTransport({
+export const mail =
+  process.env.NODE_ENV !== "production"
+    ? {
+        connect: () => Promise.resolve(),
+        destroy: () => Promise.resolve(),
+      }
+    : {
+        connect: () =>
+          new Promise<void>((resolve, reject) =>
+            transporter.verify((error) => {
+              if (error) {
+                logger.error(error);
+                reject(error);
+              } else {
+                resolve();
+              }
+            })
+          ),
+        destroy: async () => {
+          transporter.close();
+        },
+      };
+
+const transporter = createTransport({
   host: "mailserver",
   port: 587,
   secure: false, // true for 465, false for other ports

@@ -1,7 +1,6 @@
 import { createGraphQLError } from "graphql-yoga";
 import { User } from "../../../../data";
-import { issueMagicLink } from "../../../../magicLinks";
-import { sendMail } from "../../../../mail";
+import { issueMagicLink, sendMail } from "../../../../services";
 import type { MutationResolvers } from "./../../../types.generated";
 
 export const sendMagicLink: NonNullable<
