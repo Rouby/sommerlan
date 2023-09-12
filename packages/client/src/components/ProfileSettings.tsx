@@ -113,6 +113,8 @@ export function ProfileSettings() {
           </Input.Wrapper>
 
           <Dropzone
+            name="avatarImage"
+            data-cy="dropzone"
             accept={IMAGE_MIME_TYPE}
             onDrop={(files) => {
               uploadFile(files[0]).then((url) => {
