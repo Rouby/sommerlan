@@ -19,14 +19,14 @@ import {
 import { join } from "path";
 import { pipeline } from "stream/promises";
 import { AppAbility, createAbility } from "./ability";
-import { syncCache } from "./data";
+import { User, syncCache } from "./data";
 import { fakeGoogleSheetApi } from "./data/$api";
 import { expectedOrigin } from "./env";
 import { logger } from "./logger";
 import { resolvers } from "./schema/resolvers.generated";
 import { typeDefs } from "./schema/typeDefs.generated";
 import { devMailsSent, discord, mail, scheduler } from "./services";
-import { JWTPayload } from "./signToken";
+import { JWTPayload, signRefreshToken, signToken } from "./signToken";
 import { validateToken } from "./validateToken";
 
 export interface ServerOptions {
@@ -144,8 +144,6 @@ export function createServer(opts: ServerOptions) {
       url: "/seed",
       method: "POST",
       handler: async (req, reply) => {
-        logger.info({ body: req.body }, "Receive seed request");
-
         const { model, data, asRow } = req.body as {
           model: string;
           data: any;
@@ -166,8 +164,6 @@ export function createServer(opts: ServerOptions) {
       url: "/find",
       method: "POST",
       handler: async (req, reply) => {
-        logger.info({ body: req.body }, "Receive find request");
-
         const { model, query, asRow } = req.body as {
           model: string;
           query: any;
@@ -187,9 +183,7 @@ export function createServer(opts: ServerOptions) {
     server.route({
       url: "/clear",
       method: "POST",
-      handler: async (req, reply) => {
-        logger.info({ body: req.body }, "Receive clear request");
-
+      handler: async (_req, reply) => {
         await syncCache(true);
         fakeGoogleSheetApi.clear();
         devMailsSent.splice(0, devMailsSent.length);
@@ -205,6 +199,32 @@ export function createServer(opts: ServerOptions) {
       method: "POST",
       handler: async (_req, reply) => {
         reply.send(devMailsSent);
+
+        return reply;
+      },
+    });
+
+    server.route({
+      url: "/login",
+      method: "POST",
+      handler: async (req, reply) => {
+        const { email } = req.body as {
+          email: string;
+        };
+
+        const user = await User.findByEmail(email);
+
+        if (!user) {
+          reply.status(404);
+          reply.send({ error: "User not found" });
+
+          return reply;
+        }
+
+        reply.send({
+          token: await signToken(user),
+          refreshToken: await signRefreshToken(user),
+        });
 
         return reply;
       },

@@ -7,6 +7,7 @@ const backend = `http://localhost:${process.env.PORT ?? 3022}`;
 module.exports = defineConfig({
   e2e: {
     baseUrl: "http://localhost:4173",
+
     setupNodeEvents(on, config) {
       // implement node event listeners here
       on("task", {
@@ -45,6 +46,16 @@ module.exports = defineConfig({
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({}),
+          });
+
+          return response.json();
+        },
+
+        async login(data) {
+          const response = await fetch(`${backend}/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
           });
 
           return response.json();

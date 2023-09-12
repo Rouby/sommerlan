@@ -4,6 +4,15 @@ Cypress.Commands.add("seedData", (model, data) => {
   return cy.task("seedData", { model, data });
 });
 
+Cypress.Commands.add("login", { prevSubject: true }, (subject) => {
+  cy.task("login", subject).then(({ token, refreshToken }) => {
+    cy.window().then((win) => {
+      win.localStorage.setItem("token", JSON.stringify(token));
+      win.localStorage.setItem("refreshToken", JSON.stringify(refreshToken));
+    });
+  });
+});
+
 Cypress.Commands.add("findData", (model, query) => {
   return cy.task("findData", { model, query });
 });
@@ -95,5 +104,7 @@ declare namespace Cypress {
     findData(model: string, data: unknown): Chainable<any>;
 
     getMailsSent(): Chainable<any>;
+
+    login(): Chainable<any>;
   }
 }
