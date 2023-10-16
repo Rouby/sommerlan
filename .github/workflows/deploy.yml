@@ -278,16 +278,7 @@ jobs:
       name: ${{ needs.branch.outputs.env_name }}
 
     steps:
-      - name: 🏷️ New Relic Application Deployment Marker (client)
-        uses: newrelic/deployment-marker-action@v2.2.0
-        with:
-          apiKey: ${{ secrets.NEW_RELIC_API_KEY }}
-          region: "EU"
-          guid: ${{ secrets.NEW_RELIC_DEPLOYMENT_ENTITY_GUID_CLIENT }}
-          version: "${{ github.sha }}"
-          commit: "${{ github.sha }}"
-          user: "${{ github.actor }}"
-      - name: 🏷️ New Relic Application Deployment Marker (server)
+      - name: 🏷️ New Relic Application Deployment Marker
         uses: newrelic/deployment-marker-action@v2.2.0
         with:
           apiKey: ${{ secrets.NEW_RELIC_API_KEY }}
