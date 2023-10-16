@@ -141,7 +141,7 @@ jobs:
 
   build:
     name: 🏗️ Build
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     # only build/deploy main branch on pushes
     if: ${{ (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push' }}
 
@@ -159,6 +159,9 @@ jobs:
           key: ${{ runner.os }}-buildx-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-buildx-
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
 
       - name: 🐳 Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -187,16 +190,11 @@ jobs:
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
-      - name: 🐳 Load image
-        run: |
-          docker load --input /tmp/sommerlan-image.tar
-
-      # this would be needed if image is built on different machine
-      # - name: 📦 Upload artifact
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: sommerlan-image
-      #     path: /tmp/sommerlan-image.tar
+      - name: 📦 Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: sommerlan-image
+          path: /tmp/sommerlan-image.tar
 
   deploy:
     name: 🚀 Deploy
@@ -216,16 +214,15 @@ jobs:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
 
-      # this would be needed if image is built on different machine
-      # - name: 📦 Download artifact
-      #   uses: actions/download-artifact@v3
-      #   with:
-      #     name: sommerlan-image
-      #     path: /tmp/sommerlan-image.tar
+      - name: 📦 Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: sommerlan-image
+          path: /tmp/sommerlan-image.tar
 
-      # - name: 🐳 Load image
-      #   run: |
-      #     docker load --input /tmp/sommerlan-image.tar
+      - name: 🐳 Load image
+        run: |
+          docker load --input /tmp/sommerlan-image.tar
 
       - name: 🚀 Deploy Staging
         if: ${{ github.ref == 'refs/heads/dev' }}
