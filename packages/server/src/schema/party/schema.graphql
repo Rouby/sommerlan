@@ -23,6 +23,7 @@ type Party {
   location: String!
   locationWidgetSrc: String
   roomsAvailable: Int!
+  rentalCosts: Float!
   attendings: [Attending!]!
   pictures: [Picture!]!
 }

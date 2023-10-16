@@ -189,7 +189,7 @@ export function PartyAttendings({ partyId }: { partyId?: string }) {
                   ) : null}
                   <Badge>{attendingsOnDate.length} an diesem Tag da</Badge>
                 </Group>
-                <Divider mt="sm" />
+                {idx < dates.length - 1 && <Divider mt="sm" />}
               </Box>
             </Fragment>
           );

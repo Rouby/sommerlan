@@ -1,6 +1,7 @@
-import { Center, Container } from "@mantine/core";
+import { Center, Container, Space } from "@mantine/core";
 import {
   Can,
+  NextPartyCosts,
   NextPartyLocation,
   NextPartyRooms,
   PartyAttendings,
@@ -20,6 +21,12 @@ export function Party() {
         }
       >
         <PartyCountdown />
+
+        <Space h="md" />
+
+        <NextPartyCosts />
+
+        <Space h="md" />
 
         <NextPartyRooms />
 

@@ -281,6 +281,7 @@ export type Party = {
   location: Scalars['String']['output'];
   locationWidgetSrc?: Maybe<Scalars['String']['output']>;
   pictures: Array<Picture>;
+  rentalCosts: Scalars['Float']['output'];
   roomsAvailable: Scalars['Int']['output'];
   startDate: Scalars['Date']['output'];
 };
@@ -476,11 +477,11 @@ export type ResolversTypes = {
   Mutation: ResolverTypeWrapper<{}>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Party: ResolverTypeWrapper<PartyMapper>;
+  Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   PartyInput: PartyInput;
   Picture: ResolverTypeWrapper<PictureMapper>;
   PictureInput: PictureInput;
   PictureMeta: ResolverTypeWrapper<PictureMeta>;
-  Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   PictureTag: ResolverTypeWrapper<PictureTagMapper>;
   PictureTagInput: PictureTagInput;
   ProfileInput: ProfileInput;
@@ -515,11 +516,11 @@ export type ResolversParentTypes = {
   Mutation: {};
   Boolean: Scalars['Boolean']['output'];
   Party: PartyMapper;
+  Float: Scalars['Float']['output'];
   PartyInput: PartyInput;
   Picture: PictureMapper;
   PictureInput: PictureInput;
   PictureMeta: PictureMeta;
-  Float: Scalars['Float']['output'];
   PictureTag: PictureTagMapper;
   PictureTagInput: PictureTagInput;
   ProfileInput: ProfileInput;
@@ -658,6 +659,7 @@ export type PartyResolvers<ContextType = Context, ParentType extends ResolversPa
   location?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   locationWidgetSrc?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   pictures?: Resolver<Array<ResolversTypes['Picture']>, ParentType, ContextType>;
+  rentalCosts?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   roomsAvailable?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   startDate?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
