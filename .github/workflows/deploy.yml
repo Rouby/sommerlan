@@ -166,8 +166,18 @@ jobs:
             COMMIT_SHA=${{ github.sha }}
             NEW_RELIC_LOADER_CONFIG=${{ secrets.NEW_RELIC_LOADER_CONFIG }}
             NEW_RELIC_INFO=${{ secrets.NEW_RELIC_INFO }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          # cache-from: type=gha
+          # cache-to: type=gha,mode=max
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+
+      - # Temp fix
+        # https://github.com/docker/build-push-action/issues/252
+        # https://github.com/moby/buildkit/issues/1896
+        name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
       - name: 🐳 Load image
         run: |
