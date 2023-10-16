@@ -218,11 +218,11 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: sommerlan-image
-          path: /tmp/sommerlan-image.tar
+          path: /tmp/sommerlan
 
       - name: 🐳 Load image
         run: |
-          docker load --input /tmp/sommerlan-image.tar
+          docker load --input /tmp/sommerlan/sommerlan-image.tar
 
       - name: 🚀 Deploy Staging
         if: ${{ github.ref == 'refs/heads/dev' }}
