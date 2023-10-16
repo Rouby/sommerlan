@@ -16,6 +16,7 @@
   "dependencies": {
     "@casl/ability": "^6.5.0",
     "@discordjs/core": "^0.6.0",
+    "@envelop/newrelic": "^7.0.0",
     "@fastify/cookie": "^8.3.0",
     "@fastify/cors": "^8.3.0",
     "@fastify/multipart": "^7.7.3",

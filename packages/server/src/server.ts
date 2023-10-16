@@ -1,4 +1,5 @@
 import { ForbiddenError } from "@casl/ability";
+import { useNewRelic } from "@envelop/newrelic";
 import cookie from "@fastify/cookie";
 import cors from "@fastify/cors";
 import multipart from "@fastify/multipart";
@@ -55,6 +56,9 @@ export function createServer(opts: ServerOptions) {
       error: (...args) => args.forEach((arg) => server.log.error(arg)),
     },
     plugins: [
+      useNewRelic({
+        rootFieldsNaming: true,
+      }),
       useJWT({
         issuer: expectedOrigin,
         signingKey: process.env.SESSION_SECRET!,

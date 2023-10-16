@@ -1829,6 +1829,30 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@envelop/newrelic@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "@envelop/newrelic@npm:7.0.0"
+  dependencies:
+    "@envelop/on-resolve": ^4.0.0
+    tslib: ^2.5.0
+  peerDependencies:
+    "@envelop/core": ^5.0.0
+    graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+    newrelic: ">=7 <12"
+  checksum: 06bc95793acab590335de1451589043d90ea8dcd588a014ca5879062a172c55991db0031d9128491ad0630143adb46f0132270f29666c525377a15fffdaf50fc
+  languageName: node
+  linkType: hard
+
+"@envelop/on-resolve@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "@envelop/on-resolve@npm:4.0.0"
+  peerDependencies:
+    "@envelop/core": ^5.0.0
+    graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+  checksum: 3df602b8db85bdfec52bcacb365beb2e389d3fce8ea1f49f6d1d02c9d9a7a3c7d976e214e698406e850853ac8557e5127ad1b71c10514fa805c70638b28b0224
+  languageName: node
+  linkType: hard
+
 "@envelop/types@npm:4.0.1":
   version: 4.0.1
   resolution: "@envelop/types@npm:4.0.1"
@@ -4686,6 +4710,7 @@ __metadata:
     "@casl/ability": ^6.5.0
     "@discordjs/core": ^0.6.0
     "@eddeee888/gcg-typescript-resolver-files": ^0.6.0
+    "@envelop/newrelic": ^7.0.0
     "@fastify/cookie": ^8.3.0
     "@fastify/cors": ^8.3.0
     "@fastify/multipart": ^7.7.3

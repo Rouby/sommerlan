@@ -526,6 +526,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:4.0.1"\
       ],\
       [\
+        "@envelop/newrelic",\
+        "virtual:f9aaeb0ff5026b521d6a9b424ffbc3c34990b6972b440282c9eb836880cb71f3dfd141e9455e392c98abc5918762c91d12bf17451df331903d8e149b2f873a01#npm:7.0.0"\
+      ],\
+      [\
+        "@envelop/on-resolve",\
+        "virtual:db2676b5a9efd1d4af2693fc6abd84d6f1fd71d1550eb8eebca9e43f2796101bebaefb7039873c4ae5d115a2a5b9033c822332a572d5753eebdcf300df4ceb6e#npm:4.0.0"\
+      ],\
+      [\
         "@envelop/types",\
         "npm:4.0.1"\
       ],\
@@ -7593,6 +7601,64 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["@envelop/newrelic", [\
+        ["npm:7.0.0", {\
+          "packageLocation": "./.yarn/cache/@envelop-newrelic-npm-7.0.0-b8243a9221-06bc95793a.zip/node_modules/@envelop/newrelic/",\
+          "packageDependencies": [\
+            ["@envelop/newrelic", "npm:7.0.0"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:f9aaeb0ff5026b521d6a9b424ffbc3c34990b6972b440282c9eb836880cb71f3dfd141e9455e392c98abc5918762c91d12bf17451df331903d8e149b2f873a01#npm:7.0.0", {\
+          "packageLocation": "./.yarn/__virtual__/@envelop-newrelic-virtual-db2676b5a9/0/cache/@envelop-newrelic-npm-7.0.0-b8243a9221-06bc95793a.zip/node_modules/@envelop/newrelic/",\
+          "packageDependencies": [\
+            ["@envelop/newrelic", "virtual:f9aaeb0ff5026b521d6a9b424ffbc3c34990b6972b440282c9eb836880cb71f3dfd141e9455e392c98abc5918762c91d12bf17451df331903d8e149b2f873a01#npm:7.0.0"],\
+            ["@envelop/core", null],\
+            ["@envelop/on-resolve", "virtual:db2676b5a9efd1d4af2693fc6abd84d6f1fd71d1550eb8eebca9e43f2796101bebaefb7039873c4ae5d115a2a5b9033c822332a572d5753eebdcf300df4ceb6e#npm:4.0.0"],\
+            ["@types/envelop__core", null],\
+            ["@types/graphql", null],\
+            ["@types/newrelic", "npm:9.14.0"],\
+            ["graphql", "npm:16.8.0"],\
+            ["newrelic", "npm:11.2.1"],\
+            ["tslib", "npm:2.6.0"]\
+          ],\
+          "packagePeers": [\
+            "@envelop/core",\
+            "@types/envelop__core",\
+            "@types/graphql",\
+            "@types/newrelic",\
+            "graphql",\
+            "newrelic"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@envelop/on-resolve", [\
+        ["npm:4.0.0", {\
+          "packageLocation": "./.yarn/cache/@envelop-on-resolve-npm-4.0.0-c1cc344553-3df602b8db.zip/node_modules/@envelop/on-resolve/",\
+          "packageDependencies": [\
+            ["@envelop/on-resolve", "npm:4.0.0"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:db2676b5a9efd1d4af2693fc6abd84d6f1fd71d1550eb8eebca9e43f2796101bebaefb7039873c4ae5d115a2a5b9033c822332a572d5753eebdcf300df4ceb6e#npm:4.0.0", {\
+          "packageLocation": "./.yarn/__virtual__/@envelop-on-resolve-virtual-21d954bf8b/0/cache/@envelop-on-resolve-npm-4.0.0-c1cc344553-3df602b8db.zip/node_modules/@envelop/on-resolve/",\
+          "packageDependencies": [\
+            ["@envelop/on-resolve", "virtual:db2676b5a9efd1d4af2693fc6abd84d6f1fd71d1550eb8eebca9e43f2796101bebaefb7039873c4ae5d115a2a5b9033c822332a572d5753eebdcf300df4ceb6e#npm:4.0.0"],\
+            ["@envelop/core", null],\
+            ["@types/envelop__core", null],\
+            ["@types/graphql", null],\
+            ["graphql", "npm:16.8.0"]\
+          ],\
+          "packagePeers": [\
+            "@envelop/core",\
+            "@types/envelop__core",\
+            "@types/graphql",\
+            "graphql"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["@envelop/types", [\
         ["npm:4.0.1", {\
           "packageLocation": "./.yarn/cache/@envelop-types-npm-4.0.1-3b3a7fd42b-136bdd5701.zip/node_modules/@envelop/types/",\
@@ -11469,6 +11535,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@casl/ability", "npm:6.5.0"],\
             ["@discordjs/core", "npm:0.6.0"],\
             ["@eddeee888/gcg-typescript-resolver-files", "virtual:f9aaeb0ff5026b521d6a9b424ffbc3c34990b6972b440282c9eb836880cb71f3dfd141e9455e392c98abc5918762c91d12bf17451df331903d8e149b2f873a01#npm:0.6.0"],\
+            ["@envelop/newrelic", "virtual:f9aaeb0ff5026b521d6a9b424ffbc3c34990b6972b440282c9eb836880cb71f3dfd141e9455e392c98abc5918762c91d12bf17451df331903d8e149b2f873a01#npm:7.0.0"],\
             ["@fastify/cookie", "npm:8.3.0"],\
             ["@fastify/cors", "npm:8.3.0"],\
             ["@fastify/multipart", "npm:7.7.3"],\
