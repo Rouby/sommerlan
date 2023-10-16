@@ -1,9 +1,6 @@
 # base node image
 FROM node:20 as base
 
-ARG NEW_RELIC_LOADER_CONFIG
-ARG NEW_RELIC_INFO
-
 ENV NODE_ENV production
 ENV TZ "Europe/Berlin"
 
@@ -22,8 +19,6 @@ RUN yarn install --immutable --immutable-cache
 
 FROM build as client-build
 
-ENV NEW_RELIC_LOADER_CONFIG $NEW_RELIC_LOADER_CONFIG
-ENV NEW_RELIC_INFO $NEW_RELIC_INFO
 ADD ./packages/client ./packages/client
 ADD ./packages/server/src/schema ./packages/server/src/schema
 RUN yarn workspace @sommerlan-app/client build
