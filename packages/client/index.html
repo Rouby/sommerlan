@@ -13,11 +13,11 @@
         ajax: { deny_list: ["bam.eu01.nr-data.net"] },
       };
 
-      NREUM.loader_config = <%- new_relic_loader_config %>;
-      NREUM.info = <%- new_relic_info %>;
+      NREUM.loader_config = window.$__new_relic_loader_config || false;
+      NREUM.info = window.$__new_relic_info || false;
 
       NREUM.loader_config &&
-      NREUM.info &&
+        NREUM.info &&
         (() => {
           "use strict";
           var e,

@@ -5,6 +5,7 @@ import multipart from "@fastify/multipart";
 import staticfs from "@fastify/static";
 import { useJWT } from "@graphql-yoga/plugin-jwt";
 import fastify from "fastify";
+import { readFile, writeFile } from "fs/promises";
 import { GraphQLError } from "graphql";
 import {
   Plugin,
@@ -124,6 +125,22 @@ export function createServer(opts: ServerOptions) {
   });
 
   if (!dev) {
+    // rewrite index.html and replace newrelic placeholder
+    readFile(join(__dirname, "../client/index.html"), "utf-8").then((html) =>
+      writeFile(
+        join(__dirname, "../client/index.html"),
+        html
+          .replace(
+            "window.$__new_relic_loader_config",
+            process.env.NEW_RELIC_LOADER_CONFIG ?? "false"
+          )
+          .replace(
+            "window.$__new_relic_info",
+            process.env.NEW_RELIC_INFO ?? "false"
+          )
+      )
+    );
+
     server.register(staticfs, {
       root: join(__dirname, "../client"),
     });

@@ -13,12 +13,6 @@ export default defineConfig(async ({ mode }) => ({
     createHtmlPlugin({
       minify: mode !== "development",
       template: "index.html",
-      inject: {
-        data: {
-          new_relic_loader_config: process.env.NEW_RELIC_LOADER_CONFIG ?? '""',
-          new_relic_info: process.env.NEW_RELIC_INFO ?? '""',
-        },
-      },
     }),
   ],
   build: {
