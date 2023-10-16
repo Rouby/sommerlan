@@ -22,7 +22,7 @@ jobs:
       - name: ⎔ Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
           cache: yarn
 
       - name: 📥 Install deps
@@ -46,7 +46,7 @@ jobs:
       - name: ⎔ Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
           cache: yarn
 
       - name: 📥 Install deps
@@ -70,7 +70,7 @@ jobs:
       - name: ⎔ Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
           cache: yarn
 
       - name: 📥 Install deps
@@ -94,7 +94,7 @@ jobs:
       - name: ⎔ Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
           cache: yarn
 
       - name: 📥 Install deps

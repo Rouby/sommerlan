@@ -23,7 +23,7 @@ import {
 } from "urql";
 import { locales } from "./dayjs/locales";
 import { graphql } from "./gql";
-import schema from "./gql/introspection.json";
+import schema from "./gql/introspection.json" assert { type: "json" };
 import { router } from "./router";
 import {
   colorSchemeAtom,

@@ -61,7 +61,7 @@
     "wds": "^0.17.1"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "packageManager": "yarn@3.2.1"
 }

@@ -1,5 +1,5 @@
 # base node image
-FROM node:18 as base
+FROM node:20 as base
 
 ARG NEW_RELIC_LOADER_CONFIG
 ARG NEW_RELIC_INFO
