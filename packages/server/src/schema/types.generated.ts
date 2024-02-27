@@ -126,6 +126,7 @@ export type Mutation = {
   refreshLogin: AuthResponse;
   register: RegisterResponse;
   registerPasskey: RegisterDeviceResponse;
+  removeAttendance: Party;
   requestRoom?: Maybe<Attending>;
   sendMagicLink: Scalars['Boolean']['output'];
   setAttendance: Party;
@@ -225,6 +226,12 @@ export type MutationRegisterPasskeyArgs = {
   name: Scalars['String']['input'];
   response: Scalars['JSON']['input'];
   userId: Scalars['String']['input'];
+};
+
+
+export type MutationRemoveAttendanceArgs = {
+  partyId: Scalars['ID']['input'];
+  userId?: InputMaybe<Scalars['ID']['input']>;
 };
 
 
@@ -640,6 +647,7 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
   refreshLogin?: Resolver<ResolversTypes['AuthResponse'], ParentType, ContextType, RequireFields<MutationRefreshLoginArgs, 'refreshToken'>>;
   register?: Resolver<ResolversTypes['RegisterResponse'], ParentType, ContextType, RequireFields<MutationRegisterArgs, 'email' | 'userName'>>;
   registerPasskey?: Resolver<ResolversTypes['RegisterDeviceResponse'], ParentType, ContextType, RequireFields<MutationRegisterPasskeyArgs, 'name' | 'response' | 'userId'>>;
+  removeAttendance?: Resolver<ResolversTypes['Party'], ParentType, ContextType, RequireFields<MutationRemoveAttendanceArgs, 'partyId'>>;
   requestRoom?: Resolver<Maybe<ResolversTypes['Attending']>, ParentType, ContextType, RequireFields<MutationRequestRoomArgs, 'partyId'>>;
   sendMagicLink?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationSendMagicLinkArgs, 'email'>>;
   setAttendance?: Resolver<ResolversTypes['Party'], ParentType, ContextType, RequireFields<MutationSetAttendanceArgs, 'dates' | 'partyId'>>;

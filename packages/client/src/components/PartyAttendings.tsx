@@ -80,6 +80,19 @@ export function PartyAttendings({ partyId }: { partyId?: string }) {
       }
     `)
   );
+  const [, removeAttendance] = useMutation(
+    graphql(`
+      mutation removeAttendance($partyId: ID!) {
+        removeAttendance(partyId: $partyId) {
+          id
+          attendings {
+            id
+            dates
+          }
+        }
+      }
+    `)
+  );
 
   const { nextParty, party: specificParty } = data ?? {};
   const party = useFragment(PartyAttendingInfo, nextParty ?? specificParty);
@@ -98,103 +111,125 @@ export function PartyAttendings({ partyId }: { partyId?: string }) {
   );
 
   return (
-    <Checkbox.Group
-      size="lg"
-      value={myAttending?.dates}
-      onChange={(dates) => {
-        party &&
-          setAttendance({
-            partyId: party.id,
-            dates,
-            // @ts-expect-error
-            attendingId: myAttending?.id,
-          });
-      }}
-    >
-      <Box
-        p="xs"
-        sx={(theme) => ({
-          display: "grid",
-          gridTemplateColumns: "auto auto auto 1fr",
-          columnGap: theme.spacing.md,
-          rowGap: theme.spacing.sm,
-          alignItems: "center",
-          fontSize: theme.fontSizes.lg,
-
-          [theme.fn.smallerThan("xs")]: {
-            gridTemplateColumns: "auto auto 1fr",
-
-            "& > *:nth(5n)": {
-              gridColumn: "1 / span 3",
-            },
-          },
-        })}
+    <>
+      <Checkbox.Group
+        size="lg"
+        value={myAttending?.dates}
+        onChange={(dates) => {
+          party &&
+            setAttendance({
+              partyId: party.id,
+              dates,
+              // @ts-expect-error
+              attendingId: myAttending?.id,
+            });
+        }}
       >
-        {dates.map((date, idx) => {
-          if (!party) {
-            return (
-              <Skeleton
-                key={idx}
-                height={40}
-                width="100%"
-                sx={(theme) => ({
-                  gridColumn: "1 / span 4",
-                  [theme.fn.smallerThan("xs")]: {
-                    gridColumn: "1 / span 3",
-                  },
-                })}
-              />
+        <Box
+          p="xs"
+          sx={(theme) => ({
+            display: "grid",
+            gridTemplateColumns: "auto auto auto 1fr",
+            columnGap: theme.spacing.md,
+            rowGap: theme.spacing.sm,
+            alignItems: "center",
+            fontSize: theme.fontSizes.lg,
+
+            [theme.fn.smallerThan("xs")]: {
+              gridTemplateColumns: "auto auto 1fr",
+
+              "& > *:nth(5n)": {
+                gridColumn: "1 / span 3",
+              },
+            },
+          })}
+        >
+          {dates.map((date, idx) => {
+            if (!party) {
+              return (
+                <Skeleton
+                  key={idx}
+                  height={40}
+                  width="100%"
+                  sx={(theme) => ({
+                    gridColumn: "1 / span 4",
+                    [theme.fn.smallerThan("xs")]: {
+                      gridColumn: "1 / span 3",
+                    },
+                  })}
+                />
+              );
+            }
+
+            const attendingsOnDate = party.attendings.filter((attending) =>
+              attending.dates.includes(date.format("YYYY-MM-DD"))
             );
-          }
+            return (
+              <Fragment key={date.toString()}>
+                <Box sx={{ whiteSpace: "nowrap" }}>{date.format("ddd, L")}</Box>
 
-          const attendingsOnDate = party.attendings.filter((attending) =>
-            attending.dates.includes(date.format("YYYY-MM-DD"))
-          );
-          return (
-            <Fragment key={date.toString()}>
-              <Box sx={{ whiteSpace: "nowrap" }}>{date.format("ddd, L")}</Box>
+                <Checkbox value={date.format("YYYY-MM-DD")} />
 
-              <Checkbox value={date.format("YYYY-MM-DD")} />
+                <AddUserMenu
+                  attendings={party.attendings}
+                  partyId={party.id}
+                  date={date.format("YYYY-MM-DD")}
+                />
 
-              <AddUserMenu
-                attendings={party.attendings}
-                partyId={party.id}
-                date={date.format("YYYY-MM-DD")}
-              />
+                <Tooltip.Group openDelay={300} closeDelay={100}>
+                  <Avatar.Group spacing="sm" sx={{ flexWrap: "wrap" }}>
+                    {attendingsOnDate.map((attending) => (
+                      <UserAvatar key={attending.id} user={attending.user} />
+                    ))}
+                  </Avatar.Group>
+                </Tooltip.Group>
 
-              <Tooltip.Group openDelay={300} closeDelay={100}>
-                <Avatar.Group spacing="sm" sx={{ flexWrap: "wrap" }}>
-                  {attendingsOnDate.map((attending) => (
-                    <UserAvatar key={attending.id} user={attending.user} />
-                  ))}
-                </Avatar.Group>
-              </Tooltip.Group>
-
-              <Box
-                sx={(theme) => ({
-                  gridColumn: "1 / span 4",
-                  [theme.fn.smallerThan("xs")]: {
-                    gridColumn: "1 / span 3",
-                  },
-                })}
-              >
-                <Group>
-                  {party.roomsAvailable ? (
-                    <Badge>
-                      {party.roomsAvailable -
-                        attendingsOnDate.filter((att) => att.room === "GRANTED")
-                          .length}{" "}
-                      / {party.roomsAvailable} rooms available
-                    </Badge>
-                  ) : null}
-                  <Badge>{attendingsOnDate.length} an diesem Tag da</Badge>
-                </Group>
-                <Divider mt="sm" />
-              </Box>
-            </Fragment>
-          );
-        })}
-      </Box>
+                <Box
+                  sx={(theme) => ({
+                    gridColumn: "1 / span 4",
+                    [theme.fn.smallerThan("xs")]: {
+                      gridColumn: "1 / span 3",
+                    },
+                  })}
+                >
+                  <Group>
+                    {party.roomsAvailable ? (
+                      <Badge>
+                        {party.roomsAvailable -
+                          attendingsOnDate.filter(
+                            (att) => att.room === "GRANTED"
+                          ).length}{" "}
+                        / {party.roomsAvailable} rooms available
+                      </Badge>
+                    ) : null}
+                    <Badge>{attendingsOnDate.length} an diesem Tag da</Badge>
+                  </Group>
+                  <Divider mt="sm" />
+                </Box>
+              </Fragment>
+            );
+          })}
+        </Box>
+      </Checkbox.Group>
+      <Checkbox
+        label="Ich bin nicht dabei"
+        checked={myAttending?.dates.length === 0}
+        onChange={({ target: { checked } }) => {
+          party &&
+            (checked
+              ? setAttendance({
+                  partyId: party.id,
+                  dates: [],
+                  // @ts-expect-error
+                  attendingId: myAttending?.id,
+                })
+              : removeAttendance({
+                  partyId: party.id,
+                  // @ts-expect-error
+                  attendingId: myAttending?.id,
+                }));
+        }}
+      />
       Leider nicht dabei:
       <Tooltip.Group openDelay={300} closeDelay={100}>
         <Avatar.Group spacing="sm" sx={{ flexWrap: "wrap" }}>
@@ -205,7 +240,7 @@ export function PartyAttendings({ partyId }: { partyId?: string }) {
             ))}
         </Avatar.Group>
       </Tooltip.Group>
-    </Checkbox.Group>
+    </>
   );
 }
 

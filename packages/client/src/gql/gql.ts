@@ -28,6 +28,7 @@ const documents = {
     "\n    fragment PartyAttendingInfo on Party {\n      id\n      startDate\n      endDate\n      roomsAvailable\n      attendings {\n        id\n        dates\n        room\n        user {\n          id\n          displayName\n          avatar\n        }\n      }\n    }\n  ": types.PartyAttendingInfoFragmentDoc,
     "\n      query partyAttending($nextParty: Boolean!, $partyId: ID!) {\n        nextParty @include(if: $nextParty) {\n          ...PartyAttendingInfo\n        }\n\n        party(id: $partyId) @skip(if: $nextParty) {\n          ...PartyAttendingInfo\n        }\n      }\n    ": types.PartyAttendingDocument,
     "\n      mutation setAttendance($partyId: ID!, $dates: [Date!]!) {\n        setAttendance(partyId: $partyId, dates: $dates) {\n          id\n          attendings {\n            id\n            dates\n          }\n        }\n      }\n    ": types.SetAttendanceDocument,
+    "\n      mutation removeAttendance($partyId: ID!) {\n        removeAttendance(partyId: $partyId) {\n          id\n          attendings {\n            id\n            dates\n          }\n        }\n      }\n    ": types.RemoveAttendanceDocument,
     "\n      mutation registerExternal(\n        $userName: String!\n        $email: String!\n        $password: String\n      ) {\n        register(userName: $userName, email: $email, password: $password) {\n          token\n          refreshToken\n          user {\n            id\n            displayName\n            avatar\n          }\n        }\n      }\n    ": types.RegisterExternalDocument,
     "\n      query userList {\n        users {\n          id\n          displayName\n          avatar\n        }\n      }\n    ": types.UserListDocument,
     "\n      mutation setOthersAttendance(\n        $partyId: ID!\n        $userId: ID\n        $dates: [Date!]!\n      ) {\n        setAttendance(partyId: $partyId, userId: $userId, dates: $dates) {\n          id\n          attendings {\n            id\n            dates\n          }\n        }\n      }\n    ": types.SetOthersAttendanceDocument,
@@ -129,6 +130,10 @@ export function graphql(source: "\n      query partyAttending($nextParty: Boolea
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n      mutation setAttendance($partyId: ID!, $dates: [Date!]!) {\n        setAttendance(partyId: $partyId, dates: $dates) {\n          id\n          attendings {\n            id\n            dates\n          }\n        }\n      }\n    "): (typeof documents)["\n      mutation setAttendance($partyId: ID!, $dates: [Date!]!) {\n        setAttendance(partyId: $partyId, dates: $dates) {\n          id\n          attendings {\n            id\n            dates\n          }\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      mutation removeAttendance($partyId: ID!) {\n        removeAttendance(partyId: $partyId) {\n          id\n          attendings {\n            id\n            dates\n          }\n        }\n      }\n    "): (typeof documents)["\n      mutation removeAttendance($partyId: ID!) {\n        removeAttendance(partyId: $partyId) {\n          id\n          attendings {\n            id\n            dates\n          }\n        }\n      }\n    "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
