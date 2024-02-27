@@ -189,12 +189,22 @@ export function PartyAttendings({ partyId }: { partyId?: string }) {
                   ) : null}
                   <Badge>{attendingsOnDate.length} an diesem Tag da</Badge>
                 </Group>
-                {idx < dates.length - 1 && <Divider mt="sm" />}
+                <Divider mt="sm" />
               </Box>
             </Fragment>
           );
         })}
       </Box>
+      Leider nicht dabei:
+      <Tooltip.Group openDelay={300} closeDelay={100}>
+        <Avatar.Group spacing="sm" sx={{ flexWrap: "wrap" }}>
+          {party?.attendings
+            .filter((a) => a.dates.length === 0)
+            .map((attending) => (
+              <UserAvatar key={attending.id} user={attending.user} />
+            ))}
+        </Avatar.Group>
+      </Tooltip.Group>
     </Checkbox.Group>
   );
 }
