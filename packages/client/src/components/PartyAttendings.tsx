@@ -230,16 +230,20 @@ export function PartyAttendings({ partyId }: { partyId?: string }) {
                 }));
         }}
       />
-      Leider nicht dabei:
-      <Tooltip.Group openDelay={300} closeDelay={100}>
-        <Avatar.Group spacing="sm" sx={{ flexWrap: "wrap" }}>
-          {party?.attendings
-            .filter((a) => a.dates.length === 0)
-            .map((attending) => (
-              <UserAvatar key={attending.id} user={attending.user} />
-            ))}
-        </Avatar.Group>
-      </Tooltip.Group>
+      {party?.attendings && (
+        <>
+          Leider nicht dabei:
+          <Tooltip.Group openDelay={300} closeDelay={100}>
+            <Avatar.Group spacing="sm" sx={{ flexWrap: "wrap" }}>
+              {party.attendings
+                .filter((a) => a.dates.length === 0)
+                .map((attending) => (
+                  <UserAvatar key={attending.id} user={attending.user} />
+                ))}
+            </Avatar.Group>
+          </Tooltip.Group>
+        </>
+      )}
     </>
   );
 }
