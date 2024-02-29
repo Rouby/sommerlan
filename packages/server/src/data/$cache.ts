@@ -119,6 +119,10 @@ export async function syncCache(clearCache = false) {
             async () => {
               newrelic.addCustomAttribute("entity.id", id);
               newrelic.addCustomAttribute("entity.sheetName", sheetName);
+              newrelic.addCustomAttribute(
+                "entity.operations",
+                JSON.stringify(operations)
+              );
               if (operations === deleteMarker) {
                 logger.trace({ sheetName, id }, "Deleting entity");
                 row?.delete();
@@ -168,15 +172,14 @@ export async function syncCache(clearCache = false) {
         }
       });
     }
-    logger.info("Synced cache");
+    logger.info("Synced cache", { patches: patches.entries() });
+    patches.clear();
+    if (clearCache) {
+      cache.clear();
+    }
   });
 
   await syncingCache;
-
-  patches.clear();
-  if (clearCache) {
-    cache.clear();
-  }
 
   syncingCache = undefined;
 }
