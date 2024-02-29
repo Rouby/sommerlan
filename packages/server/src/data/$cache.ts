@@ -103,8 +103,8 @@ export async function syncCache(clearCache = false) {
     return syncingCache;
   }
 
-  logger.trace("Syncing cache");
-  syncingCache = newrelic.startSegment(`syncCache`, true, async () => {
+  syncingCache = newrelic.startBackgroundTransaction(`syncCache`, async () => {
+    logger.trace("Syncing cache");
     for (const [cls, entities] of patches.entries()) {
       const sheetName = cls.prototype.sheetName;
       await newrelic.startSegment(`syncCache.${sheetName}`, true, async () => {
@@ -168,13 +168,16 @@ export async function syncCache(clearCache = false) {
         }
       });
     }
+    logger.info("Synced cache");
   });
+
   await syncingCache;
-  logger.trace("Synced cache");
+
   patches.clear();
   if (clearCache) {
     cache.clear();
   }
+
   syncingCache = undefined;
 }
 
