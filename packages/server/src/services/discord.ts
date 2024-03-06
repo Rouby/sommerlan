@@ -123,37 +123,47 @@ scheduleTask("@every 5m", async () => {
   const discordUsers = await client.api.guilds.getMembers(guildId, {
     limit: 1000,
   });
-  for (const user of users) {
-    const member = discordUsers.find(
-      (member) => member.user?.id === user.discordUserId
-    );
+  const discordUsersRegisteredWithoutRole = discordUsers.filter(
+    (member) =>
+      users.some((user) => user.discordUserId === member.user?.id) &&
+      !member.roles.includes(roleId)
+  );
+  logger.info(
+    {
+      users: discordUsersRegisteredWithoutRole.map(
+        (member) => member.user?.username
+      ),
+    },
+    "Adding role to registered discord users without role"
+  );
 
-    if (!member) {
-      return;
-    }
+  for (const member of discordUsersRegisteredWithoutRole) {
+    if (!member.user) continue;
 
-    const roles = member.roles;
-
-    if (!roles.includes(roleId)) {
-      if (getEnv() === "production") {
-        logger.info({ user: user.displayName, roleId }, "Adding role to user");
-        try {
-          await client.api.guilds.addRoleToMember(
-            guildId,
-            user.discordUserId,
-            roleId
-          );
-          await sendDiscordMessage(
-            user.discordUserId,
-            "Yay, willkommen als vollwertiges Mitglied (aka auf der SommerLAN Seite angemeldet)."
-          );
-        } catch (err) {
-          logger.error(err, "Error adding role to user");
-        }
-      } else if (!addedRoleCacheForNonProd.has(user.id)) {
-        logger.info({ user: user.displayName, roleId }, "Adding role to user");
-        addedRoleCacheForNonProd.add(user.id);
+    if (getEnv() === "production") {
+      logger.info(
+        { user: member.user.username, roleId },
+        "Adding role to user"
+      );
+      try {
+        await client.api.guilds.addRoleToMember(
+          guildId,
+          member.user.id,
+          roleId
+        );
+        await sendDiscordMessage(
+          member.user.id,
+          "Yay, willkommen als vollwertiges Mitglied (aka auf der SommerLAN Seite angemeldet)."
+        );
+      } catch (err) {
+        logger.error(err, "Error adding role to user");
       }
+    } else if (!addedRoleCacheForNonProd.has(member.user.id)) {
+      logger.info(
+        { user: member.user.username, roleId },
+        "Adding role to user"
+      );
+      addedRoleCacheForNonProd.add(member.user.id);
     }
   }
 });
