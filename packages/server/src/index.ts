@@ -23,3 +23,7 @@ process.once("SIGINT", () => {
     logger.info("Stopped gracefully");
   });
 });
+
+process.on("unhandledRejection", (reason, promise) => {
+  logger.error({ reason, promise }, "Unhandled promise rejection");
+});

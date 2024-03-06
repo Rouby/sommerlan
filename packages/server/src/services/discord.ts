@@ -19,7 +19,10 @@ const rest = new REST({ version: "10" }).setToken(token);
 
 const gateway = new WebSocketManager({
   token,
-  intents: GatewayIntentBits.DirectMessages,
+  intents:
+    GatewayIntentBits.DirectMessages |
+    GatewayIntentBits.Guilds |
+    GatewayIntentBits.GuildMembers,
   rest,
 });
 
@@ -117,7 +120,9 @@ export async function findDiscordUserId(username: string) {
 const addedRoleCacheForNonProd = new Set<string>();
 scheduleTask("@every 5m", async () => {
   const users = await User.filter((user) => !!user.discordUserId);
-  const discordUsers = await client.api.guilds.getMembers(guildId);
+  const discordUsers = await client.api.guilds.getMembers(guildId, {
+    limit: 1000,
+  });
   for (const user of users) {
     const member = discordUsers.find(
       (member) => member.user?.id === user.discordUserId
