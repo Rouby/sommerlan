@@ -9,10 +9,11 @@ import { User } from "../data";
 import { getEnv } from "../env";
 import { logger } from "../logger";
 import { issueMagicLink } from "./magicLinks";
-import { scheduleTimeout } from "./scheduler";
+import { scheduleTask, scheduleTimeout } from "./scheduler";
 
 const token = process.env.DISCORD_BOT_TOKEN!;
 const guildId = process.env.DISCORD_GUILD_ID!;
+const roleId = process.env.DISCORD_ROLE_ID!;
 
 const rest = new REST({ version: "10" }).setToken(token);
 
@@ -112,3 +113,38 @@ export async function findDiscordUserId(username: string) {
 
   return result.at(0)?.user?.id;
 }
+
+const addedRoleCacheForNonProd = new Set<string>();
+scheduleTask("@every 5m", async () => {
+  const users = await User.filter((user) => !!user.discordUserId);
+  for (const user of users) {
+    const member = await client.api.guilds.getMember(
+      guildId,
+      user.discordUserId
+    );
+
+    if (!member) {
+      return;
+    }
+
+    const roles = member.roles;
+
+    if (!roles.includes(roleId)) {
+      if (getEnv() === "production") {
+        logger.info({ user: user.displayName, roleId }, "Adding role to user");
+        await client.api.guilds.addRoleToMember(
+          guildId,
+          user.discordUserId,
+          roleId
+        );
+        await sendDiscordMessage(
+          user.discordUserId,
+          "Yay, willkommen als vollwertiges Mitglied (aka auf der SommerLAN Seite angemeldet)."
+        );
+      } else if (!addedRoleCacheForNonProd.has(user.id)) {
+        logger.info({ user: user.displayName, roleId }, "Adding role to user");
+        addedRoleCacheForNonProd.add(user.id);
+      }
+    }
+  }
+});
