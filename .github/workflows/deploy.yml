@@ -240,6 +240,7 @@ jobs:
           NEW_RELIC_INFO: ${{ secrets.NEW_RELIC_INFO }}
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
           DISCORD_GUILD_ID: ${{ secrets.DISCORD_GUILD_ID }}
+          DISCORD_ROLE_ID: ${{ secrets.DISCORD_ROLE_ID }}
 
       - name: 🚀 Deploy Production
         if: ${{ github.ref == 'refs/heads/main' }}
@@ -263,6 +264,7 @@ jobs:
           NEW_RELIC_INFO: ${{ secrets.NEW_RELIC_INFO }}
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
           DISCORD_GUILD_ID: ${{ secrets.DISCORD_GUILD_ID }}
+          DISCORD_ROLE_ID: ${{ secrets.DISCORD_ROLE_ID }}
 
   newrelic:
     name: 🎯 newrelic

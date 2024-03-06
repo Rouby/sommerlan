@@ -19,6 +19,7 @@ services:
       NEW_RELIC_INFO: "${NEW_RELIC_INFO}"
       DISCORD_BOT_TOKEN: "${DISCORD_BOT_TOKEN}"
       DISCORD_GUILD_ID: "${DISCORD_GUILD_ID}"
+      DISCORD_ROLE_ID: "${DISCORD_ROLE_ID}"
     ports:
       - "${APP_PORT}:8080"
     networks:
