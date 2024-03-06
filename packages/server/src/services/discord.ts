@@ -117,10 +117,10 @@ export async function findDiscordUserId(username: string) {
 const addedRoleCacheForNonProd = new Set<string>();
 scheduleTask("@every 5m", async () => {
   const users = await User.filter((user) => !!user.discordUserId);
+  const discordUsers = await client.api.guilds.getMembers(guildId);
   for (const user of users) {
-    const member = await client.api.guilds.getMember(
-      guildId,
-      user.discordUserId
+    const member = discordUsers.find(
+      (member) => member.user?.id === user.discordUserId
     );
 
     if (!member) {
@@ -132,15 +132,19 @@ scheduleTask("@every 5m", async () => {
     if (!roles.includes(roleId)) {
       if (getEnv() === "production") {
         logger.info({ user: user.displayName, roleId }, "Adding role to user");
-        await client.api.guilds.addRoleToMember(
-          guildId,
-          user.discordUserId,
-          roleId
-        );
-        await sendDiscordMessage(
-          user.discordUserId,
-          "Yay, willkommen als vollwertiges Mitglied (aka auf der SommerLAN Seite angemeldet)."
-        );
+        try {
+          await client.api.guilds.addRoleToMember(
+            guildId,
+            user.discordUserId,
+            roleId
+          );
+          await sendDiscordMessage(
+            user.discordUserId,
+            "Yay, willkommen als vollwertiges Mitglied (aka auf der SommerLAN Seite angemeldet)."
+          );
+        } catch (err) {
+          logger.error(err, "Error adding role to user");
+        }
       } else if (!addedRoleCacheForNonProd.has(user.id)) {
         logger.info({ user: user.displayName, roleId }, "Adding role to user");
         addedRoleCacheForNonProd.add(user.id);
