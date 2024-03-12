@@ -10,10 +10,7 @@ export const loginPassword: NonNullable<
   const user = await User.findByEmail(email);
 
   if (user?.password !== password) {
-    logger.warn(
-      { email, password, expectedPassword: user?.password },
-      "Invalid login"
-    );
+    logger.warn({ email }, "Invalid login");
     throw createGraphQLError("Invalid login");
   }
 
