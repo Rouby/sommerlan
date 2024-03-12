@@ -1,5 +1,5 @@
 /// <reference path="./pino-enricher.d.ts" />
-import nrPino from "@newrelic/pino-enricher";
+import nrPino = require("@newrelic/pino-enricher");
 import pino from "pino";
 
 export const logger = pino(nrPino());

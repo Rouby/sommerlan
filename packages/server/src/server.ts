@@ -264,7 +264,7 @@ export function createServer(opts: ServerOptions) {
     try {
       await server.listen({
         port,
-        host: !dev ? "0.0.0.0" : process.env.CI ? "localhost" : undefined,
+        host: !dev ? "0.0.0.0" : process.env.CI ? "localhost" : "0.0.0.0",
       });
 
       await scheduler.start();
