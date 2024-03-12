@@ -14,7 +14,7 @@ ADD ./packages/client/package.json ./packages/client/package.json
 ADD ./packages/server/package.json ./packages/server/package.json
 ADD ./packages/integration/package.json ./packages/integration/package.json
 COPY .yarn/ ./.yarn/
-RUN yarn install --immutable --immutable-cache
+RUN yarn install
 
 
 FROM build as client-build
