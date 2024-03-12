@@ -43,7 +43,7 @@ ENV NODE_OPTIONS --enable-source-maps
 WORKDIR /myapp
 
 COPY --from=server-build /myapp/node_modules /myapp/node_modules
-COPY --from=server-build /myapp/packages/server/dist /myapp/dist/server
+COPY --from=server-build /myapp/packages/server/dist/src /myapp/dist/server
 
 COPY --from=client-build /myapp/packages/client/dist /myapp/dist/client
 
