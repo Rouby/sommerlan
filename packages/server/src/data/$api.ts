@@ -1,6 +1,7 @@
 import { GoogleSpreadsheet } from "google-spreadsheet";
-import newrelic from "newrelic";
 import * as Models from ".";
+// @ts-ignore
+import newrelic = require("newrelic");
 
 export async function getSheet() {
   if (process.env.FAKE_API) {

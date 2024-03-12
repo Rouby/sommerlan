@@ -1,7 +1,8 @@
 import { Operation, applyPatch, compare } from "fast-json-patch";
-import newrelic from "newrelic";
 import { logger } from "../logger";
 import { getSheet } from "./$api";
+// @ts-ignore
+import newrelic = require("newrelic");
 
 type Base = object;
 

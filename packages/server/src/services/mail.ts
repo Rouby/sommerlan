@@ -1,4 +1,5 @@
-import newrelic from "newrelic";
+// @ts-ignore
+import newrelic = require("newrelic");
 import { createTransport, SendMailOptions } from "nodemailer";
 import { logger } from "../logger";
 
