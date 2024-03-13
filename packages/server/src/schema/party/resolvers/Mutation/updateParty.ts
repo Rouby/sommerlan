@@ -1,8 +1,9 @@
 import { ForbiddenError } from "@casl/ability";
-import dayjs from "dayjs";
 import { createGraphQLError } from "graphql-yoga";
 import { Party } from "../../../../data";
 import type { MutationResolvers } from "./../../../types.generated";
+// @ts-ignore
+import dayjs = require("dayjs");
 
 export const updateParty: NonNullable<
   MutationResolvers["updateParty"]

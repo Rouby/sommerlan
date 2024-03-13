@@ -1,9 +1,10 @@
 import { ForbiddenError } from "@casl/ability";
-import dayjs from "dayjs";
 import { createGraphQLError } from "graphql-yoga";
 import { Event } from "../../../../data";
 import { storeFile } from "../../../../storeFile";
 import type { MutationResolvers } from "./../../../types.generated";
+// @ts-ignore
+import dayjs = require("dayjs");
 
 export const planEvent: NonNullable<MutationResolvers["planEvent"]> = async (
   _parent,

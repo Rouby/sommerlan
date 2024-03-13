@@ -1,7 +1,8 @@
 import { ForbiddenError } from "@casl/ability";
-import dayjs from "dayjs";
 import { Party } from "../../../../data";
 import type { QueryResolvers } from "./../../../types.generated";
+// @ts-ignore
+import dayjs = require("dayjs");
 
 export const nextParty: NonNullable<QueryResolvers["nextParty"]> = async (
   _parent,
