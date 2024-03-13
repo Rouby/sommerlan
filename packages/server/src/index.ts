@@ -21,6 +21,7 @@ process.once("SIGINT", () => {
   logger.info("received SIGINT");
   server.stop().then(() => {
     logger.info("Stopped gracefully");
+    process.exit(0);
   });
 });
 
