@@ -74,10 +74,7 @@ export function createServer(opts: ServerOptions) {
     ],
     maskedErrors: {
       maskError: (error, message, isDev) => {
-        console.log("ERROR", error);
-
         if (error instanceof GraphQLError) {
-          console.log("is graphqlerror");
           if (error.originalError instanceof ForbiddenError) {
             return createGraphQLError(error.message, {
               originalError: error.originalError,
