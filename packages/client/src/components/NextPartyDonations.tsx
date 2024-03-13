@@ -186,7 +186,7 @@ function AddDonationForm({ onDonate }: { onDonate: () => void }) {
 
         <Checkbox name="incognito" label="Anonym spenden" />
 
-        <Button type="submit">Nutzer erstellen</Button>
+        <Button type="submit">Spenden</Button>
       </Stack>
 
       <Text size="xs" maw={300}>
