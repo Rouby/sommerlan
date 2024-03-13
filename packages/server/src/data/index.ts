@@ -1,5 +1,6 @@
 export { syncCache } from "./$cache";
 export * from "./attendings";
+export * from "./donations";
 export * from "./events";
 export * from "./games";
 export * from "./parties";

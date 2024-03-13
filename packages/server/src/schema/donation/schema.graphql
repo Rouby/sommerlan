@@ -1,0 +1,25 @@
+extend type Party {
+  donations: [Donation!]!
+}
+
+extend type Mutation {
+  donate(
+    amount: Float!
+    incognito: Boolean
+    dedication: DonationDedication
+  ): Donation!
+  rescindDonation(id: ID!): Donation!
+}
+
+type Donation {
+  id: ID!
+  donator: User
+  amount: Float!
+  dedication: DonationDedication!
+  party: Party!
+}
+
+enum DonationDedication {
+  RENT
+  WARCHEST
+}

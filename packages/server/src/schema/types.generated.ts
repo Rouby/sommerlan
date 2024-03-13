@@ -1,6 +1,7 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 import { AttendingMapper, PartyMapper, PictureMapper, PictureTagMapper } from './party/schema.mappers';
 import { AuthDeviceMapper, UserMapper } from './user/schema.mappers';
+import { DonationMapper } from './donation/schema.mappers';
 import { EventMapper } from './events/schema.mappers';
 import { GameMapper } from './game/schema.mappers';
 import { Context } from './context';
@@ -59,6 +60,19 @@ export type AuthResponse = {
   token: Scalars['JWT']['output'];
 };
 
+export type Donation = {
+  __typename?: 'Donation';
+  amount: Scalars['Float']['output'];
+  dedication: DonationDedication;
+  donator?: Maybe<User>;
+  id: Scalars['ID']['output'];
+  party: Party;
+};
+
+export type DonationDedication =
+  | 'RENT'
+  | 'WARCHEST';
+
 export type Event = {
   __typename?: 'Event';
   date?: Maybe<Scalars['Date']['output']>;
@@ -113,6 +127,7 @@ export type Mutation = {
   addPicture: Picture;
   deleteAuthDevice: AuthDevice;
   denyRoom?: Maybe<Attending>;
+  donate: Donation;
   generatePasskeyLoginOptions: Scalars['JSON']['output'];
   generatePasskeyRegisterOptions: Scalars['JSON']['output'];
   grantRoom?: Maybe<Attending>;
@@ -128,6 +143,7 @@ export type Mutation = {
   registerPasskey: RegisterDeviceResponse;
   removeAttendance: Party;
   requestRoom?: Maybe<Attending>;
+  rescindDonation: Donation;
   sendMagicLink: Scalars['Boolean']['output'];
   setAttendance: Party;
   setGamesPlayed: Attending;
@@ -156,6 +172,13 @@ export type MutationDeleteAuthDeviceArgs = {
 
 export type MutationDenyRoomArgs = {
   attendingId: Scalars['ID']['input'];
+};
+
+
+export type MutationDonateArgs = {
+  amount: Scalars['Float']['input'];
+  dedication?: InputMaybe<DonationDedication>;
+  incognito?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -240,6 +263,11 @@ export type MutationRequestRoomArgs = {
 };
 
 
+export type MutationRescindDonationArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
 export type MutationSendMagicLinkArgs = {
   email: Scalars['String']['input'];
 };
@@ -281,6 +309,7 @@ export type MutationUpdateProfileArgs = {
 export type Party = {
   __typename?: 'Party';
   attendings: Array<Attending>;
+  donations: Array<Donation>;
   endDate: Scalars['Date']['output'];
   events: Array<Event>;
   gamesPlayed: Array<GameOnParty>;
@@ -472,6 +501,9 @@ export type ResolversTypes = {
   BoundingBox: ResolverTypeWrapper<Scalars['BoundingBox']['output']>;
   Date: ResolverTypeWrapper<Scalars['Date']['output']>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
+  Donation: ResolverTypeWrapper<DonationMapper>;
+  Float: ResolverTypeWrapper<Scalars['Float']['output']>;
+  DonationDedication: DonationDedication;
   Event: ResolverTypeWrapper<EventMapper>;
   EventInput: EventInput;
   File: ResolverTypeWrapper<Scalars['File']['output']>;
@@ -484,7 +516,6 @@ export type ResolversTypes = {
   Mutation: ResolverTypeWrapper<{}>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Party: ResolverTypeWrapper<PartyMapper>;
-  Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   PartyInput: PartyInput;
   Picture: ResolverTypeWrapper<PictureMapper>;
   PictureInput: PictureInput;
@@ -511,6 +542,8 @@ export type ResolversParentTypes = {
   BoundingBox: Scalars['BoundingBox']['output'];
   Date: Scalars['Date']['output'];
   DateTime: Scalars['DateTime']['output'];
+  Donation: DonationMapper;
+  Float: Scalars['Float']['output'];
   Event: EventMapper;
   EventInput: EventInput;
   File: Scalars['File']['output'];
@@ -523,7 +556,6 @@ export type ResolversParentTypes = {
   Mutation: {};
   Boolean: Scalars['Boolean']['output'];
   Party: PartyMapper;
-  Float: Scalars['Float']['output'];
   PartyInput: PartyInput;
   Picture: PictureMapper;
   PictureInput: PictureInput;
@@ -580,6 +612,15 @@ export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversT
   name: 'DateTime';
 }
 
+export type DonationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Donation'] = ResolversParentTypes['Donation']> = {
+  amount?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  dedication?: Resolver<ResolversTypes['DonationDedication'], ParentType, ContextType>;
+  donator?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  party?: Resolver<ResolversTypes['Party'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type EventResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Event'] = ResolversParentTypes['Event']> = {
   date?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -634,6 +675,7 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
   addPicture?: Resolver<ResolversTypes['Picture'], ParentType, ContextType, RequireFields<MutationAddPictureArgs, 'input'>>;
   deleteAuthDevice?: Resolver<ResolversTypes['AuthDevice'], ParentType, ContextType, RequireFields<MutationDeleteAuthDeviceArgs, 'id'>>;
   denyRoom?: Resolver<Maybe<ResolversTypes['Attending']>, ParentType, ContextType, RequireFields<MutationDenyRoomArgs, 'attendingId'>>;
+  donate?: Resolver<ResolversTypes['Donation'], ParentType, ContextType, RequireFields<MutationDonateArgs, 'amount'>>;
   generatePasskeyLoginOptions?: Resolver<ResolversTypes['JSON'], ParentType, ContextType, Partial<MutationGeneratePasskeyLoginOptionsArgs>>;
   generatePasskeyRegisterOptions?: Resolver<ResolversTypes['JSON'], ParentType, ContextType, RequireFields<MutationGeneratePasskeyRegisterOptionsArgs, 'userId'>>;
   grantRoom?: Resolver<Maybe<ResolversTypes['Attending']>, ParentType, ContextType, RequireFields<MutationGrantRoomArgs, 'attendingId'>>;
@@ -649,6 +691,7 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
   registerPasskey?: Resolver<ResolversTypes['RegisterDeviceResponse'], ParentType, ContextType, RequireFields<MutationRegisterPasskeyArgs, 'name' | 'response' | 'userId'>>;
   removeAttendance?: Resolver<ResolversTypes['Party'], ParentType, ContextType, RequireFields<MutationRemoveAttendanceArgs, 'partyId'>>;
   requestRoom?: Resolver<Maybe<ResolversTypes['Attending']>, ParentType, ContextType, RequireFields<MutationRequestRoomArgs, 'partyId'>>;
+  rescindDonation?: Resolver<ResolversTypes['Donation'], ParentType, ContextType, RequireFields<MutationRescindDonationArgs, 'id'>>;
   sendMagicLink?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationSendMagicLinkArgs, 'email'>>;
   setAttendance?: Resolver<ResolversTypes['Party'], ParentType, ContextType, RequireFields<MutationSetAttendanceArgs, 'dates' | 'partyId'>>;
   setGamesPlayed?: Resolver<ResolversTypes['Attending'], ParentType, ContextType, RequireFields<MutationSetGamesPlayedArgs, 'gameIds' | 'partyId'>>;
@@ -660,6 +703,7 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
 
 export type PartyResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Party'] = ResolversParentTypes['Party']> = {
   attendings?: Resolver<Array<ResolversTypes['Attending']>, ParentType, ContextType>;
+  donations?: Resolver<Array<ResolversTypes['Donation']>, ParentType, ContextType>;
   endDate?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   events?: Resolver<Array<ResolversTypes['Event']>, ParentType, ContextType>;
   gamesPlayed?: Resolver<Array<ResolversTypes['GameOnParty']>, ParentType, ContextType>;
@@ -745,6 +789,7 @@ export type Resolvers<ContextType = Context> = {
   BoundingBox?: GraphQLScalarType;
   Date?: GraphQLScalarType;
   DateTime?: GraphQLScalarType;
+  Donation?: DonationResolvers<ContextType>;
   Event?: EventResolvers<ContextType>;
   File?: GraphQLScalarType;
   Game?: GameResolvers<ContextType>;

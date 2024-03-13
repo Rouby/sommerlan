@@ -206,7 +206,11 @@ async function fillCache<T extends Base>(cls: new () => T, sheetName: string) {
             objectKeys.map((key) => [
               key,
               row[key]
-                ? JSON.parse(row[key])
+                ? row[key] === "FALSE"
+                  ? false
+                  : row[key] === "TRUE"
+                  ? true
+                  : JSON.parse(row[key])
                 : new cls()[key as keyof typeof cls],
             ])
           );

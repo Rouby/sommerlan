@@ -184,6 +184,58 @@ function Urql({ children }: { children: React.ReactNode }) {
                     }
                   }
                 },
+                donate: (result, _args, cache, _info) => {
+                  if (
+                    typeof result.donate === "object" &&
+                    result.donate &&
+                    "party" in result.donate &&
+                    result.donate?.party
+                  ) {
+                    const donations = cache.resolve(
+                      { __typename: "Party", id: result.donate.party.id },
+                      "donations"
+                    );
+                    if (Array.isArray(donations)) {
+                      donations.push(result.donate as Data);
+                      cache.link(
+                        { __typename: "Party", id: result.donate.party.id },
+                        "donations",
+                        donations as Link<Entity>
+                      );
+                    }
+                  }
+                },
+                rescindDonation: (result, _args, cache, _info) => {
+                  if (
+                    typeof result.rescindDonation === "object" &&
+                    result.rescindDonation &&
+                    "party" in result.rescindDonation &&
+                    result.rescindDonation?.party
+                  ) {
+                    const donations = cache.resolve(
+                      {
+                        __typename: "Party",
+                        id: result.rescindDonation.party.id,
+                      },
+                      "donations"
+                    );
+                    if (Array.isArray(donations)) {
+                      console.log();
+                      cache.link(
+                        {
+                          __typename: "Party",
+                          id: result.rescindDonation.party.id,
+                        },
+                        "donations",
+                        donations.filter(
+                          (donation) =>
+                            donation.split(":")[1] !==
+                            (result.rescindDonation as Data).id
+                        ) as Link<Entity>
+                      );
+                    }
+                  }
+                },
               },
             },
             optimistic: {

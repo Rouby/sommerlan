@@ -30,6 +30,7 @@ export const fakeGoogleSheetApi = {
     Attendings: fakeSheet("Attending"),
     Games: fakeSheet("Game"),
     Events: fakeSheet("Event"),
+    Donations: fakeSheet("Donation"),
   },
 
   seedRow(clsName: string, data: any) {

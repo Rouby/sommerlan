@@ -4678,7 +4678,7 @@ __metadata:
     "@mantine/spotlight": "npm:^6.0.19"
     "@mantine/tiptap": "npm:^6.0.19"
     "@simplewebauthn/browser": "npm:^7.2.0"
-    "@tabler/icons-react": "npm:^2.24.0"
+    "@tabler/icons-react": "npm:^3.0.1"
     "@tanstack/react-query": "npm:^4.29.14"
     "@tanstack/router": "npm:0.0.1-beta.86"
     "@tiptap/core": "npm:^2.1.7"
@@ -4706,7 +4706,6 @@ __metadata:
     qrcode: "npm:^1.5.3"
     react: "npm:^18.2.0"
     react-dom: "npm:^18.2.0"
-    tabler-icons-react: "npm:^1.56.0"
     typescript: "npm:^5.1.3"
     urql: "npm:^4.0.5"
     vite: "npm:^4.3.9"
@@ -5191,22 +5190,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tabler/icons-react@npm:^2.24.0":
-  version: 2.24.0
-  resolution: "@tabler/icons-react@npm:2.24.0"
+"@tabler/icons-react@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "@tabler/icons-react@npm:3.0.1"
   dependencies:
-    "@tabler/icons": "npm:2.24.0"
-    prop-types: "npm:^15.7.2"
+    "@tabler/icons": "npm:3.0.1"
   peerDependencies:
-    react: ^16.5.1 || ^17.0.0 || ^18.0.0
-  checksum: 10/04f54b080a024e95d380bd719d5592042bd969f89c8889d9bd1f333339bb777c58cf78ffe35a4292d9560fdc11dd7e0ed77b973ddc8c0759980f859d671c60be
+    react: ">= 16"
+  checksum: 10/e5a8fcb5fbd81c665ed6cfefb11ef86befabf91a3c03f900231a9639f5ab403558f06e5e5467126e90bcbb2f190defe4f7ec9541656c757896ce7ed131e9333e
   languageName: node
   linkType: hard
 
-"@tabler/icons@npm:2.24.0":
-  version: 2.24.0
-  resolution: "@tabler/icons@npm:2.24.0"
-  checksum: 10/b3dffa2b51080552ee57a3d62999d7bd932051ed13ef7daa0ff9ab196a4e3505c440664fc4e59953ef1b6f851abdb58d96173c03c6170fcc10764d628eb2fa3a
+"@tabler/icons@npm:3.0.1":
+  version: 3.0.1
+  resolution: "@tabler/icons@npm:3.0.1"
+  checksum: 10/8fde39a253979f735659abb06b4951cdc117fa36abfe35ea6377adedb3a26a3f405690a565726f8bd2e79e45ad3c803e2289ae9ffdec6c778737bf7e325f5809
   languageName: node
   linkType: hard
 
@@ -12595,7 +12593,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
+"prop-types@npm:^15.6.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -14176,15 +14174,6 @@ __metadata:
   version: 6.1.2
   resolution: "tabbable@npm:6.1.2"
   checksum: 10/bae16cea82ab345a735db5f216a4bf0a9d4672d163d5c4874e6bf420bc6ff66ad80743723a27b8817f02955155fae99036833f5f974173db9495f796c132d500
-  languageName: node
-  linkType: hard
-
-"tabler-icons-react@npm:^1.56.0":
-  version: 1.56.0
-  resolution: "tabler-icons-react@npm:1.56.0"
-  peerDependencies:
-    react: ">= 16.8.0"
-  checksum: 10/4607720d84d6ec89ad7210d18801ee0a74b973fdbbf47dc7c5001c50d79aeb7d28baeb77d06c0f55c54d83af845ee5993864140b3a0979eb5c2918d24454b283
   languageName: node
   linkType: hard
 

@@ -2,6 +2,7 @@ import { Box, Text } from "@mantine/core";
 import { useAtomValue } from "jotai";
 import { useQuery } from "urql";
 import { graphql } from "../gql";
+import { DonationDedication } from "../gql/graphql";
 import { userAtom } from "../state";
 import { formatCurrency } from "../utils";
 
@@ -14,6 +15,16 @@ export function NextPartyCosts() {
         nextParty {
           id
           rentalCosts
+          donations {
+            id
+            amount
+            donator {
+              id
+              displayName
+              avatar
+            }
+            dedication
+          }
           attendings {
             id
             dates
@@ -37,7 +48,11 @@ export function NextPartyCosts() {
     0
   );
 
-  const costPerDay = party.rentalCosts / daysWithAttending;
+  const donationsForRent = party.donations
+    .filter((donation) => donation.dedication === DonationDedication.Rent)
+    .reduce((acc, donation) => acc + donation.amount, 0);
+
+  const costPerDay = (party.rentalCosts - donationsForRent) / daysWithAttending;
 
   const myDaysAttending = Math.max(
     0,
@@ -57,6 +72,8 @@ export function NextPartyCosts() {
       >
         <Text fw="bold">Mietkosten:</Text>
         <Text>{formatCurrency(party.rentalCosts)}</Text>
+        <Text fw="bold">Spendenbeitrag:</Text>
+        <Text>{formatCurrency(donationsForRent)}</Text>
         <Text fw="bold">Kosten pro Tag:</Text>
         <Text>{formatCurrency(costPerDay)}</Text>
         {myDaysAttending > 0 && (

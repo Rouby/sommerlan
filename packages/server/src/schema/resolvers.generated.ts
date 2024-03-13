@@ -5,6 +5,7 @@ import    { Attending } from './user/resolvers/Attending';
 import    { AuthDevice } from './user/resolvers/AuthDevice';
 import    { AuthResponse } from './user/resolvers/AuthResponse';
 import    { BoundingBox } from './party/resolvers/BoundingBox';
+import    { Donation } from './donation/resolvers/Donation';
 import    { Event } from './events/resolvers/Event';
 import    { File } from './base/resolvers/File';
 import    { Game } from './game/resolvers/Game';
@@ -14,6 +15,7 @@ import    { addGameToParty as Mutation_addGameToParty } from './game/resolvers/M
 import    { addPicture as Mutation_addPicture } from './party/resolvers/Mutation/addPicture';
 import    { deleteAuthDevice as Mutation_deleteAuthDevice } from './user/resolvers/Mutation/deleteAuthDevice';
 import    { denyRoom as Mutation_denyRoom } from './party/resolvers/Mutation/denyRoom';
+import    { donate as Mutation_donate } from './donation/resolvers/Mutation/donate';
 import    { generatePasskeyLoginOptions as Mutation_generatePasskeyLoginOptions } from './user/resolvers/Mutation/generatePasskeyLoginOptions';
 import    { generatePasskeyRegisterOptions as Mutation_generatePasskeyRegisterOptions } from './user/resolvers/Mutation/generatePasskeyRegisterOptions';
 import    { grantRoom as Mutation_grantRoom } from './party/resolvers/Mutation/grantRoom';
@@ -29,6 +31,7 @@ import    { register as Mutation_register } from './user/resolvers/Mutation/regi
 import    { registerPasskey as Mutation_registerPasskey } from './user/resolvers/Mutation/registerPasskey';
 import    { removeAttendance as Mutation_removeAttendance } from './party/resolvers/Mutation/removeAttendance';
 import    { requestRoom as Mutation_requestRoom } from './party/resolvers/Mutation/requestRoom';
+import    { rescindDonation as Mutation_rescindDonation } from './donation/resolvers/Mutation/rescindDonation';
 import    { sendMagicLink as Mutation_sendMagicLink } from './user/resolvers/Mutation/sendMagicLink';
 import    { setAttendance as Mutation_setAttendance } from './party/resolvers/Mutation/setAttendance';
 import    { setGamesPlayed as Mutation_setGamesPlayed } from './game/resolvers/Mutation/setGamesPlayed';
@@ -52,13 +55,14 @@ import    { User } from './user/resolvers/User';
 import    { DateResolver,DateTimeResolver,JSONResolver,JWTResolver,TimeResolver } from 'graphql-scalars';
     export const resolvers: Resolvers = {
       Query: { games: Query_games,me: Query_me,nextParty: Query_nextParty,parties: Query_parties,party: Query_party,users: Query_users },
-      Mutation: { addGameToParty: Mutation_addGameToParty,addPicture: Mutation_addPicture,deleteAuthDevice: Mutation_deleteAuthDevice,denyRoom: Mutation_denyRoom,generatePasskeyLoginOptions: Mutation_generatePasskeyLoginOptions,generatePasskeyRegisterOptions: Mutation_generatePasskeyRegisterOptions,grantRoom: Mutation_grantRoom,leaveEvent: Mutation_leaveEvent,loginMagicLink: Mutation_loginMagicLink,loginPasskey: Mutation_loginPasskey,loginPassword: Mutation_loginPassword,participateInEvent: Mutation_participateInEvent,planEvent: Mutation_planEvent,recindRoom: Mutation_recindRoom,refreshLogin: Mutation_refreshLogin,register: Mutation_register,registerPasskey: Mutation_registerPasskey,removeAttendance: Mutation_removeAttendance,requestRoom: Mutation_requestRoom,sendMagicLink: Mutation_sendMagicLink,setAttendance: Mutation_setAttendance,setGamesPlayed: Mutation_setGamesPlayed,syncCache: Mutation_syncCache,updateAuthDevice: Mutation_updateAuthDevice,updateParty: Mutation_updateParty,updateProfile: Mutation_updateProfile },
+      Mutation: { addGameToParty: Mutation_addGameToParty,addPicture: Mutation_addPicture,deleteAuthDevice: Mutation_deleteAuthDevice,denyRoom: Mutation_denyRoom,donate: Mutation_donate,generatePasskeyLoginOptions: Mutation_generatePasskeyLoginOptions,generatePasskeyRegisterOptions: Mutation_generatePasskeyRegisterOptions,grantRoom: Mutation_grantRoom,leaveEvent: Mutation_leaveEvent,loginMagicLink: Mutation_loginMagicLink,loginPasskey: Mutation_loginPasskey,loginPassword: Mutation_loginPassword,participateInEvent: Mutation_participateInEvent,planEvent: Mutation_planEvent,recindRoom: Mutation_recindRoom,refreshLogin: Mutation_refreshLogin,register: Mutation_register,registerPasskey: Mutation_registerPasskey,removeAttendance: Mutation_removeAttendance,requestRoom: Mutation_requestRoom,rescindDonation: Mutation_rescindDonation,sendMagicLink: Mutation_sendMagicLink,setAttendance: Mutation_setAttendance,setGamesPlayed: Mutation_setGamesPlayed,syncCache: Mutation_syncCache,updateAuthDevice: Mutation_updateAuthDevice,updateParty: Mutation_updateParty,updateProfile: Mutation_updateProfile },
       
       AddGameResult: AddGameResult,
 Attending: Attending,
 AuthDevice: AuthDevice,
 AuthResponse: AuthResponse,
 BoundingBox: BoundingBox,
+Donation: Donation,
 Event: Event,
 File: File,
 Game: Game,

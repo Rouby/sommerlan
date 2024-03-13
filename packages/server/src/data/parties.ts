@@ -27,6 +27,8 @@ export class Party extends Base {
 
   public rentalCosts = 0;
 
+  public registrationDeadline = "";
+
   constructor(props?: Values<Party>) {
     super();
     if (props) Object.assign(this, props);
