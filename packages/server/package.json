@@ -35,16 +35,16 @@
     "fast-json-patch": "^3.1.1",
     "fastify": "^4.18.0",
     "google-spreadsheet": "^3.3.0",
-    "graphql": "^16.8.0",
+    "graphql": "^16.8.1",
     "graphql-scalars": "^1.22.2",
     "graphql-yoga": "^4.0.4",
     "jsonwebtoken": "^9.0.0",
     "newrelic": "^11.2.1",
-    "nodemailer": "^6.9.3",
+    "nodemailer": "^6.9.9",
     "pino": "^8.14.1",
     "recron": "^1.1.5",
     "web-push": "^3.6.2",
-    "zod": "^3.21.4"
+    "zod": "^3.22.3"
   },
   "devDependencies": {
     "@eddeee888/gcg-typescript-resolver-files": "^0.6.0",
