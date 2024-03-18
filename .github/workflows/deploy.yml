@@ -114,7 +114,6 @@ jobs:
   build:
     name: 🏗️ Build
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'release' || github.event_name == 'push' }}
 
     concurrency:
       group: build-${{ github.ref }}
