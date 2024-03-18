@@ -169,7 +169,7 @@ jobs:
     strategy:
       matrix:
         env_name: [staging, production]
-        env_url: [https://staging.sommerlan.rocks, https://sommerlan.rocks]
+        env_url: ["https://staging.sommerlan.rocks", "https://sommerlan.rocks"]
 
     concurrency:
       group: deploy-${{ matrix.env_name }}
