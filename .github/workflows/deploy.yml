@@ -157,6 +157,7 @@ jobs:
 
       - name: 📦 Upload artifact
         uses: actions/upload-artifact@v3
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         with:
           name: sommerlan-image
           path: /tmp/sommerlan-image.tar
