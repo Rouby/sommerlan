@@ -169,14 +169,13 @@ jobs:
     strategy:
       matrix:
         env_name: [staging, production]
-        env_url: [https://staging.sommerlan.rocks, https://sommerlan.rocks]
 
     concurrency:
       group: deploy-${{ matrix.env_name }}
 
     environment:
       name: ${{ matrix.env_name }}
-      url: ${{ matrix.env_url }}
+      url: "https://${{ matrix.env_name == 'staging' && 'staging.' || '' }}sommerlan.rocks"
 
     steps:
       - name: ⬇️ Checkout repo
@@ -200,7 +199,7 @@ jobs:
           BRANCH: ${{ github.ref_name }}
           SHA: ${{ github.sha }}
           APP_PORT: "53346"
-          APP_ORIGIN: ${{ matrix.env_url }}
+          APP_ORIGIN: ${{ github.env.url }}
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
           GOOGLE_SHEET_ID: ${{ vars.GOOGLE_SHEET_ID }}
           GOOGLE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
