@@ -194,7 +194,7 @@ jobs:
 
       - name: 🚀 Deploy
         run: |
-          docker compose -p sommerlan-${{ github.env.name }} up -d
+          docker compose -p sommerlan-${{ matrix.env_name }} up -d
         env:
           WORKDIR: "/home/pi/sommerlan"
           BRANCH: ${{ github.ref_name }}
@@ -206,7 +206,7 @@ jobs:
           GOOGLE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
           GOOGLE_PRIVATE_KEY: ${{ secrets.GOOGLE_PRIVATE_KEY }}
           NEW_RELIC_LICENSE_KEY: ${{ secrets.NEW_RELIC_LICENSE_KEY }}
-          NEW_RELIC_APP_NAME: "sommerlan-${{ github.env.name }}"
+          NEW_RELIC_APP_NAME: "sommerlan-${{ matrix.env_name }}"
           NEW_RELIC_LOADER_CONFIG: ${{ secrets.NEW_RELIC_LOADER_CONFIG }}
           NEW_RELIC_INFO: ${{ secrets.NEW_RELIC_INFO }}
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
