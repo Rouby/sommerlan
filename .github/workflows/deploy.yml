@@ -118,6 +118,7 @@ jobs:
 
     concurrency:
       group: build-${{ github.ref }}
+      cancel-in-progress: true
 
     steps:
       - name: ⬇️ Checkout repo
@@ -213,7 +214,7 @@ jobs:
           DISCORD_ROLE_ID: ${{ secrets.DISCORD_ROLE_ID }}
 
       - name: 🏷️ New Relic Application Deployment Marker
-        uses: newrelic/deployment-marker-action@v2.2.0
+        uses: newrelic/deployment-marker-action@v2.5.0
         with:
           apiKey: ${{ secrets.NEW_RELIC_API_KEY }}
           region: "EU"
