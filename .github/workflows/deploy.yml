@@ -183,12 +183,16 @@ jobs:
         uses: actions/checkout@v4
 
       - name: 📦 Download artifact
+        # assume prod already has the image
+        if: ${{ matrix.env_name == 'staging' }}
         uses: actions/download-artifact@v3
         with:
           name: sommerlan-image
           path: /tmp/sommerlan
 
       - name: 🐳 Load image
+        # assume prod already has the image
+        if: ${{ matrix.env_name == 'staging' }}
         run: |
           docker load --input /tmp/sommerlan/sommerlan-image.tar
 
@@ -199,7 +203,7 @@ jobs:
           WORKDIR: "/home/pi/sommerlan"
           BRANCH: ${{ github.ref_name }}
           SHA: ${{ github.sha }}
-          APP_PORT: "53346"
+          APP_PORT: ${{ matrix.env_name == 'staging' && '53346' || '53345' }}
           APP_ORIGIN: ${{ github.env.url }}
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
           GOOGLE_SHEET_ID: ${{ vars.GOOGLE_SHEET_ID }}
@@ -223,12 +227,3 @@ jobs:
             --version "${{ github.sha }}" \
             --commit "${{ github.sha }}" \
             --user "${{ github.actor }}"
-      # - name: 🏷️ New Relic Application Deployment Marker
-      #   uses: newrelic/deployment-marker-action@v2.5.0
-      #   with:
-      #     apiKey: ${{ secrets.NEW_RELIC_API_KEY }}
-      #     region: "EU"
-      #     guid: ${{ secrets.NEW_RELIC_DEPLOYMENT_ENTITY_GUID_SERVER }}
-      #     version: "${{ github.sha }}"
-      #     commit: "${{ github.sha }}"
-      #     user: "${{ github.actor }}"
