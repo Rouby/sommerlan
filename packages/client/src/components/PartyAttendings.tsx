@@ -36,6 +36,7 @@ export function PartyAttendings({ partyId }: { partyId?: string }) {
       startDate
       endDate
       roomsAvailable
+      seatsAvailable
       attendings {
         id
         dates
@@ -168,7 +169,13 @@ export function PartyAttendings({ partyId }: { partyId?: string }) {
               <Fragment key={date.toString()}>
                 <Box sx={{ whiteSpace: "nowrap" }}>{date.format("ddd, L")}</Box>
 
-                <Checkbox value={date.format("YYYY-MM-DD")} />
+                <Checkbox
+                  value={date.format("YYYY-MM-DD")}
+                  disabled={
+                    attendingsOnDate.length >= party.seatsAvailable &&
+                    !attendingsOnDate.some((att) => att.user.id === user.id)
+                  }
+                />
 
                 <AddUserMenu
                   attendings={party.attendings}
@@ -202,7 +209,10 @@ export function PartyAttendings({ partyId }: { partyId?: string }) {
                         / {party.roomsAvailable} rooms available
                       </Badge>
                     ) : null}
-                    <Badge>{attendingsOnDate.length} an diesem Tag da</Badge>
+                    <Badge>
+                      {attendingsOnDate.length} / {party.seatsAvailable} an
+                      diesem Tag da
+                    </Badge>
                   </Group>
                   <Divider mt="sm" />
                 </Box>

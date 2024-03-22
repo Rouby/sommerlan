@@ -27,6 +27,7 @@ type Party {
   rentalCosts: Float!
   attendings: [Attending!]!
   pictures: [Picture!]!
+  seatsAvailable: Int!
 }
 
 type Picture {

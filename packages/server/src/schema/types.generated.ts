@@ -319,6 +319,7 @@ export type Party = {
   pictures: Array<Picture>;
   rentalCosts: Scalars['Float']['output'];
   roomsAvailable: Scalars['Int']['output'];
+  seatsAvailable: Scalars['Int']['output'];
   startDate: Scalars['Date']['output'];
 };
 
@@ -713,6 +714,7 @@ export type PartyResolvers<ContextType = Context, ParentType extends ResolversPa
   pictures?: Resolver<Array<ResolversTypes['Picture']>, ParentType, ContextType>;
   rentalCosts?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   roomsAvailable?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  seatsAvailable?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   startDate?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
