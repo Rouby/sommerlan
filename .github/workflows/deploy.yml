@@ -206,7 +206,7 @@ jobs:
           BRANCH: ${{ github.ref_name }}
           SHA: ${{ github.sha }}
           APP_PORT: ${{ matrix.env_name == 'staging' && '53346' || '53345' }}
-          APP_ORIGIN: ${{ github.env.url }}
+          APP_ORIGIN: "https://${{ matrix.env_name == 'staging' && 'staging.' || '' }}sommerlan.rocks"
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
           GOOGLE_SHEET_ID: ${{ vars.GOOGLE_SHEET_ID }}
           GOOGLE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
