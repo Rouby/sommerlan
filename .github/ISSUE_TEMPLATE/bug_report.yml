@@ -1,5 +1,5 @@
 name: 🐛 Bug Report
-description: Something is wrong with the Stack.
+description: Something is wrong.
 body:
   - type: markdown
     attributes:

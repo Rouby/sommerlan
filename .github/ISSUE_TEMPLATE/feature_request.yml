@@ -1,0 +1,20 @@
+name: 🚀 Feature Request
+description: Something is missing.
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        Thank you for helping to improve the sommerlan website!
+
+  - type: textarea
+    attributes:
+      label: What is the problem you're trying to solve?
+      description: A concise description of what the problem is. Ex. I'm always frustrated when [...]
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Describe the solution you'd like
+      description: A concise description of what you want to happen.
+    validations:
+      required: true
