@@ -38,7 +38,7 @@ function replaceIdKeys(conditions?: MongoQuery) {
         return [`${match[1]}.id`, value];
       }
       return [key, value];
-    })
+    }),
   );
 }
 

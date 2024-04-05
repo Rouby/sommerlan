@@ -8,7 +8,7 @@ export const Game: GameResolvers = {
     return ctx.data.User.filterByIds(
       Object.values(parent.partyPeople)
         .flatMap((ids) => ids ?? [])
-        .map((id) => id)
+        .map((id) => id),
     );
   },
 };

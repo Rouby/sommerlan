@@ -32,7 +32,7 @@ export function NextPartyRooms() {
   const { nextParty } = data ?? {};
 
   const myAttending = nextParty?.attendings.find(
-    (attending) => attending.user.id === user.id
+    (attending) => attending.user.id === user.id,
   );
 
   const [{ fetching: requesting }, requestRoom] = useMutation(
@@ -49,7 +49,7 @@ export function NextPartyRooms() {
           }
         }
       }
-    `)
+    `),
   );
   const [{ fetching: recinding }, recindRoom] = useMutation(
     graphql(`
@@ -65,7 +65,7 @@ export function NextPartyRooms() {
           }
         }
       }
-    `)
+    `),
   );
 
   const isRequestingRoom = myAttending?.room === "REQUESTED";
@@ -128,7 +128,7 @@ function RoomRequest({
           room
         }
       }
-    `)
+    `),
   );
   const [{ fetching: denying }, denyRoom] = useMutation(
     graphql(`
@@ -138,7 +138,7 @@ function RoomRequest({
           room
         }
       }
-    `)
+    `),
   );
 
   return (

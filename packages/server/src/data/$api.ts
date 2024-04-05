@@ -39,7 +39,7 @@ export function createFakeApi() {
               _: new () => unknown,
               __: string,
               id: string,
-              values: Record<string, unknown>
+              values: Record<string, unknown>,
             ) => {
               const row = this.rows.find((row) => row.id === id);
               if (row) {
@@ -64,7 +64,7 @@ export function createFakeApi() {
               _: new () => unknown,
               __: string,
               id: string,
-              values: Record<string, unknown>
+              values: Record<string, unknown>,
             ) => {
               const row = this.rows.find((row) => row.id === id);
               if (row) {
@@ -89,7 +89,7 @@ export function createFakeApi() {
               _: new () => unknown,
               __: string,
               id: string,
-              values: Record<string, unknown>
+              values: Record<string, unknown>,
             ) => {
               const row = this.rows.find((row) => row.id === id);
               if (row) {
@@ -114,7 +114,7 @@ export function createFakeApi() {
               _: new () => unknown,
               __: string,
               id: string,
-              values: Record<string, unknown>
+              values: Record<string, unknown>,
             ) => {
               const row = this.rows.find((row) => row.id === id);
               if (row) {
@@ -139,7 +139,7 @@ export function createFakeApi() {
               _: new () => unknown,
               __: string,
               id: string,
-              values: Record<string, unknown>
+              values: Record<string, unknown>,
             ) => {
               const row = this.rows.find((row) => row.id === id);
               if (row) {
@@ -164,7 +164,7 @@ export function createFakeApi() {
               _: new () => unknown,
               __: string,
               id: string,
-              values: Record<string, unknown>
+              values: Record<string, unknown>,
             ) => {
               const row = this.rows.find((row) => row.id === id);
               if (row) {
@@ -190,7 +190,7 @@ export function createFakeApi() {
               _: new () => unknown,
               __: string,
               id: string,
-              values: Record<string, unknown>
+              values: Record<string, unknown>,
             ) => {
               const row = this.rows.find((row) => row.id === id);
               if (row) {
@@ -237,8 +237,8 @@ export const fakeGoogleSheetApi = {
     const Model = Models[clsName as "User"];
     return Model.find((m) =>
       Object.entries(query).every(
-        ([key, value]) => m[key as keyof typeof m] === value
-      )
+        ([key, value]) => m[key as keyof typeof m] === value,
+      ),
     );
   },
   clear() {
@@ -276,8 +276,8 @@ function fakeSheet(clsName: string) {
     findRow: async (query: any) => {
       return rows.find((m) =>
         Object.entries(query).every(
-          ([key, value]) => m[key as keyof typeof m] === value
-        )
+          ([key, value]) => m[key as keyof typeof m] === value,
+        ),
       );
     },
     clearRows: () => {

@@ -163,13 +163,13 @@ function EventCard({
           }
         }
       }
-    `)
+    `),
   );
 
   const [showEdit, setShowEdit] = useState(false);
 
   const isParticipating = event.participants.some(
-    (participant) => participant.id === user?.id
+    (participant) => participant.id === user?.id,
   );
 
   return (
@@ -292,10 +292,10 @@ function CreateEventForm({
   });
 
   const [dateUncertain, setDateUncertain] = useState(
-    defaultValues ? !defaultValues.date : true
+    defaultValues ? !defaultValues.date : true,
   );
   const [timeUncertain, setTimeUncertain] = useState(
-    defaultValues ? !defaultValues.startTime : true
+    defaultValues ? !defaultValues.startTime : true,
   );
 
   const [, fetch] = useFetchWithProgress();
@@ -322,7 +322,7 @@ function CreateEventForm({
           }
         }
       }
-    `)
+    `),
   );
 
   const openRef = useRef<() => void>(null);
@@ -359,7 +359,7 @@ function CreateEventForm({
               image,
             },
           },
-          { fetch }
+          { fetch },
         );
 
         onSubmit();

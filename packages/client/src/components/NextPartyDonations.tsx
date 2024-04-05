@@ -141,7 +141,7 @@ function AddDonationForm({ onDonate }: { onDonate: () => void }) {
           }
         }
       }
-    `)
+    `),
   );
 
   return (
@@ -216,7 +216,7 @@ function RescindDonationButton({ donationId }: { donationId: string }) {
           }
         }
       }
-    `)
+    `),
   );
 
   return (

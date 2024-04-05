@@ -3,7 +3,7 @@ import type { MutationResolvers } from "./../../../types.generated";
 export const donate: NonNullable<MutationResolvers["donate"]> = async (
   _parent,
   { amount, incognito, dedication },
-  ctx
+  ctx,
 ) => {
   const party = await ctx.data.Party.findLatest();
 

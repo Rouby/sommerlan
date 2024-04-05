@@ -20,6 +20,6 @@ test("should upload profile picture", async ({ page, context, api }) => {
 
   await expect(page.getByTestId("user button").locator("img")).toHaveAttribute(
     "src",
-    /^http:\/\/localhost.*\.png$/
+    /^http:\/\/localhost.*\.png$/,
   );
 });

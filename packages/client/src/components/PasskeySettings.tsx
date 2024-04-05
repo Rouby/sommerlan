@@ -97,7 +97,7 @@ function DeviceInfos({
           name
         }
       }
-    `)
+    `),
   );
   const [{ fetching: isDeleting }, deleteDevice] = useMutation(
     graphql(`
@@ -107,7 +107,7 @@ function DeviceInfos({
           name
         }
       }
-    `)
+    `),
   );
 
   return (

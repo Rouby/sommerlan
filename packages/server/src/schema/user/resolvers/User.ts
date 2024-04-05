@@ -4,5 +4,5 @@ export const User: UserResolvers = {
   devices: ({ devices }) => {
     /* User.devices resolver is required because User.devices and UserMapper.devices are not compatible */
     return devices;
-  }
+  },
 };

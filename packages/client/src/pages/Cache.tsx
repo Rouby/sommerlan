@@ -9,7 +9,7 @@ export function Cache() {
       mutation syncCache {
         syncCache(clear: true)
       }
-    `)
+    `),
   );
 
   return (

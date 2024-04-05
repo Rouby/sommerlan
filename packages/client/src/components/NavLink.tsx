@@ -11,11 +11,11 @@ export function NavLink<
   TDefaultFrom extends RegisteredRoutesInfo["routePaths"] = "/",
   TDefaultTo extends string = "",
   TFrom extends RegisteredRoutesInfo["routePaths"] = TDefaultFrom,
-  TTo extends string = TDefaultTo
+  TTo extends string = TDefaultTo,
 >(
   props: MakeLinkOptions<TFrom, TTo> &
     RefAttributes<HTMLAnchorElement> &
-    Omit<NavLinkProps, "component">
+    Omit<NavLinkProps, "component">,
 ) {
   const matchRoute = useMatchRoute();
 

@@ -27,7 +27,7 @@ export function ProfileSettings() {
           avatarUrl
         }
       }
-    `)
+    `),
   );
 
   const [avatarImage, setAvtarImage] = useState<FileWithPath | null>(null);
@@ -51,7 +51,7 @@ export function ProfileSettings() {
               avatar: avatarImage,
             },
           },
-          { fetch }
+          { fetch },
         );
 
         setToken(null);

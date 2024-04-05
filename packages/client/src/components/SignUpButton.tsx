@@ -17,15 +17,15 @@ import { useState } from "react";
 import { useMutation as urlMutation, useMutation } from "urql";
 import { graphql } from "../gql";
 import { usePasskeyAuthFlow } from "../hooks";
-import { ReactComponent as FingerprintIllustration } from "../illustrations/undraw_fingerprint_login_re_t71l.svg";
-import { ReactComponent as MessageSentIllustration } from "../illustrations/undraw_message_sent_re_q2kl.svg";
-import { ReactComponent as SignUpIllustration } from "../illustrations/undraw_sign_up_n6im.svg";
+import FingerprintIllustration from "../illustrations/undraw_fingerprint_login_re_t71l.svg?react";
+import MessageSentIllustration from "../illustrations/undraw_message_sent_re_q2kl.svg?react";
+import SignUpIllustration from "../illustrations/undraw_sign_up_n6im.svg?react";
 import { refreshTokenAtom, tokenAtom } from "../state";
 
 export function SignUpButton() {
   const [showAuthForm, setShowAuthForm] = useState(false);
   const [authMode, setAuthMode] = useState<"login" | "signup" | false>(
-    "signup"
+    "signup",
   );
 
   return (
@@ -76,7 +76,7 @@ function RegisterForm() {
           refreshToken
         }
       }
-    `)
+    `),
   );
 
   const setToken = useSetAtom(tokenAtom);
@@ -102,7 +102,7 @@ function RegisterForm() {
     >
       <Alert mb="md" hidden={!error} color="red">
         {error?.graphQLErrors?.some(
-          (gql) => gql.extensions.code === "PASSKEY_NOT_FOUND"
+          (gql) => gql.extensions.code === "PASSKEY_NOT_FOUND",
         )
           ? "Der Passkey ist auf dieser Seite nicht vorhanden."
           : `${error?.message}`}
@@ -233,7 +233,7 @@ function SignInViaPassword() {
           refreshToken
         }
       }
-    `)
+    `),
   );
 
   const setToken = useSetAtom(tokenAtom);
@@ -310,7 +310,7 @@ function SignInViaEmail() {
       mutation sendEmailLink($email: String!) {
         sendMagicLink(email: $email)
       }
-    `)
+    `),
   );
 
   return (

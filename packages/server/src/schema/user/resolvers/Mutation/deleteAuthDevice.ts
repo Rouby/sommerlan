@@ -14,7 +14,7 @@ export const deleteAuthDevice: NonNullable<
   ForbiddenError.from(ctx.ability).throwUnlessCan("update", user, "devices");
 
   const device = user.devices.find(
-    (device) => device.credentialID.join(",") === id
+    (device) => device.credentialID.join(",") === id,
   );
 
   if (device) {

@@ -17,7 +17,7 @@ const patches = new Map<
 export async function deleteRow<T extends Base>(
   cls: new () => T,
   sheetName: string,
-  id: string
+  id: string,
 ) {
   // ensure cache is populated
   await allRows(cls, sheetName);
@@ -39,7 +39,7 @@ export async function updateRow<T extends Base>(
   cls: new () => T,
   sheetName: string,
   id: string,
-  values: Record<string, unknown>
+  values: Record<string, unknown>,
 ) {
   // ensure cache is populated
   await allRows(cls, sheetName);
@@ -67,7 +67,9 @@ export async function updateRow<T extends Base>(
       cache
         .get(sheetName)
         ?.map((cachedValues) =>
-          cachedValues.id === id ? { ...cachedValues, ...values } : cachedValues
+          cachedValues.id === id
+            ? { ...cachedValues, ...values }
+            : cachedValues,
         ) ?? [];
 
     if (!cachedValues) {
@@ -82,7 +84,7 @@ export async function updateRow<T extends Base>(
 
 export async function allRows<T extends Base>(
   cls: new () => T,
-  sheetName: string
+  sheetName: string,
 ) {
   return await newrelic.startSegment(`allRows.${sheetName}`, true, async () => {
     newrelic.addCustomSpanAttribute("db.sheetName", sheetName);
@@ -122,7 +124,7 @@ export async function syncCache(clearCache = false) {
               newrelic.addCustomAttribute("entity.sheetName", sheetName);
               newrelic.addCustomAttribute(
                 "entity.operations",
-                JSON.stringify(operations)
+                JSON.stringify(operations),
               );
               if (operations === deleteMarker) {
                 logger.trace({ sheetName, id }, "Deleting entity");
@@ -135,7 +137,7 @@ export async function syncCache(clearCache = false) {
                         row[key]
                           ? JSON.parse(row[key])
                           : new cls()[key as keyof typeof cls],
-                      ])
+                      ]),
                     )
                   : {};
                 try {
@@ -143,17 +145,17 @@ export async function syncCache(clearCache = false) {
                     original,
                     operations,
                     true,
-                    false
+                    false,
                   );
                   const values = Object.fromEntries(
                     Object.entries(newDocument).map(([key, value]) => [
                       key,
                       JSON.stringify(value),
-                    ])
+                    ]),
                   );
                   logger.trace(
                     { sheetName, id, operations, values },
-                    "Syncing entity"
+                    "Syncing entity",
                   );
                   if (row) {
                     Object.assign(row, values);
@@ -164,11 +166,11 @@ export async function syncCache(clearCache = false) {
                 } catch (err) {
                   logger.error(
                     { err, sheetName, id, operations, original },
-                    "Failed to apply patch"
+                    "Failed to apply patch",
                   );
                 }
               }
-            }
+            },
           );
         }
       });
@@ -209,15 +211,15 @@ async function fillCache<T extends Base>(cls: new () => T, sheetName: string) {
                 ? row[key] === "FALSE"
                   ? false
                   : row[key] === "TRUE"
-                  ? true
-                  : JSON.parse(row[key])
+                    ? true
+                    : JSON.parse(row[key])
                 : new cls()[key as keyof typeof cls],
-            ])
+            ]),
           );
-        })
+        }),
       );
       fillingCache.delete(sheetName);
-    }
+    },
   );
   fillingCache.set(sheetName, promise);
   logger.trace({ sheetName }, "Filling cache");

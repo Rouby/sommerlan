@@ -11,10 +11,10 @@ export const loginPasskey: NonNullable<
 > = async (_parent, { response }, ctx) => {
   const credId = Array.from(base64url.toBuffer(response.rawId)).join(",");
   const user = await ctx.data.User.find((user) =>
-    user.devices.some((dev) => dev.credentialID.join(",") === credId)
+    user.devices.some((dev) => dev.credentialID.join(",") === credId),
   );
   const authenticator = user?.devices.find(
-    (dev) => dev.credentialID.join(",") === credId
+    (dev) => dev.credentialID.join(",") === credId,
   );
 
   if (!user || !authenticator) {

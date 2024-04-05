@@ -7,7 +7,7 @@ cron.schedule(
   process.env.NODE_ENV === "production" ? "@every 5m" : "@every 1m",
   async () => {
     await syncCache();
-  }
+  },
 );
 
 export const scheduler = {

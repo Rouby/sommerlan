@@ -12,9 +12,9 @@ export const Party: PartyResolvers = {
         game,
         party: parent,
         players: await ctx.data.User.filterByIds(
-          game.partyPeople[parent.id] ?? []
+          game.partyPeople[parent.id] ?? [],
         ),
-      }))
+      })),
     );
   },
   locationWidgetSrc: (parent) => {

@@ -79,7 +79,7 @@ export function PartyAttendings({ partyId }: { partyId?: string }) {
           }
         }
       }
-    `)
+    `),
   );
   const [, removeAttendance] = useMutation(
     graphql(`
@@ -92,7 +92,7 @@ export function PartyAttendings({ partyId }: { partyId?: string }) {
           }
         }
       }
-    `)
+    `),
   );
 
   const { nextParty, party: specificParty } = data ?? {};
@@ -103,12 +103,12 @@ export function PartyAttendings({ partyId }: { partyId?: string }) {
 
   const dates = !fetching
     ? Array.from({ length: endDate.diff(startDate, "days") + 1 }, (_, i) =>
-        startDate.add(i, "day")
+        startDate.add(i, "day"),
       )
     : [dayjs(0), dayjs(1), dayjs(2)];
 
   const myAttending = party?.attendings.find(
-    (attending) => attending.user.id === user.id
+    (attending) => attending.user.id === user.id,
   );
 
   return (
@@ -163,7 +163,7 @@ export function PartyAttendings({ partyId }: { partyId?: string }) {
             }
 
             const attendingsOnDate = party.attendings.filter((attending) =>
-              attending.dates.includes(date.format("YYYY-MM-DD"))
+              attending.dates.includes(date.format("YYYY-MM-DD")),
             );
             return (
               <Fragment key={date.toString()}>
@@ -204,7 +204,7 @@ export function PartyAttendings({ partyId }: { partyId?: string }) {
                       <Badge>
                         {party.roomsAvailable -
                           attendingsOnDate.filter(
-                            (att) => att.room === "GRANTED"
+                            (att) => att.room === "GRANTED",
                           ).length}{" "}
                         / {party.roomsAvailable} rooms available
                       </Badge>
@@ -345,7 +345,7 @@ function AddUserForm({ onAdd }: { onAdd: () => void }) {
           }
         }
       }
-    `)
+    `),
   );
 
   return (
@@ -462,7 +462,7 @@ function MenuItem({
           }
         }
       }
-    `)
+    `),
   );
 
   return (

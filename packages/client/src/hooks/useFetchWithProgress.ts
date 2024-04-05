@@ -23,9 +23,9 @@ export function useFetchWithProgress() {
                     const [name, value] = header.split(": ");
                     return [name?.trim(), value?.trim()] as [string, string];
                   })
-                  .filter(([name]) => name)
+                  .filter(([name]) => name),
               ),
-            })
+            }),
           );
         };
         xhr.onerror = () => {
@@ -45,7 +45,7 @@ export function useFetchWithProgress() {
         xhr.send(init?.body as any);
       });
     },
-    []
+    [],
   );
 
   return [progress, fetch] as const;

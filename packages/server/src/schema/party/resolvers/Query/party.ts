@@ -4,7 +4,7 @@ import type { QueryResolvers } from "./../../../types.generated";
 export const party: NonNullable<QueryResolvers["party"]> = async (
   _parent,
   { id },
-  ctx
+  ctx,
 ) => {
   const party = await ctx.data.Party.findById(id);
 

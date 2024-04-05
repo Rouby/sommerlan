@@ -8,7 +8,7 @@ import dayjs = require("dayjs");
 export const planEvent: NonNullable<MutationResolvers["planEvent"]> = async (
   _parent,
   { input: { id, image, ...input } },
-  ctx
+  ctx,
 ) => {
   const event = id
     ? await ctx.data.Event.findById(id)
@@ -30,7 +30,7 @@ export const planEvent: NonNullable<MutationResolvers["planEvent"]> = async (
 
   ForbiddenError.from(ctx.ability).throwUnlessCan(
     id ? "update" : "create",
-    event
+    event,
   );
 
   if (id) {

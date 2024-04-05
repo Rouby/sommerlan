@@ -66,7 +66,7 @@ client.on(GatewayDispatchEvents.MessageCreate, async (message) => {
     if (!user) {
       await sendDiscordMessage(
         message.data.author.id,
-        "Ich habe keinen Account gefunden, der mit deinem Discord Account verknüpft ist."
+        "Ich habe keinen Account gefunden, der mit deinem Discord Account verknüpft ist.",
       );
     } else {
       const magicLink = await issueMagicLink(user);
@@ -74,7 +74,7 @@ client.on(GatewayDispatchEvents.MessageCreate, async (message) => {
       await sendDiscordMessage(
         message.data.author.id,
         `Du kannst dich mit folgendem Link anmelden ${magicLink}. Der Link ist 15 Minuten gültig.`,
-        { ttl: "15m" }
+        { ttl: "15m" },
       );
     }
   }
@@ -94,7 +94,7 @@ export const discord =
 export async function sendDiscordMessage(
   userId: string,
   content: string,
-  { ttl }: { ttl?: `${number}m` } = {}
+  { ttl }: { ttl?: `${number}m` } = {},
 ) {
   const channel = await client.api.users.createDM(userId);
 
@@ -126,15 +126,15 @@ scheduleTask("@every 5m", async () => {
   const discordUsersRegisteredWithoutRole = discordUsers.filter(
     (member) =>
       users.some((user) => user.discordUserId === member.user?.id) &&
-      !member.roles.includes(roleId)
+      !member.roles.includes(roleId),
   );
   logger.info(
     {
       users: discordUsersRegisteredWithoutRole.map(
-        (member) => member.user?.username
+        (member) => member.user?.username,
       ),
     },
-    "Adding role to registered discord users without role"
+    "Adding role to registered discord users without role",
   );
 
   for (const member of discordUsersRegisteredWithoutRole) {
@@ -143,17 +143,17 @@ scheduleTask("@every 5m", async () => {
     if (getEnv() === "production") {
       logger.info(
         { user: member.user.username, roleId },
-        "Adding role to user"
+        "Adding role to user",
       );
       try {
         await client.api.guilds.addRoleToMember(
           guildId,
           member.user.id,
-          roleId
+          roleId,
         );
         await sendDiscordMessage(
           member.user.id,
-          "Yay, willkommen als vollwertiges Mitglied (aka auf der SommerLAN Seite angemeldet)."
+          "Yay, willkommen als vollwertiges Mitglied (aka auf der SommerLAN Seite angemeldet).",
         );
       } catch (err) {
         logger.error(err, "Error adding role to user");
@@ -161,7 +161,7 @@ scheduleTask("@every 5m", async () => {
     } else if (!addedRoleCacheForNonProd.has(member.user.id)) {
       logger.info(
         { user: member.user.username, roleId },
-        "Adding role to user"
+        "Adding role to user",
       );
       addedRoleCacheForNonProd.add(member.user.id);
     }

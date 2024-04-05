@@ -85,16 +85,16 @@ export function NextPartyGamesList({ partyId }: { partyId?: string }) {
 
   const dates = party
     ? Array.from({ length: endDate.diff(startDate, "days") + 1 }, (_, i) =>
-        startDate.add(i, "day")
+        startDate.add(i, "day"),
       )
     : [dayjs(0), dayjs(1), dayjs(2)];
 
   const myAttending = party?.attendings.find(
-    (attending) => attending.user.id === user.id
+    (attending) => attending.user.id === user.id,
   );
 
   const gamesPlayedByMe = myAttending?.gamesPlayed.map(
-    (game) => game.id as string
+    (game) => game.id as string,
   );
 
   const [, addGameToParty] = useMutation(
@@ -116,7 +116,7 @@ export function NextPartyGamesList({ partyId }: { partyId?: string }) {
           }
         }
       }
-    `)
+    `),
   );
 
   const [, setGamesPlayed] = useMutation(
@@ -131,7 +131,7 @@ export function NextPartyGamesList({ partyId }: { partyId?: string }) {
           }
         }
       }
-    `)
+    `),
   );
 
   return (
@@ -196,14 +196,14 @@ export function NextPartyGamesList({ partyId }: { partyId?: string }) {
           }
 
           const attendingsOnDate = party.attendings.filter((attending) =>
-            attending.dates.includes(date.format("YYYY-MM-DD"))
+            attending.dates.includes(date.format("YYYY-MM-DD")),
           );
           const gamesOnDate = attendingsOnDate
             .flatMap((attending) =>
               attending.gamesPlayed.map((game) => ({
                 ...game,
                 player: attending.user,
-              }))
+              })),
             )
             .reduce(
               (acc, game) => {
@@ -220,7 +220,7 @@ export function NextPartyGamesList({ partyId }: { partyId?: string }) {
                 name: string;
                 image: string;
                 players: { id: string; displayName: string; avatar: string }[];
-              }[]
+              }[],
             );
           return (
             <Fragment key={date.toString()}>
@@ -279,7 +279,7 @@ export function NextPartyGamesList({ partyId }: { partyId?: string }) {
 
 const GameItem = forwardRef(function GameItem(
   { image, label, ...props }: { image: string; label: string },
-  ref: React.Ref<HTMLDivElement>
+  ref: React.Ref<HTMLDivElement>,
 ) {
   return (
     <div ref={ref} {...props}>

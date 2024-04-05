@@ -7,7 +7,7 @@ export const requestRoom: NonNullable<
 > = async (_parent, { partyId }, ctx) => {
   const attending = await ctx.data.Attending.findByPartyIdAndUserId(
     partyId,
-    ctx.jwt.user.id
+    ctx.jwt.user.id,
   );
 
   if (!attending) {

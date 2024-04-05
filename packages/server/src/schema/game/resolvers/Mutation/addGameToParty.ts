@@ -7,7 +7,7 @@ export const addGameToParty: NonNullable<
 > = async (_parent, { name, partyId }, ctx) => {
   const attending = await ctx.data.Attending.findByPartyIdAndUserId(
     partyId,
-    ctx.jwt.user.id
+    ctx.jwt.user.id,
   );
 
   if (!attending) {

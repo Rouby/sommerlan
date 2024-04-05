@@ -14,7 +14,7 @@ export function usePasskeyCreateFlow() {
       mutation generateRegistrationOptions($userId: String!) {
         generatePasskeyRegisterOptions(userId: $userId)
       }
-    `)
+    `),
   );
 
   const [, registerPasskey] = useMutation(
@@ -32,7 +32,7 @@ export function usePasskeyCreateFlow() {
           }
         }
       }
-    `)
+    `),
   );
 
   return useNormalMutation({
@@ -44,7 +44,7 @@ export function usePasskeyCreateFlow() {
       });
 
       const response = await startRegistration(
-        data0?.generatePasskeyRegisterOptions
+        data0?.generatePasskeyRegisterOptions,
       );
 
       const { data: data1 } = await registerPasskey({

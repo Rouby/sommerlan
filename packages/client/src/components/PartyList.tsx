@@ -140,7 +140,7 @@ export function PartyList() {
                   {dateFormat
                     .formatToParts(new Date(party.startDate))
                     .filter(
-                      (part) => part.type === "month" || part.type === "year"
+                      (part) => part.type === "month" || part.type === "year",
                     )
                     .map((part) => part.value)
                     .join(" ")}
@@ -273,7 +273,7 @@ function PartyForm({
           roomsAvailable
         }
       }
-    `)
+    `),
   );
 
   return (

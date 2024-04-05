@@ -84,7 +84,7 @@ export function createServer(opts: ServerOptions) {
               api: fakeApis.get(context.req.headers["x-fake-api"] as string),
               dev,
             },
-            "Received request"
+            "Received request",
           );
 
           const data: Context["data"] = dev
@@ -159,13 +159,13 @@ export function createServer(opts: ServerOptions) {
         html
           .replace(
             "window.$__new_relic_loader_config",
-            process.env.NEW_RELIC_LOADER_CONFIG ?? "false"
+            process.env.NEW_RELIC_LOADER_CONFIG ?? "false",
           )
           .replace(
             "window.$__new_relic_info",
-            process.env.NEW_RELIC_INFO ?? "false"
-          )
-      )
+            process.env.NEW_RELIC_INFO ?? "false",
+          ),
+      ),
     );
 
     server.register(staticfs, {
@@ -210,7 +210,7 @@ export function createServer(opts: ServerOptions) {
           {
             fakeApi: req.headers["x-fake-api"],
           },
-          "Seeding object"
+          "Seeding object",
         );
 
         const api =

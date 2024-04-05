@@ -14,7 +14,7 @@ export const removeAttendance: NonNullable<
   const attending =
     (await ctx.data.Attending.findByPartyIdAndUserId(
       partyId,
-      userId ?? ctx.jwt.user.id
+      userId ?? ctx.jwt.user.id,
     )) ??
     new ctx.data.Attending({ partyId, userId: userId ?? ctx.jwt.user.id });
 

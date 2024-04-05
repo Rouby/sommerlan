@@ -22,7 +22,7 @@ export function validateToken(token: string) {
 
 export async function validateRefreshToken(
   token: string,
-  UserModel: typeof User
+  UserModel: typeof User,
 ) {
   let decodedToken: JwtPayload | null = null;
 

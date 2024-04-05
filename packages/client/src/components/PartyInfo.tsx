@@ -81,7 +81,7 @@ export function PartyInfo({ id }: { id: string }) {
           }
         }
       }
-    `)
+    `),
   );
 
   if (fetching) {
@@ -103,7 +103,7 @@ export function PartyInfo({ id }: { id: string }) {
 
   const dates = Array.from(
     { length: endDate.diff(startDate, "days") + 1 },
-    (_, i) => startDate.add(i, "day")
+    (_, i) => startDate.add(i, "day"),
   );
 
   return (
@@ -122,7 +122,7 @@ export function PartyInfo({ id }: { id: string }) {
           <Checkbox.Group
             defaultValue={
               party.attendings.find(
-                (attending) => attending.user.id === user.id
+                (attending) => attending.user.id === user.id,
               )?.dates
             }
             onChange={(dates) => {
@@ -184,7 +184,7 @@ function ImageUpload({ partyId }: { partyId: string }) {
         file: FileWithPath;
         upload: (partyId: string) => Promise<void>;
       }>
-    >
+    >,
   );
 
   const { mutate: uploadAll, isLoading } = useNormalMutation(async () => {
@@ -192,7 +192,7 @@ function ImageUpload({ partyId }: { partyId: string }) {
       Object.values(fileRefs.current).map(async (ref) => {
         const { upload } = ref.current ?? {};
         await upload?.(partyId).then(() => {});
-      })
+      }),
     );
     // fileRefs.current = {};
     // setFiles([]);
@@ -206,8 +206,8 @@ function ImageUpload({ partyId }: { partyId: string }) {
           setFiles((previous) =>
             [...previous, ...files].filter(
               (file, index, self) =>
-                self.findIndex((f) => f.path === file.path) === index
-            )
+                self.findIndex((f) => f.path === file.path) === index,
+            ),
           )
         }
         sx={{ height: 100, display: "grid", alignItems: "center" }}
@@ -252,7 +252,7 @@ const ImageUploadProgress = forwardRef(function ImageUploadProgress(
     file: FileWithPath;
     onDelete: () => void;
   },
-  ref
+  ref,
 ) {
   const [{ fetching, data, error }, addPicture] = useMutation(
     graphql(`
@@ -279,7 +279,7 @@ const ImageUploadProgress = forwardRef(function ImageUploadProgress(
           }
         }
       }
-    `)
+    `),
   );
   const [progress, fetch] = useFetchWithProgress();
 
@@ -288,7 +288,7 @@ const ImageUploadProgress = forwardRef(function ImageUploadProgress(
     upload: (partyId: string) =>
       addPicture(
         { input: { name: file.path ?? "", partyId, file } },
-        { fetch }
+        { fetch },
       ),
   }));
 
@@ -319,8 +319,8 @@ const ImageUploadProgress = forwardRef(function ImageUploadProgress(
           progress === 1
             ? [{ value: 100, color: "teal" }]
             : error
-            ? [{ value: progress * 100, color: "red" }]
-            : [{ value: progress * 100, color: "blue" }]
+              ? [{ value: progress * 100, color: "red" }]
+              : [{ value: progress * 100, color: "blue" }]
         }
         label={
           progress === 1 ? (

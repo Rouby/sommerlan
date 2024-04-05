@@ -19,7 +19,7 @@ export const mail =
               } else {
                 resolve();
               }
-            })
+            }),
           ),
         destroy: async () => {
           transporter.close();

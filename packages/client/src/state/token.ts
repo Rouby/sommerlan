@@ -7,13 +7,13 @@ export const tokenAtom = atomWithStorage<string | null>(
   "token",
   null,
   undefined,
-  { unstable_getOnInit: true }
+  { unstable_getOnInit: true },
 );
 export const refreshTokenAtom = atomWithStorage<string | null>(
   "refreshToken",
   null,
   undefined,
-  { unstable_getOnInit: true }
+  { unstable_getOnInit: true },
 );
 
 export const jwtPayloadAtom = atom((get) => {

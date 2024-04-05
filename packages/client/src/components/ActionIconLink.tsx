@@ -4,7 +4,7 @@ import { ElementType, RefAttributes, forwardRef } from "react";
 
 export const ActionIconLink = forwardRef(function ActionIconLink(
   props: any,
-  ref
+  ref,
 ) {
   return <ActionIcon ref={ref} component={Link} {...props} />;
 }) as unknown as ElementType<

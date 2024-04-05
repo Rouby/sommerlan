@@ -4,7 +4,7 @@ import type { QueryResolvers } from "./../../../types.generated";
 export const games: NonNullable<QueryResolvers["games"]> = async (
   _parent,
   _arg,
-  ctx
+  ctx,
 ) => {
   ForbiddenError.from(ctx.ability).throwUnlessCan("read", "Game");
 

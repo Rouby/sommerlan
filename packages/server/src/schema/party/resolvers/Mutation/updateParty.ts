@@ -23,7 +23,7 @@ export const updateParty: NonNullable<
 
   ForbiddenError.from(ctx.ability).throwUnlessCan(
     id ? "update" : "create",
-    party
+    party,
   );
 
   if (id) {

@@ -27,7 +27,7 @@ export const registerPasskey: NonNullable<
   try {
     logger.trace(
       { expectedChallenge, issuedChallenges },
-      "Received registration request"
+      "Received registration request",
     );
 
     const verification = await verifyRegistrationResponse({

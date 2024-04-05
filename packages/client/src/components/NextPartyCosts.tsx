@@ -45,7 +45,7 @@ export function NextPartyCosts() {
 
   const daysWithAttending = party.attendings.reduce(
     (acc, attending) => acc + Math.max(attending.dates.length - 1, 0),
-    0
+    0,
   );
 
   const donationsForRent = party.donations
@@ -57,7 +57,7 @@ export function NextPartyCosts() {
   const myDaysAttending = Math.max(
     0,
     (party.attendings.find((attending) => attending.user.id === user.id)?.dates
-      .length ?? 0) - 1
+      .length ?? 0) - 1,
   );
 
   return (

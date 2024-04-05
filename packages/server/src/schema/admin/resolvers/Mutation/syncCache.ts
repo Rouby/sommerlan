@@ -4,7 +4,7 @@ import type { MutationResolvers } from "./../../../types.generated";
 export const syncCache: NonNullable<MutationResolvers["syncCache"]> = async (
   _parent,
   { clear },
-  ctx
+  ctx,
 ) => {
   ForbiddenError.from(ctx.ability).throwUnlessCan("update", "Cache");
 

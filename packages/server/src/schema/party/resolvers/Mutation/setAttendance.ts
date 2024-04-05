@@ -14,14 +14,14 @@ export const setAttendance: NonNullable<
   const attending =
     (await ctx.data.Attending.findByPartyIdAndUserId(
       partyId,
-      userId ?? ctx.jwt.user.id
+      userId ?? ctx.jwt.user.id,
     )) ??
     new ctx.data.Attending({ partyId, userId: userId ?? ctx.jwt.user.id });
 
   ForbiddenError.from(ctx.ability).throwUnlessCan("update", attending, "dates");
 
   attending.dates = dates.map((date) =>
-    typeof date === "string" ? date : date.toISOString().substring(0, 10)
+    typeof date === "string" ? date : date.toISOString().substring(0, 10),
   );
 
   await attending.save();

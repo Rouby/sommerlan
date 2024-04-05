@@ -21,7 +21,7 @@ export function Authenticate() {
           refreshToken
         }
       }
-    `)
+    `),
   );
 
   const requestUnderway = useRef(false);

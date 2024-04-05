@@ -29,8 +29,7 @@ test("should plan an event", async ({ page, context, api }) => {
   await page.getByText("Event erstellen").click();
 
   await expect(page.getByTestId("event")).toContainText("Ein Event");
-  await expect(page.getByTestId("event").locator("img")).toHaveAttribute(
-    "src",
-    /^http:\/\/localhost.*\.png$/
-  );
+  await expect(
+    page.getByTestId("event").getByRole("figure").getByRole("img"),
+  ).toHaveAttribute("src", /^http:\/\/localhost.*\.png$/);
 });

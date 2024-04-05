@@ -7,7 +7,7 @@ export const setGamesPlayed: NonNullable<
 > = async (_parent, { partyId, gameIds }, ctx) => {
   const attending = await ctx.data.Attending.findByPartyIdAndUserId(
     partyId,
-    ctx.jwt.user.id
+    ctx.jwt.user.id,
   );
 
   if (!attending) {
@@ -17,7 +17,7 @@ export const setGamesPlayed: NonNullable<
   ForbiddenError.from(ctx.ability).throwUnlessCan("update", attending);
 
   const games = await ctx.data.Game.filter(
-    (game) => partyId in game.partyPeople || gameIds.includes(game.id)
+    (game) => partyId in game.partyPeople || gameIds.includes(game.id),
   );
 
   for (const game of games) {
@@ -28,7 +28,7 @@ export const setGamesPlayed: NonNullable<
     }
     if (!gamePlayed && game.partyPeople[partyId]?.includes(ctx.jwt.user.id)) {
       game.partyPeople[partyId] = game.partyPeople[partyId]?.filter(
-        (id) => id !== ctx.jwt.user.id
+        (id) => id !== ctx.jwt.user.id,
       );
     }
 

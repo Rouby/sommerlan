@@ -14,7 +14,7 @@ export function usePasskeyAuthFlow() {
       mutation generateLoginOptions($userId: String) {
         generatePasskeyLoginOptions(userId: $userId)
       }
-    `)
+    `),
   );
   const [, loginPasskey] = useMutation(
     graphql(`
@@ -25,7 +25,7 @@ export function usePasskeyAuthFlow() {
           credentialID
         }
       }
-    `)
+    `),
   );
 
   return useQuery<boolean, CombinedError>({
@@ -38,7 +38,7 @@ export function usePasskeyAuthFlow() {
       }
 
       const response = await startAuthentication(
-        data0?.generatePasskeyLoginOptions
+        data0?.generatePasskeyLoginOptions,
       );
 
       const { data: data1, error: error1 } = await loginPasskey({ response });
@@ -51,7 +51,7 @@ export function usePasskeyAuthFlow() {
       setRefreshToken(data1.loginPasskey.refreshToken);
       localStorage.setItem(
         "credentialID",
-        data1.loginPasskey.credentialID.join(",")
+        data1.loginPasskey.credentialID.join(","),
       );
 
       return true;

@@ -41,7 +41,7 @@ export const test = base.extend<{
                 localStorage.setItem("token", JSON.stringify(token));
                 localStorage.setItem(
                   "refreshToken",
-                  JSON.stringify(refreshToken)
+                  JSON.stringify(refreshToken),
                 );
               }, data);
             }),

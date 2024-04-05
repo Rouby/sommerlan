@@ -24,15 +24,15 @@ export type AppAbility = MongoAbility<
       | "Picture"
       | Donation
       | "Donation"
-    )
+    ),
   ]
 >;
 
 export async function createAbility(
-  user?: { id: User["id"]; roles: User["roles"] } | null
+  user?: { id: User["id"]; roles: User["roles"] } | null,
 ) {
   const { can, cannot, build } = new AbilityBuilder<AppAbility>(
-    createMongoAbility
+    createMongoAbility,
   );
 
   if (user) {
@@ -61,7 +61,7 @@ export async function createAbility(
     }
 
     cannot("participate", "Event", { organizerId: user.id }).because(
-      "Als Organisator kannst du deine Teilnahme nicht ändern."
+      "Als Organisator kannst du deine Teilnahme nicht ändern.",
     );
   }
 

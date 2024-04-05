@@ -43,7 +43,7 @@ test("should login with one-time-link", async ({ page, api }) => {
   await page.getByText("Link zuschicken", { exact: true }).click();
 
   await expect(
-    page.getByText("eine Email mit einem Login-Link versandt")
+    page.getByText("eine Email mit einem Login-Link versandt"),
   ).toBeVisible();
 
   await api.getMails().then((mails) => {

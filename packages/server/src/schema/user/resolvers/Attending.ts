@@ -20,7 +20,7 @@ export const Attending: AttendingResolvers = {
   },
   gamesPlayed: (parent, _, ctx) => {
     return ctx.data.Game.filter(
-      (game) => !!game.partyPeople[parent.partyId]?.includes(parent.userId)
+      (game) => !!game.partyPeople[parent.partyId]?.includes(parent.userId),
     );
   },
 };

@@ -14,7 +14,7 @@ export async function storeFile(file: File) {
 
   await writeFile(
     join(uploadDir, uploadName),
-    Buffer.from(await file.arrayBuffer())
+    Buffer.from(await file.arrayBuffer()),
   );
 
   return {

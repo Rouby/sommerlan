@@ -5,7 +5,7 @@ import type { MutationResolvers } from "./../../../types.generated";
 export const grantRoom: NonNullable<MutationResolvers["grantRoom"]> = async (
   _parent,
   { attendingId },
-  ctx
+  ctx,
 ) => {
   const attending = await ctx.data.Attending.findById(attendingId);
 

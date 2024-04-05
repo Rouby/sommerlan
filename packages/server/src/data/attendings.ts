@@ -31,7 +31,7 @@ export class Attending extends Base {
   static async findByPartyIdAndUserId(partyId: string, userId: string) {
     return this.find(
       (attending) =>
-        attending.partyId === partyId && attending.userId === userId
+        attending.partyId === partyId && attending.userId === userId,
     );
   }
 }

@@ -1,3 +1,5 @@
+/// <reference types="vite-plugin-svgr/client" />
+
 import { MantineProvider } from "@mantine/core";
 import { DatesProvider } from "@mantine/dates";
 import { Notifications, notifications } from "@mantine/notifications";
@@ -39,7 +41,7 @@ dayjs.extend(relativeTime);
 dayjs.extend(weekday);
 
 locales[navigator.language.split("-")[0]]?.().then(() =>
-  dayjs.locale(navigator.language)
+  dayjs.locale(navigator.language),
 );
 
 const queryClient = new QueryClient();
@@ -125,12 +127,12 @@ function Urql({ children }: { children: React.ReactNode }) {
                   ) {
                     const devices = cache.resolve(
                       { __typename: "User", id: `${args.userId}` },
-                      "devices"
+                      "devices",
                     ) as unknown[];
                     cache.link(
                       { __typename: "User", id: `${args.userId}` },
                       "devices",
-                      [...devices, result.registerPasskey.device]
+                      [...devices, result.registerPasskey.device],
                     );
                   }
                 },
@@ -144,14 +146,14 @@ function Urql({ children }: { children: React.ReactNode }) {
                   ) {
                     const events = cache.resolve(
                       { __typename: "Party", id: args.input.partyId },
-                      "events"
+                      "events",
                     );
                     if (Array.isArray(events)) {
                       events.push(result.planEvent as Data);
                       cache.link(
                         { __typename: "Party", id: args.input.partyId },
                         "events",
-                        events as Link<Entity>
+                        events as Link<Entity>,
                       );
                     }
                   }
@@ -179,14 +181,14 @@ function Urql({ children }: { children: React.ReactNode }) {
                   ) {
                     const pictures = cache.resolve(
                       { __typename: "Party", id: result.addPicture.party.id },
-                      "pictures"
+                      "pictures",
                     );
                     if (Array.isArray(pictures)) {
                       pictures.push(result.addPicture as Data);
                       cache.link(
                         { __typename: "Party", id: result.addPicture.party.id },
                         "pictures",
-                        pictures as Link<Entity>
+                        pictures as Link<Entity>,
                       );
                     }
                   }
@@ -200,14 +202,14 @@ function Urql({ children }: { children: React.ReactNode }) {
                   ) {
                     const donations = cache.resolve(
                       { __typename: "Party", id: result.donate.party.id },
-                      "donations"
+                      "donations",
                     );
                     if (Array.isArray(donations)) {
                       donations.push(result.donate as Data);
                       cache.link(
                         { __typename: "Party", id: result.donate.party.id },
                         "donations",
-                        donations as Link<Entity>
+                        donations as Link<Entity>,
                       );
                     }
                   }
@@ -224,7 +226,7 @@ function Urql({ children }: { children: React.ReactNode }) {
                         __typename: "Party",
                         id: result.rescindDonation.party.id,
                       },
-                      "donations"
+                      "donations",
                     );
                     if (Array.isArray(donations)) {
                       console.log();
@@ -237,8 +239,8 @@ function Urql({ children }: { children: React.ReactNode }) {
                         donations.filter(
                           (donation) =>
                             donation.split(":")[1] !==
-                            (result.rescindDonation as Data).id
-                        ) as Link<Entity>
+                            (result.rescindDonation as Data).id,
+                        ) as Link<Entity>,
                       );
                     }
                   }
@@ -311,7 +313,7 @@ function Urql({ children }: { children: React.ReactNode }) {
                         }
                       }
                     `),
-                    { refreshToken: authState.current.refreshToken }
+                    { refreshToken: authState.current.refreshToken },
                   );
 
                   if (result.data?.refreshLogin) {
@@ -389,7 +391,7 @@ function Urql({ children }: { children: React.ReactNode }) {
         ],
         requestPolicy: "cache-and-network",
       }),
-    [user?.id]
+    [user?.id],
   );
 
   return <UrqlProvider value={gqlClient}>{children}</UrqlProvider>;

@@ -11,7 +11,7 @@ export function UserAvatar({
 }) {
   const theme = useMantineTheme();
   const availableColors = Object.keys(
-    theme.colors
+    theme.colors,
   ) as (keyof typeof theme.colors)[];
   const initials = user.displayName.split(" ").map((name) => name[0]);
   const color =

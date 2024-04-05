@@ -6,7 +6,7 @@ import type { MutationResolvers } from "./../../../types.generated";
 export const register: NonNullable<MutationResolvers["register"]> = async (
   _parent,
   { userName, email, password },
-  ctx
+  ctx,
 ) => {
   if (await ctx.data.User.findByEmail(email)) {
     throw createGraphQLError("User already exists");

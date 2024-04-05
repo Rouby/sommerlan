@@ -6,7 +6,7 @@ import type { MutationResolvers } from "./../../../types.generated";
 export const addPicture: NonNullable<MutationResolvers["addPicture"]> = async (
   _parent,
   { input: { partyId, name, file, tags } },
-  ctx
+  ctx,
 ) => {
   ForbiddenError.from(ctx.ability).throwUnlessCan("create", "Picture");
 

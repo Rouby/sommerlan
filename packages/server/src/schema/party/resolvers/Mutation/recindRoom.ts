@@ -5,11 +5,11 @@ import type { MutationResolvers } from "./../../../types.generated";
 export const recindRoom: NonNullable<MutationResolvers["recindRoom"]> = async (
   _parent,
   { partyId },
-  ctx
+  ctx,
 ) => {
   const attending = await ctx.data.Attending.findByPartyIdAndUserId(
     partyId,
-    ctx.jwt.user.id
+    ctx.jwt.user.id,
   );
 
   if (!attending) {

@@ -32,7 +32,7 @@ export abstract class Base {
       thisClass,
       this.sheetName,
       this.id,
-      Object.fromEntries(Object.entries(this))
+      Object.fromEntries(Object.entries(this)),
     );
 
     return this;
@@ -49,35 +49,35 @@ export abstract class Base {
 
   static async filter<T extends Base>(
     this: StaticThis<T>,
-    predicate: (v: T) => boolean
+    predicate: (v: T) => boolean,
   ): Promise<T[]> {
     return (await this.allRows(this)).filter(predicate);
   }
 
   static async filterByIds<T extends Base>(
     this: StaticThis<T>,
-    ids: string[]
+    ids: string[],
   ): Promise<T[]> {
     return (await this.allRows(this)).filter((row) => ids.includes(row.id));
   }
 
   static async find<T extends Base>(
     this: StaticThis<T>,
-    predicate: (v: T) => boolean
+    predicate: (v: T) => boolean,
   ): Promise<T | null> {
     return (await this.allRows(this)).find(predicate) ?? null;
   }
 
   static async findById<T extends Base>(
     this: StaticThis<T>,
-    id: string
+    id: string,
   ): Promise<T | null> {
     return (await this.allRows(this)).find((d) => d.id === id) ?? null;
   }
 
   static async findByIdOrThrow<T extends Base>(
     this: StaticThis<T>,
-    id: string
+    id: string,
   ): Promise<T> {
     const val = (await this.allRows(this)).find((d) => d.id === id);
     if (!val) throw createGraphQLError(`No ${this.name} found with id ${id}`);
@@ -94,10 +94,10 @@ export abstract class Base {
     return {
       ...Object.fromEntries(
         Object.entries(
-          Object.getOwnPropertyDescriptors(Object.getPrototypeOf(this))
+          Object.getOwnPropertyDescriptors(Object.getPrototypeOf(this)),
         )
           .filter(([key, value]) => !(key in { ...this }) && !value.writable)
-          .map(([key, value]) => [key, value.get?.call(this)])
+          .map(([key, value]) => [key, value.get?.call(this)]),
       ),
       ...this,
     };
