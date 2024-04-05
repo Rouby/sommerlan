@@ -98,7 +98,9 @@ jobs:
           cache: yarn
 
       - name: 📥 Install deps
-        run: yarn install --immutable --immutable-cache
+        run: |
+          yarn install --immutable --immutable-cache
+          yarn workspace @sommerlan-app/integration playwright install --with-deps
 
       - name: 🔨 Build
         run: yarn build
