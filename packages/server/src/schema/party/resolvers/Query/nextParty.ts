@@ -1,5 +1,4 @@
 import { ForbiddenError } from "@casl/ability";
-import { Party } from "../../../../data";
 import type { QueryResolvers } from "./../../../types.generated";
 // @ts-ignore
 import dayjs = require("dayjs");
@@ -9,7 +8,7 @@ export const nextParty: NonNullable<QueryResolvers["nextParty"]> = async (
   _arg,
   ctx
 ) => {
-  const party = await Party.findLatest();
+  const party = await ctx.data.Party.findLatest();
 
   if (!party) return null;
 

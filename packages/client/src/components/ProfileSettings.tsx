@@ -117,7 +117,7 @@ export function ProfileSettings() {
 
           <Dropzone
             name="avatarImage"
-            data-cy="dropzone"
+            data-testid="dropzone"
             accept={IMAGE_MIME_TYPE}
             onDrop={(files) => {
               setAvtarImage(files[0]);

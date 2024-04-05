@@ -1,12 +1,11 @@
 import { ForbiddenError } from "@casl/ability";
 import { createGraphQLError } from "graphql-yoga";
-import { Attending, Game } from "../../../../data";
 import type { MutationResolvers } from "./../../../types.generated";
 
 export const addGameToParty: NonNullable<
   MutationResolvers["addGameToParty"]
 > = async (_parent, { name, partyId }, ctx) => {
-  const attending = await Attending.findByPartyIdAndUserId(
+  const attending = await ctx.data.Attending.findByPartyIdAndUserId(
     partyId,
     ctx.jwt.user.id
   );
@@ -15,7 +14,7 @@ export const addGameToParty: NonNullable<
     throw createGraphQLError("You are not attending this party");
   }
 
-  const game = new Game({
+  const game = new ctx.data.Game({
     name,
     partyPeople: { [partyId]: [ctx.jwt.user.id] },
   });

@@ -1,4 +1,3 @@
-import { Party, User } from "../../../data";
 import type { DonationResolvers } from "./../../types.generated";
 export const Donation: DonationResolvers = {
   /* Implement Donation resolver logic here */
@@ -9,9 +8,9 @@ export const Donation: DonationResolvers = {
     if (parent.incognito && ctx.jwt.user.id !== parent.userId) {
       return null;
     }
-    return User.findById(parent.userId);
+    return ctx.data.User.findById(parent.userId);
   },
-  party: (parent) => {
-    return Party.findByIdOrThrow(parent.partyId);
-  }
+  party: (parent, _, ctx) => {
+    return ctx.data.Party.findByIdOrThrow(parent.partyId);
+  },
 };

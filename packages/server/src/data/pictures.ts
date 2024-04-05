@@ -34,7 +34,7 @@ export class Picture extends Base {
   }
 
   static async filterByPartyId(partyId: string) {
-    return Picture.filter(
+    return this.filter(
       (picture) => picture.partyId === partyId && existsSync(picture.pathname)
     );
   }

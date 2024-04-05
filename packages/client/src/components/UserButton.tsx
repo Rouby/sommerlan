@@ -17,7 +17,7 @@ export function UserButton() {
     <>
       <Menu shadow="md" width={200}>
         <Menu.Target>
-          <UnstyledButton data-cy="user button">
+          <UnstyledButton data-testid="user button">
             <Group noWrap>
               <Avatar src={user.avatar} radius="xl" />
               {user.displayName}

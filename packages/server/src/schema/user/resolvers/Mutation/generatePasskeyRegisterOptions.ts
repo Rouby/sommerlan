@@ -1,14 +1,13 @@
 import { generateRegistrationOptions } from "@simplewebauthn/server";
 import { createGraphQLError } from "graphql-yoga";
 import { issuedChallenges } from "../../../../auth";
-import { User } from "../../../../data";
 import { rpID } from "../../../../env";
 import type { MutationResolvers } from "./../../../types.generated";
 
 export const generatePasskeyRegisterOptions: NonNullable<
   MutationResolvers["generatePasskeyRegisterOptions"]
 > = async (_parent, { userId }, ctx) => {
-  const user = await User.findById(userId);
+  const user = await ctx.data.User.findById(userId);
 
   if (!user) {
     throw createGraphQLError("User not found");

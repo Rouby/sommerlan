@@ -1,12 +1,11 @@
 import { ForbiddenError } from "@casl/ability";
 import { createGraphQLError } from "graphql-yoga";
-import { Event } from "../../../../data";
 import type { MutationResolvers } from "./../../../types.generated";
 
 export const participateInEvent: NonNullable<
   MutationResolvers["participateInEvent"]
 > = async (_parent, { id }, ctx) => {
-  const event = await Event.findById(id);
+  const event = await ctx.data.Event.findById(id);
 
   if (!event) {
     throw createGraphQLError("Event not found");

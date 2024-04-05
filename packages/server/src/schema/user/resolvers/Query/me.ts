@@ -1,4 +1,3 @@
-import { User } from "../../../../data";
 import type { QueryResolvers } from "./../../../types.generated";
 export const me: NonNullable<QueryResolvers["me"]> = async (
   _parent,
@@ -7,5 +6,5 @@ export const me: NonNullable<QueryResolvers["me"]> = async (
 ) => {
   if (!ctx.jwt) return null;
 
-  return User.findById(ctx.jwt.user.id);
+  return ctx.data.User.findById(ctx.jwt.user.id);
 };

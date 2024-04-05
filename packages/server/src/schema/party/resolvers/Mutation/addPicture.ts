@@ -1,6 +1,5 @@
 import { ForbiddenError } from "@casl/ability";
 import { createGraphQLError } from "graphql-yoga";
-import { Party, Picture } from "../../../../data";
 import { storeFile } from "../../../../storeFile";
 import type { MutationResolvers } from "./../../../types.generated";
 
@@ -11,7 +10,7 @@ export const addPicture: NonNullable<MutationResolvers["addPicture"]> = async (
 ) => {
   ForbiddenError.from(ctx.ability).throwUnlessCan("create", "Picture");
 
-  const party = await Party.findById(partyId);
+  const party = await ctx.data.Party.findById(partyId);
 
   if (!party) {
     throw createGraphQLError("Party not found");
@@ -19,7 +18,7 @@ export const addPicture: NonNullable<MutationResolvers["addPicture"]> = async (
 
   const { id, uploadName } = await storeFile(file);
 
-  const picture = new Picture({
+  const picture = new ctx.data.Picture({
     id,
     name,
     uploadName,

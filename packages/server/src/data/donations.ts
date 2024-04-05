@@ -27,6 +27,6 @@ export class Donation extends Base {
   }
 
   static async filterByPartyId(partyId: string) {
-    return Donation.filter((donation) => donation.partyId === partyId);
+    return this.filter((donation) => donation.partyId === partyId);
   }
 }

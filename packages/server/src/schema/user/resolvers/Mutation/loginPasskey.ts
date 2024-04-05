@@ -2,7 +2,6 @@ import { verifyAuthenticationResponse } from "@simplewebauthn/server";
 import base64url from "base64url";
 import { createGraphQLError } from "graphql-yoga";
 import { issuedChallenges } from "../../../../auth";
-import { User } from "../../../../data";
 import { expectedOrigin, rpID } from "../../../../env";
 import { signRefreshToken, signToken } from "../../../../signToken";
 import type { MutationResolvers } from "./../../../types.generated";
@@ -11,7 +10,7 @@ export const loginPasskey: NonNullable<
   MutationResolvers["loginPasskey"]
 > = async (_parent, { response }, ctx) => {
   const credId = Array.from(base64url.toBuffer(response.rawId)).join(",");
-  const user = await User.find((user) =>
+  const user = await ctx.data.User.find((user) =>
     user.devices.some((dev) => dev.credentialID.join(",") === credId)
   );
   const authenticator = user?.devices.find(

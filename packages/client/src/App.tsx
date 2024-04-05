@@ -78,6 +78,13 @@ function Urql({ children }: { children: React.ReactNode }) {
     () =>
       new Client({
         url: "/graphql",
+        fetchOptions: () => {
+          return {
+            headers: {
+              "x-fake-api": localStorage.getItem("transactionKey") ?? "",
+            },
+          };
+        },
         exchanges: [
           devtoolsExchange,
           cacheExchange({

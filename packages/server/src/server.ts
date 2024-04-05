@@ -5,6 +5,7 @@ import cors from "@fastify/cors";
 import multipart from "@fastify/multipart";
 import staticfs from "@fastify/static";
 import { useJWT } from "@graphql-yoga/plugin-jwt";
+import { randomUUID } from "crypto";
 import fastify from "fastify";
 import { readFile, writeFile } from "fs/promises";
 import { GraphQLError } from "graphql";
@@ -16,15 +17,17 @@ import {
   maskError,
 } from "graphql-yoga";
 import { join } from "path";
-import { AppAbility, createAbility } from "./ability";
-import { User, syncCache } from "./data";
-import { fakeGoogleSheetApi } from "./data/$api";
+import { createAbility } from "./ability";
+import * as dataApi from "./data";
+import { syncCache } from "./data";
+import { createFakeApi } from "./data/$api";
 import { expectedOrigin } from "./env";
 import { logger } from "./logger";
+import { Context } from "./schema/context";
 import { resolvers } from "./schema/resolvers.generated";
 import { typeDefs } from "./schema/typeDefs.generated";
 import { devMailsSent, discord, mail, scheduler } from "./services";
-import { JWTPayload, signRefreshToken, signToken } from "./signToken";
+import { signRefreshToken, signToken } from "./signToken";
 
 export interface ServerOptions {
   dev?: boolean;
@@ -39,6 +42,8 @@ export function createServer(opts: ServerOptions) {
     logger,
     disableRequestLogging: true,
   });
+
+  const fakeApis = new Map<string, ReturnType<typeof createFakeApi>>();
 
   server.register(cookie, { secret: process.env.SESSION_SECRET });
   server.register(cors, {});
@@ -70,7 +75,28 @@ export function createServer(opts: ServerOptions) {
             ability: await createAbility(context.jwt?.user),
           });
         },
-      } as Plugin<{ ability: AppAbility; jwt: JWTPayload }>,
+      } as Plugin<Context>,
+      {
+        onContextBuilding: async ({ context, extendContext }) => {
+          logger.debug(
+            {
+              fakeApi: context.req.headers["x-fake-api"],
+              api: fakeApis.get(context.req.headers["x-fake-api"] as string),
+              dev,
+            },
+            "Received request"
+          );
+
+          const data: Context["data"] = dev
+            ? fakeApis.get(context.req.headers["x-fake-api"] as string)?.data ??
+              dataApi
+            : dataApi;
+
+          extendContext({
+            data,
+          });
+        },
+      } as Plugin<Context>,
     ],
     maskedErrors: {
       maskError: (error, message, isDev) => {
@@ -158,40 +184,46 @@ export function createServer(opts: ServerOptions) {
 
   if (dev) {
     server.route({
-      url: "/seed",
+      url: "/transaction",
       method: "POST",
-      handler: async (req, reply) => {
-        const { model, data, asRow } = req.body as {
-          model: string;
-          data: any;
-          asRow: boolean;
-        };
+      handler: async (_req, reply) => {
+        const key = randomUUID();
 
-        const dbo = asRow
-          ? await fakeGoogleSheetApi.seedRow(model, data)
-          : await fakeGoogleSheetApi.seedData(model, data);
+        fakeApis.set(key, createFakeApi());
 
-        reply.send(dbo);
+        reply.send({ transactionKey: key });
 
         return reply;
       },
     });
 
     server.route({
-      url: "/find",
+      url: "/seed",
       method: "POST",
       handler: async (req, reply) => {
-        const { model, query, asRow } = req.body as {
+        const { model, data } = req.body as {
           model: string;
-          query: any;
-          asRow: boolean;
+          data: any;
         };
 
-        const dbo = asRow
-          ? await fakeGoogleSheetApi.findRow(model, query)
-          : await fakeGoogleSheetApi.findData(model, query);
+        logger.debug(
+          {
+            fakeApi: req.headers["x-fake-api"],
+          },
+          "Seeding object"
+        );
 
-        reply.send(dbo);
+        const api =
+          fakeApis.get(req.headers["x-fake-api"] as string)?.data ?? dataApi;
+
+        const Model = api[model as "User"];
+        if (Model) {
+          const dbo = await new Model(data).save();
+          reply.send(dbo);
+        } else {
+          reply.status(404);
+          reply.send({ error: "Model not found" });
+        }
 
         return reply;
       },
@@ -200,10 +232,12 @@ export function createServer(opts: ServerOptions) {
     server.route({
       url: "/clear",
       method: "POST",
-      handler: async (_req, reply) => {
-        await syncCache(true);
-        fakeGoogleSheetApi.clear();
+      handler: async (req, reply) => {
         devMailsSent.splice(0, devMailsSent.length);
+
+        if (req.headers["x-fake-api"]) {
+          fakeApis.delete(req.headers["x-fake-api"] as string);
+        }
 
         reply.send({ ok: true });
 
@@ -229,7 +263,10 @@ export function createServer(opts: ServerOptions) {
           email: string;
         };
 
-        const user = await User.findByEmail(email);
+        const api =
+          fakeApis.get(req.headers["x-fake-api"] as string)?.data ?? dataApi;
+
+        const user = await api.User.findByEmail(email);
 
         if (!user) {
           reply.status(404);

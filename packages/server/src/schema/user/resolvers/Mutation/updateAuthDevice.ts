@@ -1,12 +1,11 @@
 import { ForbiddenError } from "@casl/ability";
 import { createGraphQLError } from "graphql-yoga";
-import { User } from "../../../../data";
 import type { MutationResolvers } from "./../../../types.generated";
 
 export const updateAuthDevice: NonNullable<
   MutationResolvers["updateAuthDevice"]
 > = async (_parent, { id, name }, ctx) => {
-  const user = await User.findById(ctx.jwt.user.id);
+  const user = await ctx.data.User.findById(ctx.jwt.user.id);
 
   if (!user) {
     throw createGraphQLError("User not found");

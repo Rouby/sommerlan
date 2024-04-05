@@ -1,6 +1,5 @@
 import { ForbiddenError } from "@casl/ability";
 import { createGraphQLError } from "graphql-yoga";
-import { Event } from "../../../../data";
 import { storeFile } from "../../../../storeFile";
 import type { MutationResolvers } from "./../../../types.generated";
 // @ts-ignore
@@ -12,8 +11,8 @@ export const planEvent: NonNullable<MutationResolvers["planEvent"]> = async (
   ctx
 ) => {
   const event = id
-    ? await Event.findById(id)
-    : new Event({
+    ? await ctx.data.Event.findById(id)
+    : new ctx.data.Event({
         ...input,
         organizerId: ctx.jwt.user.id,
         participantIds: [ctx.jwt.user.id],

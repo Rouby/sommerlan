@@ -1,4 +1,3 @@
-import { Party, User } from "../../../data";
 import type { EventResolvers } from "./../../types.generated";
 
 export const Event: EventResolvers = {
@@ -8,13 +7,13 @@ export const Event: EventResolvers = {
   image: (parent) => {
     return parent.imageUrl;
   },
-  organizer: (parent) => {
-    return User.findByIdOrThrow(parent.organizerId);
+  organizer: (parent, _, ctx) => {
+    return ctx.data.User.findByIdOrThrow(parent.organizerId);
   },
-  participants: (parent) => {
-    return User.filterByIds(parent.participantIds);
+  participants: (parent, _, ctx) => {
+    return ctx.data.User.filterByIds(parent.participantIds);
   },
-  party: (parent) => {
-    return Party.findByIdOrThrow(parent.partyId);
-  }
+  party: (parent, _, ctx) => {
+    return ctx.data.Party.findByIdOrThrow(parent.partyId);
+  },
 };

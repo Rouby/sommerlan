@@ -2,7 +2,6 @@ import { ForbiddenError } from "@casl/ability";
 import { verifyRegistrationResponse } from "@simplewebauthn/server";
 import { createGraphQLError } from "graphql-yoga";
 import { issuedChallenges } from "../../../../auth";
-import { User } from "../../../../data";
 import { expectedOrigin } from "../../../../env";
 import { logger } from "../../../../logger";
 import { signToken } from "../../../../signToken";
@@ -17,7 +16,7 @@ export const registerPasskey: NonNullable<
     throw createGraphQLError("Challenge not found");
   }
 
-  const user = await User.findById(userId);
+  const user = await ctx.data.User.findById(userId);
 
   if (!user) {
     throw createGraphQLError("User not found");

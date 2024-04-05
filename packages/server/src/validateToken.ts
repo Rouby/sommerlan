@@ -1,5 +1,5 @@
 import { JwtPayload, decode, verify } from "jsonwebtoken";
-import { User } from "./data";
+import type { User } from "./data";
 import { logger } from "./logger";
 
 export function validateToken(token: string) {
@@ -20,7 +20,10 @@ export function validateToken(token: string) {
   return decodedToken;
 }
 
-export async function validateRefreshToken(token: string) {
+export async function validateRefreshToken(
+  token: string,
+  UserModel: typeof User
+) {
   let decodedToken: JwtPayload | null = null;
 
   try {
@@ -37,7 +40,7 @@ export async function validateRefreshToken(token: string) {
 
   const user =
     decodedToken?.payload?.sub &&
-    (await User.findById(decodedToken?.payload.sub));
+    (await UserModel.findById(decodedToken?.payload.sub));
 
   if (!user) {
     // || !user.refreshTokens.includes(token)

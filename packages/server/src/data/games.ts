@@ -23,6 +23,6 @@ export class Game extends Base {
   }
 
   static async filterByPartyId(partyId: string) {
-    return Game.filter((game) => partyId in game.partyPeople);
+    return this.filter((game) => partyId in game.partyPeople);
   }
 }

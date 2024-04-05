@@ -56,14 +56,14 @@ export class User extends Base {
   static Role = Role;
 
   static async findByName(name: string) {
-    return User.find((user) => user.name === name);
+    return this.find((user) => user.name === name);
   }
 
   static async findByEmail(email: string) {
-    return User.find((user) => user.email === email);
+    return this.find((user) => user.email === email);
   }
 
   static async findByDiscordId(id: string) {
-    return User.find((user) => user.discordUserId === id);
+    return this.find((user) => user.discordUserId === id);
   }
 }

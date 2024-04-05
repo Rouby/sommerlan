@@ -7,5 +7,8 @@
   },
   "eslint.nodePath": ".yarn/sdks",
   "prettier.prettierPath": ".yarn/sdks/prettier/index.js",
-  "typescript.enablePromptUseWorkspaceTsdk": true
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "playwright.env": {
+    "NODE_OPTIONS": "-r ../../.pnp.cjs"
+  }
 }

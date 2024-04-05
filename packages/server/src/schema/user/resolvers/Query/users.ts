@@ -1,5 +1,4 @@
 import { ForbiddenError } from "@casl/ability";
-import { User } from "../../../../data";
 import type { QueryResolvers } from "./../../../types.generated";
 
 export const users: NonNullable<QueryResolvers["users"]> = async (
@@ -9,5 +8,5 @@ export const users: NonNullable<QueryResolvers["users"]> = async (
 ) => {
   ForbiddenError.from(ctx.ability).throwUnlessCan("read", "User");
 
-  return User.filter((user) => ctx.ability.can("read", user));
+  return ctx.data.User.filter((user) => ctx.ability.can("read", user));
 };

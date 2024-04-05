@@ -1,7 +1,7 @@
 import { MongoQuery } from "@casl/ability";
 import { sign } from "jsonwebtoken";
 import { createAbility } from "./ability";
-import { User } from "./data";
+import type { User } from "./data";
 import { expectedOrigin } from "./env";
 
 async function tokenPayload(user: User) {

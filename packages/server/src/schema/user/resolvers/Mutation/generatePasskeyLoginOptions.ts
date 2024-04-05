@@ -1,13 +1,12 @@
 import { generateAuthenticationOptions } from "@simplewebauthn/server";
 import { issuedChallenges } from "../../../../auth";
-import { User } from "../../../../data";
 import { rpID } from "../../../../env";
 import type { MutationResolvers } from "./../../../types.generated";
 
 export const generatePasskeyLoginOptions: NonNullable<
   MutationResolvers["generatePasskeyLoginOptions"]
 > = async (_parent, { userId }, ctx) => {
-  const user = userId ? await User.findById(userId) : null;
+  const user = userId ? await ctx.data.User.findById(userId) : null;
 
   const options = generateAuthenticationOptions({
     rpID,

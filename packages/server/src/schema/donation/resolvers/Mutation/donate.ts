@@ -1,18 +1,17 @@
 import { createGraphQLError } from "graphql-yoga";
-import { Donation, Party } from "../../../../data";
 import type { MutationResolvers } from "./../../../types.generated";
 export const donate: NonNullable<MutationResolvers["donate"]> = async (
   _parent,
   { amount, incognito, dedication },
   ctx
 ) => {
-  const party = await Party.findLatest();
+  const party = await ctx.data.Party.findLatest();
 
   if (!party) {
     throw createGraphQLError("Party not found");
   }
 
-  const donation = new Donation({
+  const donation = new ctx.data.Donation({
     userId: ctx.jwt.user.id,
     incognito: incognito ?? false,
     amount,

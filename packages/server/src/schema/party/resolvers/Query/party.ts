@@ -1,5 +1,4 @@
 import { ForbiddenError } from "@casl/ability";
-import { Party } from "../../../../data";
 import type { QueryResolvers } from "./../../../types.generated";
 
 export const party: NonNullable<QueryResolvers["party"]> = async (
@@ -7,7 +6,7 @@ export const party: NonNullable<QueryResolvers["party"]> = async (
   { id },
   ctx
 ) => {
-  const party = await Party.findById(id);
+  const party = await ctx.data.Party.findById(id);
 
   if (!party) return null;
 

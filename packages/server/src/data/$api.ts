@@ -22,15 +22,199 @@ export async function getSheet() {
   });
 }
 
+export function createFakeApi() {
+  return {
+    data: {
+      syncCache: async () => {},
+      Attending: class Attending extends Models.Attending {
+        static rows: Attending[] = [];
+        static get cache() {
+          return {
+            allRows: async <T>() => this.rows as T[],
+            deleteRow: async (_: new () => unknown, __: string, id: string) => {
+              const index = this.rows.findIndex((row) => row.id === id);
+              this.rows.splice(index, 1);
+            },
+            updateRow: async (
+              _: new () => unknown,
+              __: string,
+              id: string,
+              values: Record<string, unknown>
+            ) => {
+              const row = this.rows.find((row) => row.id === id);
+              if (row) {
+                Object.assign(row, values);
+              } else {
+                this.rows.push(new Attending(values));
+              }
+            },
+          };
+        }
+      },
+      Donation: class Donation extends Models.Donation {
+        static rows: Donation[] = [];
+        static get cache() {
+          return {
+            allRows: async <T>() => this.rows as T[],
+            deleteRow: async (_: new () => unknown, __: string, id: string) => {
+              const index = this.rows.findIndex((row) => row.id === id);
+              this.rows.splice(index, 1);
+            },
+            updateRow: async (
+              _: new () => unknown,
+              __: string,
+              id: string,
+              values: Record<string, unknown>
+            ) => {
+              const row = this.rows.find((row) => row.id === id);
+              if (row) {
+                Object.assign(row, values);
+              } else {
+                this.rows.push(new Donation(values));
+              }
+            },
+          };
+        }
+      },
+      Event: class Event extends Models.Event {
+        static rows: Event[] = [];
+        static get cache() {
+          return {
+            allRows: async <T>() => this.rows as T[],
+            deleteRow: async (_: new () => unknown, __: string, id: string) => {
+              const index = this.rows.findIndex((row) => row.id === id);
+              this.rows.splice(index, 1);
+            },
+            updateRow: async (
+              _: new () => unknown,
+              __: string,
+              id: string,
+              values: Record<string, unknown>
+            ) => {
+              const row = this.rows.find((row) => row.id === id);
+              if (row) {
+                Object.assign(row, values);
+              } else {
+                this.rows.push(new Event(values));
+              }
+            },
+          };
+        }
+      },
+      Game: class Game extends Models.Game {
+        static rows: Game[] = [];
+        static get cache() {
+          return {
+            allRows: async <T>() => this.rows as T[],
+            deleteRow: async (_: new () => unknown, __: string, id: string) => {
+              const index = this.rows.findIndex((row) => row.id === id);
+              this.rows.splice(index, 1);
+            },
+            updateRow: async (
+              _: new () => unknown,
+              __: string,
+              id: string,
+              values: Record<string, unknown>
+            ) => {
+              const row = this.rows.find((row) => row.id === id);
+              if (row) {
+                Object.assign(row, values);
+              } else {
+                this.rows.push(new Game(values));
+              }
+            },
+          };
+        }
+      },
+      Party: class Party extends Models.Party {
+        static rows: Party[] = [];
+        static get cache() {
+          return {
+            allRows: async <T>() => this.rows as T[],
+            deleteRow: async (_: new () => unknown, __: string, id: string) => {
+              const index = this.rows.findIndex((row) => row.id === id);
+              this.rows.splice(index, 1);
+            },
+            updateRow: async (
+              _: new () => unknown,
+              __: string,
+              id: string,
+              values: Record<string, unknown>
+            ) => {
+              const row = this.rows.find((row) => row.id === id);
+              if (row) {
+                Object.assign(row, values);
+              } else {
+                this.rows.push(new Party(values));
+              }
+            },
+          };
+        }
+      },
+      Picture: class Picture extends Models.Picture {
+        static rows: Picture[] = [];
+        static get cache() {
+          return {
+            allRows: async <T>() => this.rows as T[],
+            deleteRow: async (_: new () => unknown, __: string, id: string) => {
+              const index = this.rows.findIndex((row) => row.id === id);
+              this.rows.splice(index, 1);
+            },
+            updateRow: async (
+              _: new () => unknown,
+              __: string,
+              id: string,
+              values: Record<string, unknown>
+            ) => {
+              const row = this.rows.find((row) => row.id === id);
+              if (row) {
+                Object.assign(row, values);
+              } else {
+                this.rows.push(new Picture(values));
+              }
+            },
+          };
+        }
+      },
+      User: class User extends Models.User {
+        static rows: User[] = [];
+        static get cache() {
+          console.log("CACHE");
+          return {
+            allRows: async <T>() => this.rows as T[],
+            deleteRow: async (_: new () => unknown, __: string, id: string) => {
+              const index = this.rows.findIndex((row) => row.id === id);
+              this.rows.splice(index, 1);
+            },
+            updateRow: async (
+              _: new () => unknown,
+              __: string,
+              id: string,
+              values: Record<string, unknown>
+            ) => {
+              const row = this.rows.find((row) => row.id === id);
+              if (row) {
+                Object.assign(row, values);
+              } else {
+                this.rows.push(new User(values));
+              }
+            },
+          };
+        }
+      },
+    },
+  };
+}
+
 export const fakeGoogleSheetApi = {
   sheetsByTitle: {
-    Users: fakeSheet("User"),
+    Attendings: fakeSheet("Attending"),
+    Donations: fakeSheet("Donation"),
+    Events: fakeSheet("Event"),
+    Games: fakeSheet("Game"),
     Parties: fakeSheet("Party"),
     Pictures: fakeSheet("Picture"),
-    Attendings: fakeSheet("Attending"),
-    Games: fakeSheet("Game"),
-    Events: fakeSheet("Event"),
-    Donations: fakeSheet("Donation"),
+    Users: fakeSheet("User"),
   },
 
   seedRow(clsName: string, data: any) {

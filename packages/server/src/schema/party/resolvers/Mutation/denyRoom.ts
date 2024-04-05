@@ -1,6 +1,5 @@
 import { ForbiddenError } from "@casl/ability";
 import { createGraphQLError } from "graphql-yoga";
-import { Attending } from "../../../../data";
 import type { MutationResolvers } from "./../../../types.generated";
 
 export const denyRoom: NonNullable<MutationResolvers["denyRoom"]> = async (
@@ -8,7 +7,7 @@ export const denyRoom: NonNullable<MutationResolvers["denyRoom"]> = async (
   { attendingId },
   ctx
 ) => {
-  const attending = await Attending.findById(attendingId);
+  const attending = await ctx.data.Attending.findById(attendingId);
 
   if (!attending) {
     throw createGraphQLError("Attending not found");

@@ -25,11 +25,11 @@ export class Attending extends Base {
   }
 
   static async filterByPartyId(partyId: string) {
-    return Attending.filter((attending) => attending.partyId === partyId);
+    return this.filter((attending) => attending.partyId === partyId);
   }
 
   static async findByPartyIdAndUserId(partyId: string, userId: string) {
-    return Attending.find(
+    return this.find(
       (attending) =>
         attending.partyId === partyId && attending.userId === userId
     );

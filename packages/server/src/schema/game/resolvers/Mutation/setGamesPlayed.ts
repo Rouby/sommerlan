@@ -1,12 +1,11 @@
 import { ForbiddenError } from "@casl/ability";
 import { createGraphQLError } from "graphql-yoga";
-import { Attending, Game } from "../../../../data";
 import type { MutationResolvers } from "./../../../types.generated";
 
 export const setGamesPlayed: NonNullable<
   MutationResolvers["setGamesPlayed"]
 > = async (_parent, { partyId, gameIds }, ctx) => {
-  const attending = await Attending.findByPartyIdAndUserId(
+  const attending = await ctx.data.Attending.findByPartyIdAndUserId(
     partyId,
     ctx.jwt.user.id
   );
@@ -17,7 +16,7 @@ export const setGamesPlayed: NonNullable<
 
   ForbiddenError.from(ctx.ability).throwUnlessCan("update", attending);
 
-  const games = await Game.filter(
+  const games = await ctx.data.Game.filter(
     (game) => partyId in game.partyPeople || gameIds.includes(game.id)
   );
 

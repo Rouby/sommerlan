@@ -35,6 +35,6 @@ export class Event extends Base {
   }
 
   static async filterByPartyId(partyId: string) {
-    return Event.filter((event) => event.partyId === partyId);
+    return this.filter((event) => event.partyId === partyId);
   }
 }

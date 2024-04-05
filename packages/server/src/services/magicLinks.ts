@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
-import { User } from "../data";
+import type { User } from "../data";
 import { expectedOrigin } from "../env";
 import { signRefreshToken, signToken } from "../signToken";
 import { scheduleTimeout } from "./scheduler";

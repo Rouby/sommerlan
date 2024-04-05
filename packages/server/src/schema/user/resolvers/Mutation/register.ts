@@ -1,5 +1,4 @@
 import { createGraphQLError } from "graphql-yoga";
-import { User } from "../../../../data";
 import { logger } from "../../../../logger";
 import { signRefreshToken, signToken } from "../../../../signToken";
 import type { MutationResolvers } from "./../../../types.generated";
@@ -7,13 +6,13 @@ import type { MutationResolvers } from "./../../../types.generated";
 export const register: NonNullable<MutationResolvers["register"]> = async (
   _parent,
   { userName, email, password },
-  _ctx
+  ctx
 ) => {
-  if (await User.findByEmail(email)) {
+  if (await ctx.data.User.findByEmail(email)) {
     throw createGraphQLError("User already exists");
   }
 
-  const user = new User({
+  const user = new ctx.data.User({
     name: userName,
     displayName: userName,
     email,

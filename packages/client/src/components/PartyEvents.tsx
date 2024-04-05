@@ -175,7 +175,7 @@ function EventCard({
   return (
     <Card
       key={event.id}
-      data-cy="event"
+      data-testid="event"
       shadow="sm"
       padding="lg"
       radius="md"
@@ -446,7 +446,7 @@ function CreateEventForm({
 
         <Dropzone
           name="image"
-          data-cy="dropzone"
+          data-testid="dropzone"
           accept={IMAGE_MIME_TYPE}
           onDrop={(files) => setImage(files[0])}
           maxFiles={1}

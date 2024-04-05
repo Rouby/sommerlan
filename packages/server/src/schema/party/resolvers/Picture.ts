@@ -1,13 +1,12 @@
 import exifr from "exifr";
 import { readFile } from "fs/promises";
 import { createGraphQLError } from "graphql-yoga";
-import { Party } from "../../../data";
 import { expectedOrigin } from "../../../env";
 import type { PictureResolvers } from "./../../types.generated";
 
 export const Picture: PictureResolvers = {
-  party: async (parent) => {
-    const party = await Party.findById(parent.partyId);
+  party: async (parent, _, ctx) => {
+    const party = await ctx.data.Party.findById(parent.partyId);
     if (!party) {
       throw createGraphQLError("Party not found");
     }

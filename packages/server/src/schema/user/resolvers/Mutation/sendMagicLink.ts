@@ -1,12 +1,11 @@
 import { createGraphQLError } from "graphql-yoga";
-import { User } from "../../../../data";
 import { issueMagicLink, sendMail } from "../../../../services";
 import type { MutationResolvers } from "./../../../types.generated";
 
 export const sendMagicLink: NonNullable<
   MutationResolvers["sendMagicLink"]
-> = async (_parent, { email }, _ctx) => {
-  const user = await User.findByEmail(email);
+> = async (_parent, { email }, ctx) => {
+  const user = await ctx.data.User.findByEmail(email);
 
   if (!user) {
     throw createGraphQLError("User not found");

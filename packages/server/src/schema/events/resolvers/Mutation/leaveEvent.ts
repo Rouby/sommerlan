@@ -1,6 +1,5 @@
 import { ForbiddenError } from "@casl/ability";
 import { createGraphQLError } from "graphql-yoga";
-import { Event } from "../../../../data";
 import type { MutationResolvers } from "./../../../types.generated";
 
 export const leaveEvent: NonNullable<MutationResolvers["leaveEvent"]> = async (
@@ -8,7 +7,7 @@ export const leaveEvent: NonNullable<MutationResolvers["leaveEvent"]> = async (
   { id },
   ctx
 ) => {
-  const event = await Event.findById(id);
+  const event = await ctx.data.Event.findById(id);
 
   if (!event) {
     throw createGraphQLError("Event not found");
