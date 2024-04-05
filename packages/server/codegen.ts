@@ -12,7 +12,7 @@ const config: CodegenConfig = {
         BoundingBox: { type: "{x:number;y:number;width:number;height:number}" },
         File: { type: "File" },
       },
-    }),
+    }) as any,
   },
 };
 
