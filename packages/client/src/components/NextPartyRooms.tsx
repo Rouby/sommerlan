@@ -90,7 +90,7 @@ export function NextPartyRooms() {
           ) : undefined
         }
         onClick={() =>
-          (isRequestingRoom ? requestRoom : recindRoom)({
+          (!myAttending?.room ? requestRoom : recindRoom)({
             partyId: nextParty.id,
           })
         }
