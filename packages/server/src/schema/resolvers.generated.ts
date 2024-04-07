@@ -1,7 +1,9 @@
 /* This file was automatically generated. DO NOT UPDATE MANUALLY. */
 import type { Resolvers } from "./types.generated";
 import { AddGameResult } from "./game/resolvers/AddGameResult";
-import { Attending } from "./user/resolvers/Attending";
+import { Attending as party_Attending } from "./party/resolvers/Attending";
+import { Attending as game_Attending } from "./game/resolvers/Attending";
+import { Attending as user_Attending } from "./user/resolvers/Attending";
 import { AuthDevice } from "./user/resolvers/AuthDevice";
 import { AuthResponse } from "./user/resolvers/AuthResponse";
 import { BoundingBox } from "./party/resolvers/BoundingBox";
@@ -39,7 +41,10 @@ import { syncCache as Mutation_syncCache } from "./admin/resolvers/Mutation/sync
 import { updateAuthDevice as Mutation_updateAuthDevice } from "./user/resolvers/Mutation/updateAuthDevice";
 import { updateParty as Mutation_updateParty } from "./party/resolvers/Mutation/updateParty";
 import { updateProfile as Mutation_updateProfile } from "./user/resolvers/Mutation/updateProfile";
-import { Party } from "./party/resolvers/Party";
+import { Party as party_Party } from "./party/resolvers/Party";
+import { Party as donation_Party } from "./donation/resolvers/Party";
+import { Party as events_Party } from "./events/resolvers/Party";
+import { Party as game_Party } from "./game/resolvers/Party";
 import { Picture } from "./party/resolvers/Picture";
 import { PictureMeta } from "./party/resolvers/PictureMeta";
 import { PictureTag } from "./party/resolvers/PictureTag";
@@ -100,7 +105,7 @@ export const resolvers: Resolvers = {
   },
 
   AddGameResult: AddGameResult,
-  Attending: Attending,
+  Attending: { ...party_Attending, ...game_Attending, ...user_Attending },
   AuthDevice: AuthDevice,
   AuthResponse: AuthResponse,
   BoundingBox: BoundingBox,
@@ -110,7 +115,7 @@ export const resolvers: Resolvers = {
   Game: Game,
   GameOnParty: GameOnParty,
   LoginResponse: LoginResponse,
-  Party: Party,
+  Party: { ...party_Party, ...donation_Party, ...events_Party, ...game_Party },
   Picture: Picture,
   PictureMeta: PictureMeta,
   PictureTag: PictureTag,

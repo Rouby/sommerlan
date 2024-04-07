@@ -3,6 +3,10 @@ import {
   GraphQLScalarType,
   GraphQLScalarTypeConfig,
 } from "graphql";
+import { Context } from "./context";
+import { DonationMapper } from "./donation/schema.mappers";
+import { EventMapper } from "./events/schema.mappers";
+import { GameMapper } from "./game/schema.mappers";
 import {
   AttendingMapper,
   PartyMapper,
@@ -10,12 +14,8 @@ import {
   PictureTagMapper,
 } from "./party/schema.mappers";
 import { AuthDeviceMapper, UserMapper } from "./user/schema.mappers";
-import { DonationMapper } from "./donation/schema.mappers";
-import { EventMapper } from "./events/schema.mappers";
-import { GameMapper } from "./game/schema.mappers";
-import { Context } from "./context";
-export type Maybe<T> = T | null;
-export type InputMaybe<T> = Maybe<T>;
+export type Maybe<T> = T | null | undefined;
+export type InputMaybe<T> = T | null | undefined;
 export type Exact<T extends { [key: string]: unknown }> = {
   [K in keyof T]: T[K];
 };
@@ -178,128 +178,128 @@ export type Mutation = {
   updateProfile: User;
 };
 
-export type MutationAddGameToPartyArgs = {
+export type MutationaddGameToPartyArgs = {
   name: Scalars["String"]["input"];
   partyId: Scalars["ID"]["input"];
 };
 
-export type MutationAddPictureArgs = {
+export type MutationaddPictureArgs = {
   input: PictureInput;
 };
 
-export type MutationDeleteAuthDeviceArgs = {
+export type MutationdeleteAuthDeviceArgs = {
   id: Scalars["ID"]["input"];
 };
 
-export type MutationDenyRoomArgs = {
+export type MutationdenyRoomArgs = {
   attendingId: Scalars["ID"]["input"];
 };
 
-export type MutationDonateArgs = {
+export type MutationdonateArgs = {
   amount: Scalars["Float"]["input"];
   dedication?: InputMaybe<DonationDedication>;
   incognito?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type MutationGeneratePasskeyLoginOptionsArgs = {
+export type MutationgeneratePasskeyLoginOptionsArgs = {
   userId?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type MutationGeneratePasskeyRegisterOptionsArgs = {
+export type MutationgeneratePasskeyRegisterOptionsArgs = {
   userId: Scalars["String"]["input"];
 };
 
-export type MutationGrantRoomArgs = {
+export type MutationgrantRoomArgs = {
   attendingId: Scalars["ID"]["input"];
 };
 
-export type MutationLeaveEventArgs = {
+export type MutationleaveEventArgs = {
   id: Scalars["ID"]["input"];
 };
 
-export type MutationLoginMagicLinkArgs = {
+export type MutationloginMagicLinkArgs = {
   magicLinkId: Scalars["String"]["input"];
 };
 
-export type MutationLoginPasskeyArgs = {
+export type MutationloginPasskeyArgs = {
   response: Scalars["JSON"]["input"];
 };
 
-export type MutationLoginPasswordArgs = {
+export type MutationloginPasswordArgs = {
   email: Scalars["String"]["input"];
   password: Scalars["String"]["input"];
 };
 
-export type MutationParticipateInEventArgs = {
+export type MutationparticipateInEventArgs = {
   id: Scalars["ID"]["input"];
 };
 
-export type MutationPlanEventArgs = {
+export type MutationplanEventArgs = {
   input: EventInput;
 };
 
-export type MutationRecindRoomArgs = {
+export type MutationrecindRoomArgs = {
   partyId: Scalars["ID"]["input"];
 };
 
-export type MutationRefreshLoginArgs = {
+export type MutationrefreshLoginArgs = {
   refreshToken: Scalars["String"]["input"];
 };
 
-export type MutationRegisterArgs = {
+export type MutationregisterArgs = {
   email: Scalars["String"]["input"];
   password?: InputMaybe<Scalars["String"]["input"]>;
   userName: Scalars["String"]["input"];
 };
 
-export type MutationRegisterPasskeyArgs = {
+export type MutationregisterPasskeyArgs = {
   name: Scalars["String"]["input"];
   response: Scalars["JSON"]["input"];
   userId: Scalars["String"]["input"];
 };
 
-export type MutationRemoveAttendanceArgs = {
+export type MutationremoveAttendanceArgs = {
   partyId: Scalars["ID"]["input"];
   userId?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
-export type MutationRequestRoomArgs = {
+export type MutationrequestRoomArgs = {
   partyId: Scalars["ID"]["input"];
 };
 
-export type MutationRescindDonationArgs = {
+export type MutationrescindDonationArgs = {
   id: Scalars["ID"]["input"];
 };
 
-export type MutationSendMagicLinkArgs = {
+export type MutationsendMagicLinkArgs = {
   email: Scalars["String"]["input"];
 };
 
-export type MutationSetAttendanceArgs = {
+export type MutationsetAttendanceArgs = {
   dates: Array<Scalars["Date"]["input"]>;
   partyId: Scalars["ID"]["input"];
   userId?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
-export type MutationSetGamesPlayedArgs = {
+export type MutationsetGamesPlayedArgs = {
   gameIds: Array<Scalars["ID"]["input"]>;
   partyId: Scalars["ID"]["input"];
 };
 
-export type MutationSyncCacheArgs = {
+export type MutationsyncCacheArgs = {
   clear?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
-export type MutationUpdateAuthDeviceArgs = {
+export type MutationupdateAuthDeviceArgs = {
   id: Scalars["ID"]["input"];
   name: Scalars["String"]["input"];
 };
 
-export type MutationUpdatePartyArgs = {
+export type MutationupdatePartyArgs = {
   input: PartyInput;
 };
 
-export type MutationUpdateProfileArgs = {
+export type MutationupdateProfileArgs = {
   input: ProfileInput;
 };
 
@@ -386,7 +386,7 @@ export type Query = {
   users: Array<User>;
 };
 
-export type QueryPartyArgs = {
+export type QuerypartyArgs = {
   id: Scalars["ID"]["input"];
 };
 
@@ -778,12 +778,12 @@ export type GameOnPartyResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export interface JsonScalarConfig
+export interface JSONScalarConfig
   extends GraphQLScalarTypeConfig<ResolversTypes["JSON"], any> {
   name: "JSON";
 }
 
-export interface JwtScalarConfig
+export interface JWTScalarConfig
   extends GraphQLScalarTypeConfig<ResolversTypes["JWT"], any> {
   name: "JWT";
 }
@@ -812,169 +812,169 @@ export type MutationResolvers<
     ResolversTypes["AddGameResult"],
     ParentType,
     ContextType,
-    RequireFields<MutationAddGameToPartyArgs, "name" | "partyId">
+    RequireFields<MutationaddGameToPartyArgs, "name" | "partyId">
   >;
   addPicture?: Resolver<
     ResolversTypes["Picture"],
     ParentType,
     ContextType,
-    RequireFields<MutationAddPictureArgs, "input">
+    RequireFields<MutationaddPictureArgs, "input">
   >;
   deleteAuthDevice?: Resolver<
     ResolversTypes["AuthDevice"],
     ParentType,
     ContextType,
-    RequireFields<MutationDeleteAuthDeviceArgs, "id">
+    RequireFields<MutationdeleteAuthDeviceArgs, "id">
   >;
   denyRoom?: Resolver<
     Maybe<ResolversTypes["Attending"]>,
     ParentType,
     ContextType,
-    RequireFields<MutationDenyRoomArgs, "attendingId">
+    RequireFields<MutationdenyRoomArgs, "attendingId">
   >;
   donate?: Resolver<
     ResolversTypes["Donation"],
     ParentType,
     ContextType,
-    RequireFields<MutationDonateArgs, "amount">
+    RequireFields<MutationdonateArgs, "amount">
   >;
   generatePasskeyLoginOptions?: Resolver<
     ResolversTypes["JSON"],
     ParentType,
     ContextType,
-    Partial<MutationGeneratePasskeyLoginOptionsArgs>
+    Partial<MutationgeneratePasskeyLoginOptionsArgs>
   >;
   generatePasskeyRegisterOptions?: Resolver<
     ResolversTypes["JSON"],
     ParentType,
     ContextType,
-    RequireFields<MutationGeneratePasskeyRegisterOptionsArgs, "userId">
+    RequireFields<MutationgeneratePasskeyRegisterOptionsArgs, "userId">
   >;
   grantRoom?: Resolver<
     Maybe<ResolversTypes["Attending"]>,
     ParentType,
     ContextType,
-    RequireFields<MutationGrantRoomArgs, "attendingId">
+    RequireFields<MutationgrantRoomArgs, "attendingId">
   >;
   leaveEvent?: Resolver<
     ResolversTypes["Event"],
     ParentType,
     ContextType,
-    RequireFields<MutationLeaveEventArgs, "id">
+    RequireFields<MutationleaveEventArgs, "id">
   >;
   loginMagicLink?: Resolver<
     ResolversTypes["AuthResponse"],
     ParentType,
     ContextType,
-    RequireFields<MutationLoginMagicLinkArgs, "magicLinkId">
+    RequireFields<MutationloginMagicLinkArgs, "magicLinkId">
   >;
   loginPasskey?: Resolver<
     ResolversTypes["LoginResponse"],
     ParentType,
     ContextType,
-    RequireFields<MutationLoginPasskeyArgs, "response">
+    RequireFields<MutationloginPasskeyArgs, "response">
   >;
   loginPassword?: Resolver<
     ResolversTypes["AuthResponse"],
     ParentType,
     ContextType,
-    RequireFields<MutationLoginPasswordArgs, "email" | "password">
+    RequireFields<MutationloginPasswordArgs, "email" | "password">
   >;
   participateInEvent?: Resolver<
     ResolversTypes["Event"],
     ParentType,
     ContextType,
-    RequireFields<MutationParticipateInEventArgs, "id">
+    RequireFields<MutationparticipateInEventArgs, "id">
   >;
   planEvent?: Resolver<
     ResolversTypes["Event"],
     ParentType,
     ContextType,
-    RequireFields<MutationPlanEventArgs, "input">
+    RequireFields<MutationplanEventArgs, "input">
   >;
   recindRoom?: Resolver<
     Maybe<ResolversTypes["Attending"]>,
     ParentType,
     ContextType,
-    RequireFields<MutationRecindRoomArgs, "partyId">
+    RequireFields<MutationrecindRoomArgs, "partyId">
   >;
   refreshLogin?: Resolver<
     ResolversTypes["AuthResponse"],
     ParentType,
     ContextType,
-    RequireFields<MutationRefreshLoginArgs, "refreshToken">
+    RequireFields<MutationrefreshLoginArgs, "refreshToken">
   >;
   register?: Resolver<
     ResolversTypes["RegisterResponse"],
     ParentType,
     ContextType,
-    RequireFields<MutationRegisterArgs, "email" | "userName">
+    RequireFields<MutationregisterArgs, "email" | "userName">
   >;
   registerPasskey?: Resolver<
     ResolversTypes["RegisterDeviceResponse"],
     ParentType,
     ContextType,
-    RequireFields<MutationRegisterPasskeyArgs, "name" | "response" | "userId">
+    RequireFields<MutationregisterPasskeyArgs, "name" | "response" | "userId">
   >;
   removeAttendance?: Resolver<
     ResolversTypes["Party"],
     ParentType,
     ContextType,
-    RequireFields<MutationRemoveAttendanceArgs, "partyId">
+    RequireFields<MutationremoveAttendanceArgs, "partyId">
   >;
   requestRoom?: Resolver<
     Maybe<ResolversTypes["Attending"]>,
     ParentType,
     ContextType,
-    RequireFields<MutationRequestRoomArgs, "partyId">
+    RequireFields<MutationrequestRoomArgs, "partyId">
   >;
   rescindDonation?: Resolver<
     ResolversTypes["Donation"],
     ParentType,
     ContextType,
-    RequireFields<MutationRescindDonationArgs, "id">
+    RequireFields<MutationrescindDonationArgs, "id">
   >;
   sendMagicLink?: Resolver<
     ResolversTypes["Boolean"],
     ParentType,
     ContextType,
-    RequireFields<MutationSendMagicLinkArgs, "email">
+    RequireFields<MutationsendMagicLinkArgs, "email">
   >;
   setAttendance?: Resolver<
     ResolversTypes["Party"],
     ParentType,
     ContextType,
-    RequireFields<MutationSetAttendanceArgs, "dates" | "partyId">
+    RequireFields<MutationsetAttendanceArgs, "dates" | "partyId">
   >;
   setGamesPlayed?: Resolver<
     ResolversTypes["Attending"],
     ParentType,
     ContextType,
-    RequireFields<MutationSetGamesPlayedArgs, "gameIds" | "partyId">
+    RequireFields<MutationsetGamesPlayedArgs, "gameIds" | "partyId">
   >;
   syncCache?: Resolver<
     Maybe<ResolversTypes["Boolean"]>,
     ParentType,
     ContextType,
-    Partial<MutationSyncCacheArgs>
+    Partial<MutationsyncCacheArgs>
   >;
   updateAuthDevice?: Resolver<
     ResolversTypes["AuthDevice"],
     ParentType,
     ContextType,
-    RequireFields<MutationUpdateAuthDeviceArgs, "id" | "name">
+    RequireFields<MutationupdateAuthDeviceArgs, "id" | "name">
   >;
   updateParty?: Resolver<
     ResolversTypes["Party"],
     ParentType,
     ContextType,
-    RequireFields<MutationUpdatePartyArgs, "input">
+    RequireFields<MutationupdatePartyArgs, "input">
   >;
   updateProfile?: Resolver<
     ResolversTypes["User"],
     ParentType,
     ContextType,
-    RequireFields<MutationUpdateProfileArgs, "input">
+    RequireFields<MutationupdateProfileArgs, "input">
   >;
 };
 
@@ -1075,7 +1075,7 @@ export type QueryResolvers<
     Maybe<ResolversTypes["Party"]>,
     ParentType,
     ContextType,
-    RequireFields<QueryPartyArgs, "id">
+    RequireFields<QuerypartyArgs, "id">
   >;
   users?: Resolver<Array<ResolversTypes["User"]>, ParentType, ContextType>;
 };
