@@ -13,6 +13,7 @@
     "@sommerlan-app/client": "workspace:*",
     "@sommerlan-app/server": "workspace:*",
     "@types/node": "^20.12.4",
+    "dayjs": "^1.11.10",
     "typescript": "^5.4.4"
   },
   "engines": {

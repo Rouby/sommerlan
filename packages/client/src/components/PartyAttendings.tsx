@@ -167,9 +167,12 @@ export function PartyAttendings({ partyId }: { partyId?: string }) {
             );
             return (
               <Fragment key={date.toString()}>
-                <Box sx={{ whiteSpace: "nowrap" }}>{date.format("ddd, L")}</Box>
+                <Box id={`date-label-${idx}`} sx={{ whiteSpace: "nowrap" }}>
+                  {date.format("ddd, L")}
+                </Box>
 
                 <Checkbox
+                  aria-labelledby={`date-label-${idx}`}
                   value={date.format("YYYY-MM-DD")}
                   disabled={
                     attendingsOnDate.length >= party.seatsAvailable &&
@@ -221,27 +224,27 @@ export function PartyAttendings({ partyId }: { partyId?: string }) {
           })}
         </Box>
       </Checkbox.Group>
-      <Checkbox
-        label="Ich bin nicht dabei"
-        checked={myAttending?.dates.length === 0}
-        onChange={({ target: { checked } }) => {
-          party &&
-            (checked
-              ? setAttendance({
-                  partyId: party.id,
-                  dates: [],
-                  // @ts-expect-error
-                  attendingId: myAttending?.id,
-                })
-              : removeAttendance({
-                  partyId: party.id,
-                  // @ts-expect-error
-                  attendingId: myAttending?.id,
-                }));
-        }}
-      />
-      {party?.attendings && (
+      {party && (
         <>
+          <Checkbox
+            label="Ich bin nicht dabei"
+            checked={myAttending?.dates.length === 0}
+            onChange={({ target: { checked } }) => {
+              party &&
+                (checked
+                  ? setAttendance({
+                      partyId: party.id,
+                      dates: [],
+                      // @ts-expect-error
+                      attendingId: myAttending?.id,
+                    })
+                  : removeAttendance({
+                      partyId: party.id,
+                      // @ts-expect-error
+                      attendingId: myAttending?.id,
+                    }));
+            }}
+          />
           Leider nicht dabei:
           <Tooltip.Group openDelay={300} closeDelay={100}>
             <Avatar.Group spacing="sm" sx={{ flexWrap: "wrap" }}>

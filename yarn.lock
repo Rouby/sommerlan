@@ -3952,6 +3952,7 @@ __metadata:
     "@sommerlan-app/client": "workspace:*"
     "@sommerlan-app/server": "workspace:*"
     "@types/node": "npm:^20.12.4"
+    dayjs: "npm:^1.11.10"
     typescript: "npm:^5.4.4"
   languageName: unknown
   linkType: soft
