@@ -174,10 +174,6 @@ export function PartyAttendings({ partyId }: { partyId?: string }) {
                 <Checkbox
                   aria-labelledby={`date-label-${idx}`}
                   value={date.format("YYYY-MM-DD")}
-                  disabled={
-                    attendingsOnDate.length >= party.seatsAvailable &&
-                    !attendingsOnDate.some((att) => att.user.id === user.id)
-                  }
                 />
 
                 <AddUserMenu
@@ -212,7 +208,13 @@ export function PartyAttendings({ partyId }: { partyId?: string }) {
                         / {party.roomsAvailable} rooms available
                       </Badge>
                     ) : null}
-                    <Badge>
+                    <Badge
+                      color={
+                        attendingsOnDate.length > party.seatsAvailable
+                          ? "orange"
+                          : "green"
+                      }
+                    >
                       {attendingsOnDate.length} / {party.seatsAvailable} an
                       diesem Tag da
                     </Badge>

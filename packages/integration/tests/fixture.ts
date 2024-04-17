@@ -1,16 +1,39 @@
 import { test as base, expect } from "@playwright/test";
+import type {
+  Attending,
+  Donation,
+  Event,
+  Game,
+  Party,
+  Picture,
+  PictureTag,
+  User,
+} from "@sommerlan-app/server/src/data";
+import type { Values } from "@sommerlan-app/server/src/data/$base";
+
+type Models = {
+  Attending: Attending;
+  Donation: Donation;
+  Event: Event;
+  Game: Game;
+  Party: Party;
+  Picture: Picture;
+  PictureTag: PictureTag;
+  User: User;
+};
 
 export const test = base.extend<{
   api: {
-    seed: (model: string, data: unknown) => Promise<unknown>;
+    seed: <T extends keyof Models>(
+      model: T,
+      data: Values<Models[T]>,
+    ) => Promise<Models[T]>;
     login: (email: string) => Promise<void>;
     getMails: () => Promise<{ html: string }[]>;
   };
 }>({
   api: [
     async ({ playwright, context }, use) => {
-      // TODO implement backend isolation?
-
       const apiContext = await playwright.request.newContext({
         baseURL: "http://127.0.0.1:2022",
       });
@@ -25,10 +48,12 @@ export const test = base.extend<{
 
       await use({
         seed: (model, data) =>
-          apiContext.post("/seed", {
-            headers: { "x-fake-api": transactionKey },
-            data: { model, data },
-          }),
+          apiContext
+            .post("/seed", {
+              headers: { "x-fake-api": transactionKey },
+              data: { model, data },
+            })
+            .then((resp) => resp.json()),
         login: (email) =>
           apiContext
             .post("/login", {

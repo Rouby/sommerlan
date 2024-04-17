@@ -22,3 +22,34 @@ test("should be able to enter party", async ({ page, api }) => {
 
   await expect(page.getByText("AE", { exact: true })).toHaveCount(3);
 });
+
+test("should be able to enter overcrowded party", async ({ page, api }) => {
+  const alice = await api.seed("User", {
+    displayName: "Alice Example",
+    name: "Alice Example",
+    email: "alice@example.com",
+  });
+  await api.seed("User", {
+    displayName: "Bob Example",
+    name: "Bob Example",
+    email: "bob@example.com",
+  });
+  const party = await api.seed("Party", {
+    seatsAvailable: 1,
+    startDate: dayjs().add(1, "month").set("day", 0).format("YYYY-MM-DD"),
+    endDate: dayjs().add(1, "month").set("day", 5).format("YYYY-MM-DD"),
+  });
+  await api.seed("Attending", {
+    userId: alice.id,
+    partyId: party.id,
+    dates: [dayjs().add(1, "month").set("day", 0).format("YYYY-MM-DD")],
+  });
+  await api.login("bob@example.com");
+
+  await page.goto("/party");
+
+  await page.getByRole("checkbox", { name: /^Sun/ }).check();
+
+  await expect(page.getByText("AE", { exact: true })).toHaveCount(1);
+  await expect(page.getByText("BE", { exact: true })).toHaveCount(1);
+});
