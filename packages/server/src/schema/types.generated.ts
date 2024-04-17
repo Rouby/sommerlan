@@ -3,10 +3,6 @@ import {
   GraphQLScalarType,
   GraphQLScalarTypeConfig,
 } from "graphql";
-import { Context } from "./context";
-import { DonationMapper } from "./donation/schema.mappers";
-import { EventMapper } from "./events/schema.mappers";
-import { GameMapper } from "./game/schema.mappers";
 import {
   AttendingMapper,
   PartyMapper,
@@ -14,6 +10,10 @@ import {
   PictureTagMapper,
 } from "./party/schema.mappers";
 import { AuthDeviceMapper, UserMapper } from "./user/schema.mappers";
+import { DonationMapper } from "./donation/schema.mappers";
+import { EventMapper } from "./events/schema.mappers";
+import { GameMapper } from "./game/schema.mappers";
+import { Context } from "./context";
 export type Maybe<T> = T | null | undefined;
 export type InputMaybe<T> = T | null | undefined;
 export type Exact<T extends { [key: string]: unknown }> = {
