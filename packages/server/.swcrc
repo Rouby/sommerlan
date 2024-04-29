@@ -10,7 +10,8 @@
   "module": {
     "type": "commonjs",
     // turn on lazy imports for maximum reboot performance
-    "lazy": true
+    "lazy": true,
+    "noInterop": true
   },
   "sourceMaps": true
 }
