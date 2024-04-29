@@ -16,9 +16,9 @@ test("should be able to enter party", async ({ page, api }) => {
 
   await page.goto("/party");
 
-  await page.getByRole("checkbox", { name: /^Sun/ }).check({ force: true });
-  await page.getByRole("checkbox", { name: /^Tue/ }).check({ force: true });
-  await page.getByRole("checkbox", { name: /^Wed/ }).check({ force: true });
+  await page.getByRole("checkbox", { name: /^Sun/ }).check();
+  await page.getByRole("checkbox", { name: /^Tue/ }).check();
+  await page.getByRole("checkbox", { name: /^Wed/ }).check();
 
   await expect(page.getByText("AE", { exact: true })).toHaveCount(3);
 });
