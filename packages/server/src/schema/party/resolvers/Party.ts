@@ -24,4 +24,10 @@ export const Party: Pick<
   pictures: (parent, _, ctx) => {
     return ctx.data.Picture.filterByPartyId(parent.id);
   },
+  registrationDeadline: (parent) => {
+    return parent.registrationDeadline ? parent.registrationDeadline : null;
+  },
+  payday: (parent) => {
+    return parent.payday ? parent.payday : null;
+  },
 };
