@@ -1,4 +1,5 @@
 import { randomUUID } from "crypto";
+import * as dayjs from "dayjs";
 import { Base, Values } from "./$base";
 
 export class Attending extends Base {
@@ -18,6 +19,10 @@ export class Attending extends Base {
   public dates: string[] = [];
 
   public room: "" | "requested" | "granted" = "";
+
+  public paidDues = 0;
+
+  public applicationDate = dayjs().format("YYYY-MM-DD");
 
   constructor(props?: Values<Attending>) {
     super();

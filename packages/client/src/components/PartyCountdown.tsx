@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import { useEffect, useReducer } from "react";
 import { useQuery } from "urql";
 import { graphql } from "../gql";
-import { formatRange } from "../utils";
+import { formatDate, formatRange } from "../utils";
 
 export function PartyCountdown({ partyId }: { partyId?: string }) {
   const [{ data, fetching }] = useQuery({
@@ -14,6 +14,7 @@ export function PartyCountdown({ partyId }: { partyId?: string }) {
           id
           startDate
           endDate
+          registrationDeadline
         }
 
         party(id: $partyId) @skip(if: $nextParty) {
@@ -30,7 +31,8 @@ export function PartyCountdown({ partyId }: { partyId?: string }) {
   });
 
   const { nextParty, party: specificParty } = data ?? {};
-  const party = nextParty ?? specificParty;
+  const party: typeof nextParty | typeof specificParty =
+    nextParty ?? specificParty;
 
   const [, rerender] = useReducer((x) => x + 1, 0);
   const { start, stop } = useInterval(() => {
@@ -72,6 +74,12 @@ export function PartyCountdown({ partyId }: { partyId?: string }) {
           <strong>{numberFormat.format(value)}</strong> {unit}
         </Text>
       ))}
+      {"registrationDeadline" in party && party.registrationDeadline && (
+        <Text weight="bold" size="lg" mt="xs">
+          Anmeldefrist ist der{" "}
+          {formatDate(new Date(party.registrationDeadline))}
+        </Text>
+      )}
     </>
   );
 }

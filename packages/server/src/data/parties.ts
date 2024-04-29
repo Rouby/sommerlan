@@ -31,6 +31,10 @@ export class Party extends Base {
 
   public seatsAvailable = 0;
 
+  public payday = "";
+
+  public finalCostPerDay = 0;
+
   constructor(props?: Values<Party>) {
     super();
     if (props) Object.assign(this, props);

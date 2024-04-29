@@ -3,10 +3,13 @@ export const Party: Pick<
   PartyResolvers,
   | "attendings"
   | "endDate"
+  | "finalCostPerDay"
   | "id"
   | "location"
   | "locationWidgetSrc"
+  | "payday"
   | "pictures"
+  | "registrationDeadline"
   | "rentalCosts"
   | "roomsAvailable"
   | "seatsAvailable"

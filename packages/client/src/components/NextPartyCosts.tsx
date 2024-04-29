@@ -4,7 +4,7 @@ import { useQuery } from "urql";
 import { graphql } from "../gql";
 import { DonationDedication } from "../gql/graphql";
 import { userAtom } from "../state";
-import { formatCurrency } from "../utils";
+import { formatCurrency, formatDate } from "../utils";
 
 export function NextPartyCosts() {
   const user = useAtomValue(userAtom)!;
@@ -15,6 +15,8 @@ export function NextPartyCosts() {
         nextParty {
           id
           rentalCosts
+          finalCostPerDay
+          payday
           donations {
             id
             amount
@@ -28,6 +30,7 @@ export function NextPartyCosts() {
           attendings {
             id
             dates
+            paidDues
             user {
               id
             }
@@ -52,13 +55,19 @@ export function NextPartyCosts() {
     .filter((donation) => donation.dedication === DonationDedication.Rent)
     .reduce((acc, donation) => acc + donation.amount, 0);
 
-  const costPerDay = (party.rentalCosts - donationsForRent) / daysWithAttending;
+  const costPerDay = party.finalCostPerDay
+    ? party.finalCostPerDay
+    : (party.rentalCosts - donationsForRent) / daysWithAttending;
 
   const myDaysAttending = Math.max(
     0,
     (party.attendings.find((attending) => attending.user.id === user.id)?.dates
       .length ?? 0) - 1,
   );
+
+  const myPaidDues = party.attendings.find(
+    (attending) => attending.user.id === user.id,
+  )?.paidDues;
 
   return (
     <>
@@ -83,13 +92,24 @@ export function NextPartyCosts() {
           </>
         )}
       </Box>
-      <Text size="xs">
-        Kosten sind Prognosen, basierend auf der aktuellen Anzahl an
-        angemeldeten Personen & Tagen.
-        <br />
-        Die Kosten werden gerecht auf die Tage verteilt. Der erste Tag ist immer
-        gratis.
-      </Text>
+      {party.finalCostPerDay && party.payday ? (
+        myPaidDues ? (
+          <Text>Du hast bereits alles bezahlt!</Text>
+        ) : (
+          <Text>
+            Bezahle deinen Beitrag bitte bis zum{" "}
+            {formatDate(new Date(party.payday))}.
+          </Text>
+        )
+      ) : (
+        <Text size="xs">
+          Kosten sind Prognosen, basierend auf der aktuellen Anzahl an
+          angemeldeten Personen & Tagen.
+          <br />
+          Die Kosten werden gerecht auf die Tage verteilt. Der erste Tag ist
+          immer gratis.
+        </Text>
+      )}
     </>
   );
 }

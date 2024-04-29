@@ -65,9 +65,11 @@ export type AddGameResult = {
 
 export type Attending = {
   __typename?: "Attending";
+  applicationDate: Scalars["Date"]["output"];
   dates: Array<Scalars["Date"]["output"]>;
   gamesPlayed: Array<Game>;
   id: Scalars["ID"]["output"];
+  paidDues: Scalars["Float"]["output"];
   party: Party;
   room?: Maybe<RoomStatus>;
   user: User;
@@ -309,11 +311,14 @@ export type Party = {
   donations: Array<Donation>;
   endDate: Scalars["Date"]["output"];
   events: Array<Event>;
+  finalCostPerDay?: Maybe<Scalars["Float"]["output"]>;
   gamesPlayed: Array<GameOnParty>;
   id: Scalars["ID"]["output"];
   location: Scalars["String"]["output"];
   locationWidgetSrc?: Maybe<Scalars["String"]["output"]>;
+  payday?: Maybe<Scalars["Date"]["output"]>;
   pictures: Array<Picture>;
+  registrationDeadline?: Maybe<Scalars["Date"]["output"]>;
   rentalCosts: Scalars["Float"]["output"];
   roomsAvailable: Scalars["Int"]["output"];
   seatsAvailable: Scalars["Int"]["output"];
@@ -531,6 +536,7 @@ export type ResolversTypes = {
   >;
   Attending: ResolverTypeWrapper<AttendingMapper>;
   ID: ResolverTypeWrapper<Scalars["ID"]["output"]>;
+  Float: ResolverTypeWrapper<Scalars["Float"]["output"]>;
   AuthDevice: ResolverTypeWrapper<AuthDeviceMapper>;
   String: ResolverTypeWrapper<Scalars["String"]["output"]>;
   AuthResponse: ResolverTypeWrapper<AuthResponse>;
@@ -538,7 +544,6 @@ export type ResolversTypes = {
   Date: ResolverTypeWrapper<Scalars["Date"]["output"]>;
   DateTime: ResolverTypeWrapper<Scalars["DateTime"]["output"]>;
   Donation: ResolverTypeWrapper<DonationMapper>;
-  Float: ResolverTypeWrapper<Scalars["Float"]["output"]>;
   DonationDedication: DonationDedication;
   Event: ResolverTypeWrapper<EventMapper>;
   EventInput: EventInput;
@@ -587,6 +592,7 @@ export type ResolversParentTypes = {
   };
   Attending: AttendingMapper;
   ID: Scalars["ID"]["output"];
+  Float: Scalars["Float"]["output"];
   AuthDevice: AuthDeviceMapper;
   String: Scalars["String"]["output"];
   AuthResponse: AuthResponse;
@@ -594,7 +600,6 @@ export type ResolversParentTypes = {
   Date: Scalars["Date"]["output"];
   DateTime: Scalars["DateTime"]["output"];
   Donation: DonationMapper;
-  Float: Scalars["Float"]["output"];
   Event: EventMapper;
   EventInput: EventInput;
   File: Scalars["File"]["output"];
@@ -644,6 +649,7 @@ export type AttendingResolvers<
   ParentType extends
     ResolversParentTypes["Attending"] = ResolversParentTypes["Attending"],
 > = {
+  applicationDate?: Resolver<ResolversTypes["Date"], ParentType, ContextType>;
   dates?: Resolver<Array<ResolversTypes["Date"]>, ParentType, ContextType>;
   gamesPlayed?: Resolver<
     Array<ResolversTypes["Game"]>,
@@ -651,6 +657,7 @@ export type AttendingResolvers<
     ContextType
   >;
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+  paidDues?: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
   party?: Resolver<ResolversTypes["Party"], ParentType, ContextType>;
   room?: Resolver<Maybe<ResolversTypes["RoomStatus"]>, ParentType, ContextType>;
   user?: Resolver<ResolversTypes["User"], ParentType, ContextType>;
@@ -995,6 +1002,11 @@ export type PartyResolvers<
   >;
   endDate?: Resolver<ResolversTypes["Date"], ParentType, ContextType>;
   events?: Resolver<Array<ResolversTypes["Event"]>, ParentType, ContextType>;
+  finalCostPerDay?: Resolver<
+    Maybe<ResolversTypes["Float"]>,
+    ParentType,
+    ContextType
+  >;
   gamesPlayed?: Resolver<
     Array<ResolversTypes["GameOnParty"]>,
     ParentType,
@@ -1007,8 +1019,14 @@ export type PartyResolvers<
     ParentType,
     ContextType
   >;
+  payday?: Resolver<Maybe<ResolversTypes["Date"]>, ParentType, ContextType>;
   pictures?: Resolver<
     Array<ResolversTypes["Picture"]>,
+    ParentType,
+    ContextType
+  >;
+  registrationDeadline?: Resolver<
+    Maybe<ResolversTypes["Date"]>,
     ParentType,
     ContextType
   >;

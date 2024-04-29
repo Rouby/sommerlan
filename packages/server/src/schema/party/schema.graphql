@@ -28,6 +28,9 @@ type Party {
   attendings: [Attending!]!
   pictures: [Picture!]!
   seatsAvailable: Int!
+  registrationDeadline: Date
+  payday: Date
+  finalCostPerDay: Float
 }
 
 type Picture {
@@ -82,6 +85,8 @@ type Attending {
   party: Party!
   dates: [Date!]!
   room: RoomStatus
+  applicationDate: Date!
+  paidDues: Float!
 }
 
 enum RoomStatus {

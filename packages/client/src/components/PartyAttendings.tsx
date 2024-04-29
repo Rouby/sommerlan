@@ -37,10 +37,12 @@ export function PartyAttendings({ partyId }: { partyId?: string }) {
       endDate
       roomsAvailable
       seatsAvailable
+      registrationDeadline
       attendings {
         id
         dates
         room
+        applicationDate
         user {
           id
           displayName
@@ -111,6 +113,10 @@ export function PartyAttendings({ partyId }: { partyId?: string }) {
     (attending) => attending.user.id === user.id,
   );
 
+  const applicationAllowed = party?.registrationDeadline
+    ? !dayjs().startOf("day").isAfter(party.registrationDeadline)
+    : true;
+
   return (
     <>
       <Checkbox.Group
@@ -174,6 +180,7 @@ export function PartyAttendings({ partyId }: { partyId?: string }) {
                 <Checkbox
                   aria-labelledby={`date-label-${idx}`}
                   value={date.format("YYYY-MM-DD")}
+                  disabled={!applicationAllowed}
                 />
 
                 <AddUserMenu
@@ -230,6 +237,7 @@ export function PartyAttendings({ partyId }: { partyId?: string }) {
         <>
           <Checkbox
             label="Ich bin nicht dabei"
+            disabled={!applicationAllowed}
             checked={myAttending?.dates.length === 0}
             onChange={({ target: { checked } }) => {
               party &&
