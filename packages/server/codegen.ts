@@ -14,7 +14,7 @@ const config: CodegenConfig = {
       },
     }) as any,
   },
-  hooks: { afterAllFileWrite: ["prettier --write"] },
+  hooks: { afterAllFileWrite: ["yarn prettier --write"] },
 };
 
 export default config;

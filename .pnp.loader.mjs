@@ -1,10 +1,10 @@
-import assert from 'assert';
-import { createHash } from 'crypto';
 import fs from 'fs';
-import moduleExports, { isBuiltin } from 'module';
-import { EOL } from 'os';
-import path from 'path';
 import { URL as URL$1, fileURLToPath, pathToFileURL } from 'url';
+import path from 'path';
+import { createHash } from 'crypto';
+import { EOL } from 'os';
+import moduleExports, { isBuiltin } from 'module';
+import assert from 'assert';
 
 const SAFE_TIME = 456789e3;
 

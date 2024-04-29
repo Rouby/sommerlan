@@ -10620,6 +10620,7 @@ const RAW_RUNTIME_STATE =
           ["nodemon", "npm:3.1.0"],\
           ["pino", "npm:8.19.0"],\
           ["pino-pretty", "npm:11.0.0"],\
+          ["prettier", "npm:3.2.5"],\
           ["recron", "npm:1.1.5"],\
           ["ts-node", "virtual:f9aaeb0ff5026b521d6a9b424ffbc3c34990b6972b440282c9eb836880cb71f3dfd141e9455e392c98abc5918762c91d12bf17451df331903d8e149b2f873a01#npm:10.9.2"],\
           ["typescript", "patch:typescript@npm%3A5.4.4#optional!builtin<compat/typescript>::version=5.4.4&hash=5adc0c"],\
