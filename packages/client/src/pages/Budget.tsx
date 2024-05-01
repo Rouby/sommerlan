@@ -1,4 +1,5 @@
 import { Box, Text } from "@mantine/core";
+import { IconCheckbox, IconClockDollar } from "@tabler/icons-react";
 import { useQuery } from "urql";
 import { CardWithHeader, UserAvatar } from "../components";
 import { graphql } from "../gql";
@@ -43,67 +44,90 @@ export function Budget() {
           Kosten pro Tag:{" "}
           {formatCurrency(data?.nextParty?.finalCostPerDay ?? 0)}
         </Text>
-        {data?.nextParty?.attendings.map((attending, idx, arr) => {
-          const donations = data.nextParty?.donations.filter(
-            (donation) => donation.donator?.id === attending.user.id,
-          );
+        {data?.nextParty?.attendings
+          .filter(
+            (attending) =>
+              attending.dates.length > 0 ||
+              data.nextParty?.donations.some(
+                (donation) => donation.donator?.id === attending.user.id,
+              ),
+          )
+          .map((attending, idx, arr) => {
+            const donations = data.nextParty?.donations.filter(
+              (donation) => donation.donator?.id === attending.user.id,
+            );
 
-          const rentDonationSum =
-            donations
-              ?.filter((donation) => donation.dedication === "RENT")
-              ?.reduce((acc, donation) => acc + donation.amount, 0) ?? 0;
-          const otherDonationSum =
-            donations
-              ?.filter((donation) => donation.dedication !== "RENT")
-              ?.reduce((acc, donation) => acc + donation.amount, 0) ?? 0;
+            const rentDues =
+              (attending.dates.length - 1) *
+              (data.nextParty?.finalCostPerDay ?? 0);
 
-          return (
-            <Box
-              key={attending.id}
-              sx={(theme) => ({
-                display: "grid",
-                alignItems: "center",
-                gap: theme.spacing.md,
-                gridTemplateColumns: "auto 1fr",
-                ...(idx < arr.length - 1
-                  ? {
-                      marginBottom: theme.spacing.sm,
-                      paddingBottom: theme.spacing.sm,
-                      borderBottom: `1px solid ${theme.colors.gray[8]}`,
-                    }
-                  : {}),
-              })}
-            >
-              <UserAvatar user={attending.user} />{" "}
-              <div>
-                <Text>
-                  {attending.user.displayName} ist {attending.dates.length} Tage
-                  dabei und muss{" "}
-                  {formatCurrency(
-                    attending.dates.length *
-                      (data.nextParty?.finalCostPerDay ?? 0),
-                  )}{" "}
-                  zur Miete beitragen.
-                </Text>
-                {rentDonationSum > 0 && (
+            const rentDonationSum =
+              donations
+                ?.filter((donation) => donation.dedication === "RENT")
+                ?.reduce((acc, donation) => acc + donation.amount, 0) ?? 0;
+
+            const otherDonationSum =
+              donations
+                ?.filter((donation) => donation.dedication !== "RENT")
+                ?.reduce((acc, donation) => acc + donation.amount, 0) ?? 0;
+
+            return (
+              <Box
+                key={attending.id}
+                sx={(theme) => ({
+                  display: "grid",
+                  alignItems: "center",
+                  gap: theme.spacing.md,
+                  gridTemplateColumns: "auto 1fr",
+                  ...(idx < arr.length - 1
+                    ? {
+                        marginBottom: theme.spacing.sm,
+                        paddingBottom: theme.spacing.sm,
+                        borderBottom: `1px solid ${theme.colors.gray[8]}`,
+                      }
+                    : {}),
+                })}
+              >
+                <UserAvatar user={attending.user} />{" "}
+                <div>
                   <Text>
-                    Plus {formatCurrency(rentDonationSum)} Spenden für die
-                    Miete.
+                    {attending.user.displayName} ist {attending.dates.length}{" "}
+                    Tage dabei und muss {formatCurrency(rentDues)} zur Miete
+                    beitragen.
                   </Text>
-                )}
-                {otherDonationSum > 0 && (
-                  <Text>
-                    Plus {formatCurrency(otherDonationSum)} andere Spenden.
+                  {rentDonationSum > 0 && (
+                    <Text>
+                      Plus {formatCurrency(rentDonationSum)} Spenden für die
+                      Miete.
+                    </Text>
+                  )}
+                  {otherDonationSum > 0 && (
+                    <Text>
+                      Plus {formatCurrency(otherDonationSum)} andere Spenden.
+                    </Text>
+                  )}
+                  <Text
+                    sx={(theme) => ({
+                      display: "grid",
+                      gridAutoFlow: "column",
+                      gridTemplateColumns: "auto",
+                      gridAutoColumns: "1fr",
+                      gap: theme.spacing.xs,
+                      alignItems: "center",
+                    })}
+                  >
+                    {attending.paidDues >= rentDues + rentDonationSum ? (
+                      <IconCheckbox color="green" size="18" />
+                    ) : (
+                      <IconClockDollar size="18" />
+                    )}
+                    Davon wurden bereits {formatCurrency(attending.paidDues)}{" "}
+                    bezahlt.
                   </Text>
-                )}
-                <Text>
-                  Davon wurden bereits {formatCurrency(attending.paidDues)}{" "}
-                  bezahlt.
-                </Text>
-              </div>
-            </Box>
-          );
-        })}
+                </div>
+              </Box>
+            );
+          })}
         <Text>
           Insgesamt wurden{" "}
           {formatCurrency(
