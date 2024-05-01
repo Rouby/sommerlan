@@ -18,6 +18,7 @@ import {
   IconHomeDollar,
   IconPigMoney,
 } from "@tabler/icons-react";
+import dayjs from "dayjs";
 import { Fragment, useState } from "react";
 import { useMutation, useQuery } from "urql";
 import { Can, UserAvatar } from ".";
@@ -31,6 +32,7 @@ export function NextPartyDonations() {
       query nextPartyDonations {
         nextParty {
           id
+          registrationDeadline
           donations {
             __typename
             id
@@ -54,6 +56,10 @@ export function NextPartyDonations() {
   if (!party) {
     return null;
   }
+
+  const donationsAllowed = party?.registrationDeadline
+    ? !dayjs().startOf("day").isAfter(party.registrationDeadline)
+    : true;
 
   return (
     <>
@@ -83,9 +89,11 @@ export function NextPartyDonations() {
                   <Avatar radius="xl">I</Avatar>
                 )}
 
-                <Can I="rescind" this={donation} otherwise={<div />}>
-                  <RescindDonationButton donationId={donation.id} />
-                </Can>
+                {donationsAllowed && (
+                  <Can I="rescind" this={donation} otherwise={<div />}>
+                    <RescindDonationButton donationId={donation.id} />
+                  </Can>
+                )}
               </Fragment>
             ))}
           </Box>
@@ -93,7 +101,10 @@ export function NextPartyDonations() {
       )}
       <Popover opened={donateMenuOpen} onClose={() => setDonateMenuOpen(false)}>
         <Popover.Target>
-          <Button onClick={() => setDonateMenuOpen(!donateMenuOpen)}>
+          <Button
+            onClick={() => setDonateMenuOpen(!donateMenuOpen)}
+            disabled={!donationsAllowed}
+          >
             Geld für die nächste Party spenden
           </Button>
         </Popover.Target>
