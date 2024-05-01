@@ -89,10 +89,12 @@ export function NextPartyDonations() {
                   <Avatar radius="xl">I</Avatar>
                 )}
 
-                {donationsAllowed && (
+                {donationsAllowed ? (
                   <Can I="rescind" this={donation} otherwise={<div />}>
                     <RescindDonationButton donationId={donation.id} />
                   </Can>
+                ) : (
+                  <div />
                 )}
               </Fragment>
             ))}
