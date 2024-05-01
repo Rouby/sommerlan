@@ -65,6 +65,12 @@ export function NextPartyCosts() {
       .length ?? 0) - 1,
   );
 
+  const myCosts =
+    myDaysAttending * costPerDay +
+    party.donations
+      .filter((donation) => donation.donator?.id === user.id)
+      .reduce((acc, donation) => acc + donation.amount, 0);
+
   const myPaidDues = party.attendings.find(
     (attending) => attending.user.id === user.id,
   )?.paidDues;
@@ -88,12 +94,12 @@ export function NextPartyCosts() {
         {myDaysAttending > 0 && (
           <>
             <Text fw="bold">Meine Kosten:</Text>
-            <Text>{formatCurrency(myDaysAttending * costPerDay)}</Text>
+            <Text>{formatCurrency(myCosts)}</Text>
           </>
         )}
       </Box>
       {party.finalCostPerDay && party.payday ? (
-        myPaidDues ? (
+        (myPaidDues ?? 0) >= myCosts ? (
           <Text>Du hast bereits alles bezahlt!</Text>
         ) : (
           <Text>

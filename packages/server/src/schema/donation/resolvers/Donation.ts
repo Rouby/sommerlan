@@ -5,9 +5,10 @@ export const Donation: DonationResolvers = {
     return dedication.toUpperCase() as Uppercase<typeof dedication>;
   },
   donator: (parent, _args, ctx) => {
-    if (parent.incognito && ctx.jwt.user.id !== parent.userId) {
+    if (!ctx.ability.can("read", parent, "userId")) {
       return null;
     }
+
     return ctx.data.User.findById(parent.userId);
   },
   party: (parent, _, ctx) => {

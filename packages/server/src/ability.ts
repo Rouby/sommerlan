@@ -24,6 +24,7 @@ export type AppAbility = MongoAbility<
       | "Picture"
       | Donation
       | "Donation"
+      | "Budget"
     ),
   ]
 >;
@@ -39,6 +40,7 @@ export async function createAbility(
     can("read", "Party");
     can("read", "User", { id: user.id });
     can("update", "User", { id: user.id });
+    can("read", "Attending", "paidDues", { userId: user.id });
     can("update", "Attending", { userId: user.id });
     can("read", "Event");
     can("create", "Event", { organizerId: user.id });
@@ -48,16 +50,23 @@ export async function createAbility(
     can("create", "Game");
     can("create", "Picture");
     can("rescind", "Donation", { userId: user.id });
+    cannot("read", "Donation", "userId", {
+      incognito: true,
+      userId: { $ne: user.id },
+    });
 
     if (user.roles.includes(User.Role.Admin)) {
       can("manage", "Party");
       can("manage", "User");
+      can("manage", "Budget");
+      can("read", "Attending", "paidDues");
       can("update", "Attending");
       can("grantRoom", "Attending");
       can("manage", "Event");
       can("manage", "Cache");
       can("manage", "Picture");
       can("rescind", "Donation");
+      can("read", "Donation", "userId");
     }
 
     cannot("participate", "Event", { organizerId: user.id }).because(

@@ -4,6 +4,7 @@ import { Root } from "./Root";
 import {
   Admin,
   ArchivedParty,
+  Budget,
   Cache,
   Events,
   Games,
@@ -100,6 +101,12 @@ const usersRoute = new Route({
   component: Users,
 });
 
+const budgetRoute = new Route({
+  getParentRoute: () => adminRoute,
+  path: "budget",
+  component: Budget,
+});
+
 const cacheRoute = new Route({
   getParentRoute: () => adminRoute,
   path: "cache",
@@ -120,7 +127,7 @@ const routeTree = rootRoute.addChildren([
     eventsRoute,
     imprintRoute,
     profileRoute,
-    adminRoute.addChildren([usersRoute, cacheRoute]),
+    adminRoute.addChildren([usersRoute, budgetRoute, cacheRoute]),
   ]),
 ]);
 

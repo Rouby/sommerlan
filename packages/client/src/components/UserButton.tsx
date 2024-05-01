@@ -55,6 +55,18 @@ export function UserButton() {
                 </Menu.Item>
               </Can>
 
+              <Can I="manage" a="Budget">
+                <Menu.Item
+                  component={Link}
+                  icon={<IconUsers size={14} />}
+                  to="/admin/budget"
+                  search={{}}
+                  params={{}}
+                >
+                  Budget verwalten
+                </Menu.Item>
+              </Can>
+
               <Can I="manage" a="Cache">
                 <Menu.Item
                   component={Link}

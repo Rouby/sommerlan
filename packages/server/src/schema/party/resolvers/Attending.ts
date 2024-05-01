@@ -18,4 +18,10 @@ export const Attending: Pick<
         return null;
     }
   },
+  paidDues: (parent, _, ctx) => {
+    if (!ctx.ability.can("read", parent, "paidDues")) {
+      return 0;
+    }
+    return parent.paidDues;
+  },
 };

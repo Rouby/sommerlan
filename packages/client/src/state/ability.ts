@@ -21,6 +21,7 @@ export type AppAbility = MongoAbility<
       | "Picture"
       | { __typename: "Donation" }
       | "Donation"
+      | "Budget"
     ),
   ]
 >;
