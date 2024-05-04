@@ -31,6 +31,7 @@ type Party {
   registrationDeadline: Date
   payday: Date
   finalCostPerDay: Float
+  paidDues: Float
 }
 
 type Picture {

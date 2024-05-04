@@ -1,4 +1,4 @@
-import { Box, Text } from "@mantine/core";
+import { Box, Progress, Text } from "@mantine/core";
 import { useAtomValue } from "jotai";
 import { useQuery } from "urql";
 import { graphql } from "../gql";
@@ -15,6 +15,7 @@ export function NextPartyCosts() {
         nextParty {
           id
           rentalCosts
+          paidDues
           finalCostPerDay
           payday
           donations {
@@ -116,6 +117,24 @@ export function NextPartyCosts() {
           immer gratis.
         </Text>
       )}
+      {party.finalCostPerDay && party.payday ? (
+        <>
+          <Text mt="sm" align="center">
+            Mietkosten Fortschritt
+          </Text>
+          <Progress
+            size="xl"
+            value={
+              ((data.nextParty.paidDues ?? 0) / data.nextParty.rentalCosts) *
+              100
+            }
+          />
+          <Text align="center">
+            {formatCurrency(data.nextParty.paidDues ?? 0)} /{" "}
+            {formatCurrency(data.nextParty.rentalCosts)}
+          </Text>
+        </>
+      ) : null}
     </>
   );
 }

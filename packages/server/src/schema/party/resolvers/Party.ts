@@ -7,6 +7,7 @@ export const Party: Pick<
   | "id"
   | "location"
   | "locationWidgetSrc"
+  | "paidDues"
   | "payday"
   | "pictures"
   | "registrationDeadline"
@@ -29,5 +30,9 @@ export const Party: Pick<
   },
   payday: (parent) => {
     return parent.payday ? parent.payday : null;
+  },
+  paidDues: async (parent, _, ctx) => {
+    const attendings = await ctx.data.Attending.filterByPartyId(parent.id);
+    return attendings.reduce((acc, attending) => acc + attending.paidDues, 0);
   },
 };

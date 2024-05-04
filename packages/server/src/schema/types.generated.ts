@@ -316,6 +316,7 @@ export type Party = {
   id: Scalars["ID"]["output"];
   location: Scalars["String"]["output"];
   locationWidgetSrc?: Maybe<Scalars["String"]["output"]>;
+  paidDues?: Maybe<Scalars["Float"]["output"]>;
   payday?: Maybe<Scalars["Date"]["output"]>;
   pictures: Array<Picture>;
   registrationDeadline?: Maybe<Scalars["Date"]["output"]>;
@@ -1019,6 +1020,7 @@ export type PartyResolvers<
     ParentType,
     ContextType
   >;
+  paidDues?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
   payday?: Resolver<Maybe<ResolversTypes["Date"]>, ParentType, ContextType>;
   pictures?: Resolver<
     Array<ResolversTypes["Picture"]>,
