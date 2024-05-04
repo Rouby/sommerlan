@@ -42,7 +42,8 @@ export function Budget() {
       <Box p="sm">
         <Text mb="md">
           Kosten pro Tag:{" "}
-          {formatCurrency(data?.nextParty?.finalCostPerDay ?? 0)}
+          {formatCurrency(data?.nextParty?.finalCostPerDay ?? 0)}, erster Tag
+          umsonst.
         </Text>
         {data?.nextParty?.attendings
           .filter(
@@ -91,19 +92,17 @@ export function Budget() {
                 <UserAvatar user={attending.user} />{" "}
                 <div>
                   <Text>
-                    {attending.user.displayName} ist {attending.dates.length}{" "}
-                    Tage dabei und muss {formatCurrency(rentDues)} zur Miete
-                    beitragen.
+                    {attending.user.displayName}, {attending.dates.length} Tage
                   </Text>
+                  <Text weight="bold">{formatCurrency(rentDues)} Miete</Text>
                   {rentDonationSum > 0 && (
                     <Text>
-                      Plus {formatCurrency(rentDonationSum)} Spenden für die
-                      Miete.
+                      {formatCurrency(rentDonationSum)} Spenden für die Miete.
                     </Text>
                   )}
                   {otherDonationSum > 0 && (
                     <Text>
-                      Plus {formatCurrency(otherDonationSum)} andere Spenden.
+                      {formatCurrency(otherDonationSum)} andere Spenden.
                     </Text>
                   )}
                   <Text
@@ -121,14 +120,14 @@ export function Budget() {
                     ) : (
                       <IconClockDollar size="18" />
                     )}
-                    Davon wurden bereits {formatCurrency(attending.paidDues)}{" "}
-                    bezahlt.
+                    Bereits {formatCurrency(attending.paidDues)} bezahlt.
                   </Text>
                 </div>
               </Box>
             );
           })}
-        <Text>
+
+        <Text mt="md">
           Insgesamt wurden{" "}
           {formatCurrency(
             data?.nextParty?.donations.reduce(

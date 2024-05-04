@@ -7,11 +7,15 @@ export function Admin() {
   return (
     <Container>
       <Box
-        sx={{
+        sx={(theme) => ({
           display: "grid",
           gridTemplateColumns: "200px 1fr",
           alignItems: "start",
-        }}
+          "@media (max-width: 48em)": {
+            gridTemplateColumns: "1fr",
+            gap: theme.spacing.md,
+          },
+        })}
       >
         <Box mr="md">
           <NavLink
