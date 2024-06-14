@@ -35,7 +35,7 @@
     "fast-json-patch": "^3.1.1",
     "fastify": "^4.26.2",
     "google-spreadsheet": "^3.3.0",
-    "graphql": "^16.8.1",
+    "graphql": "^16.8.2",
     "graphql-scalars": "^1.22.2",
     "graphql-yoga": "^4.0.4",
     "jsonwebtoken": "^9.0.0",

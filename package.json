@@ -21,7 +21,7 @@
     "@types/esprima": "^4",
     "concurrently": "^8.2.2",
     "esprima": "^4.0.1",
-    "graphql": "^16.8.1",
+    "graphql": "^16.8.2",
     "graphql-config": "^5.0.2",
     "prettier": "^3.2.5",
     "typescript": "^5.4.4"
