@@ -5,7 +5,6 @@ import {
   Group,
   Input,
   LoadingOverlay,
-  MediaQuery,
   Modal,
   PasswordInput,
   Stack,
@@ -30,7 +29,7 @@ export function SignUpButton() {
 
   return (
     <>
-      <Group noWrap>
+      <Group wrap="nowrap">
         <Button
           variant="default"
           onClick={() => {
@@ -109,17 +108,17 @@ function RegisterForm() {
       </Alert>
 
       <Box
-        sx={(theme) => ({
+        style={{
           display: "grid",
           gridTemplateColumns: "1fr minmax(360px, auto)",
-          [theme.fn.smallerThan("sm")]: {
-            gridTemplateColumns: "1fr",
-          },
-        })}
+
+          // [theme.fn.smallerThan("sm")]: {
+          //   gridTemplateColumns: "1fr",
+          // },
+        }}
       >
-        <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
-          <SignUpIllustration />
-        </MediaQuery>
+        {/* <MediaQuery smallerThan="sm" styles={{ display: "none" }}> */}
+        <SignUpIllustration />
 
         <Stack>
           <TextInput
@@ -147,7 +146,7 @@ function RegisterForm() {
             placeholder="Dein Passwort"
           />
 
-          <Group position="apart">
+          <Group justify="apart">
             <div />
             <Button type="submit" disabled={fetching}>
               Anmelden
@@ -179,18 +178,18 @@ function LoginForm() {
   return (
     <>
       <Box
-        sx={(theme) => ({
+        style={{
           display: "grid",
           gridTemplateColumns: "1fr auto",
           alignItems: "center",
-          [theme.fn.smallerThan("sm")]: {
-            gridTemplateColumns: "1fr",
-          },
-        })}
+
+          // [theme.fn.smallerThan("sm")]: {
+          //   gridTemplateColumns: "1fr",
+          // },
+        }}
       >
-        <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
-          <SignUpIllustration />
-        </MediaQuery>
+        {/* <MediaQuery smallerThan="sm" styles={{ display: "none" }}> */}
+        <SignUpIllustration />
 
         <Stack>
           <Button onClick={() => setSignInViaPasskey(true)}>
@@ -261,17 +260,17 @@ function SignInViaPassword() {
       </Alert>
 
       <Box
-        sx={(theme) => ({
+        style={{
           display: "grid",
           gridTemplateColumns: "1fr minmax(360px, auto)",
-          [theme.fn.smallerThan("sm")]: {
-            gridTemplateColumns: "1fr",
-          },
-        })}
+
+          // [theme.fn.smallerThan("sm")]: {
+          //   gridTemplateColumns: "1fr",
+          // },
+        }}
       >
-        <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
-          <SignUpIllustration />
-        </MediaQuery>
+        {/* <MediaQuery smallerThan="sm" styles={{ display: "none" }}> */}
+        <SignUpIllustration />
 
         <Stack>
           <TextInput
@@ -292,7 +291,7 @@ function SignInViaPassword() {
             placeholder="Dein Passwort"
           />
 
-          <Group position="apart">
+          <Group justify="apart">
             <div />
             <Button type="submit" disabled={fetching}>
               Anmelden
@@ -347,7 +346,7 @@ function SignInViaEmail() {
 
           <Group>
             <Input
-              sx={{ flex: "1 1 auto" }}
+              style={{ flex: "1 1 auto" }}
               required
               type="email"
               name="email"

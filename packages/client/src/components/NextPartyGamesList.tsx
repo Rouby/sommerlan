@@ -1,18 +1,22 @@
 import {
   Avatar,
   Box,
+  CheckIcon,
+  Combobox,
   Divider,
   Group,
   Indicator,
-  MultiSelect,
+  Pill,
+  PillsInput,
   Popover,
   Skeleton,
   Text,
   Tooltip,
+  useCombobox,
 } from "@mantine/core";
 import dayjs from "dayjs";
 import { useAtomValue } from "jotai";
-import { Fragment, forwardRef } from "react";
+import { Fragment, forwardRef, useState } from "react";
 import { useMutation, useQuery } from "urql";
 import { UserAvatar } from ".";
 import { graphql } from "../gql";
@@ -134,49 +138,120 @@ export function NextPartyGamesList({ partyId }: { partyId?: string }) {
     `),
   );
 
+  const combobox = useCombobox({
+    onDropdownClose: () => combobox.resetSelectedOption(),
+    onDropdownOpen: () => combobox.updateSelectedOptionIndex("active"),
+  });
+
+  const [search, setSearch] = useState("");
+
   return (
     <>
-      <MultiSelect
-        label="Spiele die ich spielen will:"
-        value={gamesPlayedByMe}
-        onChange={(gameIds) => {
-          setGamesPlayed({
-            partyId: party!.id,
-            gameIds,
-            // @ts-expect-error
-            attendingId: myAttending?.id,
-          });
-        }}
-        data={
-          games?.map((game) => ({
-            value: game.id,
-            label: game.name,
-            image: game.image,
-          })) ?? []
-        }
+      <Combobox
         disabled={fetching}
-        itemComponent={GameItem}
-        searchable
-        creatable
-        getCreateLabel={(query) => `+ ${query} zur Liste hinzufügen`}
-        onCreate={(query) => {
-          addGameToParty({ name: query, partyId: party!.id });
-          return null;
+        store={combobox}
+        onOptionSubmit={(val) => {
+          setSearch("");
+
+          if (val === "$create") {
+            addGameToParty({
+              partyId: party!.id,
+              name: search,
+            });
+          } else {
+            setGamesPlayed({
+              partyId: party!.id,
+              gameIds: gamesPlayedByMe?.includes(val)
+                ? gamesPlayedByMe?.filter((g) => g !== val) ?? []
+                : [...(gamesPlayedByMe ?? []), val],
+            });
+          }
         }}
-      />
+        withinPortal={false}
+      >
+        <Combobox.DropdownTarget>
+          <PillsInput>
+            <Pill.Group>
+              {gamesPlayedByMe?.map((game) => (
+                <Pill
+                  withRemoveButton
+                  onRemove={() => {
+                    setGamesPlayed({
+                      partyId: party!.id,
+                      gameIds: gamesPlayedByMe?.filter((g) => g !== game) ?? [],
+                    });
+                  }}
+                >
+                  {games?.find((g) => g.id === game)?.name}
+                </Pill>
+              ))}
+
+              <Combobox.EventsTarget>
+                <PillsInput.Field
+                  onFocus={() => combobox.openDropdown()}
+                  onBlur={() => combobox.closeDropdown()}
+                  value={search}
+                  placeholder="Search games"
+                  onChange={(event) => {
+                    combobox.updateSelectedOptionIndex();
+                    setSearch(event.currentTarget.value);
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key === "Backspace" && search.length === 0) {
+                      event.preventDefault();
+                      setGamesPlayed({
+                        partyId: party!.id,
+                        gameIds: gamesPlayedByMe?.slice(0, -1) ?? [],
+                      });
+                    }
+                  }}
+                />
+              </Combobox.EventsTarget>
+            </Pill.Group>
+          </PillsInput>
+        </Combobox.DropdownTarget>
+        <Combobox.Dropdown>
+          <Combobox.Options>
+            {games
+              ?.filter((game) =>
+                game.name.toLowerCase().includes(search.trim().toLowerCase()),
+              )
+              .map((game) => (
+                <Combobox.Option
+                  value={game.id}
+                  key={game.id}
+                  active={gamesPlayedByMe?.includes(game.id)}
+                >
+                  <GameItem
+                    active={gamesPlayedByMe?.includes(game.id)}
+                    label={game.name}
+                    image={game.image}
+                  />
+                </Combobox.Option>
+              ))}
+
+            {!games?.some((game) => game.name === search) &&
+              search.trim().length > 0 && (
+                <Combobox.Option value="$create">
+                  + Add {search}
+                </Combobox.Option>
+              )}
+          </Combobox.Options>
+        </Combobox.Dropdown>
+      </Combobox>
       <Box
         p="xs"
-        sx={(theme) => ({
+        style={{
           display: "grid",
           gridTemplateColumns: "auto 1fr",
-          columnGap: theme.spacing.md,
-          rowGap: theme.spacing.sm,
+          columnGap: "var(--mantine-spacing-md)",
+          rowGap: "var(--mantine-spacing-sm)",
           alignItems: "center",
 
-          [theme.fn.smallerThan("xs")]: {
-            gridTemplateColumns: "1fr",
-          },
-        })}
+          // [theme.fn.smallerThan("xs")]: {
+          //   gridTemplateColumns: "1fr",
+          // },
+        }}
       >
         {dates.map((date, idx, arr) => {
           if (!party) {
@@ -185,12 +260,13 @@ export function NextPartyGamesList({ partyId }: { partyId?: string }) {
                 key={idx}
                 height={40}
                 width="100%"
-                sx={(theme) => ({
+                style={{
                   gridColumn: "1 / span 4",
-                  [theme.fn.smallerThan("xs")]: {
-                    gridColumn: "1 / span 3",
-                  },
-                })}
+                  // TODO fix this
+                  // [theme.fn.smallerThan("xs")]: {
+                  //   gridColumn: "1 / span 3",
+                  // },
+                }}
               />
             );
           }
@@ -224,10 +300,12 @@ export function NextPartyGamesList({ partyId }: { partyId?: string }) {
             );
           return (
             <Fragment key={date.toString()}>
-              <Box sx={{ whiteSpace: "nowrap" }}>{date.format("ddd, L")}</Box>
+              <Box style={{ whiteSpace: "nowrap" }}>
+                {date.format("ddd, L")}
+              </Box>
 
               <Tooltip.Group openDelay={300} closeDelay={100}>
-                <Avatar.Group spacing="sm" sx={{ flexWrap: "wrap" }}>
+                <Avatar.Group spacing="sm" style={{ flexWrap: "wrap" }}>
                   {gamesOnDate.map((game) => (
                     <Popover key={game.id}>
                       <Popover.Target>
@@ -261,12 +339,13 @@ export function NextPartyGamesList({ partyId }: { partyId?: string }) {
 
               {idx < arr.length - 1 && (
                 <Divider
-                  sx={(theme) => ({
+                  style={{
                     gridColumn: "1 / span 2",
-                    [theme.fn.smallerThan("xs")]: {
-                      gridColumn: "1",
-                    },
-                  })}
+                    // TODO fix this
+                    // [theme.fn.smallerThan("xs")]: {
+                    //   gridColumn: "1",
+                    // },
+                  }}
                 />
               )}
             </Fragment>
@@ -278,12 +357,19 @@ export function NextPartyGamesList({ partyId }: { partyId?: string }) {
 }
 
 const GameItem = forwardRef(function GameItem(
-  { image, label, ...props }: { image: string; label: string },
+  {
+    image,
+    label,
+    active,
+    ...props
+  }: { image: string; label: string; active?: boolean },
   ref: React.Ref<HTMLDivElement>,
 ) {
   return (
     <div ref={ref} {...props}>
-      <Group noWrap>
+      <Group wrap="nowrap">
+        {active && <CheckIcon size={12} />}
+
         <Avatar radius="xl" src={image}>
           {label
             .split(" ")

@@ -1,0 +1,6 @@
+.costs {
+  display: grid;
+  grid-template-columns: max-content max-content;
+  gap: 0 var(--mantine-spacing-xs);
+  justify-items: end;
+}

@@ -1,0 +1,8 @@
+.donations {
+  display: grid;
+  grid-template-columns: repeat(4, max-content);
+  gap: 0 var(--mantine-spacing-xs);
+  justify-items: end;
+  align-items: center;
+  margin-bottom: var(--mantine-spacing-md);
+}

@@ -58,7 +58,7 @@ export function ProfileSettings() {
       }}
     >
       <CardWithHeader header="Deine Profil">
-        <Stack p="xs" spacing="xs">
+        <Stack p="xs" gap="xs">
           <Input.Wrapper label="Dein Name">
             <Input
               id="userName"
@@ -124,7 +124,9 @@ export function ProfileSettings() {
             }}
             maxFiles={1}
             openRef={openRef}
-            sx={{ height: 100, display: "grid", alignItems: "center" }}
+            style={{ alignItems: "center" }}
+            h={100}
+            display="grid"
             loading={fetching}
           >
             <Center>Alternativ kannst du ein Bild hochladen</Center>
@@ -133,7 +135,7 @@ export function ProfileSettings() {
             Bild auswählen
           </Button>
 
-          <Group position="right">
+          <Group justify="right">
             <Button loading={fetching} type="submit">
               Speichern
             </Button>

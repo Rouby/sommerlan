@@ -75,7 +75,7 @@ export function PartyCountdown({ partyId }: { partyId?: string }) {
         </Text>
       ))}
       {"registrationDeadline" in party && party.registrationDeadline && (
-        <Text weight="bold" size="lg" mt="xs">
+        <Text w="bold" size="lg" mt="xs">
           Anmeldefrist ist der{" "}
           {formatDate(new Date(party.registrationDeadline))}
         </Text>

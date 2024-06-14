@@ -1,5 +1,17 @@
-import { Avatar, Divider, Group, Menu, UnstyledButton } from "@mantine/core";
-import { IconClipboardCheck, IconLock, IconUsers } from "@tabler/icons-react";
+import {
+  Avatar,
+  Divider,
+  Group,
+  Menu,
+  UnstyledButton,
+  rem,
+} from "@mantine/core";
+import {
+  IconChevronRight,
+  IconClipboardCheck,
+  IconLock,
+  IconUsers,
+} from "@tabler/icons-react";
 import { Link } from "@tanstack/router";
 import { useAtomValue, useSetAtom } from "jotai";
 import { abilityAtom, tokenAtom, userAtom } from "../state";
@@ -18,9 +30,13 @@ export function UserButton() {
       <Menu shadow="md" width={200}>
         <Menu.Target>
           <UnstyledButton data-testid="user button">
-            <Group noWrap>
+            <Group wrap="nowrap">
               <Avatar src={user.avatar} radius="xl" />
               {user.displayName}
+              <IconChevronRight
+                style={{ width: rem(14), height: rem(14) }}
+                stroke={1.5}
+              />
             </Group>
           </UnstyledButton>
         </Menu.Target>
@@ -30,7 +46,7 @@ export function UserButton() {
 
           <Menu.Item
             component={Link}
-            icon={<IconUsers size={14} />}
+            leftSection={<IconUsers size={14} />}
             to="/profile"
             search={{}}
             params={{}}
@@ -46,7 +62,7 @@ export function UserButton() {
               <Can I="manage" a="User">
                 <Menu.Item
                   component={Link}
-                  icon={<IconUsers size={14} />}
+                  leftSection={<IconUsers size={14} />}
                   to="/admin/users"
                   search={{}}
                   params={{}}
@@ -58,7 +74,7 @@ export function UserButton() {
               <Can I="manage" a="Budget">
                 <Menu.Item
                   component={Link}
-                  icon={<IconUsers size={14} />}
+                  leftSection={<IconUsers size={14} />}
                   to="/admin/budget"
                   search={{}}
                   params={{}}
@@ -70,7 +86,7 @@ export function UserButton() {
               <Can I="manage" a="Cache">
                 <Menu.Item
                   component={Link}
-                  icon={<IconClipboardCheck size={14} />}
+                  leftSection={<IconClipboardCheck size={14} />}
                   to="/admin/cache"
                   search={{}}
                   params={{}}
@@ -84,7 +100,7 @@ export function UserButton() {
           <Divider />
 
           <Menu.Item
-            icon={<IconLock size={14} />}
+            leftSection={<IconLock size={14} />}
             onClick={() => setToken(null)}
           >
             Ausloggen

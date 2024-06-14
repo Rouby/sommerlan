@@ -8,14 +8,15 @@ import {
   Divider,
   Group,
   Loader,
-  MediaQuery,
   NumberInput,
+  PolymorphicComponentProps,
   Popover,
   Skeleton,
   Table,
   TextInput,
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
+import { useColorScheme } from "@mantine/hooks";
 import { IconArrowLeft, IconEye, IconPencil } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { motion } from "framer-motion";
@@ -26,15 +27,16 @@ import { graphql } from "../gql";
 import { abilityAtom } from "../state";
 import { PartyInfo } from "./PartyInfo";
 
-const MotionBox = motion<
-  import("@mantine/utils").PolymorphicComponentProps<"tr" | "div", BoxProps>
->(Box as any);
+const MotionBox =
+  motion<PolymorphicComponentProps<"tr" | "div", BoxProps>>(Box);
 
 const dateFormat = new Intl.DateTimeFormat(navigator.language, {
   dateStyle: "long",
 });
 
 export function PartyList() {
+  const colorScheme = useColorScheme();
+
   const ability = useAtomValue(abilityAtom);
 
   const [{ data, fetching }] = useQuery({
@@ -83,9 +85,9 @@ export function PartyList() {
             <th></th>
             <th>Datum</th>
             <th>Dauer</th>
-            <MediaQuery smallerThan="md" styles={{ display: "none" }}>
-              <th>Ort</th>
-            </MediaQuery>
+            {/* <MediaQuery smallerThan="md" styles={{ display: "none" }}> */}
+            <th>Ort</th>
+
             <th>Teilnehmer</th>
           </tr>
         </thead>
@@ -103,19 +105,19 @@ export function PartyList() {
                 component="tr"
                 layoutId={`party-${party.id}`}
                 layout="position"
-                sx={(theme) => ({
+                style={{
                   ...(isInFuture && {
                     backgroundImage:
-                      theme.colorScheme === "dark"
-                        ? `linear-gradient(45deg, ${theme.colors.dark[6]} 25%, transparent 25%, transparent 50%, ${theme.colors.dark[6]} 50%, ${theme.colors.dark[6]} 75%, transparent 75%, transparent 100%)`
-                        : theme.black,
+                      colorScheme === "dark"
+                        ? `linear-gradient(45deg, var(--mantine-color-filled) 25%, transparent 25%, transparent 50%, var(--mantine-color-filled) 50%, var(--mantine-color-filled) 75%, transparent 75%, transparent 100%)`
+                        : "var(--mantine-color-black)",
                     backgroundSize: "56.57px 56.57px",
                   }),
                   whiteSpace: "nowrap",
-                })}
+                }}
               >
                 <td>
-                  <Group noWrap spacing={0}>
+                  <Group wrap="nowrap" gap={0}>
                     <ActionIconLink
                       to={`/party/archive/$id`}
                       params={{ id: party.id }}
@@ -150,11 +152,11 @@ export function PartyList() {
                     .duration(dayjs(party.endDate).diff(party.startDate))
                     .humanize()}
                 </td>
-                <MediaQuery smallerThan="md" styles={{ display: "none" }}>
-                  <td>{party.location}</td>
-                </MediaQuery>
+                {/* <MediaQuery smallerThan="md" styles={{ display: "none" }}> */}
+                <td>{party.location}</td>
+
                 <td>
-                  <Avatar.Group spacing="sm" sx={{ flexWrap: "wrap" }}>
+                  <Avatar.Group spacing="sm" style={{ flexWrap: "wrap" }}>
                     {party.attendings
                       .filter((attending) => attending.dates.length > 0)
                       .map((attending) => (
@@ -201,12 +203,12 @@ export function PartyRowStandalone({ id }: { id: string }) {
     <MotionBox layoutId={`party-${id}`} layout="position" component="div">
       <Box
         p="sm"
-        sx={{
+        style={{
           display: "grid",
           gridTemplateColumns: "max-content 1fr",
         }}
       >
-        <Group noWrap spacing={0} mr="md">
+        <Group wrap="nowrap" gap={0} mr="md">
           <ActionIcon onClick={() => history.back()}>
             <IconArrowLeft size={18} />
           </ActionIcon>
@@ -215,11 +217,11 @@ export function PartyRowStandalone({ id }: { id: string }) {
           <Skeleton />
         ) : (
           <Box
-            sx={(theme) => ({
+            style={{
               display: "grid",
-              gap: theme.spacing.md,
+              gap: "var(--mantine-spacing-md)",
               gridTemplateColumns: "auto auto auto",
-            })}
+            }}
           >
             <div>
               {dateFormat
@@ -302,17 +304,17 @@ function PartyForm({
       }}
     >
       <Box
-        sx={(theme) => ({
+        style={{
           display: "grid",
           gridAutoColumns: "auto",
           gridAutoFlow: "column",
-          gap: theme.spacing.sm,
+          gap: "var(--mantine-spacing-sm)",
           alignItems: "end",
 
-          [theme.fn.smallerThan("md")]: {
-            gridAutoFlow: "row",
-          },
-        })}
+          // [theme.fn.smallerThan("md")]: {
+          //   gridAutoFlow: "row",
+          // },
+        }}
       >
         <DatePickerInput
           name="times"
@@ -331,7 +333,6 @@ function PartyForm({
           name="roomsAvailable"
           defaultValue={roomsAvailable}
           label="reservierbare Schlafplätze"
-          type="number"
           disabled={!isInFuture || fetching}
         />
         <Button type="submit" loading={fetching}>

@@ -1,7 +1,6 @@
 import {
   ActionIcon,
   Badge,
-  Box,
   Button,
   Group,
   Modal,
@@ -46,7 +45,7 @@ export function PasskeySettings() {
         </Button>
       }
     >
-      <Stack p="xs" spacing="xs">
+      <Stack p="xs" gap="xs">
         {fetching && (
           <>
             <Skeleton h={40} />
@@ -123,32 +122,25 @@ function DeviceInfos({
         setEdit(false);
       }}
     >
-      <Group position="apart" noWrap>
+      <Group justify="space-between" wrap="nowrap">
         {edit ? (
           <>
             <TextInput
               required
               name="deviceName"
               autoFocus
-              sx={{ flex: 1 }}
+              flex={1}
               defaultValue={name}
               placeholder="Unnamed passkey"
               disabled={isUpdating}
             />
           </>
         ) : (
-          <Stack spacing={0}>
-            <Box
-              sx={(theme) => ({
-                display: "grid",
-                gridTemplateColumns: "auto 1fr auto",
-                alignItems: "center",
-                gap: theme.spacing.md,
-              })}
-            >
+          <Stack gap={0}>
+            <Group justify="space-between" align="center">
               <IconKey size={16} />
               <Text
-                sx={{
+                style={{
                   overflow: "hidden",
                   textOverflow: "ellipsis",
                   whiteSpace: "nowrap",
@@ -160,7 +152,7 @@ function DeviceInfos({
               {localStorage.getItem("credentialID") === id && (
                 <Badge color="gray">Von diesem Browser benutzt</Badge>
               )}
-            </Box>
+            </Group>
             {(createdAt || lastUsedAt) && (
               <Text color="dimmed">
                 {createdAt ? (
@@ -176,7 +168,7 @@ function DeviceInfos({
             )}
           </Stack>
         )}
-        <Group noWrap>
+        <Group wrap="nowrap">
           {edit ? (
             <>
               <Button type="submit" loading={isUpdating}>

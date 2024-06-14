@@ -1,0 +1,42 @@
+.attendings {
+  /* 
+  
+            display: "grid",
+            gridTemplateColumns: "auto auto auto 1fr",
+            columnGap: 'var(--mantine-spacing-md)',
+            rowGap: "var(--mantine-spacing-sm)",
+            alignItems: "center",
+            fontSize: theme.fontSizes.lg,
+
+            // [theme.fn.smallerThan("xs")]: {
+            //   gridTemplateColumns: "auto auto 1fr",
+
+            //   "& > *:nth(5n)": {
+            //     gridColumn: "1 / span 3",
+            //   },
+            // },
+  */
+  display: grid;
+  grid-template-columns: auto auto auto 1fr;
+  column-gap: var(--mantine-spacing-md);
+  row-gap: var(--mantine-spacing-sm);
+  align-items: center;
+  font-size: var(--mantine-font-size-lg);
+
+  @media (max-width: 990px) {
+    grid-template-columns: auto auto 1fr;
+
+    & > *:nth(5n) {
+      grid-column: 1 / span 3;
+    }
+  }
+}
+
+.skeleton,
+.tags {
+  grid-column: span 4;
+
+  @media (max-width: 990px) {
+    grid-column: span 3;
+  }
+}

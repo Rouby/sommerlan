@@ -1,6 +1,8 @@
 import { Box, Container, useMantineTheme } from "@mantine/core";
+import { useColorScheme } from "@mantine/hooks";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import classes from "./LAN.module.css";
 
 export function LAN() {
   const width = 17;
@@ -45,9 +47,7 @@ export function LAN() {
 
   return (
     <Container>
-      <Box
-        sx={{ display: "grid", gridTemplateColumns: `repeat(${width}, auto)` }}
-      >
+      <Box style={{ "--width": width }} className={classes.computers}>
         {Array.from({ length: 6 * width }, (_, idx) => (
           <Computer key={idx} active={active.includes(idx)} />
         ))}
@@ -58,7 +58,8 @@ export function LAN() {
 
 function Computer({ active }: { active?: boolean }) {
   const [delay] = useState(() => Math.random());
-  const { colorScheme, colors, black } = useMantineTheme();
+  const { colors, black } = useMantineTheme();
+  const colorScheme = useColorScheme();
   const backgroundColor = colorScheme === "dark" ? black : colors.gray[4];
   const activeColor = "#00adef";
 
@@ -67,7 +68,7 @@ function Computer({ active }: { active?: boolean }) {
       component="svg"
       viewBox="0 0 55 78"
       xmlns="http://www.w3.org/2000/svg"
-      sx={{ fill: colorScheme === "dark" ? black : colors.gray[5] }}
+      className={classes.computer}
     >
       <path d="M47.523 40.55h-40c-2.206 0-4-1.794-4-4v-30c0-2.206 1.794-4 4-4h40c2.206 0 4 1.794 4 4v30c0 2.206-1.794 4-4 4zm-40-36c-1.103 0-2 .897-2 2v30c0 1.103.897 2 2 2h40c1.103 0 2-.897 2-2v-30c0-1.103-.897-2-2-2h-40zm34 42h-28a1 1 0 0 1 0-2h28a1 1 0 0 1 0 2z" />
       <motion.rect

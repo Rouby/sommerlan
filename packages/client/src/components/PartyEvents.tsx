@@ -102,12 +102,12 @@ export function PartyEvents({ partyId }: { partyId?: string }) {
         />
       </Modal>
       <Box
-        sx={(theme) => ({
+        style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fill, 280px)",
-          gap: theme.spacing.md,
+          gap: "var(--mantine-spacing-md)",
           justifyContent: "center",
-        })}
+        }}
       >
         {fetching && (
           <>
@@ -180,14 +180,14 @@ function EventCard({
       padding="lg"
       radius="md"
       withBorder
-      sx={{ display: "flex", flexDirection: "column" }}
+      style={{ display: "flex", flexDirection: "column" }}
     >
       <Card.Section>
         <Image src={event.image} height={300} />
       </Card.Section>
 
-      <Group mt="md" position="apart" noWrap>
-        <Text weight={500}>{event.name}</Text>
+      <Group mt="md" justify="apart" wrap="nowrap">
+        <Text w={500}>{event.name}</Text>
         <Can
           I="update"
           this={subject("Event", event as any) as any}
@@ -209,7 +209,7 @@ function EventCard({
           : ""}
       </Text>
 
-      <Box sx={{ flex: 1 }}>
+      <Box style={{ flex: 1 }}>
         {event.description && (
           <TypographyStylesProvider mt="sm">
             <div dangerouslySetInnerHTML={{ __html: event.description }} />
@@ -218,14 +218,14 @@ function EventCard({
       </Box>
 
       <Can I="participate" this={event}>
-        <Stack spacing="xs" mt="md">
+        <Stack gap="xs" mt="md">
           <Button
             loading={fetching}
             variant={isParticipating ? "gradient" : "light"}
             color="blue"
             fullWidth
             radius="md"
-            leftIcon={isParticipating ? <IconCheck /> : undefined}
+            leftSection={isParticipating ? <IconCheck /> : undefined}
             onClick={() =>
               participate({ id: event.id, participate: !isParticipating })
             }
@@ -241,7 +241,7 @@ function EventCard({
       </Can>
 
       <Tooltip.Group openDelay={300} closeDelay={100}>
-        <Avatar.Group spacing="sm" sx={{ flexWrap: "wrap" }} mt="sm">
+        <Avatar.Group spacing="sm" style={{ flexWrap: "wrap" }} mt="sm">
           {event.participants.map((user) => (
             <UserAvatar key={user.id} user={user} />
           ))}
@@ -377,16 +377,17 @@ function CreateEventForm({
         </Input.Wrapper>
 
         <Box
-          sx={(theme) => ({
+          style={{
             display: "grid",
             gridTemplateColumns: "auto 1fr 1fr",
             alignItems: "center",
-            gap: theme.spacing.md,
+            gap: "var(--mantine-spacing-md)",
 
+            // TODO nested selectors
             "& > *:nth-of-type(2)": {
               gridColumn: "span 2",
             },
-          })}
+          }}
         >
           <Checkbox
             name="dateUncertain"
@@ -451,14 +452,14 @@ function CreateEventForm({
           onDrop={(files) => setImage(files[0])}
           maxFiles={1}
           openRef={openRef}
-          sx={{ height: 100, display: "grid", alignItems: "center" }}
+          style={{ height: 100, display: "grid", alignItems: "center" }}
           loading={fetching}
         >
           <Center>Alternativ kannst du ein Bild hochladen</Center>
         </Dropzone>
         <Button onClick={() => openRef.current?.()}>Bild auswählen</Button>
 
-        <Group position="right">
+        <Group justify="right">
           <Button type="submit" disabled={fetching}>
             {defaultValues ? "Speichern" : "Event erstellen"}
           </Button>

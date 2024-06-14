@@ -1,0 +1,12 @@
+.computers {
+  display: grid;
+  grid-template-columns: repeat(var(--width), auto);
+}
+
+.computer {
+  fill: var(--mantine-color-gray-5);
+
+  @media (prefers-color-scheme: dark) {
+    fill: var(--mantine-color-black);
+  }
+}

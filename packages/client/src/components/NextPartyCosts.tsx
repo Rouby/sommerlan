@@ -5,6 +5,7 @@ import { graphql } from "../gql";
 import { DonationDedication } from "../gql/graphql";
 import { userAtom } from "../state";
 import { formatCurrency, formatDate } from "../utils";
+import classes from "./NextPartyCosts.module.css";
 
 export function NextPartyCosts() {
   const user = useAtomValue(userAtom)!;
@@ -78,14 +79,7 @@ export function NextPartyCosts() {
 
   return (
     <>
-      <Box
-        sx={(theme) => ({
-          display: "grid",
-          gridTemplateColumns: "max-content max-content",
-          gap: `0 ${theme.spacing.xs}`,
-          justifyItems: "end",
-        })}
-      >
+      <Box className={classes.costs}>
         <Text fw="bold">Mietkosten:</Text>
         <Text>{formatCurrency(party.rentalCosts)}</Text>
         <Text fw="bold">Spendenbeitrag:</Text>
@@ -119,7 +113,7 @@ export function NextPartyCosts() {
       )}
       {party.finalCostPerDay && party.payday ? (
         <>
-          <Text mt="sm" align="center">
+          <Text ta="center" mt="sm">
             Mietkosten Fortschritt
           </Text>
           <Progress
@@ -129,7 +123,7 @@ export function NextPartyCosts() {
               100
             }
           />
-          <Text align="center">
+          <Text ta="center">
             {formatCurrency(data.nextParty.paidDues ?? 0)} /{" "}
             {formatCurrency(data.nextParty.rentalCosts)}
           </Text>

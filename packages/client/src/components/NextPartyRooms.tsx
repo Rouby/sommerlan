@@ -82,7 +82,7 @@ export function NextPartyRooms() {
         fullWidth
         mt="md"
         radius="md"
-        leftIcon={
+        leftSection={
           isGrantedRoom ? (
             <IconCheck />
           ) : isRequestingRoom ? (
@@ -144,12 +144,12 @@ function RoomRequest({
   return (
     <Box
       m="sm"
-      sx={(theme) => ({
+      style={{
         display: "grid",
         gridTemplateColumns: "max-content max-content auto auto",
-        gap: theme.spacing.sm,
+        gap: "var(--mantine-spacing-sm)",
         alignItems: "center",
-      })}
+      }}
     >
       <UserAvatar user={user} />
       {user.displayName} will einen Raum

@@ -34,7 +34,6 @@ import { UserAvatar } from ".";
 import { graphql } from "../gql";
 import { useFetchWithProgress } from "../hooks";
 import { userAtom } from "../state";
-import { formatDate } from "../utils";
 
 export function PartyInfo({ id }: { id: string }) {
   const user = useAtomValue(userAtom)!;
@@ -113,7 +112,7 @@ export function PartyInfo({ id }: { id: string }) {
           <Button
             mb="md"
             loading={savingAttendance}
-            leftIcon={<IconCalendar size={18} />}
+            leftSection={<IconCalendar size={18} />}
           >
             Wann war ich da?
           </Button>
@@ -145,7 +144,7 @@ export function PartyInfo({ id }: { id: string }) {
         </Popover.Dropdown>
       </Popover>
 
-      <Avatar.Group spacing="sm" sx={{ flexWrap: "wrap" }}>
+      <Avatar.Group spacing="sm" style={{ flexWrap: "wrap" }}>
         {party.attendings
           .filter((attending) => attending.dates.length > 0)
           .map((attending) => (
@@ -156,16 +155,7 @@ export function PartyInfo({ id }: { id: string }) {
       <Carousel>
         {party.pictures.map((picture) => (
           <Carousel.Slide key={picture.id}>
-            <Image
-              src={picture.url}
-              height={rem(500)}
-              fit="contain"
-              caption={
-                picture.meta.takeAt
-                  ? formatDate(dayjs(picture.meta.takeAt).toDate())
-                  : undefined
-              }
-            />
+            <Image src={picture.url} height={rem(500)} fit="contain" />
           </Carousel.Slide>
         ))}
       </Carousel>
@@ -210,23 +200,23 @@ function ImageUpload({ partyId }: { partyId: string }) {
             ),
           )
         }
-        sx={{ height: 100, display: "grid", alignItems: "center" }}
+        style={{ height: 100, display: "grid", alignItems: "center" }}
         disabled={isLoading}
       >
         <Center>Ziehe Bilder zum hochladen hierher, oder klicke hier.</Center>
       </Dropzone>
-      <Group position="right" mt="md">
+      <Group justify="right" mt="md">
         <Button loading={isLoading} onClick={() => uploadAll()}>
           Hochladen starten
         </Button>
       </Group>
       <Box
-        sx={(theme) => ({
+        style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fill, 220px)",
-          gap: theme.spacing.md,
-          marginBlock: theme.spacing.md,
-        })}
+          gap: "var(--mantine-spacing-md)",
+          marginBlock: "var(--mantine-spacing-md)",
+        }}
       >
         {files.map((file) => (
           <ImageUploadProgress
@@ -297,22 +287,18 @@ const ImageUploadProgress = forwardRef(function ImageUploadProgress(
   const uploading = fetching || data?.addPicture.id;
 
   return (
-    <Box sx={{ position: "relative" }}>
+    <Box pos="relative">
       <Image
         height={220}
         src={url}
         radius={uploading ? 220 : 0}
-        sx={(theme) => ({ transition: theme.transitionTimingFunction })}
-        imageProps={{ style: { transition: "border-radius 0.3s ease-in-out" } }}
+        styles={{ root: { transition: "border-radius 0.3s ease-in-out" } }}
       />
       <RingProgress
-        sx={{
-          position: "absolute",
-          top: -25,
-          left: -25,
-          opacity: uploading ? 100 : 0,
-          transition: "opacity 0.3s ease-in-out",
-        }}
+        pos="absolute"
+        top={-25}
+        left={-25}
+        opacity={uploading ? 100 : 0}
         size={270}
         thickness={20}
         sections={
@@ -336,17 +322,14 @@ const ImageUploadProgress = forwardRef(function ImageUploadProgress(
               </ThemeIcon>
             </Center>
           ) : (
-            <Text align="center" color="blue" weight={700} size="xl">
+            <Text ta="center" color="blue" w={700} size="xl">
               {Math.floor(progress * 100)}%
             </Text>
           )
         }
       />
       {!uploading && (
-        <Group
-          position="right"
-          sx={{ position: "absolute", bottom: 0, left: 0, right: 0 }}
-        >
+        <Group justify="right" pos="absolute" bottom={0} left={0} right={0}>
           <ActionIcon onClick={onDelete} variant="light">
             <IconTrash size={16} />
           </ActionIcon>

@@ -25,6 +25,7 @@ import { Can, UserAvatar } from ".";
 import { graphql } from "../gql";
 import { DonationDedication } from "../gql/graphql";
 import { formatCurrency } from "../utils";
+import classes from "./NextPartyDonations.module.css";
 
 export function NextPartyDonations() {
   const [{ data }] = useQuery({
@@ -66,17 +67,7 @@ export function NextPartyDonations() {
       {party.donations.length > 0 && (
         <>
           <Text mb="xs">Bisherige Spenden:</Text>
-          <Box
-            sx={(theme) => ({
-              display: "grid",
-              gridTemplateColumns:
-                "max-content max-content max-content max-content",
-              gap: `${theme.spacing.xs}`,
-              justifyItems: "end",
-              alignItems: "center",
-              marginBottom: theme.spacing.md,
-            })}
-          >
+          <Box className={classes.donations}>
             {party.donations.map((donation) => (
               <Fragment key={donation.id}>
                 <span>{formatCurrency(donation.amount)}</span>
@@ -185,7 +176,7 @@ function AddDonationForm({ onDonate }: { onDonate: () => void }) {
           required
           name="amount"
           min={10}
-          sx={{ textAlign: "right" }}
+          ta="right"
           rightSection={<IconCurrencyEuro />}
         />
 

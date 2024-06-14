@@ -12,14 +12,10 @@ export function CardWithHeader({
   return (
     <Paper withBorder>
       <Group
-        position="apart"
+        justify="space-between"
         p="xs"
-        sx={(theme) => ({
-          background:
-            theme.colorScheme === "dark"
-              ? theme.colors.dark[6]
-              : theme.colors.gray[2],
-        })}
+        bg="var(--mantine-color-gray-filled)"
+        color="var(--mantine-color-gray-text)"
       >
         <Text>{header}</Text>
 

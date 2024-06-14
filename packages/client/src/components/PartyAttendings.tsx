@@ -15,6 +15,7 @@ import {
   Popover,
   Skeleton,
   Stack,
+  Text,
   TextInput,
   Tooltip,
 } from "@mantine/core";
@@ -26,6 +27,7 @@ import { useMutation, useQuery } from "urql";
 import { Can, UserAvatar } from ".";
 import { graphql, useFragment } from "../gql";
 import { userAtom } from "../state";
+import classes from "./PartyAttendings.module.css";
 
 export function PartyAttendings({ partyId }: { partyId?: string }) {
   const user = useAtomValue(userAtom)!;
@@ -132,25 +134,7 @@ export function PartyAttendings({ partyId }: { partyId?: string }) {
             });
         }}
       >
-        <Box
-          p="xs"
-          sx={(theme) => ({
-            display: "grid",
-            gridTemplateColumns: "auto auto auto 1fr",
-            columnGap: theme.spacing.md,
-            rowGap: theme.spacing.sm,
-            alignItems: "center",
-            fontSize: theme.fontSizes.lg,
-
-            [theme.fn.smallerThan("xs")]: {
-              gridTemplateColumns: "auto auto 1fr",
-
-              "& > *:nth(5n)": {
-                gridColumn: "1 / span 3",
-              },
-            },
-          })}
-        >
+        <Box p="xs" className={classes.attendings}>
           {dates.map((date, idx) => {
             if (!party) {
               return (
@@ -158,12 +142,7 @@ export function PartyAttendings({ partyId }: { partyId?: string }) {
                   key={idx}
                   height={40}
                   width="100%"
-                  sx={(theme) => ({
-                    gridColumn: "1 / span 4",
-                    [theme.fn.smallerThan("xs")]: {
-                      gridColumn: "1 / span 3",
-                    },
-                  })}
+                  className={classes.skeleton}
                 />
               );
             }
@@ -173,9 +152,7 @@ export function PartyAttendings({ partyId }: { partyId?: string }) {
             );
             return (
               <Fragment key={date.toString()}>
-                <Box id={`date-label-${idx}`} sx={{ whiteSpace: "nowrap" }}>
-                  {date.format("ddd, L")}
-                </Box>
+                <Text id={`date-label-${idx}`}>{date.format("ddd, L")}</Text>
 
                 <Checkbox
                   aria-labelledby={`date-label-${idx}`}
@@ -190,21 +167,14 @@ export function PartyAttendings({ partyId }: { partyId?: string }) {
                 />
 
                 <Tooltip.Group openDelay={300} closeDelay={100}>
-                  <Avatar.Group spacing="sm" sx={{ flexWrap: "wrap" }}>
+                  <Avatar.Group spacing="sm" style={{ flexWrap: "wrap" }}>
                     {attendingsOnDate.map((attending) => (
                       <UserAvatar key={attending.id} user={attending.user} />
                     ))}
                   </Avatar.Group>
                 </Tooltip.Group>
 
-                <Box
-                  sx={(theme) => ({
-                    gridColumn: "1 / span 4",
-                    [theme.fn.smallerThan("xs")]: {
-                      gridColumn: "1 / span 3",
-                    },
-                  })}
-                >
+                <Box className={classes.tags}>
                   <Group>
                     {party.roomsAvailable ? (
                       <Badge>
@@ -257,7 +227,7 @@ export function PartyAttendings({ partyId }: { partyId?: string }) {
           />
           Leider nicht dabei:
           <Tooltip.Group openDelay={300} closeDelay={100}>
-            <Avatar.Group spacing="sm" sx={{ flexWrap: "wrap" }}>
+            <Avatar.Group spacing="sm" style={{ flexWrap: "wrap" }}>
               {party.attendings
                 .filter((a) => a.dates.length === 0)
                 .map((attending) => (
@@ -297,20 +267,11 @@ function AddUserMenu({
           </ActionIcon>
         </Menu.Target>
 
-        <Menu.Dropdown sx={{ overflow: "hidden auto", maxHeight: 340 }}>
+        <Menu.Dropdown mah={340} style={{ overflow: "hidden auto" }}>
           <Menu.Label>Nutzer</Menu.Label>
           <MenuOptions attendings={attendings} partyId={partyId} date={date} />
 
-          <Box
-            sx={(theme) => ({
-              position: "sticky",
-              bottom: 0,
-              background:
-                theme.colorScheme === "dark"
-                  ? theme.colors.dark[6]
-                  : theme.white,
-            })}
-          >
+          <Box pos="sticky" bottom={0} bg="dark">
             <Menu.Divider />
 
             <Popover
@@ -322,7 +283,7 @@ function AddUserMenu({
             >
               <Popover.Target>
                 <Menu.Item
-                  icon={<IconMan size={24} />}
+                  leftSection={<IconMan size={24} />}
                   closeMenuOnClick={false}
                   onClick={() => setAddUserOpen(!addUserOpen)}
                 >
@@ -480,7 +441,7 @@ function MenuItem({
 
   return (
     <Menu.Item
-      icon={<UserAvatar user={user} size={32} />}
+      leftSection={<UserAvatar user={user} size={32} />}
       onClick={() =>
         setAttendance({
           partyId,

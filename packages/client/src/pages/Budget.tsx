@@ -48,74 +48,93 @@ export function Budget() {
         {data?.nextParty?.attendings
           .filter(
             (attending) =>
-              attending.dates.length > 0 ||
+              attending.dates.length > 1 ||
               data.nextParty?.donations.some(
                 (donation) => donation.donator?.id === attending.user.id,
               ),
           )
-          .map((attending, idx, arr) => {
+          .map((attending) => {
             const donations = data.nextParty?.donations.filter(
               (donation) => donation.donator?.id === attending.user.id,
             );
+            return {
+              ...attending,
 
-            const rentDues =
-              (attending.dates.length - 1) *
-              (data.nextParty?.finalCostPerDay ?? 0);
+              rentDues:
+                (attending.dates.length - 1) *
+                (data.nextParty?.finalCostPerDay ?? 0),
 
-            const rentDonationSum =
-              donations
-                ?.filter((donation) => donation.dedication === "RENT")
-                ?.reduce((acc, donation) => acc + donation.amount, 0) ?? 0;
+              rentDonationSum:
+                donations
+                  ?.filter((donation) => donation.dedication === "RENT")
+                  ?.reduce((acc, donation) => acc + donation.amount, 0) ?? 0,
 
-            const otherDonationSum =
-              donations
-                ?.filter((donation) => donation.dedication !== "RENT")
-                ?.reduce((acc, donation) => acc + donation.amount, 0) ?? 0;
-
+              otherDonationSum:
+                donations
+                  ?.filter((donation) => donation.dedication !== "RENT")
+                  ?.reduce((acc, donation) => acc + donation.amount, 0) ?? 0,
+            };
+          })
+          .sort((a, b) =>
+            // sort first by who paid up, second by amount to be paid
+            a.paidDues >= a.rentDues + a.rentDonationSum
+              ? -1
+              : b.paidDues >= b.rentDues + b.rentDonationSum
+                ? 1
+                : a.rentDues + a.rentDonationSum - a.paidDues >
+                    b.rentDues + b.rentDonationSum - b.paidDues
+                  ? -1
+                  : 1,
+          )
+          .map((attending, idx, arr) => {
             return (
               <Box
                 key={attending.id}
-                sx={(theme) => ({
+                style={{
                   display: "grid",
                   alignItems: "center",
-                  gap: theme.spacing.md,
+                  gap: "var(--mantine-spacing-sm)",
                   gridTemplateColumns: "auto 1fr",
                   ...(idx < arr.length - 1
                     ? {
-                        marginBottom: theme.spacing.sm,
-                        paddingBottom: theme.spacing.sm,
-                        borderBottom: `1px solid ${theme.colors.gray[8]}`,
+                        marginBottom: "var(--mantine-spacing-sm)",
+                        paddingBottom: "var(--mantine-spacing-sm)",
+                        borderBottom: "1px solid var(--mantine-color-dimmed)",
                       }
                     : {}),
-                })}
+                }}
               >
                 <UserAvatar user={attending.user} />{" "}
                 <div>
                   <Text>
                     {attending.user.displayName}, {attending.dates.length} Tage
                   </Text>
-                  <Text weight="bold">{formatCurrency(rentDues)} Miete</Text>
-                  {rentDonationSum > 0 && (
+                  <Text w="bold">
+                    {formatCurrency(attending.rentDues)} Miete
+                  </Text>
+                  {attending.rentDonationSum > 0 && (
                     <Text>
-                      {formatCurrency(rentDonationSum)} Spenden für die Miete.
+                      {formatCurrency(attending.rentDonationSum)} Spenden für
+                      die Miete.
                     </Text>
                   )}
-                  {otherDonationSum > 0 && (
+                  {attending.otherDonationSum > 0 && (
                     <Text>
-                      {formatCurrency(otherDonationSum)} andere Spenden.
+                      {formatCurrency(attending.otherDonationSum)} andere
+                      Spenden.
                     </Text>
                   )}
                   <Text
-                    sx={(theme) => ({
+                    style={{
                       display: "grid",
                       gridAutoFlow: "column",
                       gridTemplateColumns: "auto",
                       gridAutoColumns: "1fr",
-                      gap: theme.spacing.xs,
                       alignItems: "center",
-                    })}
+                    }}
                   >
-                    {attending.paidDues >= rentDues + rentDonationSum ? (
+                    {attending.paidDues >=
+                    attending.rentDues + attending.rentDonationSum ? (
                       <IconCheckbox color="green" size="18" />
                     ) : (
                       <IconClockDollar size="18" />

@@ -25,7 +25,7 @@ export function CreatePasskeyFlow() {
         {error instanceof Error ? error.message : `${error}`}
       </Alert>
 
-      <Box sx={{ overflow: "hidden" }}>
+      <Box style={{ overflow: "hidden" }}>
         <AnimatePresence initial={false}>
           <motion.div
             key={`${isSuccess}`}
@@ -46,12 +46,12 @@ export function CreatePasskeyFlow() {
       </Box>
 
       {isSuccess ? (
-        <Text mt="sm" align="center">
+        <Text mt="sm" ta="center">
           Dein Passkey wurde erfolgreich erstellt und gespeichert. Du kannst
           dich in Zukunft einfach damit einloggen.
         </Text>
       ) : (
-        <Group mt="sm" position="right">
+        <Group mt="sm" justify="right">
           <Text>Verwende einen sicheren Passkey als Login-Methode.</Text>
 
           <Button loading={isLoading} onClick={() => createPasskey()}>
