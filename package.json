@@ -10,8 +10,7 @@
     "lint": "echo \"No linting configured\"",
     "test": "yarn workspaces foreach -Ap run test",
     "typecheck": "yarn workspaces foreach -Ap run typecheck",
-    "integrate": "yarn workspace @sommerlan-app/integration integrate",
-    "integrate:dev": "concurrently --kill-others-on-fail \"yarn workspace @sommerlan-app/client dev\" \"FAKE_API=true yarn workspace @sommerlan-app/server dev\" \"PORT=2022 CYPRESS_BASE_URL=http://localhost:5173 yarn workspace @sommerlan-app/integration cypress\""
+    "integrate": "yarn workspace @sommerlan-app/integration integrate"
   },
   "workspaces": [
     "packages/*"
