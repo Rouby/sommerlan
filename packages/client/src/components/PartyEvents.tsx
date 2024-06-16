@@ -382,11 +382,6 @@ function CreateEventForm({
             gridTemplateColumns: "auto 1fr 1fr",
             alignItems: "center",
             gap: "var(--mantine-spacing-md)",
-
-            // TODO nested selectors
-            "& > *:nth-of-type(2)": {
-              gridColumn: "span 2",
-            },
           }}
         >
           <Checkbox
@@ -406,6 +401,7 @@ function CreateEventForm({
                 ? dayjs(defaultValues.date, "YYYY-MM-DD").toDate()
                 : null
             }
+            style={{ gridColumn: "span 2" }}
           />
 
           <Checkbox

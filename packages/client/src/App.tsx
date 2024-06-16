@@ -4,6 +4,7 @@ import { MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.css";
 import { DatesProvider } from "@mantine/dates";
 import { Notifications } from "@mantine/notifications";
+import "@mantine/tiptap/styles.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider } from "@tanstack/router";
 import dayjs from "dayjs";
@@ -13,8 +14,8 @@ import minMax from "dayjs/plugin/minMax";
 import relativeTime from "dayjs/plugin/relativeTime";
 import weekday from "dayjs/plugin/weekday";
 import { Provider } from "jotai";
-import { locales } from "./dayjs/locales";
 import { GraphQLProvider } from "./GraphQLProvider";
+import { locales } from "./dayjs/locales";
 import { router } from "./router";
 
 dayjs.extend(duration);
