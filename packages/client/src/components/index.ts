@@ -3,7 +3,6 @@ export * from "./Can";
 export * from "./CardWithHeader";
 export * from "./LAN";
 export * from "./NavLink";
-export * from "./NextPartyGamesList";
 export * from "./PartyEvents";
 export * from "./PartyInfo";
 export * from "./PartyList";
