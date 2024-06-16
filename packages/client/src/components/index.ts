@@ -10,7 +10,6 @@ export * from "./NextPartyGamesList";
 export * from "./NextPartyLocation";
 export * from "./NextPartyRooms";
 export * from "./PartyAttendings";
-export * from "./PartyCountdown";
 export * from "./PartyEvents";
 export * from "./PartyInfo";
 export * from "./PartyList";

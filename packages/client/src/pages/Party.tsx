@@ -6,8 +6,8 @@ import {
   NextPartyLocation,
   NextPartyRooms,
   PartyAttendings,
-  PartyCountdown,
 } from "../components";
+import { PartyDateAndTime } from "../features";
 
 export function Party() {
   return (
@@ -21,7 +21,7 @@ export function Party() {
           </Center>
         }
       >
-        <PartyCountdown />
+        <PartyDateAndTime />
 
         <Space h="md" />
 
