@@ -21,13 +21,13 @@ import {
 import dayjs from "dayjs";
 import { Fragment, useState } from "react";
 import { useMutation, useQuery } from "urql";
-import { Can, UserAvatar } from ".";
-import { graphql } from "../gql";
-import { DonationDedication } from "../gql/graphql";
-import { formatCurrency } from "../utils";
-import classes from "./NextPartyDonations.module.css";
+import { Can, UserAvatar } from "../../components";
+import { graphql } from "../../gql";
+import { DonationDedication } from "../../gql/graphql";
+import { formatCurrency } from "../../utils";
+import classes from "./styles.module.css";
 
-export function NextPartyDonations() {
+export function PartyDonations() {
   const [{ data }] = useQuery({
     query: graphql(`
       query nextPartyDonations {
