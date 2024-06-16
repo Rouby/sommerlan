@@ -2,11 +2,11 @@ import { Box, Button } from "@mantine/core";
 import { IconCheck, IconHourglassLow } from "@tabler/icons-react";
 import { useAtomValue } from "jotai";
 import { useMutation, useQuery } from "urql";
-import { Can, UserAvatar } from ".";
-import { graphql } from "../gql";
-import { userAtom } from "../state";
+import { Can, UserAvatar } from "../../components";
+import { graphql } from "../../gql";
+import { userAtom } from "../../state";
 
-export function NextPartyRooms() {
+export function PartyRooms() {
   const user = useAtomValue(userAtom)!;
 
   const [{ data, fetching }] = useQuery({

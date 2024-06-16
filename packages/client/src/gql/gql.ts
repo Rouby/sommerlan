@@ -19,11 +19,6 @@ const documents = {
     "\n      mutation addGameToParty($name: String!, $partyId: ID!) {\n        addGameToParty(name: $name, partyId: $partyId) {\n          game {\n            id\n            name\n            image\n          }\n          attending {\n            id\n            gamesPlayed {\n              id\n              name\n              image\n            }\n          }\n        }\n      }\n    ": types.AddGameToPartyDocument,
     "\n      mutation setGamesPlayed($partyId: ID!, $gameIds: [ID!]!) {\n        setGamesPlayed(partyId: $partyId, gameIds: $gameIds) {\n          id\n          gamesPlayed {\n            id\n            name\n            image\n          }\n        }\n      }\n    ": types.SetGamesPlayedDocument,
     "\n      query nextPartyLocation {\n        nextParty {\n          id\n          locationWidgetSrc\n        }\n      }\n    ": types.NextPartyLocationDocument,
-    "\n      query nextPartyRooms {\n        nextParty {\n          id\n          roomsAvailable\n          attendings {\n            id\n            room\n            user {\n              id\n              displayName\n              avatar\n            }\n          }\n        }\n      }\n    ": types.NextPartyRoomsDocument,
-    "\n      mutation requestRoom($partyId: ID!) {\n        requestRoom(partyId: $partyId) {\n          id\n          dates\n          room\n          user {\n            id\n            displayName\n            avatar\n          }\n        }\n      }\n    ": types.RequestRoomDocument,
-    "\n      mutation recindRoom($partyId: ID!) {\n        recindRoom(partyId: $partyId) {\n          id\n          dates\n          room\n          user {\n            id\n            displayName\n            avatar\n          }\n        }\n      }\n    ": types.RecindRoomDocument,
-    "\n      mutation grantRoom($attendingId: ID!) {\n        grantRoom(attendingId: $attendingId) {\n          id\n          room\n        }\n      }\n    ": types.GrantRoomDocument,
-    "\n      mutation denyRoom($attendingId: ID!) {\n        denyRoom(attendingId: $attendingId) {\n          id\n          room\n        }\n      }\n    ": types.DenyRoomDocument,
     "\n    fragment PartyAttendingInfo on Party {\n      id\n      startDate\n      endDate\n      roomsAvailable\n      seatsAvailable\n      registrationDeadline\n      attendings {\n        id\n        dates\n        room\n        applicationDate\n        user {\n          id\n          displayName\n          avatar\n        }\n      }\n    }\n  ": types.PartyAttendingInfoFragmentDoc,
     "\n      query partyAttending($nextParty: Boolean!, $partyId: ID!) {\n        nextParty @include(if: $nextParty) {\n          ...PartyAttendingInfo\n        }\n\n        party(id: $partyId) @skip(if: $nextParty) {\n          ...PartyAttendingInfo\n        }\n      }\n    ": types.PartyAttendingDocument,
     "\n      mutation setAttendance($partyId: ID!, $dates: [Date!]!) {\n        setAttendance(partyId: $partyId, dates: $dates) {\n          id\n          attendings {\n            id\n            dates\n          }\n        }\n      }\n    ": types.SetAttendanceDocument,
@@ -52,6 +47,11 @@ const documents = {
     "\n      query nextPartyDonations {\n        nextParty {\n          id\n          registrationDeadline\n          donations {\n            __typename\n            id\n            amount\n            donator {\n              id\n              displayName\n              avatar\n            }\n            dedication\n          }\n        }\n      }\n    ": types.NextPartyDonationsDocument,
     "\n      mutation donateToParty(\n        $amount: Float!\n        $dedication: DonationDedication!\n        $incognito: Boolean!\n      ) {\n        donate(\n          amount: $amount\n          dedication: $dedication\n          incognito: $incognito\n        ) {\n          id\n          amount\n          dedication\n          donator {\n            id\n            displayName\n            avatar\n          }\n          party {\n            id\n          }\n        }\n      }\n    ": types.DonateToPartyDocument,
     "\n      mutation rescindDonation($id: ID!) {\n        rescindDonation(id: $id) {\n          id\n          party {\n            id\n          }\n        }\n      }\n    ": types.RescindDonationDocument,
+    "\n      query nextPartyRooms {\n        nextParty {\n          id\n          roomsAvailable\n          attendings {\n            id\n            room\n            user {\n              id\n              displayName\n              avatar\n            }\n          }\n        }\n      }\n    ": types.NextPartyRoomsDocument,
+    "\n      mutation requestRoom($partyId: ID!) {\n        requestRoom(partyId: $partyId) {\n          id\n          dates\n          room\n          user {\n            id\n            displayName\n            avatar\n          }\n        }\n      }\n    ": types.RequestRoomDocument,
+    "\n      mutation recindRoom($partyId: ID!) {\n        recindRoom(partyId: $partyId) {\n          id\n          dates\n          room\n          user {\n            id\n            displayName\n            avatar\n          }\n        }\n      }\n    ": types.RecindRoomDocument,
+    "\n      mutation grantRoom($attendingId: ID!) {\n        grantRoom(attendingId: $attendingId) {\n          id\n          room\n        }\n      }\n    ": types.GrantRoomDocument,
+    "\n      mutation denyRoom($attendingId: ID!) {\n        denyRoom(attendingId: $attendingId) {\n          id\n          room\n        }\n      }\n    ": types.DenyRoomDocument,
     "\n      mutation generateLoginOptions($userId: String) {\n        generatePasskeyLoginOptions(userId: $userId)\n      }\n    ": types.GenerateLoginOptionsDocument,
     "\n      mutation loginPasskey($response: JSON!) {\n        loginPasskey(response: $response) {\n          token\n          refreshToken\n          credentialID\n        }\n      }\n    ": types.LoginPasskeyDocument,
     "\n      mutation generateRegistrationOptions($userId: String!) {\n        generatePasskeyRegisterOptions(userId: $userId)\n      }\n    ": types.GenerateRegistrationOptionsDocument,
@@ -98,26 +98,6 @@ export function graphql(source: "\n      mutation setGamesPlayed($partyId: ID!, 
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n      query nextPartyLocation {\n        nextParty {\n          id\n          locationWidgetSrc\n        }\n      }\n    "): (typeof documents)["\n      query nextPartyLocation {\n        nextParty {\n          id\n          locationWidgetSrc\n        }\n      }\n    "];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(source: "\n      query nextPartyRooms {\n        nextParty {\n          id\n          roomsAvailable\n          attendings {\n            id\n            room\n            user {\n              id\n              displayName\n              avatar\n            }\n          }\n        }\n      }\n    "): (typeof documents)["\n      query nextPartyRooms {\n        nextParty {\n          id\n          roomsAvailable\n          attendings {\n            id\n            room\n            user {\n              id\n              displayName\n              avatar\n            }\n          }\n        }\n      }\n    "];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(source: "\n      mutation requestRoom($partyId: ID!) {\n        requestRoom(partyId: $partyId) {\n          id\n          dates\n          room\n          user {\n            id\n            displayName\n            avatar\n          }\n        }\n      }\n    "): (typeof documents)["\n      mutation requestRoom($partyId: ID!) {\n        requestRoom(partyId: $partyId) {\n          id\n          dates\n          room\n          user {\n            id\n            displayName\n            avatar\n          }\n        }\n      }\n    "];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(source: "\n      mutation recindRoom($partyId: ID!) {\n        recindRoom(partyId: $partyId) {\n          id\n          dates\n          room\n          user {\n            id\n            displayName\n            avatar\n          }\n        }\n      }\n    "): (typeof documents)["\n      mutation recindRoom($partyId: ID!) {\n        recindRoom(partyId: $partyId) {\n          id\n          dates\n          room\n          user {\n            id\n            displayName\n            avatar\n          }\n        }\n      }\n    "];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(source: "\n      mutation grantRoom($attendingId: ID!) {\n        grantRoom(attendingId: $attendingId) {\n          id\n          room\n        }\n      }\n    "): (typeof documents)["\n      mutation grantRoom($attendingId: ID!) {\n        grantRoom(attendingId: $attendingId) {\n          id\n          room\n        }\n      }\n    "];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(source: "\n      mutation denyRoom($attendingId: ID!) {\n        denyRoom(attendingId: $attendingId) {\n          id\n          room\n        }\n      }\n    "): (typeof documents)["\n      mutation denyRoom($attendingId: ID!) {\n        denyRoom(attendingId: $attendingId) {\n          id\n          room\n        }\n      }\n    "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -230,6 +210,26 @@ export function graphql(source: "\n      mutation donateToParty(\n        $amoun
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n      mutation rescindDonation($id: ID!) {\n        rescindDonation(id: $id) {\n          id\n          party {\n            id\n          }\n        }\n      }\n    "): (typeof documents)["\n      mutation rescindDonation($id: ID!) {\n        rescindDonation(id: $id) {\n          id\n          party {\n            id\n          }\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      query nextPartyRooms {\n        nextParty {\n          id\n          roomsAvailable\n          attendings {\n            id\n            room\n            user {\n              id\n              displayName\n              avatar\n            }\n          }\n        }\n      }\n    "): (typeof documents)["\n      query nextPartyRooms {\n        nextParty {\n          id\n          roomsAvailable\n          attendings {\n            id\n            room\n            user {\n              id\n              displayName\n              avatar\n            }\n          }\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      mutation requestRoom($partyId: ID!) {\n        requestRoom(partyId: $partyId) {\n          id\n          dates\n          room\n          user {\n            id\n            displayName\n            avatar\n          }\n        }\n      }\n    "): (typeof documents)["\n      mutation requestRoom($partyId: ID!) {\n        requestRoom(partyId: $partyId) {\n          id\n          dates\n          room\n          user {\n            id\n            displayName\n            avatar\n          }\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      mutation recindRoom($partyId: ID!) {\n        recindRoom(partyId: $partyId) {\n          id\n          dates\n          room\n          user {\n            id\n            displayName\n            avatar\n          }\n        }\n      }\n    "): (typeof documents)["\n      mutation recindRoom($partyId: ID!) {\n        recindRoom(partyId: $partyId) {\n          id\n          dates\n          room\n          user {\n            id\n            displayName\n            avatar\n          }\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      mutation grantRoom($attendingId: ID!) {\n        grantRoom(attendingId: $attendingId) {\n          id\n          room\n        }\n      }\n    "): (typeof documents)["\n      mutation grantRoom($attendingId: ID!) {\n        grantRoom(attendingId: $attendingId) {\n          id\n          room\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      mutation denyRoom($attendingId: ID!) {\n        denyRoom(attendingId: $attendingId) {\n          id\n          room\n        }\n      }\n    "): (typeof documents)["\n      mutation denyRoom($attendingId: ID!) {\n        denyRoom(attendingId: $attendingId) {\n          id\n          room\n        }\n      }\n    "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

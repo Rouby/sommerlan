@@ -1,11 +1,11 @@
 import { Center, Container, Space } from "@mantine/core";
+import { Can, NextPartyLocation, PartyAttendings } from "../components";
 import {
-  Can,
-  NextPartyLocation,
-  NextPartyRooms,
-  PartyAttendings,
-} from "../components";
-import { PartyCosts, PartyDateAndTime, PartyDonations } from "../features";
+  PartyCosts,
+  PartyDateAndTime,
+  PartyDonations,
+  PartyRooms,
+} from "../features";
 
 export function Party() {
   return (
@@ -31,7 +31,7 @@ export function Party() {
 
         <Space h="md" />
 
-        <NextPartyRooms />
+        <PartyRooms />
 
         <PartyAttendings />
 
