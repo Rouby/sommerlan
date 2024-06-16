@@ -3,10 +3,10 @@ import { Dropzone, FileWithPath, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useRef, useState } from "react";
 import { useMutation } from "urql";
-import { CardWithHeader } from "../components";
-import { graphql } from "../gql";
-import { useFetchWithProgress } from "../hooks";
-import { tokenAtom, userAtom } from "../state";
+import { CardWithHeader } from "../../components";
+import { graphql } from "../../gql";
+import { useFetchWithProgress } from "../../hooks";
+import { tokenAtom, userAtom } from "../../state";
 
 export function ProfileSettings() {
   const setToken = useSetAtom(tokenAtom);

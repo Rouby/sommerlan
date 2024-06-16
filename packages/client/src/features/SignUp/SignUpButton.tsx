@@ -14,12 +14,12 @@ import {
 import { useSetAtom } from "jotai";
 import { useState } from "react";
 import { useMutation as urlMutation, useMutation } from "urql";
-import { graphql } from "../gql";
-import { usePasskeyAuthFlow } from "../hooks";
-import FingerprintIllustration from "../illustrations/undraw_fingerprint_login_re_t71l.svg?react";
-import MessageSentIllustration from "../illustrations/undraw_message_sent_re_q2kl.svg?react";
-import SignUpIllustration from "../illustrations/undraw_sign_up_n6im.svg?react";
-import { refreshTokenAtom, tokenAtom } from "../state";
+import { graphql } from "../../gql";
+import { usePasskeyAuthFlow } from "../../hooks";
+import FingerprintIllustration from "../../illustrations/undraw_fingerprint_login_re_t71l.svg?react";
+import MessageSentIllustration from "../../illustrations/undraw_message_sent_re_q2kl.svg?react";
+import SignUpIllustration from "../../illustrations/undraw_sign_up_n6im.svg?react";
+import { refreshTokenAtom, tokenAtom } from "../../state";
 
 export function SignUpButton() {
   const [showAuthForm, setShowAuthForm] = useState(false);

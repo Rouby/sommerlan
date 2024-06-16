@@ -28,13 +28,6 @@ const documents = {
     "\n      query parties {\n        parties {\n          __typename\n          id\n          startDate\n          endDate\n          location\n          roomsAvailable\n          attendings {\n            id\n            dates\n            user {\n              id\n              displayName\n              avatar\n            }\n          }\n        }\n      }\n    ": types.PartiesDocument,
     "\n      query partyRow($id: ID!) {\n        party(id: $id) {\n          id\n          startDate\n          endDate\n          location\n          attendings {\n            id\n            dates\n            user {\n              id\n              displayName\n              avatar\n            }\n          }\n        }\n      }\n    ": types.PartyRowDocument,
     "\n      mutation updateParty($input: PartyInput!) {\n        updateParty(input: $input) {\n          id\n          startDate\n          endDate\n          location\n          roomsAvailable\n        }\n      }\n    ": types.UpdatePartyDocument,
-    "\n      query myDevices {\n        me {\n          id\n          devices {\n            id\n            name\n            createdAt\n            lastUsedAt\n          }\n        }\n      }\n    ": types.MyDevicesDocument,
-    "\n      mutation updateAuthDevice($id: ID!, $name: String!) {\n        updateAuthDevice(id: $id, name: $name) {\n          id\n          name\n        }\n      }\n    ": types.UpdateAuthDeviceDocument,
-    "\n      mutation deleteAuthDevice($id: ID!) {\n        deleteAuthDevice(id: $id) {\n          id\n          name\n        }\n      }\n    ": types.DeleteAuthDeviceDocument,
-    "\n      mutation updateProfile($input: ProfileInput!) {\n        updateProfile(input: $input) {\n          id\n          name\n          displayName\n          email\n          avatar\n          avatarUrl\n        }\n      }\n    ": types.UpdateProfileDocument,
-    "\n      mutation register(\n        $userName: String!\n        $email: String!\n        $password: String\n      ) {\n        register(userName: $userName, email: $email, password: $password) {\n          token\n          refreshToken\n        }\n      }\n    ": types.RegisterDocument,
-    "\n      mutation loginPassword($email: String!, $password: String!) {\n        loginPassword(email: $email, password: $password) {\n          token\n          refreshToken\n        }\n      }\n    ": types.LoginPasswordDocument,
-    "\n      mutation sendEmailLink($email: String!) {\n        sendMagicLink(email: $email)\n      }\n    ": types.SendEmailLinkDocument,
     "\n    fragment PartyAttendingInfo on Party {\n      id\n      startDate\n      endDate\n      roomsAvailable\n      seatsAvailable\n      registrationDeadline\n      attendings {\n        id\n        dates\n        room\n        applicationDate\n        user {\n          id\n          displayName\n          avatar\n        }\n      }\n    }\n  ": types.PartyAttendingInfoFragmentDoc,
     "\n      query partyAttending($nextParty: Boolean!, $partyId: ID!) {\n        nextParty @include(if: $nextParty) {\n          ...PartyAttendingInfo\n        }\n\n        party(id: $partyId) @skip(if: $nextParty) {\n          ...PartyAttendingInfo\n        }\n      }\n    ": types.PartyAttendingDocument,
     "\n      mutation removeAttendance($partyId: ID!) {\n        removeAttendance(partyId: $partyId) {\n          id\n          attendings {\n            id\n            dates\n          }\n        }\n      }\n    ": types.RemoveAttendanceDocument,
@@ -52,6 +45,13 @@ const documents = {
     "\n      mutation recindRoom($partyId: ID!) {\n        recindRoom(partyId: $partyId) {\n          id\n          dates\n          room\n          user {\n            id\n            displayName\n            avatar\n          }\n        }\n      }\n    ": types.RecindRoomDocument,
     "\n      mutation grantRoom($attendingId: ID!) {\n        grantRoom(attendingId: $attendingId) {\n          id\n          room\n        }\n      }\n    ": types.GrantRoomDocument,
     "\n      mutation denyRoom($attendingId: ID!) {\n        denyRoom(attendingId: $attendingId) {\n          id\n          room\n        }\n      }\n    ": types.DenyRoomDocument,
+    "\n      mutation register(\n        $userName: String!\n        $email: String!\n        $password: String\n      ) {\n        register(userName: $userName, email: $email, password: $password) {\n          token\n          refreshToken\n        }\n      }\n    ": types.RegisterDocument,
+    "\n      mutation loginPassword($email: String!, $password: String!) {\n        loginPassword(email: $email, password: $password) {\n          token\n          refreshToken\n        }\n      }\n    ": types.LoginPasswordDocument,
+    "\n      mutation sendEmailLink($email: String!) {\n        sendMagicLink(email: $email)\n      }\n    ": types.SendEmailLinkDocument,
+    "\n      query myDevices {\n        me {\n          id\n          devices {\n            id\n            name\n            createdAt\n            lastUsedAt\n          }\n        }\n      }\n    ": types.MyDevicesDocument,
+    "\n      mutation updateAuthDevice($id: ID!, $name: String!) {\n        updateAuthDevice(id: $id, name: $name) {\n          id\n          name\n        }\n      }\n    ": types.UpdateAuthDeviceDocument,
+    "\n      mutation deleteAuthDevice($id: ID!) {\n        deleteAuthDevice(id: $id) {\n          id\n          name\n        }\n      }\n    ": types.DeleteAuthDeviceDocument,
+    "\n      mutation updateProfile($input: ProfileInput!) {\n        updateProfile(input: $input) {\n          id\n          name\n          displayName\n          email\n          avatar\n          avatarUrl\n        }\n      }\n    ": types.UpdateProfileDocument,
     "\n      mutation generateLoginOptions($userId: String) {\n        generatePasskeyLoginOptions(userId: $userId)\n      }\n    ": types.GenerateLoginOptionsDocument,
     "\n      mutation loginPasskey($response: JSON!) {\n        loginPasskey(response: $response) {\n          token\n          refreshToken\n          credentialID\n        }\n      }\n    ": types.LoginPasskeyDocument,
     "\n      mutation generateRegistrationOptions($userId: String!) {\n        generatePasskeyRegisterOptions(userId: $userId)\n      }\n    ": types.GenerateRegistrationOptionsDocument,
@@ -137,34 +137,6 @@ export function graphql(source: "\n      mutation updateParty($input: PartyInput
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n      query myDevices {\n        me {\n          id\n          devices {\n            id\n            name\n            createdAt\n            lastUsedAt\n          }\n        }\n      }\n    "): (typeof documents)["\n      query myDevices {\n        me {\n          id\n          devices {\n            id\n            name\n            createdAt\n            lastUsedAt\n          }\n        }\n      }\n    "];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(source: "\n      mutation updateAuthDevice($id: ID!, $name: String!) {\n        updateAuthDevice(id: $id, name: $name) {\n          id\n          name\n        }\n      }\n    "): (typeof documents)["\n      mutation updateAuthDevice($id: ID!, $name: String!) {\n        updateAuthDevice(id: $id, name: $name) {\n          id\n          name\n        }\n      }\n    "];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(source: "\n      mutation deleteAuthDevice($id: ID!) {\n        deleteAuthDevice(id: $id) {\n          id\n          name\n        }\n      }\n    "): (typeof documents)["\n      mutation deleteAuthDevice($id: ID!) {\n        deleteAuthDevice(id: $id) {\n          id\n          name\n        }\n      }\n    "];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(source: "\n      mutation updateProfile($input: ProfileInput!) {\n        updateProfile(input: $input) {\n          id\n          name\n          displayName\n          email\n          avatar\n          avatarUrl\n        }\n      }\n    "): (typeof documents)["\n      mutation updateProfile($input: ProfileInput!) {\n        updateProfile(input: $input) {\n          id\n          name\n          displayName\n          email\n          avatar\n          avatarUrl\n        }\n      }\n    "];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(source: "\n      mutation register(\n        $userName: String!\n        $email: String!\n        $password: String\n      ) {\n        register(userName: $userName, email: $email, password: $password) {\n          token\n          refreshToken\n        }\n      }\n    "): (typeof documents)["\n      mutation register(\n        $userName: String!\n        $email: String!\n        $password: String\n      ) {\n        register(userName: $userName, email: $email, password: $password) {\n          token\n          refreshToken\n        }\n      }\n    "];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(source: "\n      mutation loginPassword($email: String!, $password: String!) {\n        loginPassword(email: $email, password: $password) {\n          token\n          refreshToken\n        }\n      }\n    "): (typeof documents)["\n      mutation loginPassword($email: String!, $password: String!) {\n        loginPassword(email: $email, password: $password) {\n          token\n          refreshToken\n        }\n      }\n    "];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(source: "\n      mutation sendEmailLink($email: String!) {\n        sendMagicLink(email: $email)\n      }\n    "): (typeof documents)["\n      mutation sendEmailLink($email: String!) {\n        sendMagicLink(email: $email)\n      }\n    "];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
 export function graphql(source: "\n    fragment PartyAttendingInfo on Party {\n      id\n      startDate\n      endDate\n      roomsAvailable\n      seatsAvailable\n      registrationDeadline\n      attendings {\n        id\n        dates\n        room\n        applicationDate\n        user {\n          id\n          displayName\n          avatar\n        }\n      }\n    }\n  "): (typeof documents)["\n    fragment PartyAttendingInfo on Party {\n      id\n      startDate\n      endDate\n      roomsAvailable\n      seatsAvailable\n      registrationDeadline\n      attendings {\n        id\n        dates\n        room\n        applicationDate\n        user {\n          id\n          displayName\n          avatar\n        }\n      }\n    }\n  "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
@@ -230,6 +202,34 @@ export function graphql(source: "\n      mutation grantRoom($attendingId: ID!) {
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n      mutation denyRoom($attendingId: ID!) {\n        denyRoom(attendingId: $attendingId) {\n          id\n          room\n        }\n      }\n    "): (typeof documents)["\n      mutation denyRoom($attendingId: ID!) {\n        denyRoom(attendingId: $attendingId) {\n          id\n          room\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      mutation register(\n        $userName: String!\n        $email: String!\n        $password: String\n      ) {\n        register(userName: $userName, email: $email, password: $password) {\n          token\n          refreshToken\n        }\n      }\n    "): (typeof documents)["\n      mutation register(\n        $userName: String!\n        $email: String!\n        $password: String\n      ) {\n        register(userName: $userName, email: $email, password: $password) {\n          token\n          refreshToken\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      mutation loginPassword($email: String!, $password: String!) {\n        loginPassword(email: $email, password: $password) {\n          token\n          refreshToken\n        }\n      }\n    "): (typeof documents)["\n      mutation loginPassword($email: String!, $password: String!) {\n        loginPassword(email: $email, password: $password) {\n          token\n          refreshToken\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      mutation sendEmailLink($email: String!) {\n        sendMagicLink(email: $email)\n      }\n    "): (typeof documents)["\n      mutation sendEmailLink($email: String!) {\n        sendMagicLink(email: $email)\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      query myDevices {\n        me {\n          id\n          devices {\n            id\n            name\n            createdAt\n            lastUsedAt\n          }\n        }\n      }\n    "): (typeof documents)["\n      query myDevices {\n        me {\n          id\n          devices {\n            id\n            name\n            createdAt\n            lastUsedAt\n          }\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      mutation updateAuthDevice($id: ID!, $name: String!) {\n        updateAuthDevice(id: $id, name: $name) {\n          id\n          name\n        }\n      }\n    "): (typeof documents)["\n      mutation updateAuthDevice($id: ID!, $name: String!) {\n        updateAuthDevice(id: $id, name: $name) {\n          id\n          name\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      mutation deleteAuthDevice($id: ID!) {\n        deleteAuthDevice(id: $id) {\n          id\n          name\n        }\n      }\n    "): (typeof documents)["\n      mutation deleteAuthDevice($id: ID!) {\n        deleteAuthDevice(id: $id) {\n          id\n          name\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      mutation updateProfile($input: ProfileInput!) {\n        updateProfile(input: $input) {\n          id\n          name\n          displayName\n          email\n          avatar\n          avatarUrl\n        }\n      }\n    "): (typeof documents)["\n      mutation updateProfile($input: ProfileInput!) {\n        updateProfile(input: $input) {\n          id\n          name\n          displayName\n          email\n          avatar\n          avatarUrl\n        }\n      }\n    "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

@@ -1,5 +1,5 @@
 import { Container, Space } from "@mantine/core";
-import { PasskeySettings, ProfileSettings } from "../components";
+import { PasskeySettings, ProfileSettings } from "../features";
 
 export function Profile() {
   return (

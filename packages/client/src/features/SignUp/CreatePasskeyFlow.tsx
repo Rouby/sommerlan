@@ -1,8 +1,8 @@
 import { Alert, Box, Button, Group, Text } from "@mantine/core";
 import { AnimatePresence, motion } from "framer-motion";
-import { usePasskeyCreateFlow } from "../hooks";
-import FingerprintIllustration from "../illustrations/undraw_fingerprint_login_re_t71l.svg?react";
-import OrderConfirmedIllustration from "../illustrations/undraw_order_confirmed_re_g0if.svg?react";
+import { usePasskeyCreateFlow } from "../../hooks";
+import FingerprintIllustration from "../../illustrations/undraw_fingerprint_login_re_t71l.svg?react";
+import OrderConfirmedIllustration from "../../illustrations/undraw_order_confirmed_re_g0if.svg?react";
 
 export function CreatePasskeyFlow() {
   const {

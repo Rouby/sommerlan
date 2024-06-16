@@ -13,9 +13,10 @@ import { IconEdit, IconKey, IconTrashX } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { useMutation, useQuery } from "urql";
-import { CardWithHeader, CreatePasskeyFlow } from "../components";
-import { graphql } from "../gql";
-import { formatDate } from "../utils";
+import { CardWithHeader } from "../../components";
+import { graphql } from "../../gql";
+import { formatDate } from "../../utils";
+import { CreatePasskeyFlow } from "../SignUp/CreatePasskeyFlow";
 
 export function PasskeySettings() {
   const [{ data, fetching }] = useQuery({

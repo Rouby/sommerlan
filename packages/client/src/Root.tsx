@@ -13,8 +13,8 @@ import {
   IconHome,
 } from "@tabler/icons-react";
 import { Link, Outlet } from "@tanstack/router";
-import { Can, SignUpButton } from "./components";
-import { UserButton } from "./features";
+import { Can } from "./components";
+import { SignUpButton, UserButton } from "./features";
 import Logo from "./illustrations/lan-logo.jpg";
 
 export function Root() {
