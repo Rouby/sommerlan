@@ -24,10 +24,10 @@ import dayjs from "dayjs";
 import { useAtomValue } from "jotai";
 import { Fragment, useState } from "react";
 import { useMutation, useQuery } from "urql";
-import { Can, UserAvatar } from ".";
-import { graphql, useFragment } from "../gql";
-import { userAtom } from "../state";
-import classes from "./PartyAttendings.module.css";
+import { Can, UserAvatar } from "../../components";
+import { graphql, useFragment } from "../../gql";
+import { userAtom } from "../../state";
+import classes from "./styles.module.css";
 
 export function PartyAttendings({ partyId }: { partyId?: string }) {
   const user = useAtomValue(userAtom)!;

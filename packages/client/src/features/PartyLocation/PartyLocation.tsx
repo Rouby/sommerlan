@@ -1,7 +1,7 @@
 import { useQuery } from "urql";
-import { graphql } from "../gql";
+import { graphql } from "../../gql";
 
-export function NextPartyLocation() {
+export function PartyLocation() {
   const [{ data }] = useQuery({
     query: graphql(`
       query nextPartyLocation {
