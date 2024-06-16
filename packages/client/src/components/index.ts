@@ -19,4 +19,3 @@ export * from "./ProfileSettings";
 export * from "./SignUpButton";
 export * from "./TextLink";
 export * from "./UserAvatar";
-export * from "./UserButton";
