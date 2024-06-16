@@ -5,6 +5,7 @@ import {
   Group,
   Pill,
   PillsInput,
+  PillsInputProps,
   Text,
   useCombobox,
 } from "@mantine/core";
@@ -16,13 +17,14 @@ export function GamesCombobox({
   games,
   onChange,
   onCreate,
+  ...props
 }: {
   loading?: boolean;
   value: string[];
   games: { id: string; name: string; image: string }[];
   onChange: (value: string[]) => void;
   onCreate: (name: string) => void;
-}) {
+} & Omit<PillsInputProps, "onChange" | "value">) {
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
     onDropdownOpen: () => combobox.updateSelectedOptionIndex("active"),
@@ -50,7 +52,7 @@ export function GamesCombobox({
       withinPortal={false}
     >
       <Combobox.DropdownTarget>
-        <PillsInput>
+        <PillsInput {...props}>
           <Pill.Group>
             {value?.map((gameId) => (
               <Pill
@@ -127,8 +129,6 @@ const GameItem = forwardRef(function GameItem(
   return (
     <div ref={ref} {...props}>
       <Group wrap="nowrap">
-        {active && <CheckIcon size={12} />}
-
         <Avatar radius="xl" src={image}>
           {label
             .split(" ")
@@ -136,7 +136,11 @@ const GameItem = forwardRef(function GameItem(
             .join("")}
         </Avatar>
 
-        <Text size="sm">{label}</Text>
+        <Text size="sm" flex="1 1 auto">
+          {label}
+        </Text>
+
+        {active && <CheckIcon size={12} />}
       </Group>
     </div>
   );

@@ -5,6 +5,7 @@ import {
   Indicator,
   Popover,
   Skeleton,
+  Text,
   Tooltip,
 } from "@mantine/core";
 import dayjs from "dayjs";
@@ -134,6 +135,10 @@ export function PartyGames({ partyId }: { partyId?: string }) {
 
   return (
     <>
+      <Text mb="md">
+        Hier kannst du Spiele eintragen, an denen du interessiert bist.
+      </Text>
+
       <GamesCombobox
         loading={fetching}
         value={gamesPlayedByMe ?? []}
@@ -150,7 +155,13 @@ export function PartyGames({ partyId }: { partyId?: string }) {
             name,
           });
         }}
+        mb="md"
       />
+
+      <Text mb="md">
+        Hier siehst du, welche Spiele an welchen Tagen gespielt werden.
+      </Text>
+
       <Box
         p="xs"
         style={{
