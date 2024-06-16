@@ -1,13 +1,13 @@
 import { Box, Progress, Text } from "@mantine/core";
 import { useAtomValue } from "jotai";
 import { useQuery } from "urql";
-import { graphql } from "../gql";
-import { DonationDedication } from "../gql/graphql";
-import { userAtom } from "../state";
-import { formatCurrency, formatDate } from "../utils";
-import classes from "./NextPartyCosts.module.css";
+import { graphql } from "../../gql";
+import { DonationDedication } from "../../gql/graphql";
+import { userAtom } from "../../state";
+import { formatCurrency, formatDate } from "../../utils";
+import classes from "./styles.module.css";
 
-export function NextPartyCosts() {
+export function PartyCosts() {
   const user = useAtomValue(userAtom)!;
 
   const [{ data }] = useQuery({
