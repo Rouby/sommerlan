@@ -10,8 +10,10 @@ import {
 
 export function ImageInput({
   defaultValue,
+  onRemoveImage,
   ...props
-}: InputBaseProps & InputHTMLAttributes<HTMLInputElement>) {
+}: InputBaseProps &
+  InputHTMLAttributes<HTMLInputElement> & { onRemoveImage?: () => void }) {
   const [file, setFile] = useState<FileWithPath>();
   const [noDefaultFallback, setNoDefaultFallback] = useState(false);
 
@@ -62,7 +64,7 @@ export function ImageInput({
             overflow: "hidden",
           }}
         >
-          <Image src={url} />
+          <Image src={url} fit="cover" height="100%" />
           <Box
             style={{
               width: "100%",
@@ -88,6 +90,7 @@ export function ImageInput({
         onClick={() => {
           setFile(undefined);
           setNoDefaultFallback(true);
+          onRemoveImage?.();
         }}
         color="red"
       >

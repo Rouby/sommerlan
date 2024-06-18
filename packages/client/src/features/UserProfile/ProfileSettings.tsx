@@ -25,6 +25,17 @@ export function ProfileSettings() {
       }
     `),
   );
+  const [{ fetching: removing }, removeProfilePicture] = useMutation(
+    graphql(`
+      mutation removeProfilePicture {
+        removeProfilePicture {
+          id
+          avatar
+          avatarUrl
+        }
+      }
+    `),
+  );
 
   return (
     <form
@@ -99,6 +110,12 @@ export function ProfileSettings() {
               id="avatar"
               name="avatar"
               defaultValue={user?.avatarUrl}
+              onRemoveImage={async () => {
+                await removeProfilePicture({});
+
+                setToken(null);
+              }}
+              disabled={removing}
             />
           </Input.Wrapper>
 

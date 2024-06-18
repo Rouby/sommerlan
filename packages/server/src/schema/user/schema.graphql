@@ -32,6 +32,7 @@ extend type Mutation {
   deleteAuthDevice(id: ID!): AuthDevice!
 
   updateProfile(input: ProfileInput!): User!
+  removeProfilePicture: User!
 }
 
 extend type Attending {

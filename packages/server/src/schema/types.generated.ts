@@ -169,6 +169,7 @@ export type Mutation = {
   register: RegisterResponse;
   registerPasskey: RegisterDeviceResponse;
   removeAttendance: Party;
+  removeProfilePicture: User;
   requestRoom?: Maybe<Attending>;
   rescindDonation: Donation;
   sendMagicLink: Scalars["Boolean"]["output"];
@@ -930,6 +931,11 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationremoveAttendanceArgs, "partyId">
+  >;
+  removeProfilePicture?: Resolver<
+    ResolversTypes["User"],
+    ParentType,
+    ContextType
   >;
   requestRoom?: Resolver<
     Maybe<ResolversTypes["Attending"]>,

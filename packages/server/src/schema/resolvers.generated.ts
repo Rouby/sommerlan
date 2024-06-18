@@ -32,6 +32,7 @@ import { refreshLogin as Mutation_refreshLogin } from "./user/resolvers/Mutation
 import { register as Mutation_register } from "./user/resolvers/Mutation/register";
 import { registerPasskey as Mutation_registerPasskey } from "./user/resolvers/Mutation/registerPasskey";
 import { removeAttendance as Mutation_removeAttendance } from "./party/resolvers/Mutation/removeAttendance";
+import { removeProfilePicture as Mutation_removeProfilePicture } from "./user/resolvers/Mutation/removeProfilePicture";
 import { requestRoom as Mutation_requestRoom } from "./party/resolvers/Mutation/requestRoom";
 import { rescindDonation as Mutation_rescindDonation } from "./donation/resolvers/Mutation/rescindDonation";
 import { sendMagicLink as Mutation_sendMagicLink } from "./user/resolvers/Mutation/sendMagicLink";
@@ -93,6 +94,7 @@ export const resolvers: Resolvers = {
     register: Mutation_register,
     registerPasskey: Mutation_registerPasskey,
     removeAttendance: Mutation_removeAttendance,
+    removeProfilePicture: Mutation_removeProfilePicture,
     requestRoom: Mutation_requestRoom,
     rescindDonation: Mutation_rescindDonation,
     sendMagicLink: Mutation_sendMagicLink,
