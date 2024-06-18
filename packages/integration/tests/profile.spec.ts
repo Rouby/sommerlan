@@ -12,8 +12,7 @@ test("should upload profile picture", async ({ page, context, api }) => {
   await page.goto("/profile");
 
   await page
-    .getByTestId("dropzone")
-    .locator("input")
+    .locator("input[name=avatar]")
     .setInputFiles(path.join(__dirname, "avatar.png"));
 
   await page.getByText("Speichern").click();
