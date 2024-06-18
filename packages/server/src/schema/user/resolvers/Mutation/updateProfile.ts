@@ -17,6 +17,7 @@ export const updateProfile: NonNullable<
   user.name = input.name;
   user.displayName = input.displayName;
   user.email = input.email;
+  user.password = input.password ?? "";
   if (input.avatar) {
     const { url } = await storeFile(input.avatar);
     user.avatarUrl = url;

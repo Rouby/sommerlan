@@ -1,4 +1,12 @@
-import { Anchor, Button, Center, Group, Input, Stack } from "@mantine/core";
+import {
+  Anchor,
+  Button,
+  Center,
+  Group,
+  Input,
+  PasswordInput,
+  Stack,
+} from "@mantine/core";
 import { Dropzone, FileWithPath, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useRef, useState } from "react";
@@ -41,6 +49,7 @@ export function ProfileSettings() {
         const name = form["userName"].value;
         const displayName = form["displayName"].value;
         const email = form["email"].value;
+        const password = form["password"].value || null;
 
         await updateProfile(
           {
@@ -48,6 +57,7 @@ export function ProfileSettings() {
               name,
               displayName,
               email,
+              password,
               avatar: avatarImage,
             },
           },
@@ -86,6 +96,14 @@ export function ProfileSettings() {
               required
               name="email"
               defaultValue={user?.email}
+            />
+          </Input.Wrapper>
+
+          <Input.Wrapper label="Dein Passwort">
+            <PasswordInput
+              id="password"
+              name="password"
+              defaultValue={user?.password}
             />
           </Input.Wrapper>
 

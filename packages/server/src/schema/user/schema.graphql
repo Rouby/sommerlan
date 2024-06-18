@@ -75,6 +75,7 @@ input ProfileInput {
   name: String!
   displayName: String!
   email: String!
+  password: String
   avatar: File
 }
 

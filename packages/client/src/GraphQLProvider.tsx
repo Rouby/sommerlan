@@ -1,4 +1,5 @@
 import { notifications } from "@mantine/notifications";
+import { type JWTPayload } from "@sommerlan-app/server/src/signToken";
 import { devtoolsExchange } from "@urql/devtools";
 import { authExchange } from "@urql/exchange-auth";
 import { cacheExchange, Data, Entity, Link } from "@urql/exchange-graphcache";
@@ -281,13 +282,17 @@ export function GraphQLProvider({ children }: { children: React.ReactNode }) {
                 }
 
                 try {
-                  const decoded = jwtDecode(authState.current.token!) as {
-                    exp: number;
-                  };
+                  const decoded = jwtDecode(
+                    authState.current.token!,
+                  ) as JWTPayload & { exp: number };
 
-                  return dayjs()
+                  const willSoonExpire = dayjs()
                     .add(1, "minute")
                     .isAfter(dayjs.unix(decoded.exp));
+
+                  const isOldVersion = decoded.__version !== 1;
+
+                  return willSoonExpire || isOldVersion;
                 } catch {
                   return true;
                 }
