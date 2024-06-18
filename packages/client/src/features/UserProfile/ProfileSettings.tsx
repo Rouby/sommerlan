@@ -1,17 +1,7 @@
-import {
-  Anchor,
-  Button,
-  Center,
-  Group,
-  Input,
-  PasswordInput,
-  Stack,
-} from "@mantine/core";
-import { Dropzone, FileWithPath, IMAGE_MIME_TYPE } from "@mantine/dropzone";
+import { Button, Group, Input, PasswordInput, Stack } from "@mantine/core";
 import { useAtomValue, useSetAtom } from "jotai";
-import { useRef, useState } from "react";
 import { useMutation } from "urql";
-import { CardWithHeader } from "../../components";
+import { CardWithHeader, ImageInput } from "../../components";
 import { graphql } from "../../gql";
 import { useFetchWithProgress } from "../../hooks";
 import { tokenAtom, userAtom } from "../../state";
@@ -19,8 +9,6 @@ import { tokenAtom, userAtom } from "../../state";
 export function ProfileSettings() {
   const setToken = useSetAtom(tokenAtom);
   const user = useAtomValue(userAtom);
-
-  const openRef = useRef<() => void>(null);
 
   const [, fetch] = useFetchWithProgress();
   const [{ fetching }, updateProfile] = useMutation(
@@ -38,8 +26,6 @@ export function ProfileSettings() {
     `),
   );
 
-  const [avatarImage, setAvtarImage] = useState<FileWithPath | null>(null);
-
   return (
     <form
       onSubmit={async (evt) => {
@@ -50,6 +36,7 @@ export function ProfileSettings() {
         const displayName = form["displayName"].value;
         const email = form["email"].value;
         const password = form["password"].value || null;
+        const avatar = form["avatar"].files?.item(0) || null;
 
         await updateProfile(
           {
@@ -58,7 +45,7 @@ export function ProfileSettings() {
               displayName,
               email,
               password,
-              avatar: avatarImage,
+              avatar,
             },
           },
           { fetch },
@@ -107,51 +94,13 @@ export function ProfileSettings() {
             />
           </Input.Wrapper>
 
-          <Input.Wrapper
-            label="Profil-Bild"
-            description={
-              <>
-                Gib die Adresse zu einem Bild an, oder leer lassen um ein Bild
-                von{" "}
-                <Anchor
-                  href="https://de.gravatar.com/"
-                  target="_blank"
-                  referrerPolicy="no-referrer"
-                >
-                  Gravatar
-                </Anchor>{" "}
-                zu verwenden
-              </>
-            }
-          >
-            <Input
-              id="avatarUrl"
-              name="avatarUrl"
-              placeholder="https://example.com/image.jpg"
-              pattern="https?://.*"
+          <Input.Wrapper label="Profil-Bild">
+            <ImageInput
+              id="avatar"
+              name="avatar"
               defaultValue={user?.avatarUrl}
             />
           </Input.Wrapper>
-
-          <Dropzone
-            name="avatarImage"
-            data-testid="dropzone"
-            accept={IMAGE_MIME_TYPE}
-            onDrop={(files) => {
-              setAvtarImage(files[0]);
-            }}
-            maxFiles={1}
-            openRef={openRef}
-            style={{ alignItems: "center" }}
-            h={100}
-            display="grid"
-            loading={fetching}
-          >
-            <Center>Alternativ kannst du ein Bild hochladen</Center>
-          </Dropzone>
-          <Button variant="light" onClick={() => openRef.current?.()}>
-            Bild auswählen
-          </Button>
 
           <Group justify="right">
             <Button loading={fetching} type="submit">

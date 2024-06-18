@@ -1,6 +1,7 @@
 export * from "./ActionIconLink";
 export * from "./Can";
 export * from "./CardWithHeader";
+export * from "./ImageInput";
 export * from "./LAN";
 export * from "./NavLink";
 export * from "./PartyEvents";

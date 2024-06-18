@@ -21,6 +21,8 @@ export const updateProfile: NonNullable<
   if (input.avatar) {
     const { url } = await storeFile(input.avatar);
     user.avatarUrl = url;
+  } else {
+    user.avatarUrl = "";
   }
 
   await user.save();
