@@ -13,7 +13,6 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "\n      mutation loginMagicLink($magicLinkId: String!) {\n        loginMagicLink(magicLinkId: $magicLinkId) {\n          token\n          refreshToken\n        }\n      }\n    ": types.LoginMagicLinkDocument,
     "\n                      mutation refreshLogin($refreshToken: String!) {\n                        refreshLogin(refreshToken: $refreshToken) {\n                          token\n                          refreshToken\n                        }\n                      }\n                    ": types.RefreshLoginDocument,
     "\n    fragment PartyEventsInfo on Party {\n      id\n      events {\n        __typename\n        id\n        image\n        date\n        startTime\n        endTime\n        name\n        description\n        organizer {\n          id\n          displayName\n          avatar\n        }\n        participants {\n          id\n          displayName\n          avatar\n        }\n      }\n    }\n  ": types.PartyEventsInfoFragmentDoc,
     "\n      query partyEvents($nextParty: Boolean!, $partyId: ID!) {\n        nextParty @include(if: $nextParty) {\n          ...PartyEventsInfo\n        }\n\n        party(id: $partyId) @skip(if: $nextParty) {\n          ...PartyEventsInfo\n        }\n      }\n    ": types.PartyEventsDocument,
@@ -31,6 +30,7 @@ const documents = {
     "\n      mutation registerExternal(\n        $userName: String!\n        $email: String!\n        $password: String\n      ) {\n        register(userName: $userName, email: $email, password: $password) {\n          token\n          refreshToken\n          user {\n            id\n            displayName\n            avatar\n          }\n        }\n      }\n    ": types.RegisterExternalDocument,
     "\n      query userList {\n        users {\n          id\n          displayName\n          avatar\n        }\n      }\n    ": types.UserListDocument,
     "\n      mutation setOthersAttendance(\n        $partyId: ID!\n        $userId: ID\n        $dates: [Date!]!\n      ) {\n        setAttendance(partyId: $partyId, userId: $userId, dates: $dates) {\n          id\n          attendings {\n            id\n            dates\n          }\n        }\n      }\n    ": types.SetOthersAttendanceDocument,
+    "\n      query checkInDate {\n        nextParty {\n          id\n          attendings {\n            id\n            user {\n              id\n            }\n            dates\n            checkIn\n            checkOut\n            room\n          }\n        }\n      }\n    ": types.CheckInDateDocument,
     "\n      query nextPartyCosts {\n        nextParty {\n          id\n          rentalCosts\n          paidDues\n          finalCostPerDay\n          payday\n          donations {\n            id\n            amount\n            donator {\n              id\n              displayName\n              avatar\n            }\n            dedication\n          }\n          attendings {\n            id\n            dates\n            paidDues\n            user {\n              id\n            }\n          }\n        }\n      }\n    ": types.NextPartyCostsDocument,
     "\n      query partyCountdown($nextParty: Boolean!, $partyId: ID!) {\n        nextParty @include(if: $nextParty) {\n          id\n          startDate\n          endDate\n          registrationDeadline\n        }\n\n        party(id: $partyId) @skip(if: $nextParty) {\n          id\n          startDate\n          endDate\n        }\n      }\n    ": types.PartyCountdownDocument,
     "\n      query nextPartyDonations {\n        nextParty {\n          id\n          registrationDeadline\n          donations {\n            __typename\n            id\n            amount\n            donator {\n              id\n              displayName\n              avatar\n            }\n            dedication\n          }\n        }\n      }\n    ": types.NextPartyDonationsDocument,
@@ -77,10 +77,6 @@ const documents = {
  */
 export function graphql(source: string): unknown;
 
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(source: "\n      mutation loginMagicLink($magicLinkId: String!) {\n        loginMagicLink(magicLinkId: $magicLinkId) {\n          token\n          refreshToken\n        }\n      }\n    "): (typeof documents)["\n      mutation loginMagicLink($magicLinkId: String!) {\n        loginMagicLink(magicLinkId: $magicLinkId) {\n          token\n          refreshToken\n        }\n      }\n    "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -149,6 +145,10 @@ export function graphql(source: "\n      query userList {\n        users {\n    
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n      mutation setOthersAttendance(\n        $partyId: ID!\n        $userId: ID\n        $dates: [Date!]!\n      ) {\n        setAttendance(partyId: $partyId, userId: $userId, dates: $dates) {\n          id\n          attendings {\n            id\n            dates\n          }\n        }\n      }\n    "): (typeof documents)["\n      mutation setOthersAttendance(\n        $partyId: ID!\n        $userId: ID\n        $dates: [Date!]!\n      ) {\n        setAttendance(partyId: $partyId, userId: $userId, dates: $dates) {\n          id\n          attendings {\n            id\n            dates\n          }\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      query checkInDate {\n        nextParty {\n          id\n          attendings {\n            id\n            user {\n              id\n            }\n            dates\n            checkIn\n            checkOut\n            room\n          }\n        }\n      }\n    "): (typeof documents)["\n      query checkInDate {\n        nextParty {\n          id\n          attendings {\n            id\n            user {\n              id\n            }\n            dates\n            checkIn\n            checkOut\n            room\n          }\n        }\n      }\n    "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

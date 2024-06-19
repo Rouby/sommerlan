@@ -1,7 +1,14 @@
 import type { AttendingResolvers } from "./../../types.generated";
 export const Attending: Pick<
   AttendingResolvers,
-  "applicationDate" | "dates" | "id" | "paidDues" | "party" | "room"
+  | "applicationDate"
+  | "checkIn"
+  | "checkOut"
+  | "dates"
+  | "id"
+  | "paidDues"
+  | "party"
+  | "room"
 > = {
   /* Implement Attending resolver logic here */
   party: async (parent, _arg, ctx) => {

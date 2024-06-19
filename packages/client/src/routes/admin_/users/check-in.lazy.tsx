@@ -1,11 +1,11 @@
 import { Container } from "@mantine/core";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { PartyCheckIn } from "../../features";
+import { UserCheckIn } from "../../../features";
 
-export const Route = createLazyFileRoute("/party/check-in")({
+export const Route = createLazyFileRoute("/admin/users/check-in")({
   component: () => (
     <Container>
-      <PartyCheckIn />
+      <UserCheckIn />
     </Container>
   ),
 });

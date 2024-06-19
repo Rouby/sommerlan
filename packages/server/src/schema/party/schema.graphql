@@ -91,6 +91,8 @@ type Attending {
   room: RoomStatus
   applicationDate: Date!
   paidDues: Float!
+  checkIn: DateTime
+  checkOut: DateTime
 }
 
 enum RoomStatus {

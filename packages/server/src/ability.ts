@@ -57,7 +57,10 @@ export async function createAbility(
 
     if (user.roles.includes(User.Role.Admin)) {
       can(["create", "read", "update", "delete"], "Party");
-      can(["create", "read", "update", "delete"], "User");
+      can(
+        ["create", "read", "update", "delete", "checkIn", "checkOut"],
+        "User",
+      );
       can(["create", "read", "update", "delete"], "Budget");
       can("read", "Attending", "paidDues");
       can("update", "Attending");

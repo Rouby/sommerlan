@@ -66,6 +66,8 @@ export type AddGameResult = {
 export type Attending = {
   __typename?: "Attending";
   applicationDate: Scalars["Date"]["output"];
+  checkIn?: Maybe<Scalars["DateTime"]["output"]>;
+  checkOut?: Maybe<Scalars["DateTime"]["output"]>;
   dates: Array<Scalars["Date"]["output"]>;
   gamesPlayed: Array<Game>;
   id: Scalars["ID"]["output"];
@@ -663,6 +665,16 @@ export type AttendingResolvers<
     ResolversParentTypes["Attending"] = ResolversParentTypes["Attending"],
 > = {
   applicationDate?: Resolver<ResolversTypes["Date"], ParentType, ContextType>;
+  checkIn?: Resolver<
+    Maybe<ResolversTypes["DateTime"]>,
+    ParentType,
+    ContextType
+  >;
+  checkOut?: Resolver<
+    Maybe<ResolversTypes["DateTime"]>,
+    ParentType,
+    ContextType
+  >;
   dates?: Resolver<Array<ResolversTypes["Date"]>, ParentType, ContextType>;
   gamesPlayed?: Resolver<
     Array<ResolversTypes["Game"]>,

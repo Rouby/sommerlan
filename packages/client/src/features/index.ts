@@ -1,4 +1,5 @@
 export * from "./PartyAttendings";
+export * from "./PartyCheckIn";
 export * from "./PartyCosts";
 export * from "./PartyDateAndTime";
 export * from "./PartyDonations";

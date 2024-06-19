@@ -9,7 +9,7 @@ export const checkOut: NonNullable<MutationResolvers["checkOut"]> = async (
   { userId },
   ctx,
 ) => {
-  ForbiddenError.from(ctx.ability).throwUnlessCan("checkIn", "User");
+  ForbiddenError.from(ctx.ability).throwUnlessCan("checkOut", "User");
 
   const party = await Party.findLatest();
 
@@ -20,7 +20,7 @@ export const checkOut: NonNullable<MutationResolvers["checkOut"]> = async (
   const attending = await Attending.findByPartyIdAndUserId(party.id, userId);
 
   if (attending) {
-    attending.checkIn = dayjs().toISOString();
+    attending.checkOut = dayjs().toISOString();
 
     await attending.save();
   }

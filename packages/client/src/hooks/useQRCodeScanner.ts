@@ -5,8 +5,14 @@ export function useQRCodeScanner() {
   const stream = useRef<MediaStream | null>(null);
   const isScanning = useRef(false);
   const [data, setData] = useState<Record<string, unknown> | null>(null);
+  const [error, setError] = useState<string>();
 
   const startScanning = useCallback(() => {
+    if ("BarcodeDetector" in window === false) {
+      setError("BarcodeDetector not supported");
+      return;
+    }
+
     if (isScanning.current) {
       return;
     }
@@ -66,7 +72,7 @@ export function useQRCodeScanner() {
     isScanning.current = false;
   }, []);
 
-  return { video, startScanning, stopScanning, data };
+  return { video, startScanning, stopScanning, data, error };
 }
 
 declare global {

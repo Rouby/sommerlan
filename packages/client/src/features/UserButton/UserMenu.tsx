@@ -33,8 +33,6 @@ export function UserMenu() {
         component={Link}
         leftSection={<IconUsers size={14} />}
         to="/profile"
-        search={{}}
-        params={{}}
       >
         Einstellungen
       </Menu.Item>
@@ -56,8 +54,6 @@ export function UserMenu() {
             component={Link}
             leftSection={<IconUsers size={14} />}
             to="/party/check-in"
-            search={{}}
-            params={{}}
           >
             Check-In
           </Menu.Item>
@@ -75,20 +71,28 @@ export function UserMenu() {
               component={Link}
               leftSection={<IconUsers size={14} />}
               to="/admin/users"
-              search={{}}
-              params={{}}
             >
               Nutzer verwalten
             </Menu.Item>
           </Can>
+
+          {data?.nextParty && (
+            <Can I="checkIn" a="User">
+              <Menu.Item
+                component={Link}
+                leftSection={<IconUsers size={14} />}
+                to="/admin/users/check-in"
+              >
+                Nutzer Einchecken
+              </Menu.Item>
+            </Can>
+          )}
 
           <Can I="delete" a="Budget">
             <Menu.Item
               component={Link}
               leftSection={<IconUsers size={14} />}
               to="/admin/budget"
-              search={{}}
-              params={{}}
             >
               Budget verwalten
             </Menu.Item>
@@ -99,8 +103,6 @@ export function UserMenu() {
               component={Link}
               leftSection={<IconClipboardCheck size={14} />}
               to="/admin/cache"
-              search={{}}
-              params={{}}
             >
               Cache verwalten
             </Menu.Item>

@@ -29,6 +29,7 @@ const AdminCacheLazyImport = createFileRoute('/admin/cache')()
 const AdminBudgetLazyImport = createFileRoute('/admin/budget')()
 const PartyArchiveIndexLazyImport = createFileRoute('/party/archive/')()
 const PartyArchiveIdLazyImport = createFileRoute('/party/archive/$id')()
+const AdminUsersCheckInLazyImport = createFileRoute('/admin/users/check-in')()
 
 // Create/Update Routes
 
@@ -101,6 +102,13 @@ const PartyArchiveIdLazyRoute = PartyArchiveIdLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() =>
   import('./routes/party/archive/$id.lazy').then((d) => d.Route),
+)
+
+const AdminUsersCheckInLazyRoute = AdminUsersCheckInLazyImport.update({
+  path: '/admin/users/check-in',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/admin_/users/check-in.lazy').then((d) => d.Route),
 )
 
 // Populate the FileRoutesByPath interface
@@ -184,6 +192,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileIndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/admin/users/check-in': {
+      id: '/admin/users/check-in'
+      path: '/admin/users/check-in'
+      fullPath: '/admin/users/check-in'
+      preLoaderRoute: typeof AdminUsersCheckInLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/party/archive/$id': {
       id: '/party/archive/$id'
       path: '/party/archive/$id'
@@ -216,6 +231,7 @@ export const routeTree = rootRoute.addChildren({
   GamesIndexLazyRoute,
   PartyIndexLazyRoute,
   ProfileIndexLazyRoute,
+  AdminUsersCheckInLazyRoute,
   PartyArchiveIdLazyRoute,
   PartyArchiveIndexLazyRoute,
 })
@@ -236,6 +252,7 @@ export const routeTree = rootRoute.addChildren({
         "/games/",
         "/party/",
         "/profile/",
+        "/admin/users/check-in",
         "/party/archive/$id",
         "/party/archive/"
       ]
@@ -280,6 +297,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/profile/": {
       "filePath": "profile/index.lazy.tsx"
+    },
+    "/admin/users/check-in": {
+      "filePath": "admin_/users/check-in.lazy.tsx"
     },
     "/party/archive/$id": {
       "filePath": "party/archive/$id.lazy.tsx"
