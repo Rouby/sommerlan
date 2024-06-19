@@ -1,5 +1,5 @@
 import { ActionIcon } from "@mantine/core";
-import { Link, MakeLinkOptions, RegisteredRoutesInfo } from "@tanstack/router";
+import { Link, LinkProps } from "@tanstack/react-router";
 import { ElementType, RefAttributes, forwardRef } from "react";
 
 export const ActionIconLink = forwardRef(function ActionIconLink(
@@ -7,10 +7,4 @@ export const ActionIconLink = forwardRef(function ActionIconLink(
   ref,
 ) {
   return <ActionIcon ref={ref} component={Link} {...props} />;
-}) as unknown as ElementType<
-  MakeLinkOptions<
-    RegisteredRoutesInfo["routePaths"],
-    RegisteredRoutesInfo["routePaths"]
-  > &
-    RefAttributes<HTMLAnchorElement>
->;
+}) as unknown as ElementType<LinkProps & RefAttributes<HTMLAnchorElement>>;

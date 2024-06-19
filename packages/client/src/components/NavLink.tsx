@@ -1,19 +1,9 @@
 import { NavLink as MantineNavLink, NavLinkProps } from "@mantine/core";
-import {
-  Link,
-  MakeLinkOptions,
-  RegisteredRoutesInfo,
-  useMatchRoute,
-} from "@tanstack/router";
+import { Link, LinkProps, useMatchRoute } from "@tanstack/react-router";
 import { RefAttributes } from "react";
 
-export function NavLink<
-  TDefaultFrom extends RegisteredRoutesInfo["routePaths"] = "/",
-  TDefaultTo extends string = "",
-  TFrom extends RegisteredRoutesInfo["routePaths"] = TDefaultFrom,
-  TTo extends string = TDefaultTo,
->(
-  props: MakeLinkOptions<TFrom, TTo> &
+export function NavLink(
+  props: LinkProps &
     RefAttributes<HTMLAnchorElement> &
     Omit<NavLinkProps, "component">,
 ) {
@@ -22,7 +12,7 @@ export function NavLink<
   return (
     <MantineNavLink
       component={Link}
-      active={matchRoute(props as any)}
+      active={matchRoute(props)}
       {...(props as any)}
     />
   );

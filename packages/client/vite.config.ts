@@ -1,3 +1,4 @@
+import { TanStackRouterVite } from "@tanstack/router-vite-plugin";
 import react from "@vitejs/plugin-react-swc";
 import dns from "node:dns";
 import { defineConfig } from "vite";
@@ -13,6 +14,7 @@ export default defineConfig(async ({ mode }) => ({
     codegen(),
     svgr(),
     react(),
+    TanStackRouterVite(),
     createHtmlPlugin({
       minify: mode !== "development",
       template: "index.html",

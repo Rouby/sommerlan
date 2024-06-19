@@ -1,14 +1,7 @@
 import { Text } from "@mantine/core";
-import { Link, MakeLinkOptions, RegisteredRoutesInfo } from "@tanstack/router";
+import { Link, LinkProps } from "@tanstack/react-router";
 import { RefAttributes } from "react";
 
-export function TextLink<
-  TDefaultFrom extends RegisteredRoutesInfo["routePaths"] = "/",
-  TDefaultTo extends string = "",
-  TFrom extends RegisteredRoutesInfo["routePaths"] = TDefaultFrom,
-  TTo extends string = TDefaultTo,
->(props: MakeLinkOptions<TFrom, TTo> & RefAttributes<HTMLAnchorElement>) {
-  return (
-    <Text component={Link} variant="text" color="indigo" {...(props as any)} />
-  );
+export function TextLink(props: LinkProps & RefAttributes<HTMLAnchorElement>) {
+  return <Text component={Link} variant="text" color="indigo" {...props} />;
 }

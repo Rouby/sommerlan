@@ -1,6 +1,6 @@
 import { Divider, Menu } from "@mantine/core";
 import { IconClipboardCheck, IconLock, IconUsers } from "@tabler/icons-react";
-import { Link } from "@tanstack/router";
+import { Link } from "@tanstack/react-router";
 import dayjs from "dayjs";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useQuery } from "urql";

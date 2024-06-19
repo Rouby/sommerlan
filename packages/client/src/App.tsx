@@ -6,7 +6,7 @@ import { DatesProvider } from "@mantine/dates";
 import { Notifications } from "@mantine/notifications";
 import "@mantine/tiptap/styles.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { RouterProvider } from "@tanstack/router";
+import { RouterProvider, createRouter } from "@tanstack/react-router";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import localizedFormat from "dayjs/plugin/localizedFormat";
@@ -16,7 +16,15 @@ import weekday from "dayjs/plugin/weekday";
 import { Provider } from "jotai";
 import { GraphQLProvider } from "./GraphQLProvider";
 import { locales } from "./dayjs/locales";
-import { router } from "./router";
+import { routeTree } from "./routeTree.gen";
+
+const router = createRouter({ routeTree });
+
+declare module "@tanstack/react-router" {
+  interface Register {
+    router: typeof router;
+  }
+}
 
 dayjs.extend(duration);
 dayjs.extend(localizedFormat);
