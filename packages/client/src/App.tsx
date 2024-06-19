@@ -13,10 +13,11 @@ import localizedFormat from "dayjs/plugin/localizedFormat";
 import minMax from "dayjs/plugin/minMax";
 import relativeTime from "dayjs/plugin/relativeTime";
 import weekday from "dayjs/plugin/weekday";
-import { Provider } from "jotai";
+import { Provider as StateProvider } from "jotai";
 import { GraphQLProvider } from "./GraphQLProvider";
 import { locales } from "./dayjs/locales";
 import { routeTree } from "./routeTree.gen";
+import { store } from "./state";
 
 const router = createRouter({ routeTree });
 
@@ -40,7 +41,7 @@ const queryClient = new QueryClient();
 
 export function App() {
   return (
-    <Provider>
+    <StateProvider store={store}>
       <GraphQLProvider>
         <QueryClientProvider client={queryClient}>
           <MantineProvider defaultColorScheme="auto">
@@ -51,6 +52,6 @@ export function App() {
           </MantineProvider>
         </QueryClientProvider>
       </GraphQLProvider>
-    </Provider>
+    </StateProvider>
   );
 }

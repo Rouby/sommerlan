@@ -41,11 +41,12 @@ export const abilityAtom = atom((get) => {
   // inject rules from jwt
   rules.splice(0, 0, ...(jwtPayload?.abilityRules ?? []));
 
-  // add dynamic rules
-  can("checkIn", "Party", {
-    startDate: { $lte: dayjs().toDate() },
-    endDate: { $gte: dayjs().toDate() },
-  });
+  if ((jwtPayload?.abilityRules.length ?? 0) > 0) {
+    can("checkIn", "Party", {
+      startDate: { $lte: dayjs().toDate() },
+      endDate: { $gte: dayjs().toDate() },
+    });
+  }
 
   return build({
     detectSubjectType(subject) {

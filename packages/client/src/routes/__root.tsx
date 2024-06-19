@@ -12,14 +12,61 @@ import {
   IconDeviceGamepad,
   IconHome,
 } from "@tabler/icons-react";
-import { Link, Outlet, createRootRoute } from "@tanstack/react-router";
+import {
+  Link,
+  Outlet,
+  createRootRoute,
+  useNavigate,
+} from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
+import { useSetAtom } from "jotai";
+import { useEffect, useRef } from "react";
+import { useMutation } from "urql";
 import { Can } from "../components";
 import { SignUpButton, UserButton } from "../features";
+import { graphql } from "../gql";
 import Logo from "../illustrations/lan-logo.jpg";
+import { refreshTokenAtom, tokenAtom } from "../state";
 
 export const Route = createRootRoute({
+  validateSearch: (search) =>
+    ({
+      auth:
+        "auth" in search && typeof search.auth === "string"
+          ? search.auth
+          : undefined,
+    }) as { auth?: string } | undefined,
   component: () => {
+    const setToken = useSetAtom(tokenAtom);
+    const setRefreshToken = useSetAtom(refreshTokenAtom);
+
+    const search = Route.useSearch();
+    const navigate = useNavigate();
+
+    const [, loginMagicLink] = useMutation(
+      graphql(`
+        mutation loginMagicLink($magicLinkId: String!) {
+          loginMagicLink(magicLinkId: $magicLinkId) {
+            token
+            refreshToken
+          }
+        }
+      `),
+    );
+
+    const requestUnderway = useRef(false);
+    useEffect(() => {
+      if (requestUnderway.current) return;
+      if (search?.auth) {
+        requestUnderway.current = true;
+        loginMagicLink({ magicLinkId: search.auth }).then(({ data }) => {
+          setToken(data?.loginMagicLink?.token ?? null);
+          setRefreshToken(data?.loginMagicLink?.refreshToken ?? null);
+          navigate({ search: undefined });
+        });
+      }
+    }, [search?.auth]);
+
     const linkActiveProps = {
       style: {
         "--active-background-color": "var(--mantine-primary-color-light)",

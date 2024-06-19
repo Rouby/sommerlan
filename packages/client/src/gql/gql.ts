@@ -58,7 +58,7 @@ const documents = {
     "\n      mutation loginPasskey($response: JSON!) {\n        loginPasskey(response: $response) {\n          token\n          refreshToken\n          credentialID\n        }\n      }\n    ": types.LoginPasskeyDocument,
     "\n      mutation generateRegistrationOptions($userId: String!) {\n        generatePasskeyRegisterOptions(userId: $userId)\n      }\n    ": types.GenerateRegistrationOptionsDocument,
     "\n      mutation registerPasskey(\n        $userId: String!\n        $name: String!\n        $response: JSON!\n      ) {\n        registerPasskey(userId: $userId, name: $name, response: $response) {\n          token\n          device {\n            id\n            name\n          }\n        }\n      }\n    ": types.RegisterPasskeyDocument,
-    "\n      mutation syncCache {\n        syncCache(clear: true)\n      }\n    ": types.SyncCacheDocument,
+    "\n        mutation loginMagicLink($magicLinkId: String!) {\n          loginMagicLink(magicLinkId: $magicLinkId) {\n            token\n            refreshToken\n          }\n        }\n      ": types.LoginMagicLinkDocument,
     "\n        query NextPartyBudget {\n          nextParty {\n            id\n            finalCostPerDay\n            donations {\n              id\n              donator {\n                id\n                displayName\n                avatar\n              }\n              amount\n              dedication\n            }\n            attendings {\n              id\n              dates\n              paidDues\n              user {\n                id\n                displayName\n                avatar\n              }\n            }\n          }\n        }\n      ": types.NextPartyBudgetDocument,
     "\n        mutation syncCache {\n          syncCache(clear: true)\n        }\n      ": types.SyncCacheDocument,
 };
@@ -260,7 +260,7 @@ export function graphql(source: "\n      mutation registerPasskey(\n        $use
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n      mutation syncCache {\n        syncCache(clear: true)\n      }\n    "): (typeof documents)["\n      mutation syncCache {\n        syncCache(clear: true)\n      }\n    "];
+export function graphql(source: "\n        mutation loginMagicLink($magicLinkId: String!) {\n          loginMagicLink(magicLinkId: $magicLinkId) {\n            token\n            refreshToken\n          }\n        }\n      "): (typeof documents)["\n        mutation loginMagicLink($magicLinkId: String!) {\n          loginMagicLink(magicLinkId: $magicLinkId) {\n            token\n            refreshToken\n          }\n        }\n      "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
