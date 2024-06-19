@@ -152,6 +152,8 @@ export type Mutation = {
   __typename?: "Mutation";
   addGameToParty: AddGameResult;
   addPicture: Picture;
+  checkIn?: Maybe<Attending>;
+  checkOut?: Maybe<Attending>;
   deleteAuthDevice: AuthDevice;
   denyRoom?: Maybe<Attending>;
   donate: Donation;
@@ -188,6 +190,14 @@ export type MutationaddGameToPartyArgs = {
 
 export type MutationaddPictureArgs = {
   input: PictureInput;
+};
+
+export type MutationcheckInArgs = {
+  userId: Scalars["ID"]["input"];
+};
+
+export type MutationcheckOutArgs = {
+  userId: Scalars["ID"]["input"];
 };
 
 export type MutationdeleteAuthDeviceArgs = {
@@ -829,6 +839,18 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationaddPictureArgs, "input">
+  >;
+  checkIn?: Resolver<
+    Maybe<ResolversTypes["Attending"]>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationcheckInArgs, "userId">
+  >;
+  checkOut?: Resolver<
+    Maybe<ResolversTypes["Attending"]>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationcheckOutArgs, "userId">
   >;
   deleteAuthDevice?: Resolver<
     ResolversTypes["AuthDevice"],

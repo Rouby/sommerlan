@@ -15,6 +15,9 @@ extend type Mutation {
   updateParty(input: PartyInput!): Party!
 
   addPicture(input: PictureInput!): Picture!
+
+  checkIn(userId: ID!): Attending
+  checkOut(userId: ID!): Attending
 }
 
 type Party {

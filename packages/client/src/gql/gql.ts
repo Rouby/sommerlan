@@ -48,6 +48,7 @@ const documents = {
     "\n      mutation register(\n        $userName: String!\n        $email: String!\n        $password: String\n      ) {\n        register(userName: $userName, email: $email, password: $password) {\n          token\n          refreshToken\n        }\n      }\n    ": types.RegisterDocument,
     "\n      mutation loginPassword($email: String!, $password: String!) {\n        loginPassword(email: $email, password: $password) {\n          token\n          refreshToken\n        }\n      }\n    ": types.LoginPasswordDocument,
     "\n      mutation sendEmailLink($email: String!) {\n        sendMagicLink(email: $email)\n      }\n    ": types.SendEmailLinkDocument,
+    "\n      query nextPartyDates {\n        nextParty {\n          __typename\n          id\n          startDate\n          endDate\n        }\n      }\n    ": types.NextPartyDatesDocument,
     "\n      query myDevices {\n        me {\n          id\n          devices {\n            id\n            name\n            createdAt\n            lastUsedAt\n          }\n        }\n      }\n    ": types.MyDevicesDocument,
     "\n      mutation updateAuthDevice($id: ID!, $name: String!) {\n        updateAuthDevice(id: $id, name: $name) {\n          id\n          name\n        }\n      }\n    ": types.UpdateAuthDeviceDocument,
     "\n      mutation deleteAuthDevice($id: ID!) {\n        deleteAuthDevice(id: $id) {\n          id\n          name\n        }\n      }\n    ": types.DeleteAuthDeviceDocument,
@@ -215,6 +216,10 @@ export function graphql(source: "\n      mutation loginPassword($email: String!,
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n      mutation sendEmailLink($email: String!) {\n        sendMagicLink(email: $email)\n      }\n    "): (typeof documents)["\n      mutation sendEmailLink($email: String!) {\n        sendMagicLink(email: $email)\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      query nextPartyDates {\n        nextParty {\n          __typename\n          id\n          startDate\n          endDate\n        }\n      }\n    "): (typeof documents)["\n      query nextPartyDates {\n        nextParty {\n          __typename\n          id\n          startDate\n          endDate\n        }\n      }\n    "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

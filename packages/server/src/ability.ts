@@ -56,15 +56,15 @@ export async function createAbility(
     });
 
     if (user.roles.includes(User.Role.Admin)) {
-      can("manage", "Party");
-      can("manage", "User");
-      can("manage", "Budget");
+      can(["create", "read", "update", "delete"], "Party");
+      can(["create", "read", "update", "delete"], "User");
+      can(["create", "read", "update", "delete"], "Budget");
       can("read", "Attending", "paidDues");
       can("update", "Attending");
       can("grantRoom", "Attending");
-      can("manage", "Event");
-      can("manage", "Cache");
-      can("manage", "Picture");
+      can(["create", "read", "update", "delete"], "Event");
+      can(["create", "read", "update", "delete"], "Cache");
+      can(["create", "read", "update", "delete"], "Picture");
       can("rescind", "Donation");
       can("read", "Donation", "userId");
     }

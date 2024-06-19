@@ -7,7 +7,7 @@ import { expectedOrigin } from "./env";
 async function tokenPayload(user: User) {
   const ability = await createAbility(user);
   return {
-    __version: 1 as const,
+    __version: 2 as const,
     user: {
       id: user.id,
       roles: user.roles,

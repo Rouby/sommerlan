@@ -24,6 +24,10 @@ export class Attending extends Base {
 
   public applicationDate = dayjs().format("YYYY-MM-DD");
 
+  public checkIn = "";
+
+  public checkOut = "";
+
   constructor(props?: Values<Attending>) {
     super();
     if (props) Object.assign(this, props);
