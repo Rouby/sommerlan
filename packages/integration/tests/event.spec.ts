@@ -19,7 +19,7 @@ test("should plan an event", async ({ page, context, api }) => {
 
   await page.getByText("Ein Event eintragen").click();
 
-  await page.getByLabel("Event").fill("Ein Event");
+  await page.getByPlaceholder("Event").fill("Ein Event");
 
   await page
     .getByTestId("dropzone")
