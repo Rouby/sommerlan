@@ -1,3 +1,4 @@
+import * as dayjs from "dayjs";
 import type { AttendingResolvers } from "./../../types.generated";
 export const Attending: Pick<
   AttendingResolvers,
@@ -30,5 +31,8 @@ export const Attending: Pick<
       return 0;
     }
     return parent.paidDues;
+  },
+  dates: (parent) => {
+    return parent.dates.sort((a, b) => dayjs(a).diff(dayjs(b)));
   },
 };
