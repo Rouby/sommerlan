@@ -97,7 +97,9 @@ export function PartyRooms() {
       >
         {isGrantedRoom
           ? "Du hast einen Raum gebucht, Buchung stornieren?"
-          : "Ich würde gerne einen Raum haben"}
+          : isRequestingRoom
+            ? "Deine Raumbuchung wird gerade bearbeitet, Buchung stornieren?"
+            : "Ich würde gerne einen Raum haben"}
       </Button>
 
       <Can I="grantRoom" an="Attending">
