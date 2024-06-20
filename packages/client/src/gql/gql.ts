@@ -32,6 +32,7 @@ const documents = {
     "\n      mutation setOthersAttendance(\n        $partyId: ID!\n        $userId: ID\n        $dates: [Date!]!\n      ) {\n        setAttendance(partyId: $partyId, userId: $userId, dates: $dates) {\n          id\n          attendings {\n            id\n            dates\n          }\n        }\n      }\n    ": types.SetOthersAttendanceDocument,
     "\n      query checkInDate {\n        nextParty {\n          id\n          attending {\n            id\n            dates\n            checkIn\n            checkOut\n            room\n          }\n        }\n      }\n    ": types.CheckInDateDocument,
     "\n      mutation checkIn($userId: ID!) {\n        checkIn(userId: $userId) {\n          id\n          checkIn\n          checkOut\n        }\n      }\n    ": types.CheckInDocument,
+    "\n      mutation checkOut($userId: ID!) {\n        checkOut(userId: $userId) {\n          id\n          checkIn\n          checkOut\n        }\n      }\n    ": types.CheckOutDocument,
     "\n      query checkInDateOfUser($userId: ID!) {\n        nextParty {\n          id\n          attending(userId: $userId) {\n            id\n            dates\n            checkIn\n            checkOut\n            room\n          }\n        }\n      }\n    ": types.CheckInDateOfUserDocument,
     "\n      query nextPartyCosts {\n        nextParty {\n          id\n          rentalCosts\n          paidDues\n          finalCostPerDay\n          payday\n          donations {\n            id\n            amount\n            donator {\n              id\n              displayName\n              avatar\n            }\n            dedication\n          }\n          attendings {\n            id\n            dates\n            paidDues\n            user {\n              id\n            }\n          }\n        }\n      }\n    ": types.NextPartyCostsDocument,
     "\n      query partyCountdown($nextParty: Boolean!, $partyId: ID!) {\n        nextParty @include(if: $nextParty) {\n          id\n          startDate\n          endDate\n          registrationDeadline\n        }\n\n        party(id: $partyId) @skip(if: $nextParty) {\n          id\n          startDate\n          endDate\n        }\n      }\n    ": types.PartyCountdownDocument,
@@ -155,6 +156,10 @@ export function graphql(source: "\n      query checkInDate {\n        nextParty 
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n      mutation checkIn($userId: ID!) {\n        checkIn(userId: $userId) {\n          id\n          checkIn\n          checkOut\n        }\n      }\n    "): (typeof documents)["\n      mutation checkIn($userId: ID!) {\n        checkIn(userId: $userId) {\n          id\n          checkIn\n          checkOut\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      mutation checkOut($userId: ID!) {\n        checkOut(userId: $userId) {\n          id\n          checkIn\n          checkOut\n        }\n      }\n    "): (typeof documents)["\n      mutation checkOut($userId: ID!) {\n        checkOut(userId: $userId) {\n          id\n          checkIn\n          checkOut\n        }\n      }\n    "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

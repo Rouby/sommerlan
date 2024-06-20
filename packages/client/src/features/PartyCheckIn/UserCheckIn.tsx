@@ -40,6 +40,17 @@ export function UserCheckIn() {
       }
     `),
   );
+  const [{ fetching: fetchingCheckOut }, checkOut] = useMutation(
+    graphql(`
+      mutation checkOut($userId: ID!) {
+        checkOut(userId: $userId) {
+          id
+          checkIn
+          checkOut
+        }
+      }
+    `),
+  );
 
   const [{ data: scannedUserData }] = useQuery({
     query: graphql(`
@@ -84,6 +95,19 @@ export function UserCheckIn() {
             onClick={() => checkIn({ userId: scannedUser.id })}
           >
             Check in
+          </Button>
+
+          <Button
+            loading={fetchingCheckOut}
+            leftSection={
+              scannedUserData?.nextParty?.attending?.checkOut ? (
+                <IconCheck />
+              ) : null
+            }
+            disabled={!scannedUserData?.nextParty?.attending?.checkIn}
+            onClick={() => checkOut({ userId: scannedUser.id })}
+          >
+            Check out
           </Button>
         </Group>
       )}
