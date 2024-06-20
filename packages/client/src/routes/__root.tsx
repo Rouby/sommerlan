@@ -146,7 +146,7 @@ export const Route = createRootRoute({
             </Group>
           </AppShell.Footer>
         </AppShell>
-        <TanStackRouterDevtools />
+        {import.meta.env.DEV && <TanStackRouterDevtools />}
       </>
     );
   },

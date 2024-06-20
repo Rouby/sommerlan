@@ -320,6 +320,7 @@ export type MutationupdateProfileArgs = {
 
 export type Party = {
   __typename?: "Party";
+  attending?: Maybe<Attending>;
   attendings: Array<Attending>;
   donations: Array<Donation>;
   endDate: Scalars["Date"]["output"];
@@ -337,6 +338,10 @@ export type Party = {
   roomsAvailable: Scalars["Int"]["output"];
   seatsAvailable: Scalars["Int"]["output"];
   startDate: Scalars["Date"]["output"];
+};
+
+export type PartyattendingArgs = {
+  userId?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
 export type PartyInput = {
@@ -1032,6 +1037,12 @@ export type PartyResolvers<
   ParentType extends
     ResolversParentTypes["Party"] = ResolversParentTypes["Party"],
 > = {
+  attending?: Resolver<
+    Maybe<ResolversTypes["Attending"]>,
+    ParentType,
+    ContextType,
+    Partial<PartyattendingArgs>
+  >;
   attendings?: Resolver<
     Array<ResolversTypes["Attending"]>,
     ParentType,

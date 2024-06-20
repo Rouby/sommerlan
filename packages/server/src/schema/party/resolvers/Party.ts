@@ -1,6 +1,7 @@
 import type { PartyResolvers } from "./../../types.generated";
 export const Party: Pick<
   PartyResolvers,
+  | "attending"
   | "attendings"
   | "endDate"
   | "finalCostPerDay"
@@ -34,5 +35,11 @@ export const Party: Pick<
   paidDues: async (parent, _, ctx) => {
     const attendings = await ctx.data.Attending.filterByPartyId(parent.id);
     return attendings.reduce((acc, attending) => acc + attending.paidDues, 0);
+  },
+  attending: (parent, { userId }, ctx) => {
+    return ctx.data.Attending.findByPartyIdAndUserId(
+      parent.id,
+      userId ?? ctx.jwt.user.id,
+    );
   },
 };

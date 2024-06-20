@@ -39,23 +39,16 @@ export function useQRCodeScanner() {
 
     async function scan() {
       if (video.current) {
-        const [code] = await barcodeDetector.detect(video.current);
+        try {
+          const [code] = await barcodeDetector.detect(video.current);
 
-        if (code) {
-          try {
+          if (code) {
             const data = JSON.parse(code.rawValue);
 
-            if (data.__$app === "SommerLAN") {
-              video.current.pause();
-              stream.current?.getTracks().forEach((track) => track.stop());
-              video.current.srcObject = null;
-              isScanning.current = false;
-              setData(data);
-              return;
-            }
-          } catch {
-            // ignore
+            setData(data);
           }
+        } catch {
+          // ignore
         }
       }
 

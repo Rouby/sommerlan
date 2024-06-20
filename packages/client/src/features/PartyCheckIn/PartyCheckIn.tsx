@@ -1,7 +1,9 @@
 import { Card, Center, Group, Loader, Stack, Text } from "@mantine/core";
+import { useInterval } from "@mantine/hooks";
 import { IconBed, IconCheck } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { useAtomValue } from "jotai";
+import { useEffect } from "react";
 import { useQuery } from "urql";
 import { QRCode } from "../../components/QRCode";
 import { graphql } from "../../gql";
@@ -12,16 +14,13 @@ import { formatRange } from "../../utils";
 export function PartyCheckIn() {
   const user = useAtomValue(userAtom);
 
-  const [{ data, fetching }] = useQuery({
+  const [{ data, fetching }, refetch] = useQuery({
     query: graphql(`
       query checkInDate {
         nextParty {
           id
-          attendings {
+          attending {
             id
-            user {
-              id
-            }
             dates
             checkIn
             checkOut
@@ -32,6 +31,15 @@ export function PartyCheckIn() {
     `),
   });
 
+  const { start, stop } = useInterval(() => {
+    refetch();
+  }, 1000);
+
+  useEffect(() => {
+    start();
+    return () => stop();
+  }, []);
+
   if (fetching || !data?.nextParty) {
     return (
       <Center>
@@ -40,11 +48,7 @@ export function PartyCheckIn() {
     );
   }
 
-  const myAttending = data.nextParty.attendings.find(
-    (attending) => attending.user.id === user?.id,
-  );
-
-  if (!myAttending) {
+  if (!data.nextParty.attending) {
     return <>Du nimmst nicht an der naechsten Party teil :(</>;
   }
 
@@ -56,16 +60,17 @@ export function PartyCheckIn() {
             <div>
               <Text fw="bold">Dein gebuchter Zeitraum:</Text>{" "}
               {formatRange(
-                dayjs(myAttending.dates.at(0)).toDate(),
-                dayjs(myAttending.dates.at(-1)).toDate(),
+                dayjs(data.nextParty.attending.dates.at(0)).toDate(),
+                dayjs(data.nextParty.attending.dates.at(-1)).toDate(),
               )}
             </div>
-            {myAttending.room === RoomStatus.Granted && (
+            {data.nextParty.attending.room === RoomStatus.Granted && (
               <Group>
                 <IconBed /> Du hast einen Raum gebucht
               </Group>
             )}
-            {!myAttending.checkOut && myAttending.checkIn ? (
+            {!data.nextParty.attending.checkOut &&
+            data.nextParty.attending.checkIn ? (
               <Group>
                 <IconCheck color="green" />
                 <Text fs="italic">Checked in</Text>
@@ -80,9 +85,9 @@ export function PartyCheckIn() {
               __type: "SommerLAN-CheckIn",
               id: user?.id,
               displayName: user?.displayName,
-              checkIn: myAttending.checkIn,
-              checkOut: myAttending.checkOut,
-              room: myAttending.room,
+              checkIn: data.nextParty.attending.checkIn,
+              checkOut: data.nextParty.attending.checkOut,
+              room: data.nextParty.attending.room,
             }}
           />
         </Group>

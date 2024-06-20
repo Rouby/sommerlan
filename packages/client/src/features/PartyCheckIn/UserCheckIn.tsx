@@ -1,6 +1,9 @@
-import { Group } from "@mantine/core";
+import { Button, Group, Image } from "@mantine/core";
+import { IconCheck } from "@tabler/icons-react";
 import { useEffect } from "react";
+import { useMutation, useQuery } from "urql";
 import { UserAvatar } from "../../components";
+import { graphql } from "../../gql";
 import { useQRCodeScanner } from "../../hooks";
 
 export function UserCheckIn() {
@@ -8,11 +11,13 @@ export function UserCheckIn() {
     useQRCodeScanner();
 
   useEffect(() => {
-    startScanning();
+    if (video.current) {
+      startScanning();
 
-    return () => {
-      stopScanning();
-    };
+      return () => {
+        stopScanning();
+      };
+    }
   }, []);
 
   const scannedUser =
@@ -24,13 +29,62 @@ export function UserCheckIn() {
         }
       : null;
 
+  const [{ fetching }, checkIn] = useMutation(
+    graphql(`
+      mutation checkIn($userId: ID!) {
+        checkIn(userId: $userId) {
+          id
+          checkIn
+          checkOut
+        }
+      }
+    `),
+  );
+
+  const [{ data: scannedUserData }] = useQuery({
+    query: graphql(`
+      query checkInDateOfUser($userId: ID!) {
+        nextParty {
+          id
+          attending(userId: $userId) {
+            id
+            dates
+            checkIn
+            checkOut
+            room
+          }
+        }
+      }
+    `),
+    variables: {
+      userId: scannedUser?.id ?? "",
+    },
+    pause: !scannedUser,
+  });
+
   return (
     <>
-      {error ? <div>{error}</div> : <video ref={video} />}
+      {error ? (
+        <div>{error}</div>
+      ) : (
+        <Image component="video" ref={video} radius="md" />
+      )}
       {scannedUser && (
-        <Group>
+        <Group mt="md">
           <UserAvatar user={scannedUser} />
           {scannedUser.displayName}
+          <Button
+            loading={fetching}
+            leftSection={
+              scannedUserData?.nextParty?.attending?.checkIn ? (
+                <IconCheck />
+              ) : null
+            }
+            disabled={!!scannedUserData?.nextParty?.attending?.checkIn}
+            onClick={() => checkIn({ userId: scannedUser.id })}
+          >
+            Check in
+          </Button>
         </Group>
       )}
     </>

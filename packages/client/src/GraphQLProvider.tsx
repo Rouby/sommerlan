@@ -256,6 +256,7 @@ export function GraphQLProvider({ children }: { children: React.ReactNode }) {
                     graphql(`
                       mutation refreshLogin($refreshToken: String!) {
                         refreshLogin(refreshToken: $refreshToken) {
+                          __typename
                           token
                           refreshToken
                         }

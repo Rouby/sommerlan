@@ -1,7 +1,6 @@
 import { ForbiddenError } from "@casl/ability";
-import dayjs from "dayjs";
+import * as dayjs from "dayjs";
 import { createGraphQLError } from "graphql-yoga";
-import { Attending, Party } from "../../../../data";
 import type { MutationResolvers } from "./../../../types.generated";
 
 export const checkOut: NonNullable<MutationResolvers["checkOut"]> = async (
@@ -11,13 +10,16 @@ export const checkOut: NonNullable<MutationResolvers["checkOut"]> = async (
 ) => {
   ForbiddenError.from(ctx.ability).throwUnlessCan("checkOut", "User");
 
-  const party = await Party.findLatest();
+  const party = await ctx.data.Party.findLatest();
 
   if (!party) {
     throw createGraphQLError("Party not found");
   }
 
-  const attending = await Attending.findByPartyIdAndUserId(party.id, userId);
+  const attending = await ctx.data.Attending.findByPartyIdAndUserId(
+    party.id,
+    userId,
+  );
 
   if (attending) {
     attending.checkOut = dayjs().toISOString();
