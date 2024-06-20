@@ -1,5 +1,5 @@
 import { Box, Button, Image, InputBase, InputBaseProps } from "@mantine/core";
-import { Dropzone, FileWithPath, IMAGE_MIME_TYPE } from "@mantine/dropzone";
+import { Dropzone, FileWithPath } from "@mantine/dropzone";
 import {
   InputHTMLAttributes,
   useEffect,
@@ -43,7 +43,7 @@ export function ImageInput({
     <Box>
       <Dropzone
         multiple={false}
-        accept={IMAGE_MIME_TYPE}
+        inputProps={{ capture: "user" }}
         onDrop={([file]) => setFile(file)}
       >
         <InputBase
