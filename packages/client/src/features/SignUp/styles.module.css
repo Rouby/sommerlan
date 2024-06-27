@@ -1,0 +1,8 @@
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr minmax(360px, auto);
+
+  @media (max-width: 768px) {
+    grid-template-columns: auto;
+  }
+}
