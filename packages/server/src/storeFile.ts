@@ -4,12 +4,18 @@ import { mkdir, writeFile } from "fs/promises";
 import { join } from "path";
 import { expectedOrigin, uploadDir } from "./env";
 
-export async function storeFile(file: File) {
+export async function storeFile(
+  file: File,
+  options?: { compressImage?: boolean },
+) {
   const id = randomUUID();
   const uploadName = `${id}.${file.name.split(".").pop()}`;
 
   if (!existsSync(uploadDir)) {
     await mkdir(uploadDir, { recursive: true });
+  }
+
+  if (options?.compressImage) {
   }
 
   await writeFile(

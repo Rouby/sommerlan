@@ -1,5 +1,6 @@
 import {
   AppShell,
+  Box,
   Button,
   Group,
   Image,
@@ -82,9 +83,15 @@ export const Route = createRootRoute({
         >
           <AppShell.Header>
             <Group wrap="nowrap" justify="space-between" h="100%" mx="xl">
-              <div>
-                <Image radius="md" src={Logo} h={68} w="auto" fit="contain" />
-              </div>
+              <Box>
+                <Image
+                  radius="md"
+                  src={Logo}
+                  h={{ base: 48, md: 68 }}
+                  w="auto"
+                  fit="contain"
+                />
+              </Box>
 
               <Group wrap="nowrap" visibleFrom="md">
                 <Link to="/">
@@ -101,12 +108,6 @@ export const Route = createRootRoute({
                 </Link>
                 <Link to="/imprint">
                   <Button variant="subtle">Impressum</Button>
-                </Link>
-              </Group>
-
-              <Group justify="center" mx="xl" wrap="nowrap" hiddenFrom="md">
-                <Link to="/imprint">
-                  <Button variant="subtle">Imprint</Button>
                 </Link>
               </Group>
 
