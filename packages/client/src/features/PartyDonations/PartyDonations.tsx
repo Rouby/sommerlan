@@ -19,6 +19,7 @@ export function PartyDonations() {
       query nextPartyDonations {
         nextParty {
           id
+          tentative
           registrationDeadline
           donations {
             __typename
@@ -42,6 +43,10 @@ export function PartyDonations() {
   const party = data?.nextParty;
 
   if (!party) {
+    return null;
+  }
+
+  if (party.tentative) {
     return null;
   }
 
