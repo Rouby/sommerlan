@@ -15,6 +15,7 @@ import {
   Popover,
   Skeleton,
   Stack,
+  Switch,
   Text,
   TextInput,
   Tooltip,
@@ -109,14 +110,23 @@ export function PartyAttendings() {
     ? !dayjs().startOf("day").isAfter(data?.nextParty.registrationDeadline)
     : true;
 
+  const [showNames, setShowNames] = useState(false);
+
   return (
     <>
       {data?.nextParty?.tentative ? (
-        <Text size="lg" mt="sm">
+        <Text size="lg" mt="sm" mb="sm">
           Angaben beziehen sich auf den aktuellen Zeitraum vorschlag. Dieser
           kann sich unter Umständen noch ändern.
         </Text>
       ) : null}
+      <Group justify="flex-end">
+        <Switch
+          label="Zeige Teilnehmer als Namen"
+          checked={showNames}
+          onChange={(evt) => setShowNames(evt.target.checked)}
+        />
+      </Group>
       <Checkbox.Group
         size="lg"
         value={myAttending?.dates}
@@ -163,13 +173,25 @@ export function PartyAttendings() {
                   date={date.format("YYYY-MM-DD")}
                 />
 
-                <Tooltip.Group openDelay={300} closeDelay={100}>
-                  <Avatar.Group spacing="sm" style={{ flexWrap: "wrap" }}>
+                {showNames ? (
+                  <Group wrap="wrap" gap="0 16px">
                     {attendingsOnDate.map((attending) => (
-                      <UserAvatar key={attending.id} user={attending.user} />
+                      <UserAvatar
+                        key={attending.id}
+                        user={attending.user}
+                        showName
+                      />
                     ))}
-                  </Avatar.Group>
-                </Tooltip.Group>
+                  </Group>
+                ) : (
+                  <Tooltip.Group openDelay={300} closeDelay={100}>
+                    <Avatar.Group spacing="sm" style={{ flexWrap: "wrap" }}>
+                      {attendingsOnDate.map((attending) => (
+                        <UserAvatar key={attending.id} user={attending.user} />
+                      ))}
+                    </Avatar.Group>
+                  </Tooltip.Group>
+                )}
 
                 <Box className={classes.tags}>
                   <Group>
@@ -202,7 +224,32 @@ export function PartyAttendings() {
       </Checkbox.Group>
       {data?.nextParty && (
         <>
+          Leider nicht dabei:
+          {showNames ? (
+            <Group wrap="wrap" gap="0 16px">
+              {data?.nextParty.attendings
+                .filter((a) => a.dates.length === 0)
+                .map((attending) => (
+                  <UserAvatar
+                    key={attending.id}
+                    user={attending.user}
+                    showName
+                  />
+                ))}
+            </Group>
+          ) : (
+            <Tooltip.Group openDelay={300} closeDelay={100}>
+              <Avatar.Group spacing="sm" style={{ flexWrap: "wrap" }}>
+                {data?.nextParty.attendings
+                  .filter((a) => a.dates.length === 0)
+                  .map((attending) => (
+                    <UserAvatar key={attending.id} user={attending.user} />
+                  ))}
+              </Avatar.Group>
+            </Tooltip.Group>
+          )}
           <Checkbox
+            mt="md"
             label="Ich bin nicht dabei"
             disabled={!applicationAllowed}
             checked={myAttending?.dates.length === 0}
@@ -222,16 +269,6 @@ export function PartyAttendings() {
                     }));
             }}
           />
-          Leider nicht dabei:
-          <Tooltip.Group openDelay={300} closeDelay={100}>
-            <Avatar.Group spacing="sm" style={{ flexWrap: "wrap" }}>
-              {data?.nextParty.attendings
-                .filter((a) => a.dates.length === 0)
-                .map((attending) => (
-                  <UserAvatar key={attending.id} user={attending.user} />
-                ))}
-            </Avatar.Group>
-          </Tooltip.Group>
         </>
       )}
     </>
