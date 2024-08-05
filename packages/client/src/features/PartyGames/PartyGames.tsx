@@ -17,33 +17,13 @@ import { graphql } from "../../gql";
 import { userAtom } from "../../state";
 import { GamesCombobox } from "./GamesCombobox";
 
-export function PartyGames({ partyId }: { partyId?: string }) {
+export function PartyGames() {
   const user = useAtomValue(userAtom)!;
 
   const [{ data, fetching }] = useQuery({
     query: graphql(`
-      query partyGames($partyId: ID!, $nextParty: Boolean!) {
-        nextParty @include(if: $nextParty) {
-          id
-          startDate
-          endDate
-          attendings {
-            id
-            dates
-            user {
-              id
-              displayName
-              avatar
-            }
-            gamesPlayed {
-              id
-              name
-              image
-            }
-          }
-        }
-
-        party(id: $partyId) @skip(if: $nextParty) {
+      query partyGames {
+        nextParty {
           id
           startDate
           endDate
@@ -70,14 +50,10 @@ export function PartyGames({ partyId }: { partyId?: string }) {
         }
       }
     `),
-    variables: {
-      partyId: partyId ?? "",
-      nextParty: !partyId,
-    },
   });
 
-  const { nextParty, party: specificParty, games } = data ?? {};
-  const party = nextParty ?? specificParty;
+  const games = data?.games;
+  const party = data?.nextParty;
 
   const startDate = dayjs(party?.startDate, "YYYY-MM-DD");
   const endDate = dayjs(party?.endDate, "YYYY-MM-DD");

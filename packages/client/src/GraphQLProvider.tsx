@@ -340,6 +340,7 @@ export function GraphQLProvider({ children }: { children: React.ReactNode }) {
               );
             }
           }),
+          // mergeQueryExchange(),
           fetchExchange,
         ],
         requestPolicy: "cache-and-network",
