@@ -46,6 +46,7 @@
     "@urql/exchange-auth": "^2.1.6",
     "@urql/exchange-graphcache": "^6.3.2",
     "base64url": "^3.0.1",
+    "dataloader": "^2.2.2",
     "dayjs": "^1.11.10",
     "embla-carousel-react": "^8.0.4",
     "framer-motion": "^10.18.0",
@@ -55,7 +56,8 @@
     "qrcode": "^1.5.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "urql": "^4.0.5"
+    "urql": "^4.0.5",
+    "wonka": "^6.3.2"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^5.0.2",
@@ -68,7 +70,7 @@
     "@types/react": "^18.2.13",
     "@types/react-dom": "^18.2.6",
     "@vitejs/plugin-react-swc": "^3.3.2",
-    "typescript": "^5.4.4",
+    "typescript": "^5.5.4",
     "vite": "^5.2.8",
     "vite-plugin-graphql-codegen": "^3.3.6",
     "vite-plugin-html": "^3.2.2",
