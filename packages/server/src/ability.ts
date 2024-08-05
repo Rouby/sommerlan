@@ -50,6 +50,9 @@ export async function createAbility(
     can("create", "Game");
     can("create", "Picture");
     can("rescind", "Donation", { userId: user.id });
+    cannot("rescind", "Donation", { received: true }).because(
+      "Die Spende wurde bereits entgegengenommen.",
+    );
     cannot("read", "Donation", "userId", {
       incognito: true,
       userId: { $ne: user.id },
@@ -83,3 +86,5 @@ export async function createAbility(
     },
   });
 }
+
+export const AbilityVersion = 3 as const;

@@ -21,6 +21,8 @@ export class Donation extends Base {
 
   public incognito = false;
 
+  public received = false;
+
   constructor(props?: Values<Donation>) {
     super();
     if (props) Object.assign(this, props);

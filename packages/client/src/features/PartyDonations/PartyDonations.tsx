@@ -1,30 +1,16 @@
-import {
-  ActionIcon,
-  Alert,
-  Avatar,
-  Box,
-  Button,
-  Checkbox,
-  LoadingOverlay,
-  NumberInput,
-  Popover,
-  SegmentedControl,
-  Stack,
-  Text,
-} from "@mantine/core";
+import { ActionIcon, Avatar, Box, Button, Popover, Text } from "@mantine/core";
 import {
   IconCreditCardRefund,
-  IconCurrencyEuro,
   IconHomeDollar,
   IconPigMoney,
 } from "@tabler/icons-react";
-import dayjs from "dayjs";
 import { Fragment, useState } from "react";
 import { useMutation, useQuery } from "urql";
 import { Can, UserAvatar } from "../../components";
 import { graphql } from "../../gql";
 import { DonationDedication } from "../../gql/graphql";
 import { formatCurrency } from "../../utils";
+import { AddDonationForm } from "./AddDonationForm";
 import classes from "./styles.module.css";
 
 export function PartyDonations() {
@@ -44,6 +30,7 @@ export function PartyDonations() {
               avatar
             }
             dedication
+            received
           }
         }
       }
@@ -57,10 +44,6 @@ export function PartyDonations() {
   if (!party) {
     return null;
   }
-
-  const donationsAllowed = party?.registrationDeadline
-    ? !dayjs().startOf("day").isAfter(party.registrationDeadline)
-    : true;
 
   return (
     <>
@@ -80,13 +63,9 @@ export function PartyDonations() {
                   <Avatar radius="xl">I</Avatar>
                 )}
 
-                {donationsAllowed ? (
-                  <Can I="rescind" this={donation} otherwise={<div />}>
-                    <RescindDonationButton donationId={donation.id} />
-                  </Can>
-                ) : (
-                  <div />
-                )}
+                <Can I="rescind" this={donation} otherwise={<div />}>
+                  <RescindDonationButton donationId={donation.id} />
+                </Can>
               </Fragment>
             ))}
           </Box>
@@ -94,10 +73,7 @@ export function PartyDonations() {
       )}
       <Popover opened={donateMenuOpen} onClose={() => setDonateMenuOpen(false)}>
         <Popover.Target>
-          <Button
-            onClick={() => setDonateMenuOpen(!donateMenuOpen)}
-            disabled={!donationsAllowed}
-          >
+          <Button onClick={() => setDonateMenuOpen(!donateMenuOpen)}>
             Geld für die nächste Party spenden
           </Button>
         </Popover.Target>
@@ -117,96 +93,6 @@ function DedicationIcon({ value }: { value: DonationDedication }) {
     case DonationDedication.Warchest:
       return <IconPigMoney />;
   }
-}
-
-function AddDonationForm({ onDonate }: { onDonate: () => void }) {
-  const [{ fetching, error }, donate] = useMutation(
-    graphql(`
-      mutation donateToParty(
-        $amount: Float!
-        $dedication: DonationDedication!
-        $incognito: Boolean!
-      ) {
-        donate(
-          amount: $amount
-          dedication: $dedication
-          incognito: $incognito
-        ) {
-          id
-          amount
-          dedication
-          donator {
-            id
-            displayName
-            avatar
-          }
-          party {
-            id
-          }
-        }
-      }
-    `),
-  );
-
-  return (
-    <form
-      onSubmit={async (event) => {
-        event.preventDefault();
-        const form = event.target as HTMLFormElement;
-
-        const amount = +form["amount"].value;
-        const dedication = form["dedication"].value;
-        const incognito = form["incognito"].checked;
-
-        await donate({ amount, dedication, incognito });
-
-        (event.target as HTMLFormElement).reset();
-
-        onDonate();
-      }}
-    >
-      <LoadingOverlay visible={fetching} />
-
-      <Alert mb="md" hidden={!error} color="red">
-        {error?.message}
-      </Alert>
-
-      <Stack>
-        <NumberInput
-          required
-          name="amount"
-          min={10}
-          ta="right"
-          rightSection={<IconCurrencyEuro />}
-        />
-
-        <SegmentedControl
-          name="dedication"
-          data={[
-            { value: "RENT", label: "Miete" },
-            { value: "WARCHEST", label: "Kriegskasse" },
-          ]}
-        />
-
-        <Checkbox name="incognito" label="Anonym spenden" />
-
-        <Button type="submit">Spenden</Button>
-      </Stack>
-
-      <Text size="xs" maw={300}>
-        <p>
-          Spenden werden auf vertrauensbasis getätigt und fließen entweder in
-          die Gemeinschaftskasse ("Kriegskasse") oder werden auf die Miete
-          angerechnet.
-        </p>
-        <p>
-          Hier angegebene Spenden werden zum Stichtag der nächsten Party
-          berücksichtigt und sind <strong>zusätzlich</strong> zu den normalen
-          Kosten zu leisten, bitte beachte das bei deiner Planung.
-        </p>
-      </Text>
-    </form>
-  );
 }
 
 function RescindDonationButton({ donationId }: { donationId: string }) {

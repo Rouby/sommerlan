@@ -1,13 +1,13 @@
 import { MongoQuery } from "@casl/ability";
 import { sign } from "jsonwebtoken";
-import { createAbility } from "./ability";
+import { AbilityVersion, createAbility } from "./ability";
 import type { User } from "./data";
 import { expectedOrigin } from "./env";
 
 async function tokenPayload(user: User) {
   const ability = await createAbility(user);
   return {
-    __version: 2 as const,
+    __version: AbilityVersion,
     user: {
       id: user.id,
       roles: user.roles,

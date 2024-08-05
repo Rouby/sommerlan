@@ -17,6 +17,7 @@ type Donation {
   amount: Float!
   dedication: DonationDedication!
   party: Party!
+  received: Boolean!
 }
 
 enum DonationDedication {

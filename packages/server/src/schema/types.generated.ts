@@ -98,6 +98,7 @@ export type Donation = {
   donator?: Maybe<User>;
   id: Scalars["ID"]["output"];
   party: Party;
+  received: Scalars["Boolean"]["output"];
 };
 
 export type DonationDedication = "RENT" | "WARCHEST";
@@ -564,6 +565,7 @@ export type ResolversTypes = {
   Date: ResolverTypeWrapper<Scalars["Date"]["output"]>;
   DateTime: ResolverTypeWrapper<Scalars["DateTime"]["output"]>;
   Donation: ResolverTypeWrapper<DonationMapper>;
+  Boolean: ResolverTypeWrapper<Scalars["Boolean"]["output"]>;
   DonationDedication: DonationDedication;
   Event: ResolverTypeWrapper<EventMapper>;
   EventInput: EventInput;
@@ -581,7 +583,6 @@ export type ResolversTypes = {
   LoginResponse: ResolverTypeWrapper<LoginResponse>;
   Int: ResolverTypeWrapper<Scalars["Int"]["output"]>;
   Mutation: ResolverTypeWrapper<{}>;
-  Boolean: ResolverTypeWrapper<Scalars["Boolean"]["output"]>;
   Party: ResolverTypeWrapper<PartyMapper>;
   PartyInput: PartyInput;
   Picture: ResolverTypeWrapper<PictureMapper>;
@@ -620,6 +621,7 @@ export type ResolversParentTypes = {
   Date: Scalars["Date"]["output"];
   DateTime: Scalars["DateTime"]["output"];
   Donation: DonationMapper;
+  Boolean: Scalars["Boolean"]["output"];
   Event: EventMapper;
   EventInput: EventInput;
   File: Scalars["File"]["output"];
@@ -634,7 +636,6 @@ export type ResolversParentTypes = {
   LoginResponse: LoginResponse;
   Int: Scalars["Int"]["output"];
   Mutation: {};
-  Boolean: Scalars["Boolean"]["output"];
   Party: PartyMapper;
   PartyInput: PartyInput;
   Picture: PictureMapper;
@@ -753,6 +754,7 @@ export type DonationResolvers<
   donator?: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   party?: Resolver<ResolversTypes["Party"], ParentType, ContextType>;
+  received?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
