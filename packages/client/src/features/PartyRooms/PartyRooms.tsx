@@ -14,6 +14,7 @@ export function PartyRooms() {
       query nextPartyRooms {
         nextParty {
           id
+          tentative
           roomsAvailable
           attendings {
             id
@@ -71,7 +72,7 @@ export function PartyRooms() {
   const isRequestingRoom = myAttending?.room === "REQUESTED";
   const isGrantedRoom = myAttending?.room === "GRANTED";
 
-  if (!nextParty?.roomsAvailable) return null;
+  if (!nextParty?.roomsAvailable || nextParty.tentative) return null;
 
   return (
     <>

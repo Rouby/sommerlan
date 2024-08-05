@@ -339,6 +339,7 @@ export type Party = {
   roomsAvailable: Scalars["Int"]["output"];
   seatsAvailable: Scalars["Int"]["output"];
   startDate: Scalars["Date"]["output"];
+  tentative: Scalars["Boolean"]["output"];
 };
 
 export type PartyattendingArgs = {
@@ -1090,6 +1091,7 @@ export type PartyResolvers<
   roomsAvailable?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
   seatsAvailable?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
   startDate?: Resolver<ResolversTypes["Date"], ParentType, ContextType>;
+  tentative?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

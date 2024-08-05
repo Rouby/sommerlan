@@ -15,6 +15,8 @@ export class Party extends Base {
 
   public endDate = "";
 
+  public tentative = false;
+
   public location = "";
 
   public latitude = 0;

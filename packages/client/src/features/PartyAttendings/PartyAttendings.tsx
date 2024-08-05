@@ -25,51 +25,38 @@ import { useAtomValue } from "jotai";
 import { Fragment, useState } from "react";
 import { useMutation, useQuery } from "urql";
 import { Can, UserAvatar } from "../../components";
-import { graphql, useFragment } from "../../gql";
+import { graphql } from "../../gql";
 import { userAtom } from "../../state";
 import classes from "./styles.module.css";
 
-export function PartyAttendings({ partyId }: { partyId?: string }) {
+export function PartyAttendings() {
   const user = useAtomValue(userAtom)!;
-
-  const PartyAttendingInfo = graphql(`
-    fragment PartyAttendingInfo on Party {
-      id
-      startDate
-      endDate
-      roomsAvailable
-      seatsAvailable
-      registrationDeadline
-      attendings {
-        id
-        dates
-        room
-        applicationDate
-        user {
-          id
-          displayName
-          avatar
-        }
-      }
-    }
-  `);
 
   const [{ data, fetching }] = useQuery({
     query: graphql(`
-      query partyAttending($nextParty: Boolean!, $partyId: ID!) {
-        nextParty @include(if: $nextParty) {
-          ...PartyAttendingInfo
-        }
-
-        party(id: $partyId) @skip(if: $nextParty) {
-          ...PartyAttendingInfo
+      query partyAttending {
+        nextParty {
+          id
+          tentative
+          startDate
+          endDate
+          roomsAvailable
+          seatsAvailable
+          registrationDeadline
+          attendings {
+            id
+            dates
+            room
+            applicationDate
+            user {
+              id
+              displayName
+              avatar
+            }
+          }
         }
       }
     `),
-    variables: {
-      nextParty: !partyId,
-      partyId: partyId ?? "",
-    },
   });
 
   const [, setAttendance] = useMutation(
@@ -99,11 +86,14 @@ export function PartyAttendings({ partyId }: { partyId?: string }) {
     `),
   );
 
-  const { nextParty, party: specificParty } = data ?? {};
-  const party = useFragment(PartyAttendingInfo, nextParty ?? specificParty);
-
-  const startDate = dayjs(party?.startDate, "YYYY-MM-DD").add(12, "hours");
-  const endDate = dayjs(party?.endDate, "YYYY-MM-DD").add(20, "hours");
+  const startDate = dayjs(data?.nextParty?.startDate, "YYYY-MM-DD").add(
+    12,
+    "hours",
+  );
+  const endDate = dayjs(data?.nextParty?.endDate, "YYYY-MM-DD").add(
+    20,
+    "hours",
+  );
 
   const dates = !fetching
     ? Array.from({ length: endDate.diff(startDate, "days") + 1 }, (_, i) =>
@@ -111,23 +101,29 @@ export function PartyAttendings({ partyId }: { partyId?: string }) {
       )
     : [dayjs(0), dayjs(1), dayjs(2)];
 
-  const myAttending = party?.attendings.find(
+  const myAttending = data?.nextParty?.attendings.find(
     (attending) => attending.user.id === user.id,
   );
 
-  const applicationAllowed = party?.registrationDeadline
-    ? !dayjs().startOf("day").isAfter(party.registrationDeadline)
+  const applicationAllowed = data?.nextParty?.registrationDeadline
+    ? !dayjs().startOf("day").isAfter(data?.nextParty.registrationDeadline)
     : true;
 
   return (
     <>
+      {data?.nextParty?.tentative ? (
+        <Text size="lg" mt="sm">
+          Angaben beziehen sich auf den aktuellen Zeitraum vorschlag. Dieser
+          kann sich unter Umständen noch ändern.
+        </Text>
+      ) : null}
       <Checkbox.Group
         size="lg"
         value={myAttending?.dates}
         onChange={(dates) => {
-          party &&
+          data?.nextParty &&
             setAttendance({
-              partyId: party.id,
+              partyId: data.nextParty.id,
               dates,
               // @ts-expect-error
               attendingId: myAttending?.id,
@@ -136,7 +132,7 @@ export function PartyAttendings({ partyId }: { partyId?: string }) {
       >
         <Box p="xs" className={classes.attendings}>
           {dates.map((date, idx) => {
-            if (!party) {
+            if (!data?.nextParty) {
               return (
                 <Skeleton
                   key={idx}
@@ -147,8 +143,9 @@ export function PartyAttendings({ partyId }: { partyId?: string }) {
               );
             }
 
-            const attendingsOnDate = party.attendings.filter((attending) =>
-              attending.dates.includes(date.format("YYYY-MM-DD")),
+            const attendingsOnDate = data?.nextParty.attendings.filter(
+              (attending) =>
+                attending.dates.includes(date.format("YYYY-MM-DD")),
             );
             return (
               <Fragment key={date.toString()}>
@@ -161,8 +158,8 @@ export function PartyAttendings({ partyId }: { partyId?: string }) {
                 />
 
                 <AddUserMenu
-                  attendings={party.attendings}
-                  partyId={party.id}
+                  attendings={data?.nextParty.attendings}
+                  partyId={data?.nextParty.id}
                   date={date.format("YYYY-MM-DD")}
                 />
 
@@ -176,24 +173,24 @@ export function PartyAttendings({ partyId }: { partyId?: string }) {
 
                 <Box className={classes.tags}>
                   <Group>
-                    {party.roomsAvailable ? (
+                    {data?.nextParty.roomsAvailable ? (
                       <Badge>
-                        {party.roomsAvailable -
+                        {data?.nextParty.roomsAvailable -
                           attendingsOnDate.filter(
                             (att) => att.room === "GRANTED",
                           ).length}{" "}
-                        / {party.roomsAvailable} rooms available
+                        / {data?.nextParty.roomsAvailable} rooms available
                       </Badge>
                     ) : null}
                     <Badge
                       color={
-                        attendingsOnDate.length > party.seatsAvailable
+                        attendingsOnDate.length > data?.nextParty.seatsAvailable
                           ? "orange"
                           : "green"
                       }
                     >
-                      {attendingsOnDate.length} / {party.seatsAvailable} an
-                      diesem Tag da
+                      {attendingsOnDate.length} /{" "}
+                      {data?.nextParty.seatsAvailable} an diesem Tag da
                     </Badge>
                   </Group>
                   <Divider mt="sm" />
@@ -203,23 +200,23 @@ export function PartyAttendings({ partyId }: { partyId?: string }) {
           })}
         </Box>
       </Checkbox.Group>
-      {party && (
+      {data?.nextParty && (
         <>
           <Checkbox
             label="Ich bin nicht dabei"
             disabled={!applicationAllowed}
             checked={myAttending?.dates.length === 0}
             onChange={({ target: { checked } }) => {
-              party &&
+              data?.nextParty &&
                 (checked
                   ? setAttendance({
-                      partyId: party.id,
+                      partyId: data?.nextParty.id,
                       dates: [],
                       // @ts-expect-error
                       attendingId: myAttending?.id,
                     })
                   : removeAttendance({
-                      partyId: party.id,
+                      partyId: data?.nextParty.id,
                       // @ts-expect-error
                       attendingId: myAttending?.id,
                     }));
@@ -228,7 +225,7 @@ export function PartyAttendings({ partyId }: { partyId?: string }) {
           Leider nicht dabei:
           <Tooltip.Group openDelay={300} closeDelay={100}>
             <Avatar.Group spacing="sm" style={{ flexWrap: "wrap" }}>
-              {party.attendings
+              {data?.nextParty.attendings
                 .filter((a) => a.dates.length === 0)
                 .map((attending) => (
                   <UserAvatar key={attending.id} user={attending.user} />

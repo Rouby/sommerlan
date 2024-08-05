@@ -24,6 +24,7 @@ type Party {
   id: ID!
   startDate: Date!
   endDate: Date!
+  tentative: Boolean!
   location: String!
   locationWidgetSrc: String
   roomsAvailable: Int!

@@ -16,6 +16,7 @@ export const Party: Pick<
   | "roomsAvailable"
   | "seatsAvailable"
   | "startDate"
+  | "tentative"
 > = {
   attendings: async (parent, _arg, ctx) => {
     return ctx.data.Attending.filterByPartyId(parent.id);

@@ -5,52 +5,47 @@ import { graphql } from "../../gql";
 import { formatDate, formatRange } from "../../utils";
 import { PartyCountdown } from "./PartyCountdown";
 
-export function PartyDateAndTime({ partyId }: { partyId?: string }) {
+export function PartyDateAndTime() {
   const [{ data, fetching }] = useQuery({
     query: graphql(`
-      query partyCountdown($nextParty: Boolean!, $partyId: ID!) {
-        nextParty @include(if: $nextParty) {
+      query partyCountdown {
+        nextParty {
           id
           startDate
           endDate
+          tentative
           registrationDeadline
-        }
-
-        party(id: $partyId) @skip(if: $nextParty) {
-          id
-          startDate
-          endDate
         }
       }
     `),
-    variables: {
-      nextParty: !partyId,
-      partyId: partyId ?? "",
-    },
   });
 
-  const { nextParty, party: specificParty } = data ?? {};
-  const party: typeof nextParty | typeof specificParty =
-    nextParty ?? specificParty;
-
-  if (fetching || !party) {
+  if (fetching) {
     return <Skeleton />;
   }
 
-  const startDate = dayjs(party.startDate, "YYYY-MM-DD").add(12, "hours");
-  const endDate = dayjs(party.endDate, "YYYY-MM-DD").add(20, "hours");
+  if (!data?.nextParty) {
+    return <Text>Es gibt keine kommende Party.</Text>;
+  }
+
+  const startDate = dayjs(data.nextParty.startDate, "YYYY-MM-DD").add(
+    12,
+    "hours",
+  );
+  const endDate = dayjs(data.nextParty.endDate, "YYYY-MM-DD").add(20, "hours");
 
   return (
     <>
       <Text>
         Die nächste Party ist{" "}
         <strong>vom {formatRange(startDate.toDate(), endDate.toDate())}</strong>
+        {data?.nextParty?.tentative && " geplant."}
       </Text>
       <PartyCountdown date={startDate} />
-      {"registrationDeadline" in party && party.registrationDeadline && (
+      {data.nextParty.registrationDeadline && (
         <Text w="bold" size="lg" mt="xs">
           Anmeldefrist ist der{" "}
-          {formatDate(new Date(party.registrationDeadline))}
+          {formatDate(new Date(data.nextParty.registrationDeadline))}
         </Text>
       )}
     </>
