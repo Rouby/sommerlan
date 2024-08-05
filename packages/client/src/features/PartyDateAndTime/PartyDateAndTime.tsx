@@ -20,11 +20,11 @@ export function PartyDateAndTime() {
     `),
   });
 
-  if (fetching) {
+  if (fetching || !data) {
     return <Skeleton />;
   }
 
-  if (!data?.nextParty) {
+  if (!data.nextParty) {
     return <Text>Es gibt keine kommende Party.</Text>;
   }
 

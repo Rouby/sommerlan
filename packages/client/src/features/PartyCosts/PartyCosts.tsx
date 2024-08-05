@@ -15,6 +15,7 @@ export function PartyCosts() {
       query nextPartyCosts {
         nextParty {
           id
+          tentative
           rentalCosts
           paidDues
           finalCostPerDay
@@ -43,6 +44,10 @@ export function PartyCosts() {
   });
 
   if (!data?.nextParty?.rentalCosts) {
+    return null;
+  }
+
+  if (data.nextParty.tentative) {
     return null;
   }
 
