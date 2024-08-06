@@ -4,6 +4,7 @@ import type {
   Donation,
   Event,
   Game,
+  MoneyTransfer,
   Party,
   Picture,
   PictureTag,
@@ -20,6 +21,7 @@ type Models = {
   Picture: Picture;
   PictureTag: PictureTag;
   User: User;
+  MoneyTransfer: MoneyTransfer;
 };
 
 export const test = base.extend<{

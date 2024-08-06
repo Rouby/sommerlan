@@ -3,7 +3,16 @@ import {
   MongoAbility,
   createMongoAbility,
 } from "@casl/ability";
-import { Attending, Donation, Event, Game, Party, Picture, User } from "./data";
+import {
+  Attending,
+  Donation,
+  Event,
+  Game,
+  MoneyTransfer,
+  Party,
+  Picture,
+  User,
+} from "./data";
 
 export type AppAbility = MongoAbility<
   [
@@ -25,6 +34,8 @@ export type AppAbility = MongoAbility<
       | Donation
       | "Donation"
       | "Budget"
+      | MoneyTransfer
+      | "MoneyTransfer"
     ),
   ]
 >;
@@ -82,6 +93,7 @@ export async function createAbility(
       can(["read", "update"], "Attending", "paidDues");
       can("rescind", "Donation");
       can("read", "Donation", "userId");
+      can(["create", "read"], "MoneyTransfer");
     }
 
     cannot("participate", "Event", { organizerId: user.id }).because(

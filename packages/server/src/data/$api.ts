@@ -202,6 +202,32 @@ export function createFakeApi() {
           };
         }
       },
+      MoneyTransfer: class MoneyTransfer extends Models.MoneyTransfer {
+        static rows: MoneyTransfer[] = [];
+        static get cache() {
+          console.log("CACHE");
+          return {
+            allRows: async <T>() => this.rows as T[],
+            deleteRow: async (_: new () => unknown, __: string, id: string) => {
+              const index = this.rows.findIndex((row) => row.id === id);
+              this.rows.splice(index, 1);
+            },
+            updateRow: async (
+              _: new () => unknown,
+              __: string,
+              id: string,
+              values: Record<string, unknown>,
+            ) => {
+              const row = this.rows.find((row) => row.id === id);
+              if (row) {
+                Object.assign(row, values);
+              } else {
+                this.rows.push(new MoneyTransfer(values));
+              }
+            },
+          };
+        }
+      },
     },
   };
 }
