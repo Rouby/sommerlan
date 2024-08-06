@@ -44,6 +44,7 @@ import { syncCache as Mutation_syncCache } from "./admin/resolvers/Mutation/sync
 import { updateAuthDevice as Mutation_updateAuthDevice } from "./user/resolvers/Mutation/updateAuthDevice";
 import { updateParty as Mutation_updateParty } from "./party/resolvers/Mutation/updateParty";
 import { updateProfile as Mutation_updateProfile } from "./user/resolvers/Mutation/updateProfile";
+import { updateRoles as Mutation_updateRoles } from "./user/resolvers/Mutation/updateRoles";
 import { Party as party_Party } from "./party/resolvers/Party";
 import { Party as donation_Party } from "./donation/resolvers/Party";
 import { Party as events_Party } from "./events/resolvers/Party";
@@ -108,6 +109,7 @@ export const resolvers: Resolvers = {
     updateAuthDevice: Mutation_updateAuthDevice,
     updateParty: Mutation_updateParty,
     updateProfile: Mutation_updateProfile,
+    updateRoles: Mutation_updateRoles,
   },
 
   AddGameResult: AddGameResult,

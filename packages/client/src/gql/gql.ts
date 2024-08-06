@@ -24,6 +24,8 @@ const documents = {
     "\n      query parties {\n        parties {\n          __typename\n          id\n          startDate\n          endDate\n          location\n          roomsAvailable\n          attendings {\n            id\n            dates\n            user {\n              id\n              displayName\n              avatar\n            }\n          }\n        }\n      }\n    ": types.PartiesDocument,
     "\n      query partyRow($id: ID!) {\n        party(id: $id) {\n          id\n          startDate\n          endDate\n          location\n          attendings {\n            id\n            dates\n            user {\n              id\n              displayName\n              avatar\n            }\n          }\n        }\n      }\n    ": types.PartyRowDocument,
     "\n      mutation updateParty($input: PartyInput!) {\n        updateParty(input: $input) {\n          id\n          startDate\n          endDate\n          location\n          roomsAvailable\n        }\n      }\n    ": types.UpdatePartyDocument,
+    "\n      query adminUsers {\n        users {\n          id\n          displayName\n          avatar\n          email\n          roles\n        }\n      }\n    ": types.AdminUsersDocument,
+    "\n      mutation updateUserRoles($id: ID!, $roles: [Role!]!) {\n        updateRoles(id: $id, roles: $roles) {\n          id\n          roles\n        }\n      }\n    ": types.UpdateUserRolesDocument,
     "\n      query partyAttending {\n        nextParty {\n          id\n          tentative\n          startDate\n          endDate\n          roomsAvailable\n          seatsAvailable\n          registrationDeadline\n          attendings {\n            id\n            dates\n            room\n            applicationDate\n            user {\n              id\n              displayName\n              avatar\n            }\n          }\n        }\n      }\n    ": types.PartyAttendingDocument,
     "\n      mutation removeAttendance($partyId: ID!) {\n        removeAttendance(partyId: $partyId) {\n          id\n          attendings {\n            id\n            dates\n          }\n        }\n      }\n    ": types.RemoveAttendanceDocument,
     "\n      mutation registerExternal(\n        $userName: String!\n        $email: String!\n        $password: String\n      ) {\n        register(userName: $userName, email: $email, password: $password) {\n          token\n          refreshToken\n          user {\n            id\n            displayName\n            avatar\n          }\n        }\n      }\n    ": types.RegisterExternalDocument,
@@ -123,6 +125,14 @@ export function graphql(source: "\n      query partyRow($id: ID!) {\n        par
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n      mutation updateParty($input: PartyInput!) {\n        updateParty(input: $input) {\n          id\n          startDate\n          endDate\n          location\n          roomsAvailable\n        }\n      }\n    "): (typeof documents)["\n      mutation updateParty($input: PartyInput!) {\n        updateParty(input: $input) {\n          id\n          startDate\n          endDate\n          location\n          roomsAvailable\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      query adminUsers {\n        users {\n          id\n          displayName\n          avatar\n          email\n          roles\n        }\n      }\n    "): (typeof documents)["\n      query adminUsers {\n        users {\n          id\n          displayName\n          avatar\n          email\n          roles\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      mutation updateUserRoles($id: ID!, $roles: [Role!]!) {\n        updateRoles(id: $id, roles: $roles) {\n          id\n          roles\n        }\n      }\n    "): (typeof documents)["\n      mutation updateUserRoles($id: ID!, $roles: [Role!]!) {\n        updateRoles(id: $id, roles: $roles) {\n          id\n          roles\n        }\n      }\n    "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

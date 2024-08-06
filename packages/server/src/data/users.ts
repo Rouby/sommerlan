@@ -2,6 +2,7 @@ import { createHash, randomUUID } from "crypto";
 import { Base, Values } from "./$base";
 
 enum Role {
+  Trusted = "Trusted",
   Admin = "Admin",
 }
 
@@ -25,7 +26,7 @@ export class User extends Base {
     transports?: ("ble" | "internal" | "nfc" | "usb" | "cable" | "hybrid")[];
   }[] = [];
 
-  public roles: Role[] = [];
+  public roles: (Role | `${Role}`)[] = [];
 
   public name = "";
 

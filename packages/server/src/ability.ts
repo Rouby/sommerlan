@@ -43,12 +43,9 @@ export async function createAbility(
     can("read", "Attending", "paidDues", { userId: user.id });
     can("update", "Attending", { userId: user.id });
     can("read", "Event");
-    can("create", "Event", { organizerId: user.id });
-    can("update", "Event", { organizerId: user.id }); // TODO ids?
-    can("participate", "Event");
     can("read", "Game");
-    can("create", "Game");
-    can("create", "Picture");
+    can("participate", "Event");
+
     can("rescind", "Donation", { userId: user.id });
     cannot("rescind", "Donation", { received: true }).because(
       "Die Spende wurde bereits entgegengenommen.",
@@ -58,12 +55,17 @@ export async function createAbility(
       userId: { $ne: user.id },
     });
 
+    if (user.roles.includes(User.Role.Trusted)) {
+      can("read", "User", ["displayName", "avatar", "avatarUrl", "email"]);
+      can("create", "Event", { organizerId: user.id });
+      can("update", "Event", { organizerId: user.id }); // TODO ids?
+      can("create", "Game");
+      can("create", "Picture");
+    }
+
     if (user.roles.includes(User.Role.Admin)) {
-      can(["create", "read", "update", "delete"], "Party");
-      can(
-        ["create", "read", "update", "delete", "checkIn", "checkOut"],
-        "User",
-      );
+      can(["create", "update", "delete"], "Party");
+      can(["create", "update", "delete", "checkIn", "checkOut"], "User");
       can(["create", "read", "update", "delete"], "Budget");
       can("read", "Attending", "paidDues");
       can("update", "Attending");
@@ -87,4 +89,4 @@ export async function createAbility(
   });
 }
 
-export const AbilityVersion = 3 as const;
+export const AbilityVersion = 4 as const;

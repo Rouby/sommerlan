@@ -184,6 +184,7 @@ export type Mutation = {
   updateAuthDevice: AuthDevice;
   updateParty: Party;
   updateProfile: User;
+  updateRoles: User;
 };
 
 export type MutationaddGameToPartyArgs = {
@@ -319,6 +320,11 @@ export type MutationupdateProfileArgs = {
   input: ProfileInput;
 };
 
+export type MutationupdateRolesArgs = {
+  id: Scalars["ID"]["input"];
+  roles: Array<Role>;
+};
+
 export type Party = {
   __typename?: "Party";
   attending?: Maybe<Attending>;
@@ -430,6 +436,8 @@ export type RegisterResponse = {
   user: User;
 };
 
+export type Role = "Admin" | "Trusted";
+
 export type RoomStatus = "GRANTED" | "REQUESTED";
 
 export type User = {
@@ -441,6 +449,7 @@ export type User = {
   email: Scalars["String"]["output"];
   id: Scalars["ID"]["output"];
   name: Scalars["String"]["output"];
+  roles: Array<Role>;
 };
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -601,6 +610,7 @@ export type ResolversTypes = {
   RegisterResponse: ResolverTypeWrapper<
     Omit<RegisterResponse, "user"> & { user: ResolversTypes["User"] }
   >;
+  Role: Role;
   RoomStatus: RoomStatus;
   Time: ResolverTypeWrapper<Scalars["Time"]["output"]>;
   User: ResolverTypeWrapper<UserMapper>;
@@ -1033,6 +1043,12 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationupdateProfileArgs, "input">
   >;
+  updateRoles?: Resolver<
+    ResolversTypes["User"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationupdateRolesArgs, "id" | "roles">
+  >;
 };
 
 export type PartyResolvers<
@@ -1202,6 +1218,7 @@ export type UserResolvers<
   email?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  roles?: Resolver<Array<ResolversTypes["Role"]>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
