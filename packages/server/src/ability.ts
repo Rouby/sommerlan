@@ -66,7 +66,6 @@ export async function createAbility(
     if (user.roles.includes(User.Role.Admin)) {
       can(["create", "update", "delete"], "Party");
       can(["create", "update", "delete"], "User");
-      can("read", "Attending", "paidDues");
       can("update", "Attending");
       can("grantRoom", "Attending");
       can(["create", "read", "update", "delete"], "Event");
@@ -80,6 +79,7 @@ export async function createAbility(
 
     if (user.roles.includes(User.Role.Bookkeeper)) {
       can(["create", "read", "update", "delete"], "Budget");
+      can(["read", "update"], "Attending", "paidDues");
       can("rescind", "Donation");
       can("read", "Donation", "userId");
     }

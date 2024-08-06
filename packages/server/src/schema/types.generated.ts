@@ -182,6 +182,7 @@ export type Mutation = {
   setGamesPlayed: Attending;
   syncCache?: Maybe<Scalars["Boolean"]["output"]>;
   updateAuthDevice: AuthDevice;
+  updatePaidDues?: Maybe<Attending>;
   updateParty: Party;
   updateProfile: User;
   updateRoles: User;
@@ -310,6 +311,11 @@ export type MutationsyncCacheArgs = {
 export type MutationupdateAuthDeviceArgs = {
   id: Scalars["ID"]["input"];
   name: Scalars["String"]["input"];
+};
+
+export type MutationupdatePaidDuesArgs = {
+  attendingId: Scalars["ID"]["input"];
+  paidDues: Scalars["Float"]["input"];
 };
 
 export type MutationupdatePartyArgs = {
@@ -1030,6 +1036,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationupdateAuthDeviceArgs, "id" | "name">
+  >;
+  updatePaidDues?: Resolver<
+    Maybe<ResolversTypes["Attending"]>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationupdatePaidDuesArgs, "attendingId" | "paidDues">
   >;
   updateParty?: Resolver<
     ResolversTypes["Party"],
