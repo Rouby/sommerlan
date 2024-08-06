@@ -93,4 +93,6 @@ type AuthDevice {
 enum Role {
   Trusted
   Admin
+  Doorkeeper
+  Bookkeeper
 }

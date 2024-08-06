@@ -58,10 +58,9 @@ function UserRoles({ id, roles }: { id: string; roles: Role[] }) {
     <Group>
       <MultiSelect
         placeholder="weitere Rollen"
-        data={[Role.Trusted, Role.Admin]}
+        data={[Role.Trusted, Role.Admin, Role.Doorkeeper, Role.Bookkeeper]}
         value={roles}
         onChange={(roles) => updateRoles({ id, roles: roles as Role[] })}
-        disabled={fetching}
       />
       {fetching && <Loader size="sm" type="dots" />}
     </Group>

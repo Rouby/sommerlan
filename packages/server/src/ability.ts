@@ -65,14 +65,21 @@ export async function createAbility(
 
     if (user.roles.includes(User.Role.Admin)) {
       can(["create", "update", "delete"], "Party");
-      can(["create", "update", "delete", "checkIn", "checkOut"], "User");
-      can(["create", "read", "update", "delete"], "Budget");
+      can(["create", "update", "delete"], "User");
       can("read", "Attending", "paidDues");
       can("update", "Attending");
       can("grantRoom", "Attending");
       can(["create", "read", "update", "delete"], "Event");
       can(["create", "read", "update", "delete"], "Cache");
       can(["create", "read", "update", "delete"], "Picture");
+    }
+
+    if (user.roles.includes(User.Role.Doorkeeper)) {
+      can(["checkIn", "checkOut"], "User");
+    }
+
+    if (user.roles.includes(User.Role.Bookkeeper)) {
+      can(["create", "read", "update", "delete"], "Budget");
       can("rescind", "Donation");
       can("read", "Donation", "userId");
     }
@@ -89,4 +96,4 @@ export async function createAbility(
   });
 }
 
-export const AbilityVersion = 4 as const;
+export const AbilityVersion = 5 as const;

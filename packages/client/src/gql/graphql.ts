@@ -440,6 +440,8 @@ export type RegisterResponse = {
 
 export enum Role {
   Admin = 'Admin',
+  Bookkeeper = 'Bookkeeper',
+  Doorkeeper = 'Doorkeeper',
   Trusted = 'Trusted'
 }
 

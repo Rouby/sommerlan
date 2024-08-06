@@ -4,6 +4,8 @@ import { Base, Values } from "./$base";
 enum Role {
   Trusted = "Trusted",
   Admin = "Admin",
+  Bookkeeper = "Bookkeeper",
+  Doorkeeper = "Doorkeeper",
 }
 
 export class User extends Base {

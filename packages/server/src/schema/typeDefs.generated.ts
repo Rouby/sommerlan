@@ -5247,9 +5247,29 @@ export const typeDefs = {
           directives: [],
           loc: { start: 4946, end: 4951 },
         },
+        {
+          kind: "EnumValueDefinition",
+          name: {
+            kind: "Name",
+            value: "Doorkeeper",
+            loc: { start: 4954, end: 4964 },
+          },
+          directives: [],
+          loc: { start: 4954, end: 4964 },
+        },
+        {
+          kind: "EnumValueDefinition",
+          name: {
+            kind: "Name",
+            value: "Bookkeeper",
+            loc: { start: 4967, end: 4977 },
+          },
+          directives: [],
+          loc: { start: 4967, end: 4977 },
+        },
       ],
-      loc: { start: 4922, end: 4953 },
+      loc: { start: 4922, end: 4979 },
     },
   ],
-  loc: { start: 0, end: 4954 },
+  loc: { start: 0, end: 4980 },
 } as unknown as DocumentNode;

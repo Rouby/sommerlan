@@ -436,7 +436,7 @@ export type RegisterResponse = {
   user: User;
 };
 
-export type Role = "Admin" | "Trusted";
+export type Role = "Admin" | "Bookkeeper" | "Doorkeeper" | "Trusted";
 
 export type RoomStatus = "GRANTED" | "REQUESTED";
 
