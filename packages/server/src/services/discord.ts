@@ -2,6 +2,7 @@ import {
   Client,
   GatewayDispatchEvents,
   GatewayIntentBits,
+  RESTPostAPIChannelMessageJSONBody,
 } from "@discordjs/core";
 import { REST } from "@discordjs/rest";
 import { WebSocketManager } from "@discordjs/ws";
@@ -64,16 +65,18 @@ client.on(GatewayDispatchEvents.MessageCreate, async (message) => {
     const user = await User.findByDiscordId(message.data.author.id);
 
     if (!user) {
-      await sendDiscordMessage(
-        message.data.author.id,
-        "Ich habe keinen Account gefunden, der mit deinem Discord Account verknüpft ist.",
-      );
+      await sendDiscordMessage(message.data.author.id, {
+        content:
+          "Ich habe keinen Account gefunden, der mit deinem Discord Account verknüpft ist.",
+      });
     } else {
       const magicLink = await issueMagicLink(user);
 
       await sendDiscordMessage(
         message.data.author.id,
-        `Du kannst dich mit folgendem Link anmelden ${magicLink}. Der Link ist 15 Minuten gültig.`,
+        {
+          content: `Du kannst dich mit folgendem Link anmelden ${magicLink}. Der Link ist 15 Minuten gültig.`,
+        },
         { ttl: "15m" },
       );
     }
@@ -93,13 +96,13 @@ export const discord =
 
 export async function sendDiscordMessage(
   userId: string,
-  content: string,
+  body: RESTPostAPIChannelMessageJSONBody,
   { ttl }: { ttl?: `${number}m` } = {},
 ) {
   const channel = await client.api.users.createDM(userId);
 
   const message = await client.api.channels.createMessage(channel.id, {
-    content,
+    ...body,
   });
 
   if (ttl) {
@@ -151,10 +154,10 @@ scheduleTask("@every 5m", async () => {
           member.user.id,
           roleId,
         );
-        await sendDiscordMessage(
-          member.user.id,
-          "Yay, willkommen als vollwertiges Mitglied (aka auf der SommerLAN Seite angemeldet).",
-        );
+        await sendDiscordMessage(member.user.id, {
+          content:
+            "Yay, willkommen als vollwertiges Mitglied (aka auf der SommerLAN Seite angemeldet).",
+        });
       } catch (err) {
         logger.error(err, "Error adding role to user");
       }
