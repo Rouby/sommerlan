@@ -6,6 +6,7 @@ test("should be able to enter party", async ({ page, api }) => {
     displayName: "Alice Example",
     name: "Alice Example",
     email: "alice@example.com",
+    roles: ["Trusted"],
   });
   await api.seed("Party", {
     seatsAvailable: 10,
@@ -28,11 +29,13 @@ test("should be able to enter overcrowded party", async ({ page, api }) => {
     displayName: "Alice Example",
     name: "Alice Example",
     email: "alice@example.com",
+    roles: ["Trusted"],
   });
   await api.seed("User", {
     displayName: "Bob Example",
     name: "Bob Example",
     email: "bob@example.com",
+    roles: ["Trusted"],
   });
   const party = await api.seed("Party", {
     seatsAvailable: 1,
@@ -63,6 +66,7 @@ test("should not be able to remove application after deadline", async ({
     name: "Alice Example",
     email: "alice@example.com",
     password: "hallo",
+    roles: ["Trusted"],
   });
   const party = await api.seed("Party", {
     seatsAvailable: 1,

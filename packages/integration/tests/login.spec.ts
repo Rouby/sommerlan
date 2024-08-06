@@ -6,6 +6,7 @@ test("should login with password", async ({ page, api }) => {
     name: "Erwin Beispiel",
     email: "erwin@example.com",
     password: "hello",
+    roles: ["Trusted"],
   });
 
   await page.goto("/");
@@ -28,6 +29,7 @@ test("should login with one-time-link", async ({ page, api }) => {
     displayName: "Emma Beispiel",
     name: "Emma Beispiel",
     email: "emma@example.com",
+    roles: ["Trusted"],
   });
 
   await page.goto("/");

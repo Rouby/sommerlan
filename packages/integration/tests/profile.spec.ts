@@ -6,6 +6,7 @@ test("should upload profile picture", async ({ page, context, api }) => {
     displayName: "Erwin Beispiel",
     name: "Erwin Beispiel",
     email: "erwin@example.com",
+    roles: ["Trusted"],
   });
   await api.login("erwin@example.com");
 
