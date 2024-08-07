@@ -1,5 +1,10 @@
 import { Box, Container } from "@mantine/core";
-import { IconClipboardCheck, IconCoin, IconUsers } from "@tabler/icons-react";
+import {
+  IconClipboardCheck,
+  IconCoin,
+  IconGoGame,
+  IconUsers,
+} from "@tabler/icons-react";
 import { Outlet, createLazyFileRoute } from "@tanstack/react-router";
 import { NavLink } from "../components";
 
@@ -18,6 +23,11 @@ export const Route = createLazyFileRoute("/admin")({
             label="Nutzer"
             leftSection={<IconUsers size={18} />}
             to="/admin/users"
+          />
+          <NavLink
+            label="Spiele"
+            leftSection={<IconGoGame size={18} />}
+            to="/admin/games"
           />
           <NavLink
             label="Budget"
