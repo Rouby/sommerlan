@@ -77,6 +77,7 @@ export async function createAbility(
     if (user.roles.includes(User.Role.Admin)) {
       can(["create", "update", "delete"], "Party");
       can(["create", "update", "delete"], "User");
+      can("update", "Game");
       can("update", "Attending");
       can("grantRoom", "Attending");
       can(["create", "read", "update", "delete"], "Event");
@@ -108,4 +109,4 @@ export async function createAbility(
   });
 }
 
-export const AbilityVersion = 5 as const;
+export const AbilityVersion = 6 as const;

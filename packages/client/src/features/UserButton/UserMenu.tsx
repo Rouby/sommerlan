@@ -3,6 +3,7 @@ import {
   IconChecklist,
   IconClipboardCheck,
   IconCoin,
+  IconGoGame,
   IconLock,
   IconUsers,
 } from "@tabler/icons-react";
@@ -93,6 +94,16 @@ export function UserMenu() {
               </Menu.Item>
             </Can>
           )}
+
+          <Can I="update" a="Game">
+            <Menu.Item
+              component={Link}
+              leftSection={<IconGoGame size={14} />}
+              to="/admin/games"
+            >
+              Spiele verwalten
+            </Menu.Item>
+          </Can>
 
           <Can I="delete" a="Budget">
             <Menu.Item

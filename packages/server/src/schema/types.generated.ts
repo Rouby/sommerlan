@@ -136,6 +136,11 @@ export type Game = {
   players: Array<User>;
 };
 
+export type GameInput = {
+  id: Scalars["ID"]["input"];
+  image: Scalars["File"]["input"];
+};
+
 export type GameOnParty = {
   __typename?: "GameOnParty";
   game: Game;
@@ -182,6 +187,7 @@ export type Mutation = {
   setGamesPlayed: Attending;
   syncCache?: Maybe<Scalars["Boolean"]["output"]>;
   updateAuthDevice: AuthDevice;
+  updateGame: Game;
   updatePaidDues?: Maybe<Attending>;
   updateParty: Party;
   updateProfile: User;
@@ -311,6 +317,10 @@ export type MutationsyncCacheArgs = {
 export type MutationupdateAuthDeviceArgs = {
   id: Scalars["ID"]["input"];
   name: Scalars["String"]["input"];
+};
+
+export type MutationupdateGameArgs = {
+  input: GameInput;
 };
 
 export type MutationupdatePaidDuesArgs = {
@@ -587,6 +597,7 @@ export type ResolversTypes = {
   EventInput: EventInput;
   File: ResolverTypeWrapper<Scalars["File"]["output"]>;
   Game: ResolverTypeWrapper<GameMapper>;
+  GameInput: GameInput;
   GameOnParty: ResolverTypeWrapper<
     Omit<GameOnParty, "game" | "party" | "players"> & {
       game: ResolversTypes["Game"];
@@ -643,6 +654,7 @@ export type ResolversParentTypes = {
   EventInput: EventInput;
   File: Scalars["File"]["output"];
   Game: GameMapper;
+  GameInput: GameInput;
   GameOnParty: Omit<GameOnParty, "game" | "party" | "players"> & {
     game: ResolversParentTypes["Game"];
     party: ResolversParentTypes["Party"];
@@ -1036,6 +1048,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationupdateAuthDeviceArgs, "id" | "name">
+  >;
+  updateGame?: Resolver<
+    ResolversTypes["Game"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationupdateGameArgs, "input">
   >;
   updatePaidDues?: Resolver<
     Maybe<ResolversTypes["Attending"]>,

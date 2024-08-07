@@ -24,6 +24,8 @@ const documents = {
     "\n      query parties {\n        parties {\n          __typename\n          id\n          startDate\n          endDate\n          location\n          roomsAvailable\n          attendings {\n            id\n            dates\n            user {\n              id\n              displayName\n              avatar\n            }\n          }\n        }\n      }\n    ": types.PartiesDocument,
     "\n      query partyRow($id: ID!) {\n        party(id: $id) {\n          id\n          startDate\n          endDate\n          location\n          attendings {\n            id\n            dates\n            user {\n              id\n              displayName\n              avatar\n            }\n          }\n        }\n      }\n    ": types.PartyRowDocument,
     "\n      mutation updateParty($input: PartyInput!) {\n        updateParty(input: $input) {\n          id\n          startDate\n          endDate\n          location\n          roomsAvailable\n        }\n      }\n    ": types.UpdatePartyDocument,
+    "\n      query adminGames {\n        games {\n          id\n          name\n          image\n        }\n      }\n    ": types.AdminGamesDocument,
+    "\n      mutation updateGame($id: ID!, $image: File!) {\n        updateGame(input: { id: $id, image: $image }) {\n          id\n          image\n        }\n      }\n    ": types.UpdateGameDocument,
     "\n      query NextPartyBudget {\n        nextParty {\n          id\n          finalCostPerDay\n          donations {\n            id\n            donator {\n              id\n              displayName\n              avatar\n            }\n            amount\n            dedication\n          }\n          attendings {\n            id\n            dates\n            paidDues\n            user {\n              id\n              displayName\n              avatar\n            }\n          }\n        }\n      }\n    ": types.NextPartyBudgetDocument,
     "\n      mutation updatePaidDues($id: ID!, $paidDues: Float!) {\n        updatePaidDues(attendingId: $id, paidDues: $paidDues) {\n          id\n          paidDues\n        }\n      }\n    ": types.UpdatePaidDuesDocument,
     "\n      query adminUsers {\n        users {\n          id\n          displayName\n          avatar\n          email\n          roles\n        }\n      }\n    ": types.AdminUsersDocument,
@@ -126,6 +128,14 @@ export function graphql(source: "\n      query partyRow($id: ID!) {\n        par
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n      mutation updateParty($input: PartyInput!) {\n        updateParty(input: $input) {\n          id\n          startDate\n          endDate\n          location\n          roomsAvailable\n        }\n      }\n    "): (typeof documents)["\n      mutation updateParty($input: PartyInput!) {\n        updateParty(input: $input) {\n          id\n          startDate\n          endDate\n          location\n          roomsAvailable\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      query adminGames {\n        games {\n          id\n          name\n          image\n        }\n      }\n    "): (typeof documents)["\n      query adminGames {\n        games {\n          id\n          name\n          image\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      mutation updateGame($id: ID!, $image: File!) {\n        updateGame(input: { id: $id, image: $image }) {\n          id\n          image\n        }\n      }\n    "): (typeof documents)["\n      mutation updateGame($id: ID!, $image: File!) {\n        updateGame(input: { id: $id, image: $image }) {\n          id\n          image\n        }\n      }\n    "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

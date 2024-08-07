@@ -42,6 +42,7 @@ import { setAttendance as Mutation_setAttendance } from "./party/resolvers/Mutat
 import { setGamesPlayed as Mutation_setGamesPlayed } from "./game/resolvers/Mutation/setGamesPlayed";
 import { syncCache as Mutation_syncCache } from "./admin/resolvers/Mutation/syncCache";
 import { updateAuthDevice as Mutation_updateAuthDevice } from "./user/resolvers/Mutation/updateAuthDevice";
+import { updateGame as Mutation_updateGame } from "./game/resolvers/Mutation/updateGame";
 import { updatePaidDues as Mutation_updatePaidDues } from "./party/resolvers/Mutation/updatePaidDues";
 import { updateParty as Mutation_updateParty } from "./party/resolvers/Mutation/updateParty";
 import { updateProfile as Mutation_updateProfile } from "./user/resolvers/Mutation/updateProfile";
@@ -108,6 +109,7 @@ export const resolvers: Resolvers = {
     setGamesPlayed: Mutation_setGamesPlayed,
     syncCache: Mutation_syncCache,
     updateAuthDevice: Mutation_updateAuthDevice,
+    updateGame: Mutation_updateGame,
     updatePaidDues: Mutation_updatePaidDues,
     updateParty: Mutation_updateParty,
     updateProfile: Mutation_updateProfile,

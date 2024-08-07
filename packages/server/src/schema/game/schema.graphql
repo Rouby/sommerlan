@@ -5,6 +5,8 @@ extend type Query {
 extend type Mutation {
   addGameToParty(partyId: ID!, name: String!): AddGameResult!
   setGamesPlayed(partyId: ID!, gameIds: [ID!]!): Attending!
+
+  updateGame(input: GameInput!): Game!
 }
 
 extend type Party {
@@ -32,4 +34,9 @@ type GameOnParty {
   game: Game!
   party: Party!
   players: [User!]!
+}
+
+input GameInput {
+  id: ID!
+  image: File!
 }

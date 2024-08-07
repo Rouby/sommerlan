@@ -25,6 +25,7 @@ const PartyIndexLazyImport = createFileRoute('/party/')()
 const GamesIndexLazyImport = createFileRoute('/games/')()
 const EventsIndexLazyImport = createFileRoute('/events/')()
 const AdminUsersLazyImport = createFileRoute('/admin/users')()
+const AdminGamesLazyImport = createFileRoute('/admin/games')()
 const AdminCacheLazyImport = createFileRoute('/admin/cache')()
 const AdminBudgetLazyImport = createFileRoute('/admin/budget')()
 const PartyArchiveIndexLazyImport = createFileRoute('/party/archive/')()
@@ -72,6 +73,11 @@ const AdminUsersLazyRoute = AdminUsersLazyImport.update({
   path: '/users',
   getParentRoute: () => AdminLazyRoute,
 } as any).lazy(() => import('./routes/admin/users.lazy').then((d) => d.Route))
+
+const AdminGamesLazyRoute = AdminGamesLazyImport.update({
+  path: '/games',
+  getParentRoute: () => AdminLazyRoute,
+} as any).lazy(() => import('./routes/admin/games.lazy').then((d) => d.Route))
 
 const AdminCacheLazyRoute = AdminCacheLazyImport.update({
   path: '/cache',
@@ -157,6 +163,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCacheLazyImport
       parentRoute: typeof AdminLazyImport
     }
+    '/admin/games': {
+      id: '/admin/games'
+      path: '/games'
+      fullPath: '/admin/games'
+      preLoaderRoute: typeof AdminGamesLazyImport
+      parentRoute: typeof AdminLazyImport
+    }
     '/admin/users': {
       id: '/admin/users'
       path: '/users'
@@ -223,6 +236,7 @@ export const routeTree = rootRoute.addChildren({
   AdminLazyRoute: AdminLazyRoute.addChildren({
     AdminBudgetLazyRoute,
     AdminCacheLazyRoute,
+    AdminGamesLazyRoute,
     AdminUsersLazyRoute,
   }),
   ImprintLazyRoute,
@@ -265,6 +279,7 @@ export const routeTree = rootRoute.addChildren({
       "children": [
         "/admin/budget",
         "/admin/cache",
+        "/admin/games",
         "/admin/users"
       ]
     },
@@ -280,6 +295,10 @@ export const routeTree = rootRoute.addChildren({
     },
     "/admin/cache": {
       "filePath": "admin/cache.lazy.tsx",
+      "parent": "/admin"
+    },
+    "/admin/games": {
+      "filePath": "admin/games.lazy.tsx",
       "parent": "/admin"
     },
     "/admin/users": {
