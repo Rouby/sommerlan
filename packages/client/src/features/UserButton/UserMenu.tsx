@@ -1,5 +1,11 @@
 import { Divider, Menu } from "@mantine/core";
-import { IconClipboardCheck, IconLock, IconUsers } from "@tabler/icons-react";
+import {
+  IconChecklist,
+  IconClipboardCheck,
+  IconCoin,
+  IconLock,
+  IconUsers,
+} from "@tabler/icons-react";
 import { Link } from "@tanstack/react-router";
 import dayjs from "dayjs";
 import { useAtomValue, useSetAtom } from "jotai";
@@ -80,7 +86,7 @@ export function UserMenu() {
             <Can I="checkIn" a="User">
               <Menu.Item
                 component={Link}
-                leftSection={<IconUsers size={14} />}
+                leftSection={<IconChecklist size={14} />}
                 to="/admin/users/check-in"
               >
                 Nutzer Einchecken
@@ -91,7 +97,7 @@ export function UserMenu() {
           <Can I="delete" a="Budget">
             <Menu.Item
               component={Link}
-              leftSection={<IconUsers size={14} />}
+              leftSection={<IconCoin size={14} />}
               to="/admin/budget"
             >
               Budget verwalten
