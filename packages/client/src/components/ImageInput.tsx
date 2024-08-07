@@ -59,6 +59,25 @@ export function ImageInput({
     return devices.filter((dev) => dev.deviceId);
   });
 
+  useEffect(() => {
+    document.addEventListener("paste", handlePaste);
+    return () => document.removeEventListener("paste", handlePaste);
+
+    function handlePaste(evt: ClipboardEvent) {
+      if (evt.clipboardData?.items) {
+        for (const item of evt.clipboardData.items) {
+          if (item.type.startsWith("image")) {
+            const file = item.getAsFile();
+            console.log(item);
+            if (file) {
+              setFile(file);
+            }
+          }
+        }
+      }
+    }
+  }, []);
+
   return (
     <Box>
       <InputBase
