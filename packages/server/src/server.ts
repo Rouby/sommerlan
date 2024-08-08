@@ -12,7 +12,6 @@ import { GraphQLError } from "graphql";
 import {
   Plugin,
   createGraphQLError,
-  createSchema,
   createYoga,
   maskError,
 } from "graphql-yoga";
@@ -23,9 +22,8 @@ import { syncCache } from "./data";
 import { createFakeApi } from "./data/$api";
 import { expectedOrigin } from "./env";
 import { logger } from "./logger";
+import { schema } from "./schema";
 import { Context } from "./schema/context";
-import { resolvers } from "./schema/resolvers.generated";
-import { typeDefs } from "./schema/typeDefs.generated";
 import { devMailsSent, discord, mail, scheduler } from "./services";
 import { signRefreshToken, signToken } from "./signToken";
 
@@ -50,10 +48,7 @@ export function createServer(opts: ServerOptions) {
   server.register(multipart);
 
   const yoga = createYoga({
-    schema: createSchema({
-      typeDefs,
-      resolvers,
-    }),
+    schema,
     logging: {
       debug: (...args) => args.forEach((arg) => server.log.debug(arg)),
       info: (...args) => args.forEach((arg) => server.log.info(arg)),

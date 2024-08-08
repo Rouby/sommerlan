@@ -22,7 +22,7 @@ extend type Mutation {
   updatePaidDues(attendingId: ID!, paidDues: Float!): Attending
 }
 
-type Party {
+type Party @rbac {
   id: ID!
   startDate: Date!
   endDate: Date!

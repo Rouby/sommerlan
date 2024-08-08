@@ -7,3 +7,5 @@ scalar Time
 scalar JSON
 scalar JWT
 scalar File
+
+directive @rbac on OBJECT

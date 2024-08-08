@@ -47,6 +47,14 @@ export async function createAbility(
     createMongoAbility,
   );
 
+  can("read", "Party", [
+    "id",
+    "startDate",
+    "endDate",
+    "tentative",
+    "locationWidgetSrc",
+  ]);
+
   if (user) {
     can("read", "Party");
     can("read", "User", { id: user.id });

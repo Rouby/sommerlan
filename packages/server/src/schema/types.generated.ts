@@ -684,6 +684,15 @@ export type ResolversParentTypes = {
   User: UserMapper;
 };
 
+export type rbacDirectiveArgs = {};
+
+export type rbacDirectiveResolver<
+  Result,
+  Parent,
+  ContextType = Context,
+  Args = rbacDirectiveArgs,
+> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
 export type AddGameResultResolvers<
   ContextType = Context,
   ParentType extends
@@ -1278,4 +1287,8 @@ export type Resolvers<ContextType = Context> = {
   RegisterResponse?: RegisterResponseResolvers<ContextType>;
   Time?: GraphQLScalarType;
   User?: UserResolvers<ContextType>;
+};
+
+export type DirectiveResolvers<ContextType = Context> = {
+  rbac?: rbacDirectiveResolver<any, any, ContextType>;
 };
