@@ -19,15 +19,16 @@ export function SignUpButton() {
             setShowAuthForm(true);
           }}
         >
-          Log in
+          Einloggen
         </Button>
+        oder
         <Button
           onClick={() => {
             setAuthMode("signup");
             setShowAuthForm(true);
           }}
         >
-          Sign up
+          Account erstellen
         </Button>
       </Group>
 
