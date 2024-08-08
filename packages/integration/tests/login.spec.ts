@@ -11,7 +11,7 @@ test("should login with password", async ({ page, api }) => {
 
   await page.goto("/");
 
-  await page.getByText("Log in").click();
+  await page.getByText("Einloggen").first().click();
 
   await page.getByText("Mit Passwort anmelden").click();
 
@@ -34,7 +34,7 @@ test("should login with one-time-link", async ({ page, api }) => {
 
   await page.goto("/");
 
-  await page.getByText("Log in").click();
+  await page.getByText("Einloggen").first().click();
 
   await page
     .getByText("Einen Einmal-Link zum einloggen per Email anfordern")
