@@ -1,9 +1,10 @@
 /// <reference types="vite-plugin-svgr/client" />
 
+import "@mantine/carousel/styles.css";
 import { MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.css";
 import { DatesProvider } from "@mantine/dates";
-import { Notifications } from "@mantine/notifications";
+import "@mantine/notifications/styles.css";
 import "@mantine/tiptap/styles.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
@@ -46,7 +47,6 @@ export function App() {
         <QueryClientProvider client={queryClient}>
           <MantineProvider defaultColorScheme="auto">
             <DatesProvider settings={{ locale: navigator.language }}>
-              <Notifications />
               <RouterProvider router={router} />
             </DatesProvider>
           </MantineProvider>

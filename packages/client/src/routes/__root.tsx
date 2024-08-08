@@ -7,6 +7,7 @@ import {
   Stack,
   UnstyledButton,
 } from "@mantine/core";
+import { Notifications } from "@mantine/notifications";
 import {
   IconCalendar,
   IconCloudComputing,
@@ -77,6 +78,7 @@ export const Route = createRootRoute({
 
     return (
       <>
+        <Notifications />
         <AppShell
           header={{ height: { base: 50, md: 70 } }}
           footer={{ height: { base: 70, md: 0 } }}
