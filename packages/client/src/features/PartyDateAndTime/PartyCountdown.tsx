@@ -1,7 +1,7 @@
 import { Text } from "@mantine/core";
 import { useInterval } from "@mantine/hooks";
 import dayjs, { Dayjs } from "dayjs";
-import { useEffect, useReducer } from "react";
+import { useReducer } from "react";
 
 export function PartyCountdown({ date }: { date: Dayjs }) {
   const now = dayjs();
@@ -17,14 +17,7 @@ export function PartyCountdown({ date }: { date: Dayjs }) {
   ].filter(([value]) => value > 0);
 
   const [, rerender] = useReducer((x) => x + 1, 0);
-  const { start, stop } = useInterval(() => {
-    rerender();
-  }, 1000);
-
-  useEffect(() => {
-    start();
-    return () => stop();
-  }, []);
+  useInterval(rerender, 1000, { autoInvoke: true });
 
   return (
     <>
