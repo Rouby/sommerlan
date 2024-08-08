@@ -1,6 +1,7 @@
 export * from "./AdminGames";
 export * from "./AdminPartyPayments";
 export * from "./AdminUsers";
+export * from "./GameCarousel";
 export * from "./PartyAttendings";
 export * from "./PartyCheckIn";
 export * from "./PartyCosts";

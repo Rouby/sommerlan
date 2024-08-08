@@ -53,6 +53,7 @@ export async function createAbility(
     "endDate",
     "tentative",
     "locationWidgetSrc",
+    "gamesPlayed",
   ]);
 
   if (user) {
