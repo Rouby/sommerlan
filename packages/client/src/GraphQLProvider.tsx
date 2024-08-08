@@ -275,7 +275,9 @@ export function GraphQLProvider({ children }: { children: React.ReactNode }) {
                   }
                 }
 
-                logout();
+                if (authState.current.token || authState.current.refreshToken) {
+                  logout();
+                }
               },
               willAuthError(operation) {
                 if (isOperationWithoutAuth(operation)) {

@@ -13,11 +13,12 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { useQuery } from "urql";
 import { Can } from "../../components";
 import { graphql } from "../../gql";
-import { abilityAtom, tokenAtom } from "../../state";
+import { abilityAtom, refreshTokenAtom, tokenAtom } from "../../state";
 
 export function UserMenu() {
   const ability = useAtomValue(abilityAtom);
   const setToken = useSetAtom(tokenAtom);
+  const setRefreshToken = useSetAtom(refreshTokenAtom);
 
   const [{ data }] = useQuery({
     query: graphql(`
@@ -131,7 +132,10 @@ export function UserMenu() {
 
       <Menu.Item
         leftSection={<IconLock size={14} />}
-        onClick={() => setToken(null)}
+        onClick={() => {
+          setToken(null);
+          setRefreshToken(null);
+        }}
       >
         Ausloggen
       </Menu.Item>
