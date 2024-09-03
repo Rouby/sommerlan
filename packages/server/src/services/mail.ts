@@ -27,7 +27,7 @@ export const mail =
       };
 
 const transporter = createTransport({
-  host: "mailserver.mail.svc.cluster.local",
+  host: "docker-mailserver.mail.svc.cluster.local",
   port: 587,
   secure: false, // true for 465, false for other ports
   auth: {
