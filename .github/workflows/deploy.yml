@@ -224,8 +224,8 @@ jobs:
           NEW_RELIC_API_KEY: ${{ secrets.NEW_RELIC_API_KEY }}
           NEW_RELIC_REGION: EU
         run: |
-          newrelic entity deployment create \
-            --guid ${{ secrets.NEW_RELIC_DEPLOYMENT_ENTITY_GUID_SERVER }} \
-            --version "${{ github.sha }}" \
-            --commit "${{ github.sha }}" \
+          newrelic entity deployment create `
+            --guid ${{ secrets.NEW_RELIC_DEPLOYMENT_ENTITY_GUID_SERVER }} `
+            --version "${{ github.sha }}" `
+            --commit "${{ github.sha }}" `
             --user "${{ github.actor }}"
