@@ -203,18 +203,18 @@ jobs:
           $env:KUBECONFIG_CONTENT | Out-File -FilePath "$HOME\.kube\config" -Force -Encoding UTF8
       - name: 🚀 Deploy
         run: |
-          $env:SESSION_SECRET = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes("sommerlan-rocks-cookies"))
-          $env:APP_ORIGIN = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes("https://${{ matrix.env_name == 'staging' && 'staging.' || '' }}sommerlan.rocks"))
-          $env:GOOGLE_SHEET_ID = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes('${{ secrets.GOOGLE_SHEET_ID }}'))
-          $env:GOOGLE_SERVICE_ACCOUNT_EMAIL = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes('${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}'))
-          $env:GOOGLE_PRIVATE_KEY = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes('${{ secrets.GOOGLE_PRIVATE_KEY }}'))
-          $env:NEW_RELIC_LICENSE_KEY = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes('${{ secrets.NEW_RELIC_LICENSE_KEY }}'))
-          $env:NEW_RELIC_APP_NAME = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes("sommerlan-${{ matrix.env_name }}"))
-          $env:NEW_RELIC_LOADER_CONFIG = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes('${{ secrets.NEW_RELIC_LOADER_CONFIG }}'))
-          $env:NEW_RELIC_INFO = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes('${{ secrets.NEW_RELIC_INFO }}'))
-          $env:DISCORD_BOT_TOKEN = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes('${{ secrets.DISCORD_BOT_TOKEN }}'))
-          $env:DISCORD_GUILD_ID = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes('${{ secrets.DISCORD_GUILD_ID }}'))
-          $env:DISCORD_ROLE_ID = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes('${{ secrets.DISCORD_ROLE_ID }}'))
+          $env:SESSION_SECRET = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes("sommerlan-rocks-cookies"))
+          $env:APP_ORIGIN = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes("https://${{ matrix.env_name == 'staging' && 'staging.' || '' }}sommerlan.rocks"))
+          $env:GOOGLE_SHEET_ID = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes('${{ secrets.GOOGLE_SHEET_ID }}'))
+          $env:GOOGLE_SERVICE_ACCOUNT_EMAIL = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes('${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}'))
+          $env:GOOGLE_PRIVATE_KEY = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes('${{ secrets.GOOGLE_PRIVATE_KEY }}'))
+          $env:NEW_RELIC_LICENSE_KEY = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes('${{ secrets.NEW_RELIC_LICENSE_KEY }}'))
+          $env:NEW_RELIC_APP_NAME = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes("sommerlan-${{ matrix.env_name }}"))
+          $env:NEW_RELIC_LOADER_CONFIG = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes('${{ secrets.NEW_RELIC_LOADER_CONFIG }}'))
+          $env:NEW_RELIC_INFO = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes('${{ secrets.NEW_RELIC_INFO }}'))
+          $env:DISCORD_BOT_TOKEN = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes('${{ secrets.DISCORD_BOT_TOKEN }}'))
+          $env:DISCORD_GUILD_ID = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes('${{ secrets.DISCORD_GUILD_ID }}'))
+          $env:DISCORD_ROLE_ID = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes('${{ secrets.DISCORD_ROLE_ID }}'))
 
           helm upgrade sommerlan -n "sommerlan-${{ matrix.env_name }}" --install --create-namespace `
               --set image.repository=ghcr.io/rouby/sommerlan-app `
