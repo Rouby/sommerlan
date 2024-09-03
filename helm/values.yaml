@@ -51,8 +51,9 @@ service:
 ingress:
   enabled: true
   className: "nginx"
+  clusterIssuer: "letsencrypt-staging"
   annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-staging"
+    {}
     # ingress.kubernetes.io/ssl-redirect: "false"
   hosts:
     - host: staging.sommerlan.rocks
