@@ -221,6 +221,7 @@ jobs:
               --set image.tag="${{ github.ref_name }}-${{ github.sha }}" `
               --set ingress.hosts[0].host="${{ matrix.env_name == 'staging' && 'staging.' || '' }}sommerlan.rocks" `
               --set ingress.hosts[0].paths[0].path="/" `
+              --set ingress.hosts[0].paths[0].pathType="ImplementationSpecific" `
               --set-string secrets.SESSION_SECRET="$env:SESSION_SECRET" `
               --set-string secrets.APP_ORIGIN="$env:APP_ORIGIN" `
               --set-string secrets.GOOGLE_SHEET_ID="$env:GOOGLE_SHEET_ID" `
