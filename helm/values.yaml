@@ -79,11 +79,11 @@ resources:
 
 livenessProbe:
   httpGet:
-    path: /
+    path: /live
     port: http
 readinessProbe:
   httpGet:
-    path: /
+    path: /ready
     port: http
 
 volumes:

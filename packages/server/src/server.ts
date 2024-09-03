@@ -118,12 +118,25 @@ export function createServer(opts: ServerOptions) {
   };
 
   server.route({
-    url: "/health",
+    url: "/live",
+    method: "GET",
+    handler: async (_req, reply) => {
+      reply.status(200);
+
+      reply.send({ ok: true });
+
+      return reply;
+    },
+  });
+
+  server.route({
+    url: "/ready",
     method: "GET",
     handler: async (_req, reply) => {
       reply.status(
-        healthy.http && healthy.scheduler && healthy.discord && healthy.mail
-          ? 200
+        healthy.http && healthy.scheduler && healthy.discord
+          ? // TODO: include mail if working && healthy.mail
+            200
           : 503,
       );
 
