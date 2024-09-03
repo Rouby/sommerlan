@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: sommerlan
+  repository: ghcr.io/rouby/sommerlan
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
@@ -46,7 +46,7 @@ securityContext:
 
 service:
   type: ClusterIP
-  port: 80
+  port: 8080
 
 ingress:
   enabled: true
