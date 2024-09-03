@@ -207,16 +207,16 @@ jobs:
               --set image.repository=ghcr.io/rouby/sommerlan-app `
               --set image.tag="${{ github.ref_name }}-${{ github.sha }}" `
               --set deployment.environment.APP_ORIGIN="https://${{ matrix.env_name == 'staging' && 'staging.' || '' }}sommerlan.rocks" `
-              --set deployment.environment.GOOGLE_SHEET_ID="$env:GOOGLE_SHEET_ID" `
-              --set deployment.environment.GOOGLE_SERVICE_ACCOUNT_EMAIL="$env:GOOGLE_SERVICE_ACCOUNT_EMAIL" `
-              --set deployment.environment.GOOGLE_PRIVATE_KEY="$env:GOOGLE_PRIVATE_KEY" `
-              --set deployment.environment.NEW_RELIC_LICENSE_KEY="$env:NEW_RELIC_LICENSE_KEY" `
+              --set deployment.environment.GOOGLE_SHEET_ID="$($env:GOOGLE_SHEET_ID)" `
+              --set deployment.environment.GOOGLE_SERVICE_ACCOUNT_EMAIL="$($env:GOOGLE_SERVICE_ACCOUNT_EMAIL)" `
+              --set deployment.environment.GOOGLE_PRIVATE_KEY="$($env:GOOGLE_PRIVATE_KEY)" `
+              --set deployment.environment.NEW_RELIC_LICENSE_KEY="$($env:NEW_RELIC_LICENSE_KEY)" `
               --set deployment.environment.NEW_RELIC_APP_NAME="sommerlan-${{ matrix.env_name }}" `
-              --set deployment.environment.NEW_RELIC_LOADER_CONFIG="$env:NEW_RELIC_LOADER_CONFIG" `
-              --set deployment.environment.NEW_RELIC_INFO="$env:NEW_RELIC_INFO" `
-              --set deployment.environment.DISCORD_BOT_TOKEN="$env:DISCORD_BOT_TOKEN" `
-              --set deployment.environment.DISCORD_GUILD_ID="$env:DISCORD_GUILD_ID" `
-              --set deployment.environment.DISCORD_ROLE_ID="$env:DISCORD_ROLE_ID" `
+              --set deployment.environment.NEW_RELIC_LOADER_CONFIG="$($env:NEW_RELIC_LOADER_CONFIG)" `
+              --set deployment.environment.NEW_RELIC_INFO="$($env:NEW_RELIC_INFO)" `
+              --set deployment.environment.DISCORD_BOT_TOKEN="$($env:DISCORD_BOT_TOKEN)" `
+              --set deployment.environment.DISCORD_GUILD_ID="$($env:DISCORD_GUILD_ID)" `
+              --set deployment.environment.DISCORD_ROLE_ID="$($env:DISCORD_ROLE_ID)" `
               ./helm
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
