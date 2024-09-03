@@ -1,0 +1,15 @@
+{{- range .Values.persistentVolumeClaims }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    io.kompose.service: {{ .name }}
+  name: {{ .name }}
+spec:
+  accessModes:
+    {{- toYaml .accessModes | nindent 4 }}
+  resources:
+    requests:
+      storage: {{ .resources.requests.storage }}
+---
+{{- end }}
