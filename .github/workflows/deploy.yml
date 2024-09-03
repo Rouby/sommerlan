@@ -208,6 +208,11 @@ jobs:
         run: |
           docker load --input ./image/sommerlan-image.tar
 
+      - name: 📥 Setup kubeconfig
+        run: |
+          New-Item -ItemType Directory -Path "$HOME\.kube" -Force
+          $env:KUBECONFIG_CONTENT = "${{ secrets.KUBECONFIG }}"
+          $env:KUBECONFIG_CONTENT | Out-File -FilePath "$HOME\.kube\config" -Force -Encoding UTF8
       - name: 🚀 Deploy
         run: |
           helm upgrade sommerlan -n "sommerlan-${{ matrix.env_name }}" --install --create-namespace `
