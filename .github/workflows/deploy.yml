@@ -203,6 +203,16 @@ jobs:
           $env:KUBECONFIG_CONTENT | Out-File -FilePath "$HOME\.kube\config" -Force -Encoding UTF8
       - name: 🚀 Deploy
         run: |
+          $env:GOOGLE_SHEET_ID = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes('${{ secrets.GOOGLE_SHEET_ID }}'))
+          $env:GOOGLE_SERVICE_ACCOUNT_EMAIL = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes('${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}'))
+          $env:GOOGLE_PRIVATE_KEY = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes('${{ secrets.GOOGLE_PRIVATE_KEY }}'))
+          $env:NEW_RELIC_LICENSE_KEY = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes('${{ secrets.NEW_RELIC_LICENSE_KEY }}'))
+          $env:NEW_RELIC_LOADER_CONFIG = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes('${{ secrets.NEW_RELIC_LOADER_CONFIG }}'))
+          $env:NEW_RELIC_INFO = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes('${{ secrets.NEW_RELIC_INFO }}'))
+          $env:DISCORD_BOT_TOKEN = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes('${{ secrets.DISCORD_BOT_TOKEN }}'))
+          $env:DISCORD_GUILD_ID = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes('${{ secrets.DISCORD_GUILD_ID }}'))
+          $env:DISCORD_ROLE_ID = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes('${{ secrets.DISCORD_ROLE_ID }}'))
+
           helm upgrade sommerlan -n "sommerlan-${{ matrix.env_name }}" --install --create-namespace `
               --set image.repository=ghcr.io/rouby/sommerlan-app `
               --set image.tag="${{ github.ref_name }}-${{ github.sha }}" `
@@ -218,17 +228,6 @@ jobs:
               --set-string secrets.DISCORD_GUILD_ID="$($env:DISCORD_GUILD_ID)" `
               --set-string secrets.DISCORD_ROLE_ID="$($env:DISCORD_ROLE_ID)" `
               ./helm
-        env:
-          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-          GOOGLE_SHEET_ID: ${{ vars.GOOGLE_SHEET_ID }}
-          GOOGLE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
-          GOOGLE_PRIVATE_KEY: ${{ secrets.GOOGLE_PRIVATE_KEY }}
-          NEW_RELIC_LICENSE_KEY: ${{ secrets.NEW_RELIC_LICENSE_KEY }}
-          NEW_RELIC_LOADER_CONFIG: ${{ secrets.NEW_RELIC_LOADER_CONFIG }}
-          NEW_RELIC_INFO: ${{ secrets.NEW_RELIC_INFO }}
-          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
-          DISCORD_GUILD_ID: ${{ secrets.DISCORD_GUILD_ID }}
-          DISCORD_ROLE_ID: ${{ secrets.DISCORD_ROLE_ID }}
 
       - name: 🏷️ New Relic Application Deployment Marker
         env:
