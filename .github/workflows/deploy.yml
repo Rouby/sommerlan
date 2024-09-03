@@ -222,7 +222,7 @@ jobs:
               --set ingress.hosts[0].host="${{ matrix.env_name == 'staging' && 'staging.' || '' }}sommerlan.rocks" `
               --set ingress.hosts[0].paths[0].path="/" `
               --set ingress.hosts[0].paths[0].pathType="ImplementationSpecific" `
-              --set ingress.annotations.cert-manager.io/cluster-issuer="letsencrypt-${{ matrix.env_name }}" `
+              --set 'ingress.annotations.cert-manager.io/cluster-issuer="letsencrypt-${{ matrix.env_name }}"' `
               --set ingress.tls[0].hosts="{${{ matrix.env_name == 'staging' && 'staging.' || '' }}sommerlan.rocks}" `
               --set ingress.tls[0].secretName="sommerlan-tls" `
               --set-string secrets.SESSION_SECRET="$env:SESSION_SECRET" `
