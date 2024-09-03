@@ -110,11 +110,26 @@ export function createServer(opts: ServerOptions) {
     },
   });
 
+  const healthy = {
+    http: false,
+    scheduler: false,
+    discord: false,
+    mail: false,
+  };
+
   server.route({
     url: "/health",
     method: "GET",
     handler: async (_req, reply) => {
-      reply.send({ status: "ok" });
+      reply.status(
+        healthy.http && healthy.scheduler && healthy.discord && healthy.mail
+          ? 200
+          : 503,
+      );
+
+      reply.send(healthy);
+
+      return reply;
     },
   });
 
@@ -290,23 +305,46 @@ export function createServer(opts: ServerOptions) {
     ]);
   };
   const start = async () => {
-    try {
-      await server.listen({
+    await server
+      .listen({
         port,
         host: !dev ? "0.0.0.0" : process.env.CI ? "localhost" : "0.0.0.0",
+      })
+      .then(() => {
+        healthy.http = true;
+      })
+      .catch((err) => {
+        logger.error(err);
       });
 
-      await scheduler.start();
+    await scheduler
+      .start()
+      .then(() => {
+        healthy.scheduler = true;
+      })
+      .catch((err) => {
+        logger.error(err);
+      });
 
-      await discord.connect();
+    await discord
+      .connect()
+      .then(() => {
+        healthy.discord = true;
+      })
+      .catch((err) => {
+        logger.error(err);
+      });
 
-      await mail.connect();
+    await mail
+      .connect()
+      .then(() => {
+        healthy.mail = true;
+      })
+      .catch((err) => {
+        logger.error(err);
+      });
 
-      logger.info("Startup complete", port);
-    } catch (err) {
-      server.log.error(err);
-      process.exit(1);
-    }
+    logger.info("Startup complete", port);
   };
 
   return { server, start, stop };
