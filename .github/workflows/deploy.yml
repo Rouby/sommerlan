@@ -200,30 +200,30 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: sommerlan-image
-          path: /tmp/sommerlan
+          path: ./image
 
       - name: 🐳 Load image
         # assume prod already has the image
         if: ${{ matrix.env_name == 'staging' }}
         run: |
-          docker load --input /tmp/sommerlan/sommerlan-image.tar
+          docker load --input ./image/sommerlan-image.tar
 
       - name: 🚀 Deploy
         run: |
-          helm upgrade sommerlan -n sommerlan-${{ matrix.env_name }} --install --create-namespace \
-            --set image.tag="${{ github.ref_name }}-${{ github.sha }}" \
-            --set deployment.environment.APP_ORIGIN="https://${{ matrix.env_name == 'staging' && 'staging.' || '' }}sommerlan.rocks" \
-            --set deployment.environment.GOOGLE_SHEET_ID="${{ secrets.GOOGLE_SHEET_ID }}" \
-            --set deployment.environment.GOOGLE_SERVICE_ACCOUNT_EMAIL="${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}" \
-            --set deployment.environment.GOOGLE_PRIVATE_KEY="${{ secrets.GOOGLE_PRIVATE_KEY }}" \
-            --set deployment.environment.NEW_RELIC_LICENSE_KEY="${{ secrets.NEW_RELIC_LICENSE_KEY }}" \
-            --set deployment.environment.NEW_RELIC_APP_NAME="sommerlan-${{ matrix.env_name }}" \
-            --set deployment.environment.NEW_RELIC_LOADER_CONFIG="${{ secrets.NEW_RELIC_LOADER_CONFIG }}" \
-            --set deployment.environment.NEW_RELIC_INFO="${{ secrets.NEW_RELIC_INFO }}" \
-            --set deployment.environment.DISCORD_BOT_TOKEN="${{ secrets.DISCORD_BOT_TOKEN }}" \
-            --set deployment.environment.DISCORD_GUILD_ID="${{ secrets.DISCORD_GUILD_ID }}" \
-            --set deployment.environment.DISCORD_ROLE_ID="${{ secrets.DISCORD_ROLE_ID }}" \
-            ./helm
+          helm upgrade sommerlan -n "sommerlan-${{ matrix.env_name }}" --install --create-namespace `
+              --set image.tag="${{ github.ref_name }}-${{ github.sha }}" `
+              --set deployment.environment.APP_ORIGIN="https://${{ matrix.env_name == 'staging' && 'staging.' || '' }}sommerlan.rocks" `
+              --set deployment.environment.GOOGLE_SHEET_ID="${{ secrets.GOOGLE_SHEET_ID }}" `
+              --set deployment.environment.GOOGLE_SERVICE_ACCOUNT_EMAIL="${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}" `
+              --set deployment.environment.GOOGLE_PRIVATE_KEY="${{ secrets.GOOGLE_PRIVATE_KEY }}" `
+              --set deployment.environment.NEW_RELIC_LICENSE_KEY="${{ secrets.NEW_RELIC_LICENSE_KEY }}" `
+              --set deployment.environment.NEW_RELIC_APP_NAME="sommerlan-${{ matrix.env_name }}" `
+              --set deployment.environment.NEW_RELIC_LOADER_CONFIG="${{ secrets.NEW_RELIC_LOADER_CONFIG }}" `
+              --set deployment.environment.NEW_RELIC_INFO="${{ secrets.NEW_RELIC_INFO }}" `
+              --set deployment.environment.DISCORD_BOT_TOKEN="${{ secrets.DISCORD_BOT_TOKEN }}" `
+              --set deployment.environment.DISCORD_GUILD_ID="${{ secrets.DISCORD_GUILD_ID }}" `
+              --set deployment.environment.DISCORD_ROLE_ID="${{ secrets.DISCORD_ROLE_ID }}" `
+              ./helm
 
       - name: 🏷️ New Relic Application Deployment Marker
         env:
