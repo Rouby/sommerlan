@@ -33,7 +33,31 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          environment: {{ .Values.deployment.environment | toYaml | nindent 12 }}
+          env:
+            - name: SESSION_SECRET
+              value: {{ .Values.deployment.environment.SESSION_SECRET }}
+            - name: APP_ORIGIN
+              value: {{ .Values.deployment.environment.APP_ORIGIN }}
+            - name: GOOGLE_SHEET_ID
+              value: {{ .Values.deployment.environment.GOOGLE_SHEET_ID }}
+            - name: GOOGLE_SERVICE_ACCOUNT_EMAIL
+              value: {{ .Values.deployment.environment.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
+            - name: GOOGLE_PRIVATE_KEY
+              value: {{ .Values.deployment.environment.GOOGLE_PRIVATE_KEY }}
+            - name: NEW_RELIC_LICENSE_KEY
+              value: {{ .Values.deployment.environment.NEW_RELIC_LICENSE_KEY }}
+            - name: NEW_RELIC_APP_NAME
+              value: {{ .Values.deployment.environment.NEW_RELIC_APP_NAME }}
+            - name: NEW_RELIC_LOADER_CONFIG
+              value: {{ .Values.deployment.environment.NEW_RELIC_LOADER_CONFIG }}
+            - name: NEW_RELIC_INFO
+              value: {{ .Values.deployment.environment.NEW_RELIC_INFO }}  
+            - name: DISCORD_BOT_TOKEN 
+              value: {{ .Values.deployment.environment.DISCORD_BOT_TOKEN }}
+            - name: DISCORD_GUILD_ID  
+              value: {{ .Values.deployment.environment.DISCORD_GUILD_ID }}
+            - name: DISCORD_ROLE_ID
+              value: {{ .Values.deployment.environment.DISCORD_ROLE_ID }}
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
