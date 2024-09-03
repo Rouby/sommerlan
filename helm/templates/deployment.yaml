@@ -34,30 +34,14 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-            - name: SESSION_SECRET
-              value: {{ .Values.deployment.environment.SESSION_SECRET | squote}}
-            - name: APP_ORIGIN
-              value: {{ .Values.deployment.environment.APP_ORIGIN | squote}}
-            - name: GOOGLE_SHEET_ID
-              value: {{ .Values.deployment.environment.GOOGLE_SHEET_ID | squote}}
-            - name: GOOGLE_SERVICE_ACCOUNT_EMAIL
-              value: {{ .Values.deployment.environment.GOOGLE_SERVICE_ACCOUNT_EMAIL | squote}}
-            - name: GOOGLE_PRIVATE_KEY
-              value: {{ .Values.deployment.environment.GOOGLE_PRIVATE_KEY | squote}}
-            - name: NEW_RELIC_LICENSE_KEY
-              value: {{ .Values.deployment.environment.NEW_RELIC_LICENSE_KEY | squote}}
-            - name: NEW_RELIC_APP_NAME
-              value: {{ .Values.deployment.environment.NEW_RELIC_APP_NAME | squote}}
-            - name: NEW_RELIC_LOADER_CONFIG
-              value: {{ .Values.deployment.environment.NEW_RELIC_LOADER_CONFIG | squote}}
-            - name: NEW_RELIC_INFO
-              value: {{ .Values.deployment.environment.NEW_RELIC_INFO | squote}}
-            - name: DISCORD_BOT_TOKEN 
-              value: {{ .Values.deployment.environment.DISCORD_BOT_TOKEN | squote}}
-            - name: DISCORD_GUILD_ID  
-              value: {{ .Values.deployment.environment.DISCORD_GUILD_ID | squote}}
-            - name: DISCORD_ROLE_ID
-              value: {{ .Values.deployment.environment.DISCORD_ROLE_ID | squote}}
+            env:
+              {{- range $key, $value := .Values.secrets }}
+              - name: {{ $key }}
+                valueFrom:
+                  secretKeyRef:
+                    name: deployment-secrets
+                    key: {{ $key }}
+              {{- end }}
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
