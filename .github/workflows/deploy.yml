@@ -203,6 +203,7 @@ jobs:
           $env:KUBECONFIG_CONTENT | Out-File -FilePath "$HOME\.kube\config" -Force -Encoding UTF8
       - name: 🚀 Deploy
         run: |
+          $env:SESSION_SECRET = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes("sommerlan-rocks-cookies"))
           $env:APP_ORIGIN = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes("https://${{ matrix.env_name == 'staging' && 'staging.' || '' }}sommerlan.rocks"))
           $env:GOOGLE_SHEET_ID = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes('${{ secrets.GOOGLE_SHEET_ID }}'))
           $env:GOOGLE_SERVICE_ACCOUNT_EMAIL = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes('${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}'))
@@ -218,6 +219,7 @@ jobs:
           helm upgrade sommerlan -n "sommerlan-${{ matrix.env_name }}" --install --create-namespace `
               --set image.repository=ghcr.io/rouby/sommerlan-app `
               --set image.tag="${{ github.ref_name }}-${{ github.sha }}" `
+              --set-string secrets.SESSION_SECRET="$env:SESSION_SECRET" `
               --set-string secrets.APP_ORIGIN="$env:APP_ORIGIN" `
               --set-string secrets.GOOGLE_SHEET_ID="$env:GOOGLE_SHEET_ID" `
               --set-string secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL="$env:GOOGLE_SERVICE_ACCOUNT_EMAIL" `
