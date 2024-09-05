@@ -50,6 +50,8 @@ export const abilityAtom = atom((get) => {
     });
   }
 
+  window.newrelic?.setUserId(jwtPayload?.user.id as string);
+
   return build({
     detectSubjectType(subject) {
       return subject.__typename;
