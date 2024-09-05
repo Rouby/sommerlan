@@ -23,7 +23,20 @@ export default defineConfig(async ({ mode }) => ({
   build: {
     outDir: "./dist",
     sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks: (id) => {
+          if (id.includes("newrelic")) {
+            return "newrelic";
+          }
+          if (id.includes("node_modules")) {
+            return "vendor";
+          }
+        },
+      },
+    },
   },
+
   server: {
     host: "0.0.0.0",
     port: 5173,
@@ -33,6 +46,10 @@ export default defineConfig(async ({ mode }) => ({
         changeOrigin: true,
       },
       "/uploads": {
+        target: `http://localhost:${process.env.PORT ?? 2022}`,
+        changeOrigin: true,
+      },
+      "/newrelic-browser-loader.js": {
         target: `http://localhost:${process.env.PORT ?? 2022}`,
         changeOrigin: true,
       },

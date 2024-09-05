@@ -133,14 +133,27 @@ export function createServer(opts: ServerOptions) {
     url: "/ready",
     method: "GET",
     handler: async (_req, reply) => {
-      reply.status(
-        healthy.http && healthy.scheduler && healthy.discord
-          ? // TODO: include mail if working && healthy.mail
-            200
-          : 503,
-      );
+      // only http needs to be healthy to be ready to accept requests
+      reply.status(healthy.http ? 200 : 503);
 
       reply.send(healthy);
+
+      return reply;
+    },
+  });
+
+  server.route({
+    url: "/newrelic-browser-loader.js",
+    method: "GET",
+    handler: async (req, reply) => {
+      console.log("request");
+
+      reply.send(
+        `
+window.NEW_RELIC_LOADER_CONFIG = ${process.env.NEW_RELIC_LOADER_CONFIG ?? "false"};
+window.NEW_RELIC_INFO = ${process.env.NEW_RELIC_INFO ?? "false"};
+        `.trim(),
+      );
 
       return reply;
     },
