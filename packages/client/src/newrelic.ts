@@ -17,8 +17,8 @@ const options = {
     distributed_tracing: { enabled: true },
     privacy: { cookies_enabled: true },
   },
-  info: (window as any).NREUM?.info,
-  loader_config: (window as any).NREUM?.loader_config,
+  loader_config: (window as any).NEW_RELIC_LOADER_CONFIG?.loader_config,
+  info: (window as any).NEW_RELIC_INFO?.info,
 };
 
 (options.info && new BrowserAgent(options)) ||
