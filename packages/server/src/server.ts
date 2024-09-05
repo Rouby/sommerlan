@@ -145,7 +145,7 @@ export function createServer(opts: ServerOptions) {
   server.route({
     url: "/newrelic-browser-loader.js",
     method: "GET",
-    handler: async (req, reply) => {
+    handler: async (_req, reply) => {
       console.log("request");
 
       reply.send(
