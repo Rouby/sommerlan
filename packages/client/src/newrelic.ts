@@ -17,8 +17,8 @@ const options = {
     distributed_tracing: { enabled: true },
     privacy: { cookies_enabled: true },
   },
-  loader_config: (window as any).NEW_RELIC_LOADER_CONFIG?.loader_config,
-  info: (window as any).NEW_RELIC_INFO?.info,
+  loader_config: (window as any).NEW_RELIC_LOADER_CONFIG,
+  info: (window as any).NEW_RELIC_INFO,
 };
 
 (options.info && new BrowserAgent(options)) ||
