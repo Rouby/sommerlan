@@ -6,6 +6,7 @@ import {
 import dayjs from "dayjs";
 import { atom } from "jotai";
 import { jwtPayloadAtom } from ".";
+import { agent } from "../newrelic";
 
 export type AppAbility = MongoAbility<
   [
@@ -50,7 +51,7 @@ export const abilityAtom = atom((get) => {
     });
   }
 
-  window.newrelic?.setUserId(jwtPayload?.user.id as string);
+  agent?.setUserId(jwtPayload?.user.id as string);
 
   return build({
     detectSubjectType(subject) {

@@ -21,11 +21,4 @@ const options = {
   info: (window as any).NEW_RELIC_INFO,
 };
 
-(options.info && new BrowserAgent(options)) ||
-  console.log("Newrelic not started");
-
-declare global {
-  interface Window {
-    newrelic?: BrowserAgent;
-  }
-}
+export const agent = options.info ? new BrowserAgent(options) : null;
