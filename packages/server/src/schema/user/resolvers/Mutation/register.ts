@@ -1,9 +1,10 @@
 import { createGraphQLError } from "graphql-yoga";
-import { startBackgroundTransaction } from "newrelic";
 import { logger } from "../../../../logger";
 import { sendDiscordMessage } from "../../../../services";
 import { signRefreshToken, signToken } from "../../../../signToken";
 import type { MutationResolvers } from "./../../../types.generated";
+// @ts-ignore
+import newrelic = require("newrelic");
 
 export const register: NonNullable<MutationResolvers["register"]> = async (
   _parent,
@@ -24,7 +25,7 @@ export const register: NonNullable<MutationResolvers["register"]> = async (
 
   logger.trace({ user }, "Registered user");
 
-  startBackgroundTransaction("sendDiscordMessages", () =>
+  newrelic.startBackgroundTransaction("sendDiscordMessages", () =>
     Promise.all(
       `${process.env.DISCORD_ADMIN_IDS!}`.split(",").map(async (userId) => {
         await sendDiscordMessage(userId, {
