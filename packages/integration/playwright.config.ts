@@ -68,6 +68,9 @@ export default defineConfig({
       command: "yarn workspace @sommerlan-app/server start",
       url: "http://127.0.0.1:2022/ready",
       reuseExistingServer: !process.env.CI,
+      env: {
+        DISCORD_BOT_TOKEN: "",
+      }
     },
     {
       command: "yarn workspace @sommerlan-app/client start",
