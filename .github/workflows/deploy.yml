@@ -215,6 +215,7 @@ jobs:
           $env:DISCORD_BOT_TOKEN = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes('${{ secrets.DISCORD_BOT_TOKEN }}'))
           $env:DISCORD_GUILD_ID = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes('${{ secrets.DISCORD_GUILD_ID }}'))
           $env:DISCORD_ROLE_ID = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes('${{ secrets.DISCORD_ROLE_ID }}'))
+          $env:DISCORD_ADMIN_IDS = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes('${{ vars.DISCORD_ADMIN_IDS }}'))
 
           helm upgrade sommerlan -n "sommerlan-${{ matrix.env_name }}" --install --create-namespace `
               --set image.repository=ghcr.io/rouby/sommerlan-app `
@@ -237,6 +238,7 @@ jobs:
               --set-string secrets.DISCORD_BOT_TOKEN="$env:DISCORD_BOT_TOKEN" `
               --set-string secrets.DISCORD_GUILD_ID="$env:DISCORD_GUILD_ID" `
               --set-string secrets.DISCORD_ROLE_ID="$env:DISCORD_ROLE_ID" `
+              --set-string secrets.DISCORD_ADMIN_IDS="$env:DISCORD_ADMIN_IDS" `
               ./helm
 
       - name: 🏷️ New Relic Application Deployment Marker
