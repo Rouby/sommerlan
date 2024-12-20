@@ -220,28 +220,28 @@ jobs:
           export DISCORD_ROLE_ID=$(echo '${{ secrets.DISCORD_ROLE_ID }}' | base64 -w 0)
           export DISCORD_ADMIN_IDS=$(echo '${{ vars.DISCORD_ADMIN_IDS }}' | base64 -w 0)
 
-          helm upgrade sommerlan -n "sommerlan-${{ matrix.env_name }}" --install --create-namespace `
-              --set image.repository=ghcr.io/rouby/sommerlan-app `
-              --set image.tag="${{ github.ref_name }}-${{ github.sha }}" `
-              --set ingress.hosts[0].host="${{ matrix.env_name == 'staging' && 'staging.' || '' }}sommerlan.rocks" `
-              --set ingress.hosts[0].paths[0].path="/" `
-              --set ingress.hosts[0].paths[0].pathType="ImplementationSpecific" `
-              --set ingress.clusterIssuer="letsencrypt-production" `
-              --set ingress.tls[0].hosts="{${{ matrix.env_name == 'staging' && 'staging.' || '' }}sommerlan.rocks}" `
-              --set ingress.tls[0].secretName="sommerlan-tls" `
-              --set-string secrets.SESSION_SECRET="SESSION_SECRET" `
-              --set-string secrets.APP_ORIGIN="APP_ORIGIN" `
-              --set-string secrets.GOOGLE_SHEET_ID="GOOGLE_SHEET_ID" `
-              --set-string secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL="GOOGLE_SERVICE_ACCOUNT_EMAIL" `
-              --set-string secrets.GOOGLE_PRIVATE_KEY="GOOGLE_PRIVATE_KEY" `
-              --set-string secrets.NEW_RELIC_LICENSE_KEY="NEW_RELIC_LICENSE_KEY" `
-              --set-string secrets.NEW_RELIC_APP_NAME="NEW_RELIC_APP_NAME" `
-              --set-string secrets.NEW_RELIC_LOADER_CONFIG="NEW_RELIC_LOADER_CONFIG" `
-              --set-string secrets.NEW_RELIC_INFO="NEW_RELIC_INFO" `
-              --set-string secrets.DISCORD_BOT_TOKEN="DISCORD_BOT_TOKEN" `
-              --set-string secrets.DISCORD_GUILD_ID="DISCORD_GUILD_ID" `
-              --set-string secrets.DISCORD_ROLE_ID="DISCORD_ROLE_ID" `
-              --set-string secrets.DISCORD_ADMIN_IDS="DISCORD_ADMIN_IDS" `
+          helm upgrade sommerlan -n "sommerlan-${{ matrix.env_name }}" --install --create-namespace \
+              --set image.repository=ghcr.io/rouby/sommerlan-app \
+              --set image.tag="${{ github.ref_name }}-${{ github.sha }}" \
+              --set ingress.hosts[0].host="${{ matrix.env_name == 'staging' && 'staging.' || '' }}sommerlan.rocks" \
+              --set ingress.hosts[0].paths[0].path="/" \
+              --set ingress.hosts[0].paths[0].pathType="ImplementationSpecific" \
+              --set ingress.clusterIssuer="letsencrypt-production" \
+              --set ingress.tls[0].hosts="{${{ matrix.env_name == 'staging' && 'staging.' || '' }}sommerlan.rocks}" \
+              --set ingress.tls[0].secretName="sommerlan-tls" \
+              --set-string secrets.SESSION_SECRET="SESSION_SECRET" \
+              --set-string secrets.APP_ORIGIN="APP_ORIGIN" \
+              --set-string secrets.GOOGLE_SHEET_ID="GOOGLE_SHEET_ID" \
+              --set-string secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL="GOOGLE_SERVICE_ACCOUNT_EMAIL" \
+              --set-string secrets.GOOGLE_PRIVATE_KEY="GOOGLE_PRIVATE_KEY" \
+              --set-string secrets.NEW_RELIC_LICENSE_KEY="NEW_RELIC_LICENSE_KEY" \
+              --set-string secrets.NEW_RELIC_APP_NAME="NEW_RELIC_APP_NAME" \
+              --set-string secrets.NEW_RELIC_LOADER_CONFIG="NEW_RELIC_LOADER_CONFIG" \
+              --set-string secrets.NEW_RELIC_INFO="NEW_RELIC_INFO" \
+              --set-string secrets.DISCORD_BOT_TOKEN="DISCORD_BOT_TOKEN" \
+              --set-string secrets.DISCORD_GUILD_ID="DISCORD_GUILD_ID" \
+              --set-string secrets.DISCORD_ROLE_ID="DISCORD_ROLE_ID" \
+              --set-string secrets.DISCORD_ADMIN_IDS="DISCORD_ADMIN_IDS" \
               ./helm
 
       - name: 🏷️ New Relic Application Deployment Marker
@@ -249,8 +249,8 @@ jobs:
           NEW_RELIC_API_KEY: ${{ secrets.NEW_RELIC_API_KEY }}
           NEW_RELIC_REGION: EU
         run: |
-          newrelic entity deployment create `
-            --guid ${{ secrets.NEW_RELIC_DEPLOYMENT_ENTITY_GUID_SERVER }} `
+          newrelic entity deployment create \
+            --guid ${{ secrets.NEW_RELIC_DEPLOYMENT_ENTITY_GUID_SERVER }} \
             --version "${{ github.sha }}" `
             --commit "${{ github.sha }}" `
             --user "${{ github.actor }}"
