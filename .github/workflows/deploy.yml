@@ -249,6 +249,7 @@ jobs:
           NEW_RELIC_API_KEY: ${{ secrets.NEW_RELIC_API_KEY }}
           NEW_RELIC_REGION: EU
         run: |
+          curl -Ls https://download.newrelic.com/install/newrelic-cli/scripts/install.sh | bash
           newrelic entity deployment create \
             --guid ${{ secrets.NEW_RELIC_DEPLOYMENT_ENTITY_GUID_SERVER }} \
             --version "${{ github.sha }}" `
