@@ -9,7 +9,7 @@
     "integrate": "playwright test"
   },
   "devDependencies": {
-    "@playwright/test": "^1.42.1",
+    "@playwright/test": "^1.49.1",
     "@sommerlan-app/client": "workspace:*",
     "@sommerlan-app/server": "workspace:*",
     "@types/node": "^20.12.4",
