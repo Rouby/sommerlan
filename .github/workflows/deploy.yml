@@ -176,7 +176,7 @@ jobs:
 
   deploy:
     name: 🚀 Deploy
-    runs-on: self-hosted
+    runs-on: arc-runner-set
     needs: [lint, typecheck, test, integration, build]
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     strategy:
@@ -196,26 +196,30 @@ jobs:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v4
 
-      - name: 📥 Setup kubeconfig
+      - name: 📥 Install kubectl and helm
         run: |
-          New-Item -ItemType Directory -Path "$HOME\.kube" -Force
-          $env:KUBECONFIG_CONTENT = "${{ secrets.KUBECONFIG }}"
-          $env:KUBECONFIG_CONTENT | Out-File -FilePath "$HOME\.kube\config" -Force -Encoding UTF8
+          curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+          echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
+          sudo apt-get update
+          sudo apt-get install -y kubectl
+          curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+          chmod 700 get_helm.sh
+          ./get_helm.sh
       - name: 🚀 Deploy
         run: |
-          $env:SESSION_SECRET = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes("sommerlan-rocks-cookies"))
-          $env:APP_ORIGIN = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes("https://${{ matrix.env_name == 'staging' && 'staging.' || '' }}sommerlan.rocks"))
-          $env:GOOGLE_SHEET_ID = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes('${{ vars.GOOGLE_SHEET_ID }}'))
-          $env:GOOGLE_SERVICE_ACCOUNT_EMAIL = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes('${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}'))
-          $env:GOOGLE_PRIVATE_KEY = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes('${{ secrets.GOOGLE_PRIVATE_KEY }}'))
-          $env:NEW_RELIC_LICENSE_KEY = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes('${{ secrets.NEW_RELIC_LICENSE_KEY }}'))
-          $env:NEW_RELIC_APP_NAME = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes("sommerlan-${{ matrix.env_name }}"))
-          $env:NEW_RELIC_LOADER_CONFIG = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes('${{ secrets.NEW_RELIC_LOADER_CONFIG }}'))
-          $env:NEW_RELIC_INFO = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes('${{ secrets.NEW_RELIC_INFO }}'))
-          $env:DISCORD_BOT_TOKEN = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes('${{ secrets.DISCORD_BOT_TOKEN }}'))
-          $env:DISCORD_GUILD_ID = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes('${{ secrets.DISCORD_GUILD_ID }}'))
-          $env:DISCORD_ROLE_ID = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes('${{ secrets.DISCORD_ROLE_ID }}'))
-          $env:DISCORD_ADMIN_IDS = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes('${{ vars.DISCORD_ADMIN_IDS }}'))
+          export SESSION_SECRET = (echo "sommerlan-rocks-cookies" | base64 -w 0)
+          export APP_ORIGIN = (echo "https://${{ matrix.env_name == 'staging' && 'staging.' || '' }}sommerlan.rocks" | base64 -w 0)
+          export GOOGLE_SHEET_ID = (echo '${{ vars.GOOGLE_SHEET_ID }}' | base64 -w 0)
+          export GOOGLE_SERVICE_ACCOUNT_EMAIL = (echo '${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}' | base64 -w 0)
+          export GOOGLE_PRIVATE_KEY = (echo '${{ secrets.GOOGLE_PRIVATE_KEY }}' | base64 -w 0)
+          export NEW_RELIC_LICENSE_KEY = (echo '${{ secrets.NEW_RELIC_LICENSE_KEY }}' | base64 -w 0)
+          export NEW_RELIC_APP_NAME = (echo "sommerlan-${{ matrix.env_name }}" | base64 -w 0)
+          export NEW_RELIC_LOADER_CONFIG = (echo '${{ secrets.NEW_RELIC_LOADER_CONFIG }}' | base64 -w 0)
+          export NEW_RELIC_INFO = (echo '${{ secrets.NEW_RELIC_INFO }}' | base64 -w 0)
+          export DISCORD_BOT_TOKEN = (echo '${{ secrets.DISCORD_BOT_TOKEN }}' | base64 -w 0)
+          export DISCORD_GUILD_ID = (echo '${{ secrets.DISCORD_GUILD_ID }}' | base64 -w 0)
+          export DISCORD_ROLE_ID = (echo '${{ secrets.DISCORD_ROLE_ID }}' | base64 -w 0)
+          export DISCORD_ADMIN_IDS = (echo '${{ vars.DISCORD_ADMIN_IDS }}' | base64 -w 0)
 
           helm upgrade sommerlan -n "sommerlan-${{ matrix.env_name }}" --install --create-namespace `
               --set image.repository=ghcr.io/rouby/sommerlan-app `
@@ -226,19 +230,19 @@ jobs:
               --set ingress.clusterIssuer="letsencrypt-production" `
               --set ingress.tls[0].hosts="{${{ matrix.env_name == 'staging' && 'staging.' || '' }}sommerlan.rocks}" `
               --set ingress.tls[0].secretName="sommerlan-tls" `
-              --set-string secrets.SESSION_SECRET="$env:SESSION_SECRET" `
-              --set-string secrets.APP_ORIGIN="$env:APP_ORIGIN" `
-              --set-string secrets.GOOGLE_SHEET_ID="$env:GOOGLE_SHEET_ID" `
-              --set-string secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL="$env:GOOGLE_SERVICE_ACCOUNT_EMAIL" `
-              --set-string secrets.GOOGLE_PRIVATE_KEY="$env:GOOGLE_PRIVATE_KEY" `
-              --set-string secrets.NEW_RELIC_LICENSE_KEY="$env:NEW_RELIC_LICENSE_KEY" `
-              --set-string secrets.NEW_RELIC_APP_NAME="$env:NEW_RELIC_APP_NAME" `
-              --set-string secrets.NEW_RELIC_LOADER_CONFIG="$env:NEW_RELIC_LOADER_CONFIG" `
-              --set-string secrets.NEW_RELIC_INFO="$env:NEW_RELIC_INFO" `
-              --set-string secrets.DISCORD_BOT_TOKEN="$env:DISCORD_BOT_TOKEN" `
-              --set-string secrets.DISCORD_GUILD_ID="$env:DISCORD_GUILD_ID" `
-              --set-string secrets.DISCORD_ROLE_ID="$env:DISCORD_ROLE_ID" `
-              --set-string secrets.DISCORD_ADMIN_IDS="$env:DISCORD_ADMIN_IDS" `
+              --set-string secrets.SESSION_SECRET="SESSION_SECRET" `
+              --set-string secrets.APP_ORIGIN="APP_ORIGIN" `
+              --set-string secrets.GOOGLE_SHEET_ID="GOOGLE_SHEET_ID" `
+              --set-string secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL="GOOGLE_SERVICE_ACCOUNT_EMAIL" `
+              --set-string secrets.GOOGLE_PRIVATE_KEY="GOOGLE_PRIVATE_KEY" `
+              --set-string secrets.NEW_RELIC_LICENSE_KEY="NEW_RELIC_LICENSE_KEY" `
+              --set-string secrets.NEW_RELIC_APP_NAME="NEW_RELIC_APP_NAME" `
+              --set-string secrets.NEW_RELIC_LOADER_CONFIG="NEW_RELIC_LOADER_CONFIG" `
+              --set-string secrets.NEW_RELIC_INFO="NEW_RELIC_INFO" `
+              --set-string secrets.DISCORD_BOT_TOKEN="DISCORD_BOT_TOKEN" `
+              --set-string secrets.DISCORD_GUILD_ID="DISCORD_GUILD_ID" `
+              --set-string secrets.DISCORD_ROLE_ID="DISCORD_ROLE_ID" `
+              --set-string secrets.DISCORD_ADMIN_IDS="DISCORD_ADMIN_IDS" `
               ./helm
 
       - name: 🏷️ New Relic Application Deployment Marker
