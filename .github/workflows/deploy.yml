@@ -161,7 +161,7 @@ jobs:
           platforms: linux/arm64
           push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
           tags: |
-            ghcr.io/rouby/sommerlan-app:latest
+            ${{ github.ref == 'refs/heads/main' && 'ghcr.io/rouby/sommerlan-app:latest' || '' }}
             ghcr.io/rouby/sommerlan-app:${{ github.ref_name }}-${{ github.sha }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
