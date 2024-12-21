@@ -159,7 +159,7 @@ jobs:
         with:
           context: .
           platforms: linux/arm64
-          push: true
+          push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
           tags: |
             ghcr.io/rouby/sommerlan-app:latest
             ghcr.io/rouby/sommerlan-app:${{ github.ref_name }}-${{ github.sha }}
