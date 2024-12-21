@@ -230,19 +230,19 @@ jobs:
               --set ingress.clusterIssuer="letsencrypt-production" \
               --set ingress.tls[0].hosts="{${{ matrix.env_name == 'staging' && 'staging.' || '' }}sommerlan.rocks}" \
               --set ingress.tls[0].secretName="sommerlan-tls" \
-              --set-string secrets.SESSION_SECRET="SESSION_SECRET" \
-              --set-string secrets.APP_ORIGIN="APP_ORIGIN" \
-              --set-string secrets.GOOGLE_SHEET_ID="GOOGLE_SHEET_ID" \
-              --set-string secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL="GOOGLE_SERVICE_ACCOUNT_EMAIL" \
-              --set-string secrets.GOOGLE_PRIVATE_KEY="GOOGLE_PRIVATE_KEY" \
-              --set-string secrets.NEW_RELIC_LICENSE_KEY="NEW_RELIC_LICENSE_KEY" \
-              --set-string secrets.NEW_RELIC_APP_NAME="NEW_RELIC_APP_NAME" \
-              --set-string secrets.NEW_RELIC_LOADER_CONFIG="NEW_RELIC_LOADER_CONFIG" \
-              --set-string secrets.NEW_RELIC_INFO="NEW_RELIC_INFO" \
-              --set-string secrets.DISCORD_BOT_TOKEN="DISCORD_BOT_TOKEN" \
-              --set-string secrets.DISCORD_GUILD_ID="DISCORD_GUILD_ID" \
-              --set-string secrets.DISCORD_ROLE_ID="DISCORD_ROLE_ID" \
-              --set-string secrets.DISCORD_ADMIN_IDS="DISCORD_ADMIN_IDS" \
+              --set-string secrets.SESSION_SECRET="$SESSION_SECRET" \
+              --set-string secrets.APP_ORIGIN="$APP_ORIGIN" \
+              --set-string secrets.GOOGLE_SHEET_ID="$GOOGLE_SHEET_ID" \
+              --set-string secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL="$GOOGLE_SERVICE_ACCOUNT_EMAIL" \
+              --set-string secrets.GOOGLE_PRIVATE_KEY="$GOOGLE_PRIVATE_KEY" \
+              --set-string secrets.NEW_RELIC_LICENSE_KEY="$NEW_RELIC_LICENSE_KEY" \
+              --set-string secrets.NEW_RELIC_APP_NAME="$NEW_RELIC_APP_NAME" \
+              --set-string secrets.NEW_RELIC_LOADER_CONFIG="$NEW_RELIC_LOADER_CONFIG" \
+              --set-string secrets.NEW_RELIC_INFO="$NEW_RELIC_INFO" \
+              --set-string secrets.DISCORD_BOT_TOKEN="$DISCORD_BOT_TOKEN" \
+              --set-string secrets.DISCORD_GUILD_ID="$DISCORD_GUILD_ID" \
+              --set-string secrets.DISCORD_ROLE_ID="$DISCORD_ROLE_ID" \
+              --set-string secrets.DISCORD_ADMIN_IDS="$DISCORD_ADMIN_IDS" \
               ./helm
 
       - name: 🏷️ New Relic Application Deployment Marker
