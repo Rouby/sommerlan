@@ -207,19 +207,19 @@ jobs:
           ./get_helm.sh
       - name: 🚀 Deploy
         run: |
-          export SESSION_SECRET=$(echo -n "sommerlan-rocks-cookies" | base64 -w 0)
-          export APP_ORIGIN=$(echo -n "https://${{ matrix.env_name == 'staging' && 'staging.' || '' }}sommerlan.rocks" | base64 -w 0)
-          export GOOGLE_SHEET_ID=$(echo -n '${{ vars.GOOGLE_SHEET_ID }}' | base64 -w 0)
-          export GOOGLE_SERVICE_ACCOUNT_EMAIL=$(echo -n '${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}' | base64 -w 0)
-          export GOOGLE_PRIVATE_KEY=$(echo -n '${{ secrets.GOOGLE_PRIVATE_KEY }}' | base64 -w 0)
-          export NEW_RELIC_LICENSE_KEY=$(echo -n '${{ secrets.NEW_RELIC_LICENSE_KEY }}' | base64 -w 0)
-          export NEW_RELIC_APP_NAME=$(echo -n "sommerlan-${{ matrix.env_name }}" | base64 -w 0)
-          export NEW_RELIC_LOADER_CONFIG=$(echo -n '${{ secrets.NEW_RELIC_LOADER_CONFIG }}' | base64 -w 0)
-          export NEW_RELIC_INFO=$(echo -n '${{ secrets.NEW_RELIC_INFO }}' | base64 -w 0)
-          export DISCORD_BOT_TOKEN=$(echo -n '${{ secrets.DISCORD_BOT_TOKEN }}' | base64 -w 0)
-          export DISCORD_GUILD_ID=$(echo -n '${{ secrets.DISCORD_GUILD_ID }}' | base64 -w 0)
-          export DISCORD_ROLE_ID=$(echo -n '${{ secrets.DISCORD_ROLE_ID }}' | base64 -w 0)
-          export DISCORD_ADMIN_IDS=$(echo -n '${{ vars.DISCORD_ADMIN_IDS }}' | base64 -w 0)
+          export SESSION_SECRET=$(echo -n "sommerlan-rocks-cookies" | iconv -t utf-8 | base64 -w 0)
+          export APP_ORIGIN=$(echo -n "https://${{ matrix.env_name == 'staging' && 'staging.' || '' }}sommerlan.rocks" | iconv -t utf-8 | base64 -w 0)
+          export GOOGLE_SHEET_ID=$(echo -n '${{ vars.GOOGLE_SHEET_ID }}' | iconv -t utf-8 | base64 -w 0)
+          export GOOGLE_SERVICE_ACCOUNT_EMAIL=$(echo -n '${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}' | iconv -t utf-8 | base64 -w 0)
+          export GOOGLE_PRIVATE_KEY=$(echo -n '${{ secrets.GOOGLE_PRIVATE_KEY }}' | iconv -t utf-8 | base64 -w 0)
+          export NEW_RELIC_LICENSE_KEY=$(echo -n '${{ secrets.NEW_RELIC_LICENSE_KEY }}' | iconv -t utf-8 | base64 -w 0)
+          export NEW_RELIC_APP_NAME=$(echo -n "sommerlan-${{ matrix.env_name }}" | iconv -t utf-8 | base64 -w 0)
+          export NEW_RELIC_LOADER_CONFIG=$(echo -n '${{ secrets.NEW_RELIC_LOADER_CONFIG }}' | iconv -t utf-8 | base64 -w 0)
+          export NEW_RELIC_INFO=$(echo -n '${{ secrets.NEW_RELIC_INFO }}' | iconv -t utf-8 | base64 -w 0)
+          export DISCORD_BOT_TOKEN=$(echo -n '${{ secrets.DISCORD_BOT_TOKEN }}' | iconv -t utf-8 | base64 -w 0)
+          export DISCORD_GUILD_ID=$(echo -n '${{ secrets.DISCORD_GUILD_ID }}' | iconv -t utf-8 | base64 -w 0)
+          export DISCORD_ROLE_ID=$(echo -n '${{ secrets.DISCORD_ROLE_ID }}' | iconv -t utf-8 | base64 -w 0)
+          export DISCORD_ADMIN_IDS=$(echo -n '${{ vars.DISCORD_ADMIN_IDS }}' | iconv -t utf-8 | base64 -w 0)
 
           helm upgrade sommerlan -n "sommerlan-${{ matrix.env_name }}" --install --create-namespace \
               --set image.repository=ghcr.io/rouby/sommerlan-app \
