@@ -1,0 +1,76 @@
+---
+description: Mantine Performance Guidelines
+globs: ["**/*.tsx", "**/*.jsx"]
+---
+# Mantine Performance Guidelines
+
+This file contains performance optimization guidelines for working with Mantine components.
+
+<rule>
+name: mantine_performance
+description: Performance optimization guidelines for Mantine components
+filters:
+  - type: file_extension
+    pattern: "\\.(tsx?|jsx?)$"
+  - type: content
+    pattern: "import.*@mantine/core"
+
+actions:
+  - type: ai_instruction
+    message: |
+      When working with Mantine components, follow these performance guidelines:
+
+      1. State Management:
+         - Avoid controlled inputs when real-time synchronization isn't necessary
+         - Use local state for UI previews, only update backend on final changes
+         - Keep form submissions and UI state separate when possible
+         - Use defaultValue for initial state in uncontrolled components
+
+      2. Loading States:
+         - Prefer component-specific loading states over disabling inputs
+         - Use LoadingOverlay for better UX during loading states
+         - Keep components interactive during loading when possible
+
+examples:
+  - input: |
+      ```tsx
+      // Bad: Controlled input with immediate updates
+      <TextInput
+        value={value}
+        onChange={(e) => {
+          setValue(e.target.value);
+          handleSubmit(e.target.value);
+        }}
+      />
+      ```
+    output: |
+      ```tsx
+      // Good: Uncontrolled input with separate preview and submit
+      <TextInput
+        defaultValue={initialValue}
+        onChange={handleLocalPreview}
+        onBlur={handleSubmit}
+      />
+      ```
+  - input: |
+      ```tsx
+      // Bad: Disabled input during loading
+      <Input disabled={isLoading} />
+      ```
+    output: |
+      ```tsx
+      // Good: Loading overlay with interactive input
+      <div style={{ position: "relative" }}>
+        <LoadingOverlay visible={isLoading} />
+        <Input />
+      </div>
+      ```
+
+metadata:
+  priority: high
+  version: 1.0
+  tags:
+    - performance
+    - mantine
+    - best-practices
+</rule> 

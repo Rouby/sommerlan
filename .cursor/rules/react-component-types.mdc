@@ -1,0 +1,84 @@
+---
+description: React Component Type Definitions
+globs: ["**/*.tsx"]
+alwaysApply: false
+---
+# React Component Type Definitions
+
+This file contains guidelines for defining React component types.
+
+<rule>
+name: react_component_types
+description: Guidelines for React component type definitions
+filters:
+  - type: file_extension
+    pattern: "\\.tsx$"
+  - type: content
+    pattern: "function.*\\(.*\\).*\\{"
+
+actions:
+  - type: ai_instruction
+    message: |
+      When creating React components, use inline property type definitions directly in the function parameters instead of creating separate interfaces or type aliases.
+
+      ## Rationale
+      - **Improved Readability**: Type definitions are located directly where they are used
+      - **Reduced Boilerplate**: Eliminates the need for separate interface declarations
+      - **Better Code Organization**: Keeps related code together
+      - **Easier Maintenance**: Changes to component props only need to be made in one place
+
+      ## Exceptions
+      In some cases, separate type definitions may be preferred:
+      1. When the same type is reused across multiple components
+      2. For very complex prop types that would make the function signature difficult to read
+      3. When the type needs to be exported for use in other files
+
+      ## Implementation Notes
+      - For complex nested types, consider creating separate type definitions
+      - For reusable types, create and export type definitions in a separate file
+      - When a component has many props (>5), consider grouping related props into logical objects
+      
+      ## Related Rules
+      - Mantine Performance Guidelines
+      - GraphQL Schema Design Guidelines
+
+examples:
+  - input: |
+      ```tsx
+      interface MyComponentProps {
+        name: string;
+        age: number;
+        onSubmit: (data: { name: string; age: number }) => void;
+      }
+
+      export function MyComponent({
+        name,
+        age,
+        onSubmit,
+      }: MyComponentProps) {
+        // Component implementation
+      }
+      ```
+    output: |
+      ```tsx
+      export function MyComponent({
+        name,
+        age,
+        onSubmit,
+      }: {
+        name: string;
+        age: number;
+        onSubmit: (data: { name: string; age: number }) => void;
+      }) {
+        // Component implementation
+      }
+      ```
+
+metadata:
+  priority: medium
+  version: 1.0
+  tags:
+    - react
+    - typescript
+    - best-practices
+</rule>

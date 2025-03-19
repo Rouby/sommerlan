@@ -1,0 +1,70 @@
+---
+description: Package Manager Configuration
+globs: ["package.json", "yarn.lock"]
+---
+# Package Manager Configuration
+
+<rule>
+name: use_yarn_package_manager
+description: Specifies yarn as the package manager for all Node.js related operations
+filters:
+  - type: file_extension
+    pattern: "package\\.json$|yarn\\.lock$"
+  - type: event
+    pattern: "package_manager_operation"
+
+actions:
+  - type: enforce
+    message: |
+      Always use yarn for package management operations:
+      
+      1. Installing packages:
+         - Use `yarn add <package>` instead of npm install
+         - Use `yarn add -D <package>` for dev dependencies
+      
+      2. Removing packages:
+         - Use `yarn remove <package>`
+      
+      3. Installing all dependencies:
+         - Use `yarn install` or just `yarn`
+      
+      4. Running scripts:
+         - Use `yarn <script-name>`
+      
+      5. Updating packages:
+         - Use `yarn upgrade` or `yarn upgrade-interactive`
+      
+      6. Managing the project:
+         - Use `yarn init` for new projects
+         - Use `yarn audit` for security checks
+         - Use `yarn cache clean` for cache management
+      
+      7. Workspace-specific commands:
+         - Run codegen from root directory using `yarn codegen`
+         - Run other workspace commands using `yarn workspace @space/<workspace-name> <command>`
+
+examples:
+  - input: |
+      # Bad: Using npm commands
+      npm install
+      npm run start
+      npm add lodash
+      
+      # Good: Using yarn commands
+      yarn
+      yarn start
+      yarn add lodash
+      
+      # Good: Using workspace commands
+      yarn codegen
+      yarn workspace @space/frontend dev
+    output: "Correctly using yarn package manager with workspaces"
+
+metadata:
+  priority: high
+  version: 1.0
+  tags:
+    - package-manager
+    - yarn
+    - workspaces
+</rule>

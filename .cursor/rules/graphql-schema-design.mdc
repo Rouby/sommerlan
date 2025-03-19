@@ -1,0 +1,88 @@
+---
+description: GraphQL Schema Design Guidelines
+globs: ["**/*.graphql", "**/schema.ts"]
+---
+# GraphQL Schema Design Guidelines
+
+<rule>
+name: graphql_schema_design
+description: Guidelines for designing GraphQL schemas with a focus on generic, extensible mutations
+filters:
+  - type: file_extension
+    pattern: "\\.graphql$|\\.ts$"
+  - type: content
+    pattern: "type Mutation|input.*Input"
+
+actions:
+  - type: ai_instruction
+    message: |
+      When designing GraphQL schemas, follow these guidelines:
+
+      1. Prefer Generic Updates:
+         - Instead of specific field mutations, use generic update mutations
+         - Use input types to make mutations extensible
+         - Group related fields into a single update operation
+
+      2. Input Type Design:
+         - Make fields optional when possible
+         - Use descriptive names that indicate the purpose
+         - Consider future extensibility
+
+      3. Mutation Naming:
+         - Use verb-noun format (e.g., updatePlayer, createGame)
+         - Avoid field-specific names (e.g., updatePlayerColor)
+         - Name should reflect the entity being modified
+
+examples:
+  - input: |
+      # Bad: Specific field mutations
+      ```graphql
+      type Mutation {
+        updatePlayerColor(gameId: ID!, color: String!): Player!
+        updatePlayerName(gameId: ID!, name: String!): Player!
+      }
+      ```
+    output: |
+      # Good: Generic update mutation
+      ```graphql
+      input UpdatePlayerInput {
+        color: String
+        name: String
+        # Easily extensible for future fields
+      }
+
+      type Mutation {
+        updatePlayer(gameId: ID!, input: UpdatePlayerInput!): Player!
+      }
+      ```
+  - input: |
+      # Bad: Multiple specific mutations
+      ```graphql
+      type Mutation {
+        setTaskForcePosition(id: ID!, position: Vector!): TaskForce!
+        setTaskForceSpeed(id: ID!, speed: Float!): TaskForce!
+        setTaskForceTarget(id: ID!, target: ID!): TaskForce!
+      }
+      ```
+    output: |
+      # Good: Generic update with input type
+      ```graphql
+      input UpdateTaskForceInput {
+        position: Vector
+        speed: Float
+        targetId: ID
+      }
+
+      type Mutation {
+        updateTaskForce(id: ID!, input: UpdateTaskForceInput!): TaskForce!
+      }
+      ```
+
+metadata:
+  priority: high
+  version: 1.0
+  tags:
+    - graphql
+    - schema-design
+    - best-practices
+</rule> 

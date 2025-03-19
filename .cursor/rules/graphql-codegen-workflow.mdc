@@ -1,0 +1,73 @@
+---
+description: GraphQL Code Generation Workflow
+globs: ["**/*.graphql", "**/schema.ts"]
+alwaysApply: false
+---
+# GraphQL Code Generation Workflow
+
+<rule>
+name: graphql_codegen_workflow
+description: Guidelines for the correct order of operations when modifying GraphQL schemas and resolvers
+filters:
+  - type: file_extension
+    pattern: "\\.graphql$|\\.ts$"
+  - type: content
+    pattern: "type Mutation|type Query|export.*Resolvers"
+
+actions:
+  - type: enforce
+    message: |
+      When modifying GraphQL schemas and resolvers, follow this workflow:
+
+      1. Schema Modifications:
+         - First, modify the .graphql schema files
+         - Add new types, inputs, queries, or mutations
+         - Update existing type definitions
+
+      2. Generate Types:
+         - Run `yarn codegen` from the root directory
+         - This must be done BEFORE writing resolver code
+         - Ensures type safety and proper TypeScript integration
+
+      3. Resolver Implementation:
+         - Only after codegen, implement or modify resolvers
+         - Use generated types for type safety
+         - Follow the types generated in the previous step
+
+      Remember: Always run codegen after ANY schema changes and before writing resolver code!
+
+examples:
+  - input: |
+      # Step 1: Modified schema
+      ```graphql
+      type Mutation {
+        updatePlayer(gameId: ID!, input: UpdatePlayerInput!): Player!
+      }
+      ```
+      
+      # Step 2: Run codegen
+      ```bash
+      yarn workspace @sommerlan/server codegen
+      ```
+      
+      # Step 3: Implement resolver
+      ```typescript
+      export const updatePlayer: MutationResolvers["updatePlayer"] = async (
+        _parent,
+        { gameId, input },
+        ctx
+      ) => {
+        // Implementation
+      };
+      ```
+    output: "Correct workflow: Schema → Codegen → Resolver"
+
+metadata:
+  priority: high
+  version: 1.0
+  tags:
+    - graphql
+    - codegen
+    - workflow
+    - best-practices
+</rule> 
