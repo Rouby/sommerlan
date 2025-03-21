@@ -1,11 +1,13 @@
 import {
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
   Client,
-  GatewayDispatchEvents,
+  Events,
   GatewayIntentBits,
-  RESTPostAPIChannelMessageJSONBody,
-} from "@discordjs/core";
-import { REST } from "@discordjs/rest";
-import { WebSocketManager } from "@discordjs/ws";
+  MessageCreateOptions,
+  MessagePayload,
+} from "discord.js";
 import { User } from "../data";
 import { getEnv } from "../env";
 import { logger } from "../logger";
@@ -16,25 +18,51 @@ const token = process.env.DISCORD_BOT_TOKEN!;
 const guildId = process.env.DISCORD_GUILD_ID!;
 const roleId = process.env.DISCORD_ROLE_ID!;
 
-const rest = new REST({ version: "10" }).setToken(token);
-
-const gateway = new WebSocketManager({
-  token,
-  intents:
-    GatewayIntentBits.DirectMessages |
-    GatewayIntentBits.Guilds |
+const client = new Client({
+  intents: [
+    GatewayIntentBits.DirectMessages,
+    GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMembers,
-  rest,
+  ],
 });
 
-const client = new Client({ rest, gateway });
+client.once("ready", () => {
+  logger.info("Discord client ready");
+});
 
-client.on(GatewayDispatchEvents.MessageCreate, async (message) => {
-  if (message.data.author.bot) {
+export const discord =
+  process.env.FAKE_API || !token || !guildId
+    ? {
+        connect: () => Promise.resolve(),
+        destroy: () => Promise.resolve(),
+      }
+    : {
+        connect: () => client.login(token),
+        destroy: () => client.destroy(),
+      };
+
+export async function sendDiscordMessage(
+  userId: string,
+  options: string | MessagePayload | MessageCreateOptions,
+  { ttl }: { ttl?: `${number}m` } = {},
+) {
+  const channel = await client.users.createDM(userId);
+
+  const message = await channel?.send(options);
+
+  if (ttl && message) {
+    scheduleTimeout(ttl, async () => {
+      await message.delete();
+    });
+  }
+}
+
+client.on(Events.MessageCreate, async (message) => {
+  if (message.author.bot) {
     // Dont handle bot messages
     return;
   }
-  const msgContent = message.data.content.toLowerCase();
+  const msgContent = message.content.toLowerCase();
 
   switch (getEnv()) {
     case "development":
@@ -57,103 +85,68 @@ client.on(GatewayDispatchEvents.MessageCreate, async (message) => {
       break;
   }
 
-  logger.info({ message: { data: message.data } }, "Received discord message");
+  logger.info({ message }, "Received discord message");
 
   if (msgContent.includes("login")) {
-    await client.api.channels.showTyping(message.data.channel_id);
+    await message.channel.sendTyping();
 
-    const user = await User.findByDiscordId(message.data.author.id);
+    const user = await User.findByDiscordId(message.author.id);
 
-    if (!user) {
-      await sendDiscordMessage(message.data.author.id, {
+    if (!user || true) {
+      const button = new ButtonBuilder()
+        .setCustomId("email")
+        .setLabel("Email eingeben")
+        .setStyle(ButtonStyle.Primary);
+
+      const row = new ActionRowBuilder<ButtonBuilder>().addComponents(button);
+
+      await message.reply({
         content:
-          "Ich habe keinen Account gefunden, der mit deinem Discord Account verknüpft ist.",
+          "Ich habe keinen Account gefunden, der mit deinem Discord Account verknüpft ist. Klicke den Button um deine Email einzugeben.",
+        components: [row],
       });
     } else {
       const magicLink = await issueMagicLink(user);
 
-      await sendDiscordMessage(
-        message.data.author.id,
-        {
-          content: `Du kannst dich mit folgendem Link anmelden ${magicLink}. Der Link ist 15 Minuten gültig.`,
-        },
-        { ttl: "15m" },
-      );
+      const reply = await message.reply({
+        content: `Du kannst dich mit folgendem Link anmelden ${magicLink}. Der Link ist 15 Minuten gültig.`,
+      });
+
+      scheduleTimeout("5m", async () => {
+        message.deletable && (await message.delete());
+        reply.deletable && (await reply.delete());
+      });
     }
   }
 });
 
-export const discord =
-  process.env.FAKE_API || !token || !guildId
-    ? {
-        connect: () => Promise.resolve(),
-        destroy: () => Promise.resolve(),
-      }
-    : {
-        connect: () => gateway.connect(),
-        destroy: () => gateway.destroy(),
-      };
-
-export async function sendDiscordMessage(
-  userId: string,
-  body: RESTPostAPIChannelMessageJSONBody,
-  { ttl }: { ttl?: `${number}m` } = {},
-) {
-  const channel = await client.api.users.createDM(userId);
-
-  const message = await client.api.channels.createMessage(channel.id, {
-    ...body,
-  });
-
-  if (ttl) {
-    scheduleTimeout(ttl, async () => {
-      await client.api.channels.deleteMessage(channel.id, message.id);
-    });
-  }
-}
-
-export async function findDiscordUserId(username: string) {
-  const result = await client.api.guilds.searchForMembers(guildId, {
-    query: username,
-  });
-
-  return result.at(0)?.user?.id;
-}
-
 const addedRoleCacheForNonProd = new Set<string>();
 scheduleTask("@every 5m", async () => {
   const users = await User.filter((user) => !!user.discordUserId);
-  const discordUsers = await client.api.guilds.getMembers(guildId, {
-    limit: 1000,
-  });
-  const discordUsersRegisteredWithoutRole = discordUsers.filter(
+  const discordUsers = await client.guilds
+    .resolve(guildId)
+    ?.members.fetch({ limit: 1000 });
+  const discordUsersRegisteredWithoutRole = discordUsers?.filter(
     (member) =>
       users.some((user) => user.discordUserId === member.user?.id) &&
-      !member.roles.includes(roleId),
+      !member.roles.cache.has(roleId),
   );
   logger.info(
     {
-      users: discordUsersRegisteredWithoutRole.map(
+      users: discordUsersRegisteredWithoutRole?.map(
         (member) => member.user?.username,
       ),
     },
     "Adding role to registered discord users without role",
   );
 
-  for (const member of discordUsersRegisteredWithoutRole) {
+  for (const member of discordUsersRegisteredWithoutRole?.values() ?? []) {
     if (!member.user) continue;
 
+    logger.info({ user: member.user.username, roleId }, "Adding role to user");
     if (getEnv() === "production") {
-      logger.info(
-        { user: member.user.username, roleId },
-        "Adding role to user",
-      );
       try {
-        await client.api.guilds.addRoleToMember(
-          guildId,
-          member.user.id,
-          roleId,
-        );
+        await member.roles.add(roleId);
         await sendDiscordMessage(member.user.id, {
           content:
             "Yay, willkommen als vollwertiges Mitglied (aka auf der SommerLAN Seite angemeldet).",
@@ -162,10 +155,6 @@ scheduleTask("@every 5m", async () => {
         logger.error(err, "Error adding role to user");
       }
     } else if (!addedRoleCacheForNonProd.has(member.user.id)) {
-      logger.info(
-        { user: member.user.username, roleId },
-        "Adding role to user",
-      );
       addedRoleCacheForNonProd.add(member.user.id);
     }
   }

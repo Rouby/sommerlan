@@ -1,0 +1,278 @@
+directive @rbac on OBJECT
+
+type AddGameResult {
+  attending: Attending!
+  game: Game!
+}
+
+type Attending {
+  applicationDate: Date!
+  checkIn: DateTime
+  checkOut: DateTime
+  dates: [Date!]!
+  gamesPlayed: [Game!]!
+  id: ID!
+  paidDues: Float!
+  party: Party!
+  room: RoomStatus
+  user: User!
+}
+
+type AuthDevice {
+  createdAt: DateTime
+  id: ID!
+  lastUsedAt: DateTime
+  name: String!
+}
+
+type AuthResponse {
+  refreshToken: String!
+  token: JWT!
+}
+
+scalar BoundingBox
+
+scalar Date
+
+scalar DateTime
+
+type Donation {
+  amount: Float!
+  dedication: DonationDedication!
+  donator: User
+  id: ID!
+  party: Party!
+  received: Boolean!
+}
+
+enum DonationDedication {
+  RENT
+  WARCHEST
+}
+
+type Event {
+  date: Date
+  description: String
+  endTime: String
+  id: ID!
+  image: String!
+  name: String!
+  organizer: User!
+  participants: [User!]!
+  party: Party!
+  startTime: String
+}
+
+input EventInput {
+  date: Date
+  description: String
+  endTime: String
+  id: ID
+  image: File!
+  name: String!
+  partyId: ID!
+  startTime: String
+}
+
+scalar File
+
+type Game {
+  id: ID!
+  image: String!
+  name: String!
+  players: [User!]!
+}
+
+input GameInput {
+  id: ID!
+  image: File!
+}
+
+type GameOnParty {
+  game: Game!
+  id: ID!
+  party: Party!
+  players: [User!]!
+}
+
+scalar JSON
+
+scalar JWT
+
+type LoginResponse {
+  credentialID: [Int!]!
+  refreshToken: String!
+  token: JWT!
+}
+
+type Mutation {
+  addGameToParty(name: String!, partyId: ID!): AddGameResult!
+  addPicture(input: PictureInput!): Picture!
+  capturePayPalOrder(orderId: ID!): Attending
+  checkIn(userId: ID!): Attending
+  checkOut(userId: ID!): Attending
+  createPayPalOrder: ID!
+  deleteAuthDevice(id: ID!): AuthDevice!
+  denyRoom(attendingId: ID!): Attending
+  donate(
+    amount: Float!
+    dedication: DonationDedication
+    incognito: Boolean
+  ): Donation!
+  generatePasskeyLoginOptions(userId: String): JSON!
+  generatePasskeyRegisterOptions(userId: String!): JSON!
+  grantRoom(attendingId: ID!): Attending
+  leaveEvent(id: ID!): Event!
+  loginMagicLink(magicLinkId: String!): AuthResponse!
+  loginPasskey(response: JSON!): LoginResponse!
+  loginPassword(email: String!, password: String!): AuthResponse!
+  participateInEvent(id: ID!): Event!
+  planEvent(input: EventInput!): Event!
+  recindRoom(partyId: ID!): Attending
+  refreshLogin(refreshToken: String!): AuthResponse!
+  register(
+    email: String!
+    password: String
+    userName: String!
+  ): RegisterResponse!
+  registerPasskey(
+    name: String!
+    response: JSON!
+    userId: String!
+  ): RegisterDeviceResponse!
+  removeAttendance(partyId: ID!, userId: ID): Party!
+  removeProfilePicture: User!
+  requestRoom(partyId: ID!): Attending
+  rescindDonation(id: ID!): Donation!
+  sendMagicLink(email: String!): Boolean!
+  setAttendance(dates: [Date!]!, partyId: ID!, userId: ID): Party!
+  setGamesPlayed(gameIds: [ID!]!, partyId: ID!): Attending!
+  syncCache(clear: Boolean): Boolean
+  updateAuthDevice(id: ID!, name: String!): AuthDevice!
+  updateGame(input: GameInput!): Game!
+  updatePaidDues(attendingId: ID!, paidDues: Float!): Attending
+  updateParty(input: PartyInput!): Party!
+  updateProfile(input: ProfileInput!): User!
+  updateRoles(id: ID!, roles: [Role!]!): User!
+}
+
+type Party {
+  attending(userId: ID): Attending
+  attendings: [Attending!]!
+  donations: [Donation!]!
+  endDate: Date!
+  events: [Event!]!
+  finalCostPerDay: Float
+  gamesPlayed: [GameOnParty!]!
+  id: ID!
+  location: String!
+  locationWidgetSrc: String
+  paidDues: Float
+  payday: Date
+  pictures: [Picture!]!
+  registrationDeadline: Date
+  rentalCosts: Float!
+  roomsAvailable: Int!
+  seatsAvailable: Int!
+  startDate: Date!
+  tentative: Boolean!
+}
+
+input PartyInput {
+  endDate: Date!
+  id: ID
+  location: String!
+  locationWidgetSrc: String
+  roomsAvailable: Int!
+  startDate: Date!
+}
+
+type Picture {
+  id: ID!
+  meta: PictureMeta!
+  party: Party!
+  tags: [PictureTag!]!
+  url: String!
+}
+
+input PictureInput {
+  file: File!
+  name: String!
+  partyId: ID!
+  tags: [PictureTagInput!]
+}
+
+type PictureMeta {
+  altitude: Float
+  height: Int!
+  latitude: Float
+  longitude: Float
+  takeAt: DateTime
+  width: Int!
+}
+
+type PictureTag {
+  boundingBox: BoundingBox!
+  id: ID!
+  picture: Picture!
+  user: User!
+}
+
+input PictureTagInput {
+  boundingBox: BoundingBox!
+  userId: ID!
+}
+
+input ProfileInput {
+  avatar: File
+  displayName: String!
+  email: String!
+  id: ID
+  name: String!
+  password: String
+}
+
+type Query {
+  games: [Game!]!
+  me: User
+  nextParty: Party
+  parties: [Party!]!
+  party(id: ID!): Party
+  users: [User!]!
+}
+
+type RegisterDeviceResponse {
+  device: AuthDevice!
+  token: String!
+}
+
+type RegisterResponse {
+  refreshToken: String!
+  token: String!
+  user: User!
+}
+
+enum Role {
+  Admin
+  Bookkeeper
+  Doorkeeper
+  Trusted
+}
+
+enum RoomStatus {
+  GRANTED
+  REQUESTED
+}
+
+scalar Time
+
+type User {
+  avatar: String!
+  avatarUrl: String
+  devices: [AuthDevice!]!
+  displayName: String!
+  email: String!
+  id: ID!
+  name: String!
+  roles: [Role!]!
+}

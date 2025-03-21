@@ -10,6 +10,7 @@ export const Attending: Pick<
   | "paidDues"
   | "party"
   | "room"
+  | "__isTypeOf"
 > = {
   /* Implement Attending resolver logic here */
   party: async (parent, _arg, ctx) => {

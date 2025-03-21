@@ -35,6 +35,9 @@ export type Incremental<T> =
       [P in keyof T]?: P extends " $fragmentName" | "__typename" ? T[P] : never;
     };
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+export type EnumResolverSignature<T, AllowedValues = any> = {
+  [key in keyof T]?: AllowedValues;
+};
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & {
   [P in K]-?: NonNullable<T[P]>;
 };
@@ -598,7 +601,7 @@ export type ResolversTypes = {
   DateTime: ResolverTypeWrapper<Scalars["DateTime"]["output"]>;
   Donation: ResolverTypeWrapper<DonationMapper>;
   Boolean: ResolverTypeWrapper<Scalars["Boolean"]["output"]>;
-  DonationDedication: DonationDedication;
+  DonationDedication: ResolverTypeWrapper<"RENT" | "WARCHEST">;
   Event: ResolverTypeWrapper<EventMapper>;
   EventInput: EventInput;
   File: ResolverTypeWrapper<Scalars["File"]["output"]>;
@@ -633,8 +636,8 @@ export type ResolversTypes = {
   RegisterResponse: ResolverTypeWrapper<
     Omit<RegisterResponse, "user"> & { user: ResolversTypes["User"] }
   >;
-  Role: Role;
-  RoomStatus: RoomStatus;
+  Role: ResolverTypeWrapper<"Trusted" | "Admin" | "Doorkeeper" | "Bookkeeper">;
+  RoomStatus: ResolverTypeWrapper<"REQUESTED" | "GRANTED">;
   Time: ResolverTypeWrapper<Scalars["Time"]["output"]>;
   User: ResolverTypeWrapper<UserMapper>;
 };
@@ -801,6 +804,11 @@ export type DonationResolvers<
   received?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
+
+export type DonationDedicationResolvers = EnumResolverSignature<
+  { RENT?: any; WARCHEST?: any },
+  ResolversTypes["DonationDedication"]
+>;
 
 export type EventResolvers<
   ContextType = Context,
@@ -1245,6 +1253,16 @@ export type RegisterResponseResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type RoleResolvers = EnumResolverSignature<
+  { Admin?: any; Bookkeeper?: any; Doorkeeper?: any; Trusted?: any },
+  ResolversTypes["Role"]
+>;
+
+export type RoomStatusResolvers = EnumResolverSignature<
+  { GRANTED?: any; REQUESTED?: any },
+  ResolversTypes["RoomStatus"]
+>;
+
 export interface TimeScalarConfig
   extends GraphQLScalarTypeConfig<ResolversTypes["Time"], any> {
   name: "Time";
@@ -1283,6 +1301,7 @@ export type Resolvers<ContextType = Context> = {
   Date?: GraphQLScalarType;
   DateTime?: GraphQLScalarType;
   Donation?: DonationResolvers<ContextType>;
+  DonationDedication?: DonationDedicationResolvers;
   Event?: EventResolvers<ContextType>;
   File?: GraphQLScalarType;
   Game?: GameResolvers<ContextType>;
@@ -1298,6 +1317,8 @@ export type Resolvers<ContextType = Context> = {
   Query?: QueryResolvers<ContextType>;
   RegisterDeviceResponse?: RegisterDeviceResponseResolvers<ContextType>;
   RegisterResponse?: RegisterResponseResolvers<ContextType>;
+  Role?: RoleResolvers;
+  RoomStatus?: RoomStatusResolvers;
   Time?: GraphQLScalarType;
   User?: UserResolvers<ContextType>;
 };

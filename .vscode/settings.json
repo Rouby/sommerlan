@@ -10,5 +10,5 @@
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "playwright.env": {
     "NODE_OPTIONS": "-r ./.pnp.cjs"
-  },
+  }
 }

@@ -1,18 +1,11 @@
 /* This file was automatically generated. DO NOT UPDATE MANUALLY. */
 import type { Resolvers } from "./types.generated";
-import { AddGameResult } from "./game/resolvers/AddGameResult";
-import { Attending as party_Attending } from "./party/resolvers/Attending";
-import { Attending as game_Attending } from "./game/resolvers/Attending";
-import { Attending as user_Attending } from "./user/resolvers/Attending";
-import { AuthDevice } from "./user/resolvers/AuthDevice";
-import { AuthResponse } from "./user/resolvers/AuthResponse";
-import { BoundingBox } from "./party/resolvers/BoundingBox";
-import { Donation } from "./donation/resolvers/Donation";
-import { Event } from "./events/resolvers/Event";
-import { File } from "./base/resolvers/File";
-import { Game } from "./game/resolvers/Game";
-import { GameOnParty } from "./game/resolvers/GameOnParty";
-import { LoginResponse } from "./user/resolvers/LoginResponse";
+import { games as Query_games } from "./game/resolvers/Query/games";
+import { me as Query_me } from "./user/resolvers/Query/me";
+import { nextParty as Query_nextParty } from "./party/resolvers/Query/nextParty";
+import { parties as Query_parties } from "./party/resolvers/Query/parties";
+import { party as Query_party } from "./party/resolvers/Query/party";
+import { users as Query_users } from "./user/resolvers/Query/users";
 import { addGameToParty as Mutation_addGameToParty } from "./game/resolvers/Mutation/addGameToParty";
 import { addPicture as Mutation_addPicture } from "./party/resolvers/Mutation/addPicture";
 import { capturePayPalOrder as Mutation_capturePayPalOrder } from "./party/resolvers/Mutation/capturePayPalOrder";
@@ -49,6 +42,17 @@ import { updatePaidDues as Mutation_updatePaidDues } from "./party/resolvers/Mut
 import { updateParty as Mutation_updateParty } from "./party/resolvers/Mutation/updateParty";
 import { updateProfile as Mutation_updateProfile } from "./user/resolvers/Mutation/updateProfile";
 import { updateRoles as Mutation_updateRoles } from "./user/resolvers/Mutation/updateRoles";
+import { AddGameResult } from "./game/resolvers/AddGameResult";
+import { Attending as party_Attending } from "./party/resolvers/Attending";
+import { Attending as game_Attending } from "./game/resolvers/Attending";
+import { Attending as user_Attending } from "./user/resolvers/Attending";
+import { AuthDevice } from "./user/resolvers/AuthDevice";
+import { AuthResponse } from "./user/resolvers/AuthResponse";
+import { Donation } from "./donation/resolvers/Donation";
+import { Event } from "./events/resolvers/Event";
+import { Game } from "./game/resolvers/Game";
+import { GameOnParty } from "./game/resolvers/GameOnParty";
+import { LoginResponse } from "./user/resolvers/LoginResponse";
 import { Party as party_Party } from "./party/resolvers/Party";
 import { Party as donation_Party } from "./donation/resolvers/Party";
 import { Party as events_Party } from "./events/resolvers/Party";
@@ -56,15 +60,11 @@ import { Party as game_Party } from "./game/resolvers/Party";
 import { Picture } from "./party/resolvers/Picture";
 import { PictureMeta } from "./party/resolvers/PictureMeta";
 import { PictureTag } from "./party/resolvers/PictureTag";
-import { games as Query_games } from "./game/resolvers/Query/games";
-import { me as Query_me } from "./user/resolvers/Query/me";
-import { nextParty as Query_nextParty } from "./party/resolvers/Query/nextParty";
-import { parties as Query_parties } from "./party/resolvers/Query/parties";
-import { party as Query_party } from "./party/resolvers/Query/party";
-import { users as Query_users } from "./user/resolvers/Query/users";
 import { RegisterDeviceResponse } from "./user/resolvers/RegisterDeviceResponse";
 import { RegisterResponse } from "./user/resolvers/RegisterResponse";
 import { User } from "./user/resolvers/User";
+import { BoundingBox } from "./party/resolvers/BoundingBox";
+import { File } from "./base/resolvers/File";
 import {
   DateResolver,
   DateTimeResolver,
@@ -124,10 +124,8 @@ export const resolvers: Resolvers = {
   Attending: { ...party_Attending, ...game_Attending, ...user_Attending },
   AuthDevice: AuthDevice,
   AuthResponse: AuthResponse,
-  BoundingBox: BoundingBox,
   Donation: Donation,
   Event: Event,
-  File: File,
   Game: Game,
   GameOnParty: GameOnParty,
   LoginResponse: LoginResponse,
@@ -138,6 +136,8 @@ export const resolvers: Resolvers = {
   RegisterDeviceResponse: RegisterDeviceResponse,
   RegisterResponse: RegisterResponse,
   User: User,
+  BoundingBox: BoundingBox,
+  File: File,
   Date: DateResolver,
   DateTime: DateTimeResolver,
   JSON: JSONResolver,
