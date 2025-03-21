@@ -6,7 +6,7 @@
   "sideEffects": false,
   "scripts": {
     "codegen": "graphql-codegen",
-    "dev": "concurrently --kill-others-on-fail \"nodemon ./src/index.ts | pino-pretty\" \"graphql-codegen --watch\"",
+    "dev": "nodemon ./src/index.ts | pino-pretty",
     "build": "pnpify swc src -d dist",
     "start": "node dist/src/index | pino-pretty",
     "lint": "echo \"No linting configured\"",
