@@ -15,8 +15,10 @@ import { GameOnParty } from "./game/resolvers/GameOnParty";
 import { LoginResponse } from "./user/resolvers/LoginResponse";
 import { addGameToParty as Mutation_addGameToParty } from "./game/resolvers/Mutation/addGameToParty";
 import { addPicture as Mutation_addPicture } from "./party/resolvers/Mutation/addPicture";
+import { capturePayPalOrder as Mutation_capturePayPalOrder } from "./party/resolvers/Mutation/capturePayPalOrder";
 import { checkIn as Mutation_checkIn } from "./party/resolvers/Mutation/checkIn";
 import { checkOut as Mutation_checkOut } from "./party/resolvers/Mutation/checkOut";
+import { createPayPalOrder as Mutation_createPayPalOrder } from "./party/resolvers/Mutation/createPayPalOrder";
 import { deleteAuthDevice as Mutation_deleteAuthDevice } from "./user/resolvers/Mutation/deleteAuthDevice";
 import { denyRoom as Mutation_denyRoom } from "./party/resolvers/Mutation/denyRoom";
 import { donate as Mutation_donate } from "./donation/resolvers/Mutation/donate";
@@ -82,8 +84,10 @@ export const resolvers: Resolvers = {
   Mutation: {
     addGameToParty: Mutation_addGameToParty,
     addPicture: Mutation_addPicture,
+    capturePayPalOrder: Mutation_capturePayPalOrder,
     checkIn: Mutation_checkIn,
     checkOut: Mutation_checkOut,
+    createPayPalOrder: Mutation_createPayPalOrder,
     deleteAuthDevice: Mutation_deleteAuthDevice,
     denyRoom: Mutation_denyRoom,
     donate: Mutation_donate,

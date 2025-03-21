@@ -81,6 +81,7 @@ export async function createAbility(
       can("update", "Event", { organizerId: user.id }); // TODO ids?
       can("create", "Game");
       can("create", "Picture");
+      can("payWithPayPal", "Party");
     }
 
     if (user.roles.includes(User.Role.Admin)) {

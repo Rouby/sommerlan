@@ -973,6 +973,18 @@ const RAW_RUNTIME_STATE =
       "npm:2.3.0"\
     ],\
     [\
+      "@paypal/paypal-js",\
+      "npm:8.2.0"\
+    ],\
+    [\
+      "@paypal/react-paypal-js",\
+      "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:8.8.2"\
+    ],\
+    [\
+      "@paypal/sdk-constants",\
+      "npm:1.0.153"\
+    ],\
+    [\
       "@peculiar/asn1-android",\
       "npm:2.3.6"\
     ],\
@@ -2769,6 +2781,10 @@ const RAW_RUNTIME_STATE =
       "npm:5.0.0"\
     ],\
     [\
+      "hi-base32",\
+      "npm:0.5.1"\
+    ],\
+    [\
       "hoist-non-react-statics",\
       "npm:3.3.2"\
     ],\
@@ -3683,6 +3699,10 @@ const RAW_RUNTIME_STATE =
     [\
       "promise",\
       "npm:7.3.1"\
+    ],\
+    [\
+      "promise-polyfill",\
+      "npm:8.3.0"\
     ],\
     [\
       "promise-retry",\
@@ -10203,6 +10223,54 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["@paypal/paypal-js", [\
+      ["npm:8.2.0", {\
+        "packageLocation": "./.yarn/cache/@paypal-paypal-js-npm-8.2.0-20d2e9f576-307ddc4e6e.zip/node_modules/@paypal/paypal-js/",\
+        "packageDependencies": [\
+          ["@paypal/paypal-js", "npm:8.2.0"],\
+          ["promise-polyfill", "npm:8.3.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@paypal/react-paypal-js", [\
+      ["npm:8.8.2", {\
+        "packageLocation": "./.yarn/cache/@paypal-react-paypal-js-npm-8.8.2-b3c0071836-5094a5a5cd.zip/node_modules/@paypal/react-paypal-js/",\
+        "packageDependencies": [\
+          ["@paypal/react-paypal-js", "npm:8.8.2"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:8.8.2", {\
+        "packageLocation": "./.yarn/__virtual__/@paypal-react-paypal-js-virtual-6c6beda6b1/0/cache/@paypal-react-paypal-js-npm-8.8.2-b3c0071836-5094a5a5cd.zip/node_modules/@paypal/react-paypal-js/",\
+        "packageDependencies": [\
+          ["@paypal/react-paypal-js", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:8.8.2"],\
+          ["@paypal/paypal-js", "npm:8.2.0"],\
+          ["@paypal/sdk-constants", "npm:1.0.153"],\
+          ["@types/react", "npm:18.2.13"],\
+          ["@types/react-dom", "npm:18.2.6"],\
+          ["react", "npm:18.2.0"],\
+          ["react-dom", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:18.2.0"]\
+        ],\
+        "packagePeers": [\
+          "@types/react-dom",\
+          "@types/react",\
+          "react-dom",\
+          "react"\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@paypal/sdk-constants", [\
+      ["npm:1.0.153", {\
+        "packageLocation": "./.yarn/cache/@paypal-sdk-constants-npm-1.0.153-6029e7736d-527a10b83e.zip/node_modules/@paypal/sdk-constants/",\
+        "packageDependencies": [\
+          ["@paypal/sdk-constants", "npm:1.0.153"],\
+          ["hi-base32", "npm:0.5.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["@peculiar/asn1-android", [\
       ["npm:2.3.6", {\
         "packageLocation": "./.yarn/cache/@peculiar-asn1-android-npm-2.3.6-cf68215309-5c60b8de28.zip/node_modules/@peculiar/asn1-android/",\
@@ -10773,6 +10841,7 @@ const RAW_RUNTIME_STATE =
           ["@mantine/spotlight", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:7.12.0"],\
           ["@mantine/tiptap", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:7.12.0"],\
           ["@newrelic/browser-agent", "npm:1.265.0"],\
+          ["@paypal/react-paypal-js", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:8.8.2"],\
           ["@simplewebauthn/browser", "npm:7.2.0"],\
           ["@tabler/icons-react", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:3.0.1"],\
           ["@tanstack/react-query", "virtual:45858a3af37f856fe60d06243d2212e16cf5cfb256122d4dc03ddfdb69990bac76050a45ff1fbfb5b4797ac3250f0759e98596ff0dfdb7c2d1fdd856b7e1daa7#npm:4.29.14"],\
@@ -17099,6 +17168,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["hi-base32", [\
+      ["npm:0.5.1", {\
+        "packageLocation": "./.yarn/cache/hi-base32-npm-0.5.1-75ccb27ef3-f2cd52dca0.zip/node_modules/hi-base32/",\
+        "packageDependencies": [\
+          ["hi-base32", "npm:0.5.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["hoist-non-react-statics", [\
       ["npm:3.3.2", {\
         "packageLocation": "./.yarn/cache/hoist-non-react-statics-npm-3.3.2-e7b709e6c1-1acbe85f33.zip/node_modules/hoist-non-react-statics/",\
@@ -20026,6 +20104,15 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["promise", "npm:8.3.0"],\
           ["asap", "npm:2.0.6"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["promise-polyfill", [\
+      ["npm:8.3.0", {\
+        "packageLocation": "./.yarn/cache/promise-polyfill-npm-8.3.0-ba317c123f-f735f59e46.zip/node_modules/promise-polyfill/",\
+        "packageDependencies": [\
+          ["promise-polyfill", "npm:8.3.0"]\
         ],\
         "linkType": "HARD"\
       }]\

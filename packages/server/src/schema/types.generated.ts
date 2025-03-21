@@ -160,8 +160,10 @@ export type Mutation = {
   __typename?: "Mutation";
   addGameToParty: AddGameResult;
   addPicture: Picture;
+  capturePayPalOrder?: Maybe<Attending>;
   checkIn?: Maybe<Attending>;
   checkOut?: Maybe<Attending>;
+  createPayPalOrder: Scalars["ID"]["output"];
   deleteAuthDevice: AuthDevice;
   denyRoom?: Maybe<Attending>;
   donate: Donation;
@@ -201,6 +203,10 @@ export type MutationaddGameToPartyArgs = {
 
 export type MutationaddPictureArgs = {
   input: PictureInput;
+};
+
+export type MutationcapturePayPalOrderArgs = {
+  orderId: Scalars["ID"]["input"];
 };
 
 export type MutationcheckInArgs = {
@@ -897,6 +903,12 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationaddPictureArgs, "input">
   >;
+  capturePayPalOrder?: Resolver<
+    Maybe<ResolversTypes["Attending"]>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationcapturePayPalOrderArgs, "orderId">
+  >;
   checkIn?: Resolver<
     Maybe<ResolversTypes["Attending"]>,
     ParentType,
@@ -909,6 +921,7 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationcheckOutArgs, "userId">
   >;
+  createPayPalOrder?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   deleteAuthDevice?: Resolver<
     ResolversTypes["AuthDevice"],
     ParentType,

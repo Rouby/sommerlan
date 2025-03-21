@@ -6,6 +6,7 @@ import "@mantine/core/styles.css";
 import { DatesProvider } from "@mantine/dates";
 import "@mantine/notifications/styles.css";
 import "@mantine/tiptap/styles.css";
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import dayjs from "dayjs";
@@ -47,7 +48,16 @@ export function App() {
         <QueryClientProvider client={queryClient}>
           <MantineProvider defaultColorScheme="auto">
             <DatesProvider settings={{ locale: navigator.language }}>
-              <RouterProvider router={router} />
+              <PayPalScriptProvider
+                options={{
+                  clientId:
+                    "AQnPomsWs3EV41OEh6HtYLc1jLYI8hGw73s1CRiI4DiFT3Yf6lg9rHRUZb-iZrjFKSv-RxNv3F9mC7wI",
+                  components: "buttons",
+                  currency: "EUR",
+                }}
+              >
+                <RouterProvider router={router} />
+              </PayPalScriptProvider>
             </DatesProvider>
           </MantineProvider>
         </QueryClientProvider>

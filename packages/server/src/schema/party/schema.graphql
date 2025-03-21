@@ -20,6 +20,9 @@ extend type Mutation {
   checkOut(userId: ID!): Attending
 
   updatePaidDues(attendingId: ID!, paidDues: Float!): Attending
+
+  createPayPalOrder: ID!
+  capturePayPalOrder(orderId: ID!): Attending
 }
 
 type Party @rbac {

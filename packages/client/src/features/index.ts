@@ -9,7 +9,9 @@ export * from "./PartyDateAndTime";
 export * from "./PartyDonations";
 export * from "./PartyGames";
 export * from "./PartyLocation";
+export * from "./PartyPayment";
 export * from "./PartyRooms";
 export * from "./SignUp";
 export * from "./UserButton";
 export * from "./UserProfile";
+

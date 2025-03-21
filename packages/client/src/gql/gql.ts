@@ -49,6 +49,9 @@ const documents = {
     "\n      mutation addGameToParty($name: String!, $partyId: ID!) {\n        addGameToParty(name: $name, partyId: $partyId) {\n          game {\n            id\n            name\n            image\n          }\n          attending {\n            id\n            gamesPlayed {\n              id\n              name\n              image\n            }\n          }\n        }\n      }\n    ": types.AddGameToPartyDocument,
     "\n      mutation setGamesPlayed($partyId: ID!, $gameIds: [ID!]!) {\n        setGamesPlayed(partyId: $partyId, gameIds: $gameIds) {\n          id\n          gamesPlayed {\n            id\n            name\n            image\n          }\n        }\n      }\n    ": types.SetGamesPlayedDocument,
     "\n      query nextPartyLocation {\n        nextParty {\n          id\n          locationWidgetSrc\n        }\n      }\n    ": types.NextPartyLocationDocument,
+    "\n      query PartyPaymentInfo {\n        nextParty {\n          id\n          finalCostPerDay\n          payday\n          attendings {\n            id\n            dates\n            paidDues\n            user {\n              id\n              displayName\n            }\n          }\n          donations {\n            id\n            amount\n            dedication\n            donator {\n              id\n            }\n          }\n        }\n      }\n    ": types.PartyPaymentInfoDocument,
+    "\n      mutation CreatePayPalOrder {\n        createPayPalOrder\n      }\n    ": types.CreatePayPalOrderDocument,
+    "\n      mutation CapturePayPalOrder($orderId: ID!) {\n        capturePayPalOrder(orderId: $orderId) {\n          id\n          paidDues\n        }\n      }\n    ": types.CapturePayPalOrderDocument,
     "\n      query nextPartyRooms {\n        nextParty {\n          id\n          tentative\n          roomsAvailable\n          attendings {\n            id\n            room\n            user {\n              id\n              displayName\n              avatar\n            }\n          }\n        }\n      }\n    ": types.NextPartyRoomsDocument,
     "\n      mutation requestRoom($partyId: ID!) {\n        requestRoom(partyId: $partyId) {\n          id\n          dates\n          room\n          user {\n            id\n            displayName\n            avatar\n          }\n        }\n      }\n    ": types.RequestRoomDocument,
     "\n      mutation recindRoom($partyId: ID!) {\n        recindRoom(partyId: $partyId) {\n          id\n          dates\n          room\n          user {\n            id\n            displayName\n            avatar\n          }\n        }\n      }\n    ": types.RecindRoomDocument,
@@ -229,6 +232,18 @@ export function graphql(source: "\n      mutation setGamesPlayed($partyId: ID!, 
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n      query nextPartyLocation {\n        nextParty {\n          id\n          locationWidgetSrc\n        }\n      }\n    "): (typeof documents)["\n      query nextPartyLocation {\n        nextParty {\n          id\n          locationWidgetSrc\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      query PartyPaymentInfo {\n        nextParty {\n          id\n          finalCostPerDay\n          payday\n          attendings {\n            id\n            dates\n            paidDues\n            user {\n              id\n              displayName\n            }\n          }\n          donations {\n            id\n            amount\n            dedication\n            donator {\n              id\n            }\n          }\n        }\n      }\n    "): (typeof documents)["\n      query PartyPaymentInfo {\n        nextParty {\n          id\n          finalCostPerDay\n          payday\n          attendings {\n            id\n            dates\n            paidDues\n            user {\n              id\n              displayName\n            }\n          }\n          donations {\n            id\n            amount\n            dedication\n            donator {\n              id\n            }\n          }\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      mutation CreatePayPalOrder {\n        createPayPalOrder\n      }\n    "): (typeof documents)["\n      mutation CreatePayPalOrder {\n        createPayPalOrder\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      mutation CapturePayPalOrder($orderId: ID!) {\n        capturePayPalOrder(orderId: $orderId) {\n          id\n          paidDues\n        }\n      }\n    "): (typeof documents)["\n      mutation CapturePayPalOrder($orderId: ID!) {\n        capturePayPalOrder(orderId: $orderId) {\n          id\n          paidDues\n        }\n      }\n    "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

@@ -3714,6 +3714,37 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@paypal/paypal-js@npm:^8.1.2":
+  version: 8.2.0
+  resolution: "@paypal/paypal-js@npm:8.2.0"
+  dependencies:
+    promise-polyfill: "npm:^8.3.0"
+  checksum: 10/307ddc4e6ea5629b2ef6a339063543ee286791a4a557d4e5c84e9a74ba4d2d8893403bc555aceb11b41948fa86adf9a9a61bcce2ba7c3ff632170ba45185176a
+  languageName: node
+  linkType: hard
+
+"@paypal/react-paypal-js@npm:^8.8.2":
+  version: 8.8.2
+  resolution: "@paypal/react-paypal-js@npm:8.8.2"
+  dependencies:
+    "@paypal/paypal-js": "npm:^8.1.2"
+    "@paypal/sdk-constants": "npm:^1.0.122"
+  peerDependencies:
+    react: ^16.8.0 || ^17 || ^18 || ^19
+    react-dom: ^16.8.0 || ^17 || ^18 || ^19
+  checksum: 10/5094a5a5cddbe95b5e2ba339cd6b6d476fd0f914a761f5932a45ac1642b1b89be740846a4c1f241cae0f11e7fbe56a94eafd4fe907dba1c0db48eff8775cd515
+  languageName: node
+  linkType: hard
+
+"@paypal/sdk-constants@npm:^1.0.122":
+  version: 1.0.153
+  resolution: "@paypal/sdk-constants@npm:1.0.153"
+  dependencies:
+    hi-base32: "npm:^0.5.0"
+  checksum: 10/527a10b83e5b268cab720b3bb5b042dc3cfff9532d6e8ab04e5e93dd7497717c8e71095cb9887645dde76d9dc1a8f9478be2ca1f2886b7e27a46775159e634ae
+  languageName: node
+  linkType: hard
+
 "@peculiar/asn1-android@npm:^2.3.3":
   version: 2.3.6
   resolution: "@peculiar/asn1-android@npm:2.3.6"
@@ -4195,6 +4226,7 @@ __metadata:
     "@mantine/spotlight": "npm:^7.12.0"
     "@mantine/tiptap": "npm:^7.12.0"
     "@newrelic/browser-agent": "npm:^1.265.0"
+    "@paypal/react-paypal-js": "npm:^8.8.2"
     "@simplewebauthn/browser": "npm:^7.2.0"
     "@tabler/icons-react": "npm:^3.0.1"
     "@tanstack/react-query": "npm:^4.29.14"
@@ -9289,6 +9321,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"hi-base32@npm:^0.5.0":
+  version: 0.5.1
+  resolution: "hi-base32@npm:0.5.1"
+  checksum: 10/f2cd52dca0f73d04786b98401aee2e27c58d015cc040eb35922c4231a06ca9e0cb79ce0a1556f18acf0f33233dbd52f7106fc950a38fdd65e5cb5758e4fcd9a1
+  languageName: node
+  linkType: hard
+
 "hoist-non-react-statics@npm:^3.3.1":
   version: 3.3.2
   resolution: "hoist-non-react-statics@npm:3.3.2"
@@ -11920,6 +11959,13 @@ __metadata:
   version: 0.11.10
   resolution: "process@npm:0.11.10"
   checksum: 10/dbaa7e8d1d5cf375c36963ff43116772a989ef2bb47c9bdee20f38fd8fc061119cf38140631cf90c781aca4d3f0f0d2c834711952b728953f04fd7d238f59f5b
+  languageName: node
+  linkType: hard
+
+"promise-polyfill@npm:^8.3.0":
+  version: 8.3.0
+  resolution: "promise-polyfill@npm:8.3.0"
+  checksum: 10/f735f59e464174f720fec9c41c5029ec1014e62e05d61e39d8d2290a0bc4dd7c36a0782d3202f1775d09d0b33a47fef289db38c437534769b187da22e03bfa23
   languageName: node
   linkType: hard
 
