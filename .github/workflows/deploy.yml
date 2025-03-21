@@ -220,6 +220,9 @@ jobs:
           export DISCORD_GUILD_ID=$(echo -n '${{ secrets.DISCORD_GUILD_ID }}' | iconv -t utf-8 | base64 -w 0)
           export DISCORD_ROLE_ID=$(echo -n '${{ secrets.DISCORD_ROLE_ID }}' | iconv -t utf-8 | base64 -w 0)
           export DISCORD_ADMIN_IDS=$(echo -n '${{ vars.DISCORD_ADMIN_IDS }}' | iconv -t utf-8 | base64 -w 0)
+          export MAILSERVER_HOST=$(echo -n '${{ vars.MAILSERVER_HOST }}' | iconv -t utf-8 | base64 -w 0)
+          export MAILSERVER_USER=$(echo -n '${{ secrets.MAILSERVER_USER }}' | iconv -t utf-8 | base64 -w 0)
+          export MAILSERVER_PASSWORD=$(echo -n '${{ secrets.MAILSERVER_PASSWORD }}' | iconv -t utf-8 | base64 -w 0)
 
           helm upgrade sommerlan -n "sommerlan-${{ matrix.env_name }}" --install --create-namespace \
               --set image.repository=ghcr.io/rouby/sommerlan-app \
@@ -243,6 +246,9 @@ jobs:
               --set-string secrets.DISCORD_GUILD_ID="$DISCORD_GUILD_ID" \
               --set-string secrets.DISCORD_ROLE_ID="$DISCORD_ROLE_ID" \
               --set-string secrets.DISCORD_ADMIN_IDS="$DISCORD_ADMIN_IDS" \
+              --set-string secrets.MAILSERVER_HOST="$MAILSERVER_HOST" \
+              --set-string secrets.MAILSERVER_USER="$MAILSERVER_USER" \
+              --set-string secrets.MAILSERVER_PASSWORD="$MAILSERVER_PASSWORD" \
               ./helm
 
       - name: 🏷️ New Relic Application Deployment Marker

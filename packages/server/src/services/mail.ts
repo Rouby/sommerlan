@@ -27,12 +27,12 @@ export const mail =
       };
 
 const transporter = createTransport({
-  host: "docker-mailserver.mail.svc.cluster.local",
+  host: process.env.MAILSERVER_HOST,
   port: 587,
   secure: false, // true for 465, false for other ports
   auth: {
-    user: "admin@sommerlan.rocks",
-    pass: "hallo1du",
+    user: process.env.MAILSERVER_USER,
+    pass: process.env.MAILSERVER_PASSWORD,
   },
   tls: { rejectUnauthorized: false },
   debug: true,
