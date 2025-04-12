@@ -16,13 +16,13 @@ export const sendPaymentNotificationToAll: NonNullable<
 
   for (const attending of attendings) {
     if (attending.paidDues) {
-      throw new GraphQLError("User already paid dues");
+      continue;
     }
 
     const user = await ctx.data.User.findById(attending.userId);
 
     if (!user) {
-      throw new GraphQLError("User not found");
+      continue;
     }
 
     if (user.discordUserId) {
