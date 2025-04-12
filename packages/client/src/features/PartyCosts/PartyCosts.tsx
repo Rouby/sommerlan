@@ -93,7 +93,7 @@ export function PartyCosts() {
         <Text>{formatCurrency(costPerDay)}</Text>
         {myDaysAttending > 0 && (
           <>
-            <Text fw="bold">Meine Kosten:</Text>
+            <Text fw="bold">Deine Kosten:</Text>
             <Text>{formatCurrency(myCosts)}</Text>
           </>
         )}

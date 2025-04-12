@@ -40,6 +40,7 @@ export type Attending = {
   notificationSent?: Maybe<Scalars['DateTime']['output']>;
   paidDues: Scalars['Float']['output'];
   party: Party;
+  rentDues?: Maybe<Scalars['Float']['output']>;
   room?: Maybe<RoomStatus>;
   user: User;
 };
