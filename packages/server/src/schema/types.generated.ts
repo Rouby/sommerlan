@@ -74,8 +74,10 @@ export type Attending = {
   dates: Array<Scalars["Date"]["output"]>;
   gamesPlayed: Array<Game>;
   id: Scalars["ID"]["output"];
+  notificationSent?: Maybe<Scalars["DateTime"]["output"]>;
   paidDues: Scalars["Float"]["output"];
   party: Party;
+  rentDues?: Maybe<Scalars["Float"]["output"]>;
   room?: Maybe<RoomStatus>;
   user: User;
 };
@@ -188,6 +190,8 @@ export type Mutation = {
   requestRoom?: Maybe<Attending>;
   rescindDonation: Donation;
   sendMagicLink: Scalars["Boolean"]["output"];
+  sendPaymentNotification: Attending;
+  sendPaymentNotificationToAll: Array<Attending>;
   setAttendance: Party;
   setGamesPlayed: Attending;
   syncCache?: Maybe<Scalars["Boolean"]["output"]>;
@@ -306,6 +310,10 @@ export type MutationrescindDonationArgs = {
 
 export type MutationsendMagicLinkArgs = {
   email: Scalars["String"]["input"];
+};
+
+export type MutationsendPaymentNotificationArgs = {
+  userId: Scalars["ID"]["input"];
 };
 
 export type MutationsetAttendanceArgs = {
@@ -735,8 +743,14 @@ export type AttendingResolvers<
     ContextType
   >;
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+  notificationSent?: Resolver<
+    Maybe<ResolversTypes["DateTime"]>,
+    ParentType,
+    ContextType
+  >;
   paidDues?: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
   party?: Resolver<ResolversTypes["Party"], ParentType, ContextType>;
+  rentDues?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
   room?: Resolver<Maybe<ResolversTypes["RoomStatus"]>, ParentType, ContextType>;
   user?: Resolver<ResolversTypes["User"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -1054,6 +1068,17 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationsendMagicLinkArgs, "email">
+  >;
+  sendPaymentNotification?: Resolver<
+    ResolversTypes["Attending"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationsendPaymentNotificationArgs, "userId">
+  >;
+  sendPaymentNotificationToAll?: Resolver<
+    Array<ResolversTypes["Attending"]>,
+    ParentType,
+    ContextType
   >;
   setAttendance?: Resolver<
     ResolversTypes["Party"],

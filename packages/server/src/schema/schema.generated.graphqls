@@ -12,8 +12,10 @@ type Attending {
   dates: [Date!]!
   gamesPlayed: [Game!]!
   id: ID!
+  notificationSent: DateTime
   paidDues: Float!
   party: Party!
+  rentDues: Float
   room: RoomStatus
   user: User!
 }
@@ -145,6 +147,8 @@ type Mutation {
   requestRoom(partyId: ID!): Attending
   rescindDonation(id: ID!): Donation!
   sendMagicLink(email: String!): Boolean!
+  sendPaymentNotification(userId: ID!): Attending!
+  sendPaymentNotificationToAll: [Attending!]!
   setAttendance(dates: [Date!]!, partyId: ID!, userId: ID): Party!
   setGamesPlayed(gameIds: [ID!]!, partyId: ID!): Attending!
   syncCache(clear: Boolean): Boolean

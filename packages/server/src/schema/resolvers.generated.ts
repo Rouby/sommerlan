@@ -33,6 +33,8 @@ import { removeProfilePicture as Mutation_removeProfilePicture } from "./user/re
 import { requestRoom as Mutation_requestRoom } from "./party/resolvers/Mutation/requestRoom";
 import { rescindDonation as Mutation_rescindDonation } from "./donation/resolvers/Mutation/rescindDonation";
 import { sendMagicLink as Mutation_sendMagicLink } from "./user/resolvers/Mutation/sendMagicLink";
+import { sendPaymentNotification as Mutation_sendPaymentNotification } from "./party/resolvers/Mutation/sendPaymentNotification";
+import { sendPaymentNotificationToAll as Mutation_sendPaymentNotificationToAll } from "./party/resolvers/Mutation/sendPaymentNotificationToAll";
 import { setAttendance as Mutation_setAttendance } from "./party/resolvers/Mutation/setAttendance";
 import { setGamesPlayed as Mutation_setGamesPlayed } from "./game/resolvers/Mutation/setGamesPlayed";
 import { syncCache as Mutation_syncCache } from "./admin/resolvers/Mutation/syncCache";
@@ -109,6 +111,8 @@ export const resolvers: Resolvers = {
     requestRoom: Mutation_requestRoom,
     rescindDonation: Mutation_rescindDonation,
     sendMagicLink: Mutation_sendMagicLink,
+    sendPaymentNotification: Mutation_sendPaymentNotification,
+    sendPaymentNotificationToAll: Mutation_sendPaymentNotificationToAll,
     setAttendance: Mutation_setAttendance,
     setGamesPlayed: Mutation_setGamesPlayed,
     syncCache: Mutation_syncCache,

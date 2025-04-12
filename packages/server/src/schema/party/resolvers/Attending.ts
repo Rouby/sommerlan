@@ -7,8 +7,10 @@ export const Attending: Pick<
   | "checkOut"
   | "dates"
   | "id"
+  | "notificationSent"
   | "paidDues"
   | "party"
+  | "rentDues"
   | "room"
   | "__isTypeOf"
 > = {
@@ -35,5 +37,20 @@ export const Attending: Pick<
   },
   dates: (parent) => {
     return parent.dates.sort((a, b) => dayjs(a).diff(dayjs(b)));
+  },
+  notificationSent: (parent, _arg, ctx) => {
+    if (!ctx.ability.can("read", parent, "paidDues")) {
+      return null;
+    }
+    return parent.notificationSent;
+  },
+  rentDues: async (parent, _arg, ctx) => {
+    const party = await ctx.data.Party.findById(parent.partyId);
+
+    if (!party?.finalCostPerDay) {
+      return null;
+    }
+
+    return parent.rentDues(party.finalCostPerDay);
   },
 };

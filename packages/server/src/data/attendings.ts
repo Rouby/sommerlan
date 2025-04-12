@@ -28,6 +28,12 @@ export class Attending extends Base {
 
   public checkOut = "";
 
+  public notificationSent = "";
+
+  rentDues(costPerDay: number) {
+    return (this.dates.length - 1) * costPerDay;
+  }
+
   constructor(props?: Values<Attending>) {
     super();
     if (props) Object.assign(this, props);

@@ -1,5 +1,13 @@
-import { Box, Group, Loader, NumberInput, Table, Text } from "@mantine/core";
-import { IconCheckbox, IconClockDollar } from "@tabler/icons-react";
+import {
+  Box,
+  Button,
+  Group,
+  Loader,
+  NumberInput,
+  Table,
+  Text,
+} from "@mantine/core";
+import { IconCheck, IconCheckbox, IconClockDollar } from "@tabler/icons-react";
 import { useMutation, useQuery } from "urql";
 import { UserAvatar } from "../../components";
 import { graphql } from "../../gql";
@@ -26,6 +34,7 @@ export function AdminPartyPayments() {
             id
             dates
             paidDues
+            notificationSent
             user {
               id
               displayName
@@ -36,6 +45,28 @@ export function AdminPartyPayments() {
       }
     `),
   });
+
+  const [{ fetching }, sendPaymentNotification] = useMutation(
+    graphql(`
+      mutation sendPaymentNotification($userId: ID!) {
+        sendPaymentNotification(userId: $userId) {
+          id
+          notificationSent
+        }
+      }
+    `),
+  );
+  const [{ fetching: sendingToAll }, sendPaymentNotificationToAll] =
+    useMutation(
+      graphql(`
+        mutation sendPaymentNotificationToAll {
+          sendPaymentNotificationToAll {
+            id
+            notificationSent
+          }
+        }
+      `),
+    );
 
   return (
     <Box p="sm">
@@ -126,6 +157,20 @@ export function AdminPartyPayments() {
                       ) : (
                         <IconClockDollar size="18" />
                       )}
+                      <Button
+                        rightSection={
+                          attending.notificationSent ? (
+                            <IconCheck color="green" size="18" />
+                          ) : null
+                        }
+                        variant="subtle"
+                        onClick={() =>
+                          sendPaymentNotification({ userId: attending.user.id })
+                        }
+                        loading={fetching}
+                      >
+                        Erinnern
+                      </Button>
                     </Group>
                   </Table.Td>
                 </Table.Tr>
@@ -133,6 +178,16 @@ export function AdminPartyPayments() {
             })}
         </Table.Tbody>
       </Table>
+
+      <Group justify="end">
+        <Button
+          mt="md"
+          onClick={() => sendPaymentNotificationToAll({})}
+          loading={sendingToAll}
+        >
+          Alle erinnern
+        </Button>
+      </Group>
 
       <Text mt="md">
         Insgesamt wurden{" "}

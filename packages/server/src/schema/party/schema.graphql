@@ -23,6 +23,9 @@ extend type Mutation {
 
   createPayPalOrder: ID!
   capturePayPalOrder(orderId: ID!): Attending
+
+  sendPaymentNotification(userId: ID!): Attending!
+  sendPaymentNotificationToAll: [Attending!]!
 }
 
 type Party @rbac {
@@ -97,9 +100,11 @@ type Attending {
   dates: [Date!]!
   room: RoomStatus
   applicationDate: Date!
+  rentDues: Float
   paidDues: Float!
   checkIn: DateTime
   checkOut: DateTime
+  notificationSent: DateTime
 }
 
 enum RoomStatus {

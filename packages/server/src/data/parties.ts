@@ -37,6 +37,8 @@ export class Party extends Base {
 
   public finalCostPerDay = 0;
 
+  public paypalPoolId = "";
+
   constructor(props?: Values<Party>) {
     super();
     if (props) Object.assign(this, props);
