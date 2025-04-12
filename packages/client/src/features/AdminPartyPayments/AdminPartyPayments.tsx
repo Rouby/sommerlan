@@ -33,6 +33,7 @@ export function AdminPartyPayments() {
           attendings {
             id
             dates
+            rentDues
             paidDues
             notificationSent
             user {
@@ -100,9 +101,7 @@ export function AdminPartyPayments() {
               return {
                 ...attending,
 
-                rentDues:
-                  (attending.dates.length - 1) *
-                  (data.nextParty?.finalCostPerDay ?? 0),
+                rentDues: attending.rentDues ?? 0,
 
                 rentDonationSum:
                   donations

@@ -31,7 +31,7 @@ export class Attending extends Base {
   public notificationSent = "";
 
   rentDues(costPerDay: number) {
-    return (this.dates.length - 1) * costPerDay;
+    return Math.round((this.dates.length - 1) * costPerDay * 100) / 100;
   }
 
   constructor(props?: Values<Attending>) {
