@@ -1,5 +1,6 @@
 import * as dayjs from "dayjs";
 import { GraphQLError } from "graphql";
+import { expectedOrigin } from "../../../../env";
 import { sendDiscordMessage } from "../../../../services";
 import type { MutationResolvers } from "./../../../types.generated";
 export const sendPaymentNotification: NonNullable<
@@ -40,7 +41,7 @@ export const sendPaymentNotification: NonNullable<
       embeds: [
         {
           title: "Zahlungserinnerung",
-          url: `https://www.paypal.com/pool/${party.paypalPoolId}`,
+          url: `${expectedOrigin}/party`,
           color: 0x00ff00,
           fields: [
             {
@@ -52,8 +53,8 @@ export const sendPaymentNotification: NonNullable<
               value: `${attending.dates.length} Tage`,
             },
             {
-              name: "Paypal Pool",
-              value: `https://www.paypal.com/pool/${party.paypalPoolId}`,
+              name: "Paypal",
+              value: `https://www.paypal.me/OnlyRouby`,
             },
             {
               name: "Dein Beitrag",
