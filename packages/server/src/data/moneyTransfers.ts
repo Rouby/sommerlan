@@ -17,6 +17,8 @@ export class MoneyTransfer extends Base {
 
   public note = "";
 
+  public correlationId = "";
+
   constructor(props?: Values<MoneyTransfer>) {
     super();
     if (props) Object.assign(this, props);

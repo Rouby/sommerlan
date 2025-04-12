@@ -181,6 +181,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         )?.value;
 
         if (!userDiscordId) {
+          logger.info({ previousMessage }, "No discord id found");
           return;
         }
 
@@ -193,7 +194,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             if (user) {
               user.discordUserId = userDiscordId;
 
-              //await user.save();
+              await user.save();
 
               discordLinked = true;
             }
@@ -237,7 +238,16 @@ client.on(Events.InteractionCreate, async (interaction) => {
             ],
           });
         }
+      } else {
+        logger.info(
+          { interaction, userMessageId },
+          "No user message id found, ignoring interaction",
+        );
       }
+
+      await interaction.update({
+        components: [],
+      });
     }
   }
 
@@ -269,6 +279,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
         );
 
         if (adminUser) {
+          const discordUserId = interaction.user.id;
+          const discordName = interaction.user.displayName;
+
           const approvalMessage = await sendDiscordMessage(
             adminUser.discordUserId,
             {
@@ -278,8 +291,11 @@ client.on(Events.InteractionCreate, async (interaction) => {
                 {
                   fields: [
                     { name: "Name", value: user.displayName },
-                    { name: "Discord Name", value: `<@${user.discordUserId}>` },
-                    { name: "Discord Id", value: user.discordUserId },
+                    {
+                      name: "Discord Name",
+                      value: `<@${discordUserId}> (${discordName})`,
+                    },
+                    { name: "Discord Id", value: discordUserId },
                     { name: "Email", value: email },
                   ],
                   image: { url: user.avatarUrl },
