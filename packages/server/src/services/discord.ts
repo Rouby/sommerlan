@@ -2,6 +2,7 @@ import {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
+  ChannelType,
   Client,
   Events,
   GatewayIntentBits,
@@ -76,6 +77,11 @@ client.on(Events.MessageCreate, async (message) => {
     // Dont handle bot messages
     return;
   }
+  if (message.channel.type !== ChannelType.DM) {
+    // Only handle direct messages
+    return;
+  }
+
   const msgContent = message.content.toLowerCase();
 
   switch (getEnv()) {
