@@ -72,15 +72,17 @@ export function PartyCosts() {
       .length ?? 0) - 1,
   );
 
-  const myCosts =
+  const myCosts = toFixed(
     myDaysAttending * costPerDay +
-    party.donations
-      .filter((donation) => donation.donator?.id === user.id)
-      .reduce((acc, donation) => acc + donation.amount, 0);
+      party.donations
+        .filter((donation) => donation.donator?.id === user.id)
+        .reduce((acc, donation) => acc + donation.amount, 0),
+  );
 
-  const myPaidDues = party.attendings.find(
-    (attending) => attending.user.id === user.id,
-  )?.paidDues;
+  const myPaidDues = toFixed(
+    party.attendings.find((attending) => attending.user.id === user.id)
+      ?.paidDues ?? 0,
+  );
 
   return (
     <>
@@ -136,4 +138,10 @@ export function PartyCosts() {
       ) : null}
     </>
   );
+}
+
+function toFixed<TNum extends number | undefined>(num: TNum): TNum {
+  return typeof num === "number"
+    ? ((Math.round(num * 100) / 100) as TNum)
+    : num;
 }
