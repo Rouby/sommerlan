@@ -97,9 +97,9 @@ export function PartyRooms() {
         }
       >
         {isGrantedRoom
-          ? "Du hast einen Raum gebucht, Buchung stornieren?"
+          ? "Du hast erfolgreich einen Raum gebucht und zugeordnet bekommen! Möchtest du die Buchung stornieren?"
           : isRequestingRoom
-            ? "Deine Raumbuchung wird gerade bearbeitet, Buchung stornieren?"
+            ? "Deine Raumbuchung wird gerade bearbeitet. Möchtest du die Buchung stornieren?"
             : "Ich würde gerne einen Raum haben"}
       </Button>
 
