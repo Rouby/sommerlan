@@ -30,10 +30,11 @@ import dayjs from "dayjs";
 import { useAtomValue } from "jotai";
 import { useRef, useState } from "react";
 import { useMutation, useQuery } from "urql";
-import { Can, UserAvatar } from ".";
-import { graphql, useFragment } from "../gql";
-import { useFetchWithProgress } from "../hooks";
-import { userAtom } from "../state";
+import { Can } from "../../components/Can";
+import { UserAvatar } from "../../components/UserAvatar";
+import { graphql, useFragment } from "../../gql";
+import { useFetchWithProgress } from "../../hooks";
+import { userAtom } from "../../state";
 
 export function PartyEvents({ partyId }: { partyId?: string }) {
   const PartyEventsInfo = graphql(`
@@ -328,11 +329,19 @@ function CreateEventForm({
   const openRef = useRef<() => void>(null);
 
   const [image, setImage] = useState<FileWithPath | null>(null);
+  const [imageError, setImageError] = useState<string | null>(null);
 
   return (
     <form
       onSubmit={async (evt) => {
         evt.preventDefault();
+        setImageError(null);
+
+        if (!defaultValues && !image) {
+          setImageError("Ein Bild ist erforderlich.");
+          return;
+        }
+
         const form = evt.target as HTMLFormElement;
 
         const name = form["eventName"].value;
@@ -356,7 +365,7 @@ function CreateEventForm({
               endTime: timeUncertain ? null : endTime,
               name,
               description,
-              image,
+              image: image ?? undefined,
             },
           },
           { fetch },
@@ -426,7 +435,7 @@ function CreateEventForm({
           />
         </Box>
 
-        <RichTextEditor editor={editor}>
+        <RichTextEditor editor={editor} mih={240}>
           <RichTextEditor.Toolbar sticky stickyOffset={60}>
             <RichTextEditor.ControlsGroup>
               <RichTextEditor.Bold />
@@ -441,18 +450,37 @@ function CreateEventForm({
           <RichTextEditor.Content />
         </RichTextEditor>
 
-        <Dropzone
-          name="image"
-          data-testid="dropzone"
-          accept={IMAGE_MIME_TYPE}
-          onDrop={(files) => setImage(files[0])}
-          maxFiles={1}
-          openRef={openRef}
-          style={{ height: 100, display: "grid", alignItems: "center" }}
-          loading={fetching}
+        <Input.Wrapper
+          label="Bild"
+          withAsterisk={!defaultValues}
+          error={imageError}
         >
-          <Center>Alternativ kannst du ein Bild hochladen</Center>
-        </Dropzone>
+          <Dropzone
+            name="image"
+            data-testid="dropzone"
+            accept={IMAGE_MIME_TYPE}
+            onDrop={(files) => {
+              setImage(files[0]);
+              setImageError(null);
+            }}
+            onReject={() => setImageError("Ungültiger Dateityp.")}
+            maxFiles={1}
+            openRef={openRef}
+            style={{ height: 100, display: "grid", alignItems: "center" }}
+            loading={fetching}
+          >
+            <Center>Bild hochladen</Center>
+          </Dropzone>
+        </Input.Wrapper>
+        {(image || defaultValues?.image) && (
+          <Image
+            src={image ? URL.createObjectURL(image) : defaultValues?.image}
+            height={100}
+            width="auto"
+            fit="contain"
+            mt="xs"
+          />
+        )}
         <Button onClick={() => openRef.current?.()}>Bild auswählen</Button>
 
         <Group justify="right">

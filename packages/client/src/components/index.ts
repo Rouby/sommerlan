@@ -4,7 +4,6 @@ export * from "./CardWithHeader";
 export * from "./ImageInput";
 export * from "./LAN";
 export * from "./NavLink";
-export * from "./PartyEvents";
 export * from "./PartyInfo";
 export * from "./PartyList";
 export * from "./TextLink";

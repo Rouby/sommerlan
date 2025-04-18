@@ -1,6 +1,7 @@
 import { Center, Container } from "@mantine/core";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { Can, PartyEvents } from "../../components";
+import { Can } from "../../components";
+import { PartyEvents } from "../../features";
 
 export const Route = createLazyFileRoute("/events/")({
   component: () => (
