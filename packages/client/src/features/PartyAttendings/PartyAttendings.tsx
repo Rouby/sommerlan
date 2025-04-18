@@ -1,31 +1,20 @@
 import {
-  ActionIcon,
-  Alert,
   Avatar,
   Badge,
   Box,
-  Button,
   Checkbox,
   Divider,
   Group,
-  Loader,
-  LoadingOverlay,
-  Menu,
-  PasswordInput,
-  Popover,
   Skeleton,
-  Stack,
   Switch,
   Text,
-  TextInput,
   Tooltip,
 } from "@mantine/core";
-import { IconCheck, IconMan, IconPlus } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { useAtomValue } from "jotai";
 import { Fragment, useState } from "react";
 import { useMutation, useQuery } from "urql";
-import { Can, UserAvatar } from "../../components";
+import { Can, UserAvatar, UserMenu } from "../../components";
 import { graphql } from "../../gql";
 import { userAtom } from "../../state";
 import classes from "./styles.module.css";
@@ -62,8 +51,12 @@ export function PartyAttendings() {
 
   const [, setAttendance] = useMutation(
     graphql(`
-      mutation setAttendance($partyId: ID!, $dates: [Date!]!) {
-        setAttendance(partyId: $partyId, dates: $dates) {
+      mutation setMyOrOtherAttendance(
+        $partyId: ID!
+        $dates: [Date!]!
+        $userId: ID
+      ) {
+        setAttendance(partyId: $partyId, dates: $dates, userId: $userId) {
           id
           attendings {
             id
@@ -167,11 +160,30 @@ export function PartyAttendings() {
                   disabled={!applicationAllowed}
                 />
 
-                <AddUserMenu
-                  attendings={data?.nextParty.attendings}
-                  partyId={data?.nextParty.id}
-                  date={date.format("YYYY-MM-DD")}
-                />
+                <Can I="update" a="Party" otherwise={<div />}>
+                  <UserMenu
+                    selectedUsers={data?.nextParty.attendings
+                      .filter((attending) =>
+                        attending.dates.includes(date.format("YYYY-MM-DD")),
+                      )
+                      .map((attending) => attending.user)}
+                    onSelect={(user) => {
+                      const attending = data?.nextParty!.attendings.find(
+                        (attending) => attending.user.id === user.id,
+                      );
+                      const jsDate = date.format("YYYY-MM-DD");
+                      setAttendance({
+                        partyId: data?.nextParty!.id,
+                        dates: attending?.dates.includes(jsDate)
+                          ? attending.dates.filter((d) => d !== jsDate)
+                          : [...(attending?.dates ?? []), jsDate],
+                        userId: user.id,
+                        // @ts-expect-error
+                        attendingId: myAttending?.id,
+                      });
+                    }}
+                  />
+                </Can>
 
                 {showNames ? (
                   <Group wrap="wrap" gap="0 16px">
@@ -272,232 +284,5 @@ export function PartyAttendings() {
         </>
       )}
     </>
-  );
-}
-
-function AddUserMenu({
-  partyId,
-  date,
-  attendings,
-}: {
-  partyId: string;
-  date: string;
-  attendings: { id: string; dates: string[]; user: { id: string } }[];
-}) {
-  const [addUserOpen, setAddUserOpen] = useState(false);
-
-  return (
-    <Can I="update" a="Party" otherwise={<div />}>
-      <Menu
-        width={300}
-        position="bottom-start"
-        shadow="lg"
-        withArrow
-        withinPortal
-      >
-        <Menu.Target>
-          <ActionIcon radius="xl" variant="default">
-            <IconPlus size="1rem" />
-          </ActionIcon>
-        </Menu.Target>
-
-        <Menu.Dropdown mah={340} style={{ overflow: "hidden auto" }}>
-          <Menu.Label>Nutzer</Menu.Label>
-          <MenuOptions attendings={attendings} partyId={partyId} date={date} />
-
-          <Box pos="sticky" bottom={0} bg="dark">
-            <Menu.Divider />
-
-            <Popover
-              width="100%"
-              position="top"
-              shadow="lg"
-              opened={addUserOpen}
-              onClose={() => setAddUserOpen(false)}
-            >
-              <Popover.Target>
-                <Menu.Item
-                  leftSection={<IconMan size={24} />}
-                  closeMenuOnClick={false}
-                  onClick={() => setAddUserOpen(!addUserOpen)}
-                >
-                  Neuen Nutzer anlegen
-                </Menu.Item>
-              </Popover.Target>
-              <Popover.Dropdown>
-                <AddUserForm onAdd={() => setAddUserOpen(false)} />
-              </Popover.Dropdown>
-            </Popover>
-          </Box>
-        </Menu.Dropdown>
-      </Menu>
-    </Can>
-  );
-}
-
-function AddUserForm({ onAdd }: { onAdd: () => void }) {
-  const [{ fetching, error }, register] = useMutation(
-    graphql(`
-      mutation registerExternal(
-        $userName: String!
-        $email: String!
-        $password: String
-      ) {
-        register(userName: $userName, email: $email, password: $password) {
-          token
-          refreshToken
-          user {
-            id
-            displayName
-            avatar
-          }
-        }
-      }
-    `),
-  );
-
-  return (
-    <form
-      onSubmit={async (event) => {
-        event.preventDefault();
-        const form = event.target as HTMLFormElement;
-
-        const userName = form["username"].value;
-        const email = form["email"].value;
-        const password = form["new-password"].value;
-
-        await register({ userName, email, password });
-
-        (event.target as HTMLFormElement).reset();
-
-        onAdd();
-      }}
-    >
-      <LoadingOverlay visible={fetching} />
-
-      <Alert mb="md" hidden={!error} color="red">
-        {error?.message}
-      </Alert>
-
-      <Stack>
-        <TextInput
-          required
-          name="username"
-          autoComplete="username"
-          placeholder="Nutzername"
-        />
-
-        <TextInput
-          required
-          type="email"
-          name="email"
-          autoComplete="email"
-          placeholder="Email-Adresse"
-        />
-
-        <PasswordInput
-          name="new-password"
-          autoComplete="new-password"
-          placeholder="Passwort"
-        />
-
-        <Button type="submit">Nutzer erstellen</Button>
-      </Stack>
-    </form>
-  );
-}
-
-function MenuOptions({
-  partyId,
-  date,
-  attendings,
-}: {
-  partyId: string;
-  date: string;
-  attendings: { id: string; dates: string[]; user: { id: string } }[];
-}) {
-  const [{ data, fetching }] = useQuery({
-    query: graphql(`
-      query userList {
-        users {
-          id
-          displayName
-          avatar
-        }
-      }
-    `),
-  });
-
-  return (
-    <>
-      <LoadingOverlay visible={fetching} />
-      {data?.users.map((user) => (
-        <MenuItem
-          key={user.id}
-          user={user}
-          attending={attendings.find((att) => att.user.id === user.id)}
-          partyId={partyId}
-          date={date}
-        />
-      ))}
-    </>
-  );
-}
-
-function MenuItem({
-  partyId,
-  date,
-  attending,
-  user,
-}: {
-  partyId: string;
-  date: string;
-  attending?: { id: string; dates: string[]; user: { id: string } };
-  user: { id: string; avatar: string; displayName: string };
-}) {
-  const [{ fetching }, setAttendance] = useMutation(
-    graphql(`
-      mutation setOthersAttendance(
-        $partyId: ID!
-        $userId: ID
-        $dates: [Date!]!
-      ) {
-        setAttendance(partyId: $partyId, userId: $userId, dates: $dates) {
-          id
-          attendings {
-            id
-            dates
-          }
-        }
-      }
-    `),
-  );
-
-  return (
-    <Menu.Item
-      leftSection={<UserAvatar user={user} size={32} />}
-      onClick={() =>
-        setAttendance({
-          partyId,
-          dates: (attending?.dates.includes(date)
-            ? attending.dates.filter((d) => d !== date)
-            : [...(attending?.dates ?? []), date]
-          ).sort(),
-          userId: user.id,
-          // @ts-expect-error
-          attendingId: attending?.id,
-        })
-      }
-      closeMenuOnClick={false}
-      rightSection={
-        fetching ? (
-          <Loader size={24} />
-        ) : attending?.dates.includes(date) ? (
-          <IconCheck />
-        ) : null
-      }
-    >
-      {user.displayName}
-    </Menu.Item>
   );
 }
