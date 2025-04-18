@@ -91,6 +91,7 @@ export async function createAbility(
       can("update", "Attending");
       can("grantRoom", "Attending");
       can(["create", "read", "update", "delete"], "Event");
+      can("participateOthers", "Event");
       can(["create", "read", "update", "delete"], "Cache");
       can(["create", "read", "update", "delete"], "Picture");
     }

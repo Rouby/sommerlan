@@ -252,6 +252,7 @@ export type MutationgrantRoomArgs = {
 
 export type MutationleaveEventArgs = {
   id: Scalars["ID"]["input"];
+  userId?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
 export type MutationloginMagicLinkArgs = {
@@ -269,6 +270,7 @@ export type MutationloginPasswordArgs = {
 
 export type MutationparticipateInEventArgs = {
   id: Scalars["ID"]["input"];
+  userId?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
 export type MutationplanEventArgs = {

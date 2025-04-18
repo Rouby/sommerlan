@@ -139,6 +139,12 @@ export const typeDefs = {
               },
               directives: [],
             },
+            {
+              kind: "InputValueDefinition",
+              name: { kind: "Name", value: "userId" },
+              type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
+              directives: [],
+            },
           ],
           type: {
             kind: "NonNullType",
@@ -160,6 +166,12 @@ export const typeDefs = {
                   name: { kind: "Name", value: "ID" },
                 },
               },
+              directives: [],
+            },
+            {
+              kind: "InputValueDefinition",
+              name: { kind: "Name", value: "userId" },
+              type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
               directives: [],
             },
           ],

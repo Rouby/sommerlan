@@ -1,7 +1,7 @@
 extend type Mutation {
   planEvent(input: EventInput!): Event!
-  participateInEvent(id: ID!): Event!
-  leaveEvent(id: ID!): Event!
+  participateInEvent(id: ID!, userId: ID): Event!
+  leaveEvent(id: ID!, userId: ID): Event!
 }
 
 extend type Party {

@@ -4,7 +4,7 @@ import type { MutationResolvers } from "./../../../types.generated";
 
 export const leaveEvent: NonNullable<MutationResolvers["leaveEvent"]> = async (
   _parent,
-  { id },
+  { id, userId },
   ctx,
 ) => {
   const event = await ctx.data.Event.findById(id);
@@ -13,11 +13,16 @@ export const leaveEvent: NonNullable<MutationResolvers["leaveEvent"]> = async (
     throw createGraphQLError("Event not found");
   }
 
-  ForbiddenError.from(ctx.ability).throwUnlessCan("participate", event);
+  ForbiddenError.from(ctx.ability).throwUnlessCan(
+    userId ? "participateOthers" : "participate",
+    event,
+  );
 
-  if (event.participantIds.includes(ctx.jwt.user.id)) {
+  const userIdToUse = userId ?? ctx.jwt.user.id;
+
+  if (event.participantIds.includes(userIdToUse)) {
     event.participantIds = event.participantIds.filter(
-      (id) => id !== ctx.jwt.user.id,
+      (id) => id !== userIdToUse,
     );
 
     await event.save();

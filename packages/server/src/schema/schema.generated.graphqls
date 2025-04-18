@@ -124,11 +124,11 @@ type Mutation {
   generatePasskeyLoginOptions(userId: String): JSON!
   generatePasskeyRegisterOptions(userId: String!): JSON!
   grantRoom(attendingId: ID!): Attending
-  leaveEvent(id: ID!): Event!
+  leaveEvent(id: ID!, userId: ID): Event!
   loginMagicLink(magicLinkId: String!): AuthResponse!
   loginPasskey(response: JSON!): LoginResponse!
   loginPassword(email: String!, password: String!): AuthResponse!
-  participateInEvent(id: ID!): Event!
+  participateInEvent(id: ID!, userId: ID): Event!
   planEvent(input: EventInput!): Event!
   recindRoom(partyId: ID!): Attending
   refreshLogin(refreshToken: String!): AuthResponse!

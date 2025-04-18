@@ -30,6 +30,7 @@ import dayjs from "dayjs";
 import { useAtomValue } from "jotai";
 import { useRef, useState } from "react";
 import { useMutation, useQuery } from "urql";
+import { UserMenu } from "../../components";
 import { Can } from "../../components/Can";
 import { UserAvatar } from "../../components/UserAvatar";
 import { graphql, useFragment } from "../../gql";
@@ -146,8 +147,13 @@ function EventCard({
 
   const [{ fetching, error }, participate] = useMutation(
     graphql(`
-      mutation toggleEventParticipation($id: ID!, $participate: Boolean!) {
-        participateInEvent(id: $id) @include(if: $participate) {
+      mutation toggleEventParticipation(
+        $id: ID!
+        $userId: ID
+        $participate: Boolean!
+      ) {
+        participateInEvent(id: $id, userId: $userId)
+          @include(if: $participate) {
           id
           participants {
             id
@@ -155,7 +161,7 @@ function EventCard({
             avatar
           }
         }
-        leaveEvent(id: $id) @skip(if: $participate) {
+        leaveEvent(id: $id, userId: $userId) @skip(if: $participate) {
           id
           participants {
             id
@@ -241,14 +247,32 @@ function EventCard({
         </Stack>
       </Can>
 
-      <Tooltip.Group openDelay={300} closeDelay={100}>
-        <Avatar.Group spacing="sm" style={{ flexWrap: "wrap" }} mt="sm">
-          {event.participants.map((user) => (
-            <UserAvatar key={user.id} user={user} />
-          ))}
-          <div />
-        </Avatar.Group>
-      </Tooltip.Group>
+      <Group gap="xs" mt="sm">
+        <Tooltip.Group openDelay={300} closeDelay={100}>
+          <Avatar.Group spacing="sm" style={{ flexWrap: "wrap" }}>
+            {event.participants.map((user) => (
+              <UserAvatar key={user.id} user={user} />
+            ))}
+            <div />
+          </Avatar.Group>
+        </Tooltip.Group>
+
+        <Can I="participateOthers" this={event} otherwise={<div />}>
+          <UserMenu
+            selectedUsers={event.participants}
+            onSelect={(user) => {
+              const participant = event.participants.find(
+                (participant) => participant.id === user.id,
+              );
+              participate({
+                id: event.id,
+                userId: user.id,
+                participate: !participant,
+              });
+            }}
+          />
+        </Can>
+      </Group>
 
       <Modal
         size="lg"
