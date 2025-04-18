@@ -179,7 +179,6 @@ export function createFakeApi() {
       User: class User extends Models.User {
         static rows: User[] = [];
         static get cache() {
-          console.log("CACHE");
           return {
             allRows: async <T>() => this.rows as T[],
             deleteRow: async (_: new () => unknown, __: string, id: string) => {
@@ -205,7 +204,6 @@ export function createFakeApi() {
       MoneyTransfer: class MoneyTransfer extends Models.MoneyTransfer {
         static rows: MoneyTransfer[] = [];
         static get cache() {
-          console.log("CACHE");
           return {
             allRows: async <T>() => this.rows as T[],
             deleteRow: async (_: new () => unknown, __: string, id: string) => {

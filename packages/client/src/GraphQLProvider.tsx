@@ -177,7 +177,6 @@ export function GraphQLProvider({ children }: { children: React.ReactNode }) {
                       "donations",
                     );
                     if (Array.isArray(donations)) {
-                      console.log();
                       cache.link(
                         {
                           __typename: "Party",

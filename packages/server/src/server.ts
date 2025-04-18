@@ -146,8 +146,6 @@ export function createServer(opts: ServerOptions) {
     url: "/newrelic-browser-loader.js",
     method: "GET",
     handler: async (_req, reply) => {
-      console.log("request");
-
       reply.send(
         `
 window.NEW_RELIC_LOADER_CONFIG = ${process.env.NEW_RELIC_LOADER_CONFIG ?? "false"};

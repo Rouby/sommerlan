@@ -68,7 +68,7 @@ export function ImageInput({
         for (const item of evt.clipboardData.items) {
           if (item.type.startsWith("image")) {
             const file = item.getAsFile();
-            console.log(item);
+
             if (file) {
               setFile(file);
             }

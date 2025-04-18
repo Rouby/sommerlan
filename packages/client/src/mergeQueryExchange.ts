@@ -10,8 +10,6 @@ export const mergeQueryExchange =
       async (ops: readonly Operation<any, AnyVariables>[]) => {
         const fields = ops.reduce(
           (acc, op) => {
-            console.log(op);
-
             const querySelectionSet =
               op.query.definitions[0].kind === Kind.OPERATION_DEFINITION &&
               op.query.definitions[0].operation === OperationTypeNode.QUERY
