@@ -41,7 +41,8 @@
     "nodemailer": "^6.9.13",
     "pino": "^8.19.0",
     "recron": "^1.1.5",
-    "web-push": "^3.6.7"
+    "web-push": "^3.6.7",
+    "xstate": "^5.19.2"
   },
   "devDependencies": {
     "@eddeee888/gcg-typescript-resolver-files": "^0.12.0",

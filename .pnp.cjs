@@ -4714,6 +4714,10 @@ const RAW_RUNTIME_STATE =
       "virtual:fca05dfadd1590ede45c6b43acf052206b02cc0e4632a9e128f714134eb94c950eb7006342cba2aefe5ad5a01911f21bae164022190922c2cb40066140598ee8#npm:8.13.0"\
     ],\
     [\
+      "xstate",\
+      "npm:5.19.2"\
+    ],\
+    [\
       "y18n",\
       "npm:5.0.8"\
     ],\
@@ -11222,7 +11226,8 @@ const RAW_RUNTIME_STATE =
           ["typescript", "patch:typescript@npm%3A5.5.4#optional!builtin<compat/typescript>::version=5.5.4&hash=379a07"],\
           ["vitest", "virtual:f9aaeb0ff5026b521d6a9b424ffbc3c34990b6972b440282c9eb836880cb71f3dfd141e9455e392c98abc5918762c91d12bf17451df331903d8e149b2f873a01#npm:1.4.0"],\
           ["wds", "npm:0.17.1"],\
-          ["web-push", "npm:3.6.7"]\
+          ["web-push", "npm:3.6.7"],\
+          ["xstate", "npm:5.19.2"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -24043,6 +24048,15 @@ const RAW_RUNTIME_STATE =
           "@types/utf-8-validate",\
           "bufferutil",\
           "utf-8-validate"\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["xstate", [\
+      ["npm:5.19.2", {\
+        "packageLocation": "./.yarn/cache/xstate-npm-5.19.2-46b8b87d6f-e482600e8d.zip/node_modules/xstate/",\
+        "packageDependencies": [\
+          ["xstate", "npm:5.19.2"]\
         ],\
         "linkType": "HARD"\
       }]\

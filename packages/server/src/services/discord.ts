@@ -14,9 +14,11 @@ import {
   TextInputBuilder,
   TextInputStyle,
 } from "discord.js";
+import { Actor, fromPromise } from "xstate";
 import { User } from "../data";
 import { getEnv } from "../env";
 import { logger } from "../logger";
+import { loginMachine } from "./discord-interactions/login";
 import { issueMagicLink } from "./magicLinks";
 import { scheduleTask, scheduleTimeout } from "./scheduler";
 
@@ -72,6 +74,8 @@ export async function sendDiscordMessage(
   return message;
 }
 
+const userActors = new Map<string, Actor<typeof loginMachine>>();
+
 client.on(Events.MessageCreate, async (message) => {
   if (message.author.bot) {
     // Dont handle bot messages
@@ -108,218 +112,278 @@ client.on(Events.MessageCreate, async (message) => {
   logger.info({ message }, "Received discord message");
 
   if (msgContent.includes("login")) {
-    await message.channel.sendTyping();
+    const actor = new Actor(
+      loginMachine.provide({
+        actors: {
+          sendTyping: fromPromise(async () => {
+            const channel = await (
+              await client.users.fetch(message.author.id)
+            ).createDM();
 
-    const user = await User.findByDiscordId(message.author.id);
-
-    if (!user) {
-      await message.reply({
-        content:
-          "Ich habe keinen Account gefunden, der mit deinem Discord Account verknüpft ist. Klicke den Button um deine Email einzugeben.",
-        components: [
-          new ActionRowBuilder<ButtonBuilder>().addComponents(
-            new ButtonBuilder()
-              .setCustomId("connectAccount")
-              .setLabel("Verknüpfe deinen Account")
-              .setStyle(ButtonStyle.Primary),
-          ),
-        ],
-      });
-    } else {
-      const magicLink = await issueMagicLink(user);
-
-      const reply = await message.reply({
-        content: `Du kannst dich mit folgendem Link anmelden ${magicLink}. Der Link ist 15 Minuten gültig.`,
-      });
-
-      scheduleTimeout("5m", async () => {
-        message.deletable && (await message.delete());
-        reply.deletable && (await reply.delete());
-      });
-    }
-  }
-});
-
-// map of admin msg -> user msg
-const connectInteractions = new Map<string, string>();
-
-client.on(Events.InteractionCreate, async (interaction) => {
-  if (interaction.isButton()) {
-    if (interaction.customId === "connectAccount") {
-      await interaction.showModal(
-        new ModalBuilder()
-          .setCustomId("connectAccount")
-          .setTitle("Verknüpfe deinen Account")
-          .addComponents(
-            new ActionRowBuilder<TextInputBuilder>().addComponents(
-              new TextInputBuilder()
-                .setCustomId("email")
-                .setLabel("Email eingeben")
-                .setStyle(TextInputStyle.Short),
-            ),
-          ),
-      );
-    }
-
-    if (
-      interaction.customId === "approve" ||
-      interaction.customId === "reject"
-    ) {
-      const approved = interaction.customId === "approve";
-
-      const userMessageId = connectInteractions.get(interaction.message.id);
-      const previousMessage = await interaction.message.fetch();
-
-      logger.info({ interaction, userMessageId }, "Approving user");
-
-      if (userMessageId && previousMessage) {
-        const userEmail = previousMessage.embeds[0].fields.find(
-          (f) => f.name === "Email",
-        )?.value;
-        const userDiscordId = previousMessage.embeds[0].fields.find(
-          (f) => f.name === "Discord Id",
-        )?.value;
-
-        if (!userDiscordId) {
-          logger.info({ previousMessage }, "No discord id found");
-          return;
-        }
-
-        let discordLinked = false;
-
-        if (approved) {
-          if (userEmail) {
-            const user = await User.findByEmail(userEmail);
-
-            if (user) {
-              user.discordUserId = userDiscordId;
-
-              await user.save();
-
-              discordLinked = true;
+            await channel.sendTyping();
+          }),
+          checkAccount: fromPromise(async () => {
+            const user = await User.findByDiscordId(message.author.id);
+            if (!user) {
+              return null;
             }
-          }
-        }
-        await previousMessage.edit({
-          components: [],
-        });
+            return user;
+          }),
+          sendLoginLink: fromPromise(async ({ input }) => {
+            const channel = await (
+              await client.users.fetch(message.author.id)
+            ).createDM();
 
-        // TODO notify user
-        const userChannel = await (
-          await client.users.fetch(userDiscordId)
-        ).createDM();
+            await channel.sendTyping();
 
-        const message = await userChannel.messages.fetch(userMessageId);
+            const magicLink = await issueMagicLink(input.user);
 
-        if (discordLinked) {
-          await message.edit({
-            embeds: [
-              {
-                fields: [
-                  {
-                    name: "Status",
-                    value: "Dein Account wurde erfolgreich verknüpft.",
-                  },
-                ],
-              },
-            ],
-          });
-        } else {
-          await message.edit({
-            embeds: [
-              {
-                fields: [
-                  {
-                    name: "Status",
-                    value: "Dein Account wurde nicht verknüpft.",
-                  },
-                ],
-              },
-            ],
-          });
-        }
-      } else {
-        logger.info(
-          { interaction, userMessageId },
-          "No user message id found, ignoring interaction",
-        );
-      }
+            const reply = await channel.send({
+              content: `Du kannst dich mit folgendem Link anmelden ${magicLink}. Der Link ist 15 Minuten gültig.`,
+            });
 
-      await interaction.update({
-        components: [],
-      });
-    }
-  }
+            scheduleTimeout("5m", async () => {
+              reply.deletable && (await reply.delete());
+            });
+          }),
+          askToConnectAccount: fromPromise(async () => {
+            const channel = await (
+              await client.users.fetch(message.author.id)
+            ).createDM();
 
-  if (interaction.isModalSubmit()) {
-    if (interaction.customId === "connectAccount") {
-      const email = interaction.fields.getTextInputValue("email");
+            await channel.sendTyping();
 
-      const user = await User.findByEmail(email);
-
-      if (!user) {
-        await interaction.reply({
-          content: "Ein Nutzer mit dieser Email existiert nicht :(",
-        });
-      } else {
-        await interaction.message?.edit({
-          components: [],
-          embeds: [
-            {
-              fields: [
-                { name: "Status", value: "Verknüpfung wird überprüft..." },
-              ],
-            },
-          ],
-        });
-        await interaction.deferUpdate();
-
-        const adminUser = await User.find(
-          (user) => user.roles.includes("Admin") && !!user.discordUserId,
-        );
-
-        if (adminUser) {
-          const discordUserId = interaction.user.id;
-          const discordName = interaction.user.displayName;
-
-          const approvalMessage = await sendDiscordMessage(
-            adminUser.discordUserId,
-            {
+            const reply = await channel.send({
               content:
-                "Ein Discord-Nutzer hat versucht, seinen Account mit Discord zu verknüpfen.",
-              embeds: [
-                {
-                  fields: [
-                    { name: "Name", value: user.displayName },
-                    {
-                      name: "Discord Name",
-                      value: `<@${discordUserId}> (${discordName})`,
-                    },
-                    { name: "Discord Id", value: discordUserId },
-                    { name: "Email", value: email },
-                  ],
-                  image: { url: user.avatarUrl },
-                },
-              ],
+                "Ich habe keinen Account gefunden, der mit deinem Discord Account verknüpft ist. Klicke den Button um deine Email einzugeben.",
               components: [
                 new ActionRowBuilder<ButtonBuilder>().addComponents(
                   new ButtonBuilder()
-                    .setCustomId("approve")
-                    .setLabel("Genehmigen")
-                    .setStyle(ButtonStyle.Success),
-                  new ButtonBuilder()
-                    .setCustomId("reject")
-                    .setLabel("Ablehnen")
-                    .setStyle(ButtonStyle.Danger),
+                    .setCustomId(`connectUser:login:${message.author.id}`)
+                    .setLabel("Verknüpfe deinen Account")
+                    .setStyle(ButtonStyle.Primary),
                 ),
               ],
-            },
-          );
+            });
 
-          connectInteractions.set(
-            approvalMessage.id,
-            interaction.message?.id ?? "",
-          );
+            scheduleTimeout("5m", async () => {
+              reply.deletable && (await reply.delete());
+            });
+          }),
+          askForEmail: fromPromise(async ({ input }) => {
+            await input.interaction.showModal(
+              new ModalBuilder()
+                .setCustomId(`submitEmail:login:${message.author.id}`)
+                .setTitle("Verknüpfe deinen Account")
+                .addComponents(
+                  new ActionRowBuilder<TextInputBuilder>().addComponents(
+                    new TextInputBuilder()
+                      .setCustomId("email")
+                      .setLabel("Email eingeben")
+                      .setStyle(TextInputStyle.Short),
+                  ),
+                ),
+            );
+          }),
+          requestApproval: fromPromise(async ({ input }) => {
+            const adminUser = await User.find(
+              (user) => user.roles.includes("Admin") && !!user.discordUserId,
+            );
+            const emailUser = await User.findByEmail(input.email);
+
+            if (!adminUser) {
+              throw new Error("No admin user found");
+            }
+
+            if (!emailUser) {
+              await input.interaction.message?.edit({
+                components: [],
+              });
+              await input.interaction.reply({
+                content: "Ein Nutzer mit dieser Email existiert nicht :(",
+              });
+            } else {
+              await input.interaction.message?.edit({
+                components: [],
+                embeds: [
+                  {
+                    fields: [
+                      {
+                        name: "Status",
+                        value: "Verknüpfung wird überprüft...",
+                      },
+                    ],
+                  },
+                ],
+              });
+              await input.interaction.deferUpdate();
+
+              const approvalRequest = await sendDiscordMessage(
+                adminUser.discordUserId,
+                {
+                  content:
+                    "Ein Discord-Nutzer hat versucht, seinen Account mit Discord zu verknüpfen.",
+                  embeds: [
+                    {
+                      fields: [
+                        { name: "Name", value: input.discordUserName },
+                        {
+                          name: "Discord Name",
+                          value: `<@${input.discordUserId}> (${input.discordUserName})`,
+                        },
+                        { name: "Discord Id", value: input.discordUserId },
+                        { name: "Email", value: input.email },
+                      ],
+                      // image: { url: user.avatarUrl },
+                    },
+                  ],
+                  components: [
+                    new ActionRowBuilder<ButtonBuilder>().addComponents(
+                      new ButtonBuilder()
+                        .setCustomId(`approve:login:${input.discordUserId}`)
+                        .setLabel("Genehmigen")
+                        .setStyle(ButtonStyle.Success),
+                      new ButtonBuilder()
+                        .setCustomId(`reject:login:${input.discordUserId}`)
+                        .setLabel("Ablehnen")
+                        .setStyle(ButtonStyle.Danger),
+                    ),
+                  ],
+                },
+              );
+
+              return { approvalRequestId: approvalRequest.id };
+            }
+
+            return null;
+          }),
+          finishApproval: fromPromise(async ({ input }) => {
+            await input.adminMessage.edit({
+              components: [],
+            });
+
+            let user: User | null = null;
+            if (input.type === "approved") {
+              user = await User.findByEmail(input.email);
+
+              if (!user) {
+                throw new Error("No user found");
+              }
+
+              user.discordUserId = input.discordUserId;
+
+              await user.save();
+            }
+
+            await input.userMessage.edit({
+              embeds: [
+                {
+                  fields: [
+                    {
+                      name: "Status",
+                      value:
+                        input.type === "approved"
+                          ? "Dein Account wurde erfolgreich verknüpft."
+                          : "Dein Account wurde nicht verknüpft.",
+                    },
+                  ],
+                },
+              ],
+            });
+
+            return user;
+          }),
+        },
+      }),
+      {
+        input: {
+          discordUserId: message.author.id,
+          discordUserName: message.author.username,
+        },
+      },
+    ).start();
+    userActors.set(message.author.id, actor);
+
+    actor.subscribe({
+      next: (snapshot) => {
+        logger.trace(
+          {
+            snapshot: {
+              ...snapshot,
+              context: { ...snapshot.context, client: {} },
+            },
+          },
+          "Login actor snapshot",
+        );
+      },
+
+      error: async (err) => {
+        logger.error(err, "Error in login actor");
+
+        const channel = await message.author.createDM();
+
+        await channel.send({
+          content:
+            "Es gab einen Fehler beim Login. Bitte versuche es später erneut oder melde dich im #general.",
+        });
+      },
+      complete: () => {
+        logger.info("Login actor completed");
+
+        actor.stop();
+        userActors.delete(message.author.id);
+      },
+    });
+
+    actor.send({ type: "promptLogin" });
+  }
+});
+
+client.on(Events.InteractionCreate, async (interaction) => {
+  if (interaction.user.bot) {
+    // Ignore bot interactions
+    return;
+  }
+  if (interaction.channel?.type !== ChannelType.DM) {
+    // Ignore non-DM interactions
+    return;
+  }
+  if (interaction.isButton()) {
+    const [action, workflow, userId] = interaction.customId.split(":");
+
+    if (workflow === "login") {
+      switch (action) {
+        case "connectUser": {
+          userActors.get(userId)?.send({
+            type: action,
+            interaction,
+          });
+          break;
+        }
+        case "approve":
+        case "reject": {
+          userActors.get(userId)?.send({
+            type: action,
+            adminMessage: await interaction.message.fetch(),
+          });
+          break;
+        }
+      }
+    }
+  }
+  if (interaction.isModalSubmit()) {
+    const [action, workflow, userId] = interaction.customId.split(":");
+
+    if (workflow === "login") {
+      switch (action) {
+        case "submitEmail": {
+          const email = interaction.fields.getTextInputValue("email");
+
+          userActors.get(userId)?.send({
+            type: "submitEmail",
+            email,
+            interaction,
+          });
         }
       }
     }
