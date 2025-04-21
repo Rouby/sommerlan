@@ -200,7 +200,11 @@ function EventCard({
           this={subject("Event", event as any) as any}
           otherwise={<div />}
         >
-          <ActionIcon size="xs" onClick={() => setShowEdit(true)}>
+          <ActionIcon
+            size="xs"
+            onClick={() => setShowEdit(true)}
+            aria-label="Event bearbeiten"
+          >
             <IconPencil />
           </ActionIcon>
         </Can>

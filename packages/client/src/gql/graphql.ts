@@ -93,7 +93,7 @@ export type EventInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   endTime?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
-  image: Scalars['File']['input'];
+  image?: InputMaybe<Scalars['File']['input']>;
   name: Scalars['String']['input'];
   partyId: Scalars['ID']['input'];
   startTime?: InputMaybe<Scalars['String']['input']>;

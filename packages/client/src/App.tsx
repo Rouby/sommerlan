@@ -4,6 +4,7 @@ import "@mantine/carousel/styles.css";
 import { MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.css";
 import { DatesProvider } from "@mantine/dates";
+import "@mantine/dates/styles.css";
 import "@mantine/notifications/styles.css";
 import "@mantine/tiptap/styles.css";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";

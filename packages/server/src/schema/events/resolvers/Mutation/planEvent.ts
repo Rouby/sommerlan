@@ -35,6 +35,7 @@ export const planEvent: NonNullable<MutationResolvers["planEvent"]> = async (
 
   if (id) {
     event.name = input.name;
+    event.partyId = input.partyId;
     event.date = input.date ? dayjs(input.date).format("YYYY-MM-DD") : "";
     event.startTime = input.startTime
       ? dayjs(input.startTime).format("HH:mm:ssZ")
@@ -43,11 +44,12 @@ export const planEvent: NonNullable<MutationResolvers["planEvent"]> = async (
       ? dayjs(input.endTime).format("HH:mm:ssZ")
       : "";
     event.description = input.description ?? "";
-    event.partyId = input.partyId;
   }
 
-  const { url } = await storeFile(image);
-  event.imageUrl = url;
+  if (image) {
+    const { url } = await storeFile(image);
+    event.imageUrl = url;
+  }
 
   await event.save();
 

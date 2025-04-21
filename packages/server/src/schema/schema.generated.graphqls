@@ -70,7 +70,7 @@ input EventInput {
   description: String
   endTime: String
   id: ID
-  image: File!
+  image: File
   name: String!
   partyId: ID!
   startTime: String

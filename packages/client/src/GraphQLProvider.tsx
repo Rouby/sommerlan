@@ -92,17 +92,24 @@ export function GraphQLProvider({ children }: { children: React.ReactNode }) {
                     args.input &&
                     "partyId" in args.input
                   ) {
+                    const partyId = args.input.partyId;
+                    const updatedEvent = result.planEvent as Data;
+                    const eventId = args.input.id; // Check if it's an update
+
                     const events = cache.resolve(
-                      { __typename: "Party", id: args.input.partyId },
+                      { __typename: "Party", id: partyId },
                       "events",
                     );
+
                     if (Array.isArray(events)) {
-                      events.push(result.planEvent as Data);
-                      cache.link(
-                        { __typename: "Party", id: args.input.partyId },
-                        "events",
-                        events as Link<Entity>,
-                      );
+                      if (!eventId) {
+                        // Create: Add the new event
+                        cache.link(
+                          { __typename: "Party", id: partyId },
+                          "events",
+                          [...events, updatedEvent],
+                        );
+                      }
                     }
                   }
                 },

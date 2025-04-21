@@ -31,3 +31,39 @@ test("should plan an event", async ({ page, context, api }) => {
 
   await expect(page.getByTestId("event")).toContainText("Ein Event");
 });
+
+test("should change an event", async ({ page, api }) => {
+  const user = await api.seed("User", {
+    displayName: "Erwin Beispiel",
+    name: "Erwin Beispiel",
+    email: "erwin@example.com",
+    roles: ["Trusted"],
+  });
+  await api.login("erwin@example.com");
+  const party = await api.seed("Party", {
+    startDate: new Date(Date.now() + 8 * 86400000)
+      .toISOString()
+      .substring(0, 10),
+    endDate: new Date(Date.now() + 8 * 86400000).toISOString().substring(0, 10), // Removed trailing comma
+  });
+  await api.seed("Event", {
+    name: "Initial Event Name",
+    partyId: party.id,
+    organizerId: user.id,
+    description: "<p>Initial Event Description</p>",
+    imageUrl: "https://example.com/image.png",
+  });
+
+  await page.goto("/events");
+
+  await page.getByLabel("Event bearbeiten").click();
+
+  await page.getByRole("textbox", { name: "Event" }).fill("Updated Event Name");
+
+  await page.getByText("Speichern").click(); // Or similar text like "Save Event"
+
+  await expect(page.getByTestId("event")).toContainText("Updated Event Name");
+  await expect(page.getByTestId("event")).not.toContainText(
+    "Initial Event Name",
+  );
+});

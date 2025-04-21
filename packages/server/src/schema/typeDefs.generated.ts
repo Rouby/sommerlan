@@ -1720,10 +1720,7 @@ export const typeDefs = {
         {
           kind: "InputValueDefinition",
           name: { kind: "Name", value: "image" },
-          type: {
-            kind: "NonNullType",
-            type: { kind: "NamedType", name: { kind: "Name", value: "File" } },
-          },
+          type: { kind: "NamedType", name: { kind: "Name", value: "File" } },
           directives: [],
         },
       ],
