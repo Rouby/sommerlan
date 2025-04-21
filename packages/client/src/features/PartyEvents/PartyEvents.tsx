@@ -41,6 +41,8 @@ export function PartyEvents({ partyId }: { partyId?: string }) {
   const PartyEventsInfo = graphql(`
     fragment PartyEventsInfo on Party {
       id
+      startDate
+      endDate
       events {
         __typename
         id
@@ -90,7 +92,9 @@ export function PartyEvents({ partyId }: { partyId?: string }) {
   return (
     <>
       <Center mb="md">
-        <Button onClick={() => setShowCreate(true)}>Ein Event eintragen</Button>
+        <Button onClick={() => setShowCreate(true)} loading={fetching}>
+          Ein Event eintragen
+        </Button>
       </Center>
       <Modal
         size="lg"
@@ -100,6 +104,8 @@ export function PartyEvents({ partyId }: { partyId?: string }) {
       >
         <CreateEventForm
           partyId={party?.id ?? ""}
+          partyStartDate={party?.startDate ?? ""}
+          partyEndDate={party?.endDate ?? ""}
           onSubmit={() => setShowCreate(false)}
         />
       </Modal>
@@ -118,7 +124,7 @@ export function PartyEvents({ partyId }: { partyId?: string }) {
           </>
         )}
         {party?.events.map((event) => (
-          <EventCard key={event.id} partyId={party.id} event={event} />
+          <EventCard key={event.id} party={party} event={event} />
         ))}
       </Box>
     </>
@@ -126,10 +132,14 @@ export function PartyEvents({ partyId }: { partyId?: string }) {
 }
 
 function EventCard({
-  partyId,
+  party,
   event,
 }: {
-  partyId: string;
+  party: {
+    id: string;
+    startDate: string;
+    endDate: string;
+  };
   event: {
     __typename: "Event";
     id: string;
@@ -285,7 +295,9 @@ function EventCard({
         withCloseButton={false}
       >
         <CreateEventForm
-          partyId={partyId}
+          partyId={party.id}
+          partyStartDate={party.startDate}
+          partyEndDate={party.endDate}
           defaultValues={event}
           onSubmit={() => setShowEdit(false)}
         />
@@ -298,6 +310,8 @@ function CreateEventForm({
   partyId,
   defaultValues,
   onSubmit,
+  partyStartDate,
+  partyEndDate,
 }: {
   partyId: string;
   defaultValues?: {
@@ -310,6 +324,8 @@ function CreateEventForm({
     description?: string | null;
   };
   onSubmit: () => void;
+  partyStartDate: string;
+  partyEndDate: string;
 }) {
   const editor = useEditor({
     extensions: [
@@ -439,6 +455,9 @@ function CreateEventForm({
                 : null
             }
             style={{ gridColumn: "span 2" }}
+            minDate={new Date(partyStartDate)}
+            maxDate={new Date(partyEndDate)}
+            hideOutsideDates
           />
 
           <Checkbox
