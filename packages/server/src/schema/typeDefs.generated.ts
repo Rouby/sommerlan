@@ -1111,6 +1111,25 @@ export const typeDefs = {
         },
         {
           kind: "FieldDefinition",
+          name: { kind: "Name", value: "moneyTransfers" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "ListType",
+              type: {
+                kind: "NonNullType",
+                type: {
+                  kind: "NamedType",
+                  name: { kind: "Name", value: "MoneyTransfer" },
+                },
+              },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
           name: { kind: "Name", value: "party" },
           arguments: [
             {
@@ -2040,6 +2059,58 @@ export const typeDefs = {
             kind: "NonNullType",
             type: { kind: "NamedType", name: { kind: "Name", value: "File" } },
           },
+          directives: [],
+        },
+      ],
+    },
+    {
+      kind: "ObjectTypeDefinition",
+      name: { kind: "Name", value: "MoneyTransfer" },
+      interfaces: [],
+      directives: [],
+      fields: [
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "id" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "amount" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Float" } },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "valuationDate" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Date" } },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "note" },
+          arguments: [],
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "correlationId" },
+          arguments: [],
+          type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
           directives: [],
         },
       ],

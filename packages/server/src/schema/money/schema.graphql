@@ -1,0 +1,11 @@
+extend type Query {
+  moneyTransfers: [MoneyTransfer!]!
+}
+
+type MoneyTransfer {
+  id: ID!
+  amount: Float!
+  valuationDate: Date!
+  note: String
+  correlationId: ID
+}

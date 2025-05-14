@@ -13,6 +13,7 @@ import { AuthDeviceMapper, UserMapper } from "./user/schema.mappers";
 import { DonationMapper } from "./donation/schema.mappers";
 import { EventMapper } from "./events/schema.mappers";
 import { GameMapper } from "./game/schema.mappers";
+import { MoneyTransferMapper } from "./money/schema.mappers";
 import { Context } from "./context";
 export type Maybe<T> = T | null | undefined;
 export type InputMaybe<T> = T | null | undefined;
@@ -159,6 +160,15 @@ export type LoginResponse = {
   credentialID: Array<Scalars["Int"]["output"]>;
   refreshToken: Scalars["String"]["output"];
   token: Scalars["JWT"]["output"];
+};
+
+export type MoneyTransfer = {
+  __typename?: "MoneyTransfer";
+  amount: Scalars["Float"]["output"];
+  correlationId?: Maybe<Scalars["ID"]["output"]>;
+  id: Scalars["ID"]["output"];
+  note?: Maybe<Scalars["String"]["output"]>;
+  valuationDate: Scalars["Date"]["output"];
 };
 
 export type Mutation = {
@@ -448,6 +458,7 @@ export type Query = {
   __typename?: "Query";
   games: Array<Game>;
   me?: Maybe<User>;
+  moneyTransfers: Array<MoneyTransfer>;
   nextParty?: Maybe<Party>;
   parties: Array<Party>;
   party?: Maybe<Party>;
@@ -628,6 +639,7 @@ export type ResolversTypes = {
   JWT: ResolverTypeWrapper<Scalars["JWT"]["output"]>;
   LoginResponse: ResolverTypeWrapper<LoginResponse>;
   Int: ResolverTypeWrapper<Scalars["Int"]["output"]>;
+  MoneyTransfer: ResolverTypeWrapper<MoneyTransferMapper>;
   Mutation: ResolverTypeWrapper<{}>;
   Party: ResolverTypeWrapper<PartyMapper>;
   PartyInput: PartyInput;
@@ -683,6 +695,7 @@ export type ResolversParentTypes = {
   JWT: Scalars["JWT"]["output"];
   LoginResponse: LoginResponse;
   Int: Scalars["Int"]["output"];
+  MoneyTransfer: MoneyTransferMapper;
   Mutation: {};
   Party: PartyMapper;
   PartyInput: PartyInput;
@@ -907,6 +920,23 @@ export type LoginResponseResolvers<
   >;
   refreshToken?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   token?: Resolver<ResolversTypes["JWT"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type MoneyTransferResolvers<
+  ContextType = Context,
+  ParentType extends
+    ResolversParentTypes["MoneyTransfer"] = ResolversParentTypes["MoneyTransfer"],
+> = {
+  amount?: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
+  correlationId?: Resolver<
+    Maybe<ResolversTypes["ID"]>,
+    ParentType,
+    ContextType
+  >;
+  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+  note?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  valuationDate?: Resolver<ResolversTypes["Date"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -1248,6 +1278,11 @@ export type QueryResolvers<
 > = {
   games?: Resolver<Array<ResolversTypes["Game"]>, ParentType, ContextType>;
   me?: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
+  moneyTransfers?: Resolver<
+    Array<ResolversTypes["MoneyTransfer"]>,
+    ParentType,
+    ContextType
+  >;
   nextParty?: Resolver<Maybe<ResolversTypes["Party"]>, ParentType, ContextType>;
   parties?: Resolver<Array<ResolversTypes["Party"]>, ParentType, ContextType>;
   party?: Resolver<
@@ -1336,6 +1371,7 @@ export type Resolvers<ContextType = Context> = {
   JSON?: GraphQLScalarType;
   JWT?: GraphQLScalarType;
   LoginResponse?: LoginResponseResolvers<ContextType>;
+  MoneyTransfer?: MoneyTransferResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Party?: PartyResolvers<ContextType>;
   Picture?: PictureResolvers<ContextType>;

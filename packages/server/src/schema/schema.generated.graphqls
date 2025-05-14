@@ -107,6 +107,14 @@ type LoginResponse {
   token: JWT!
 }
 
+type MoneyTransfer {
+  amount: Float!
+  correlationId: ID
+  id: ID!
+  note: String
+  valuationDate: Date!
+}
+
 type Mutation {
   addGameToParty(name: String!, partyId: ID!): AddGameResult!
   addPicture(input: PictureInput!): Picture!
@@ -239,6 +247,7 @@ input ProfileInput {
 type Query {
   games: [Game!]!
   me: User
+  moneyTransfers: [MoneyTransfer!]!
   nextParty: Party
   parties: [Party!]!
   party(id: ID!): Party

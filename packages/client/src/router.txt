@@ -89,6 +89,12 @@ const budgetRoute = new Route({
   component: Budget,
 });
 
+const cashflowRoute = new Route({
+  getParentRoute: () => adminRoute,
+  path: "cashflow",
+  component: AdminCashflow,
+});
+
 const cacheRoute = new Route({
   getParentRoute: () => adminRoute,
   path: "cache",
@@ -109,7 +115,7 @@ const routeTree = rootRoute.addChildren([
     eventsRoute,
     imprintRoute,
     profileRoute,
-    adminRoute.addChildren([usersRoute, budgetRoute, cacheRoute]),
+    adminRoute.addChildren([usersRoute, budgetRoute, cashflowRoute, cacheRoute]),
   ]),
 ]);
 

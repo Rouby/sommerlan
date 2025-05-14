@@ -2,6 +2,7 @@
 import type { Resolvers } from "./types.generated";
 import { games as Query_games } from "./game/resolvers/Query/games";
 import { me as Query_me } from "./user/resolvers/Query/me";
+import { moneyTransfers as Query_moneyTransfers } from "./money/resolvers/Query/moneyTransfers";
 import { nextParty as Query_nextParty } from "./party/resolvers/Query/nextParty";
 import { parties as Query_parties } from "./party/resolvers/Query/parties";
 import { party as Query_party } from "./party/resolvers/Query/party";
@@ -55,6 +56,7 @@ import { Event } from "./events/resolvers/Event";
 import { Game } from "./game/resolvers/Game";
 import { GameOnParty } from "./game/resolvers/GameOnParty";
 import { LoginResponse } from "./user/resolvers/LoginResponse";
+import { MoneyTransfer } from "./money/resolvers/MoneyTransfer";
 import { Party as party_Party } from "./party/resolvers/Party";
 import { Party as donation_Party } from "./donation/resolvers/Party";
 import { Party as events_Party } from "./events/resolvers/Party";
@@ -78,6 +80,7 @@ export const resolvers: Resolvers = {
   Query: {
     games: Query_games,
     me: Query_me,
+    moneyTransfers: Query_moneyTransfers,
     nextParty: Query_nextParty,
     parties: Query_parties,
     party: Query_party,
@@ -133,6 +136,7 @@ export const resolvers: Resolvers = {
   Game: Game,
   GameOnParty: GameOnParty,
   LoginResponse: LoginResponse,
+  MoneyTransfer: MoneyTransfer,
   Party: { ...party_Party, ...donation_Party, ...events_Party, ...game_Party },
   Picture: Picture,
   PictureMeta: PictureMeta,
