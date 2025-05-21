@@ -37,12 +37,8 @@ export const planEvent: NonNullable<MutationResolvers["planEvent"]> = async (
     event.name = input.name;
     event.partyId = input.partyId;
     event.date = input.date ? dayjs(input.date).format("YYYY-MM-DD") : "";
-    event.startTime = input.startTime
-      ? dayjs(input.startTime).format("HH:mm:ssZ")
-      : "";
-    event.endTime = input.endTime
-      ? dayjs(input.endTime).format("HH:mm:ssZ")
-      : "";
+    event.startTime = input.startTime ?? "";
+    event.endTime = input.endTime ?? "";
     event.description = input.description ?? "";
   }
 

@@ -472,6 +472,8 @@ function CreateEventForm({
             disabled={timeUncertain}
             required={!timeUncertain}
             defaultValue={defaultValues?.startTime ?? undefined}
+            role="textbox"
+            aria-label="Startzeit"
           />
           <TimeInput
             name="endTime"
@@ -479,6 +481,8 @@ function CreateEventForm({
             disabled={timeUncertain}
             required={!timeUncertain}
             defaultValue={defaultValues?.endTime ?? undefined}
+            role="textbox"
+            aria-label="Endzeit"
           />
         </Box>
 

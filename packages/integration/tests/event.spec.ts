@@ -60,9 +60,15 @@ test("should change an event", async ({ page, api }) => {
 
   await page.getByRole("textbox", { name: "Event" }).fill("Updated Event Name");
 
+  await page.getByRole("checkbox", { name: "Zeit noch unklar" }).uncheck();
+
+  await page.getByRole("textbox", { name: "Startzeit" }).fill("08:00");
+  await page.getByRole("textbox", { name: "Endzeit" }).fill("09:00");
+
   await page.getByText("Speichern").click(); // Or similar text like "Save Event"
 
   await expect(page.getByTestId("event")).toContainText("Updated Event Name");
+  await expect(page.getByTestId("event")).toContainText("08:00 - 09:00");
   await expect(page.getByTestId("event")).not.toContainText(
     "Initial Event Name",
   );
