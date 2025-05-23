@@ -9,6 +9,6 @@
   "prettier.prettierPath": ".yarn/sdks/prettier/index.cjs",
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "playwright.env": {
-    "NODE_OPTIONS": "-r ./.pnp.cjs"
+    "NODE_OPTIONS": "-r /home/rouby/sommerlan/.pnp.cjs --experimental-loader /home/rouby/sommerlan/.pnp.loader.mjs"
   }
 }

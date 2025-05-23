@@ -34,6 +34,21 @@ type AuthResponse {
 
 scalar BoundingBox
 
+type CacheEntry {
+  patches: [CachePatch!]!
+  sheet: String!
+}
+
+type CacheInfo {
+  entries: [CacheEntry!]!
+  lastSync: DateTime
+}
+
+type CachePatch {
+  id: ID!
+  operations: JSON!
+}
+
 scalar Date
 
 scalar DateTime
@@ -246,6 +261,7 @@ input ProfileInput {
 
 type Query {
   games: [Game!]!
+  getCacheInfo: CacheInfo
   me: User
   moneyTransfers: [MoneyTransfer!]!
   nextParty: Party

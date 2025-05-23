@@ -10,6 +10,134 @@ export const typeDefs = {
       locations: [{ kind: "Name", value: "OBJECT" }],
     },
     {
+      name: { kind: "Name", value: "Query" },
+      kind: "ObjectTypeDefinition",
+      fields: [
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "getCacheInfo" },
+          arguments: [],
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "CacheInfo" },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "games" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "ListType",
+              type: {
+                kind: "NonNullType",
+                type: {
+                  kind: "NamedType",
+                  name: { kind: "Name", value: "Game" },
+                },
+              },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "moneyTransfers" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "ListType",
+              type: {
+                kind: "NonNullType",
+                type: {
+                  kind: "NamedType",
+                  name: { kind: "Name", value: "MoneyTransfer" },
+                },
+              },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "party" },
+          arguments: [
+            {
+              kind: "InputValueDefinition",
+              name: { kind: "Name", value: "id" },
+              type: {
+                kind: "NonNullType",
+                type: {
+                  kind: "NamedType",
+                  name: { kind: "Name", value: "ID" },
+                },
+              },
+              directives: [],
+            },
+          ],
+          type: { kind: "NamedType", name: { kind: "Name", value: "Party" } },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "parties" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "ListType",
+              type: {
+                kind: "NonNullType",
+                type: {
+                  kind: "NamedType",
+                  name: { kind: "Name", value: "Party" },
+                },
+              },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "nextParty" },
+          arguments: [],
+          type: { kind: "NamedType", name: { kind: "Name", value: "Party" } },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "me" },
+          arguments: [],
+          type: { kind: "NamedType", name: { kind: "Name", value: "User" } },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "users" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "ListType",
+              type: {
+                kind: "NonNullType",
+                type: {
+                  kind: "NamedType",
+                  name: { kind: "Name", value: "User" },
+                },
+              },
+            },
+          },
+          directives: [],
+        },
+      ],
+      directives: [],
+      interfaces: [],
+    },
+    {
       name: { kind: "Name", value: "Mutation" },
       kind: "ObjectTypeDefinition",
       fields: [
@@ -1087,31 +1215,24 @@ export const typeDefs = {
       interfaces: [],
     },
     {
-      name: { kind: "Name", value: "Query" },
       kind: "ObjectTypeDefinition",
+      name: { kind: "Name", value: "CacheInfo" },
+      interfaces: [],
+      directives: [],
       fields: [
         {
           kind: "FieldDefinition",
-          name: { kind: "Name", value: "games" },
+          name: { kind: "Name", value: "lastSync" },
           arguments: [],
           type: {
-            kind: "NonNullType",
-            type: {
-              kind: "ListType",
-              type: {
-                kind: "NonNullType",
-                type: {
-                  kind: "NamedType",
-                  name: { kind: "Name", value: "Game" },
-                },
-              },
-            },
+            kind: "NamedType",
+            name: { kind: "Name", value: "DateTime" },
           },
           directives: [],
         },
         {
           kind: "FieldDefinition",
-          name: { kind: "Name", value: "moneyTransfers" },
+          name: { kind: "Name", value: "entries" },
           arguments: [],
           type: {
             kind: "NonNullType",
@@ -1121,79 +1242,7 @@ export const typeDefs = {
                 kind: "NonNullType",
                 type: {
                   kind: "NamedType",
-                  name: { kind: "Name", value: "MoneyTransfer" },
-                },
-              },
-            },
-          },
-          directives: [],
-        },
-        {
-          kind: "FieldDefinition",
-          name: { kind: "Name", value: "party" },
-          arguments: [
-            {
-              kind: "InputValueDefinition",
-              name: { kind: "Name", value: "id" },
-              type: {
-                kind: "NonNullType",
-                type: {
-                  kind: "NamedType",
-                  name: { kind: "Name", value: "ID" },
-                },
-              },
-              directives: [],
-            },
-          ],
-          type: { kind: "NamedType", name: { kind: "Name", value: "Party" } },
-          directives: [],
-        },
-        {
-          kind: "FieldDefinition",
-          name: { kind: "Name", value: "parties" },
-          arguments: [],
-          type: {
-            kind: "NonNullType",
-            type: {
-              kind: "ListType",
-              type: {
-                kind: "NonNullType",
-                type: {
-                  kind: "NamedType",
-                  name: { kind: "Name", value: "Party" },
-                },
-              },
-            },
-          },
-          directives: [],
-        },
-        {
-          kind: "FieldDefinition",
-          name: { kind: "Name", value: "nextParty" },
-          arguments: [],
-          type: { kind: "NamedType", name: { kind: "Name", value: "Party" } },
-          directives: [],
-        },
-        {
-          kind: "FieldDefinition",
-          name: { kind: "Name", value: "me" },
-          arguments: [],
-          type: { kind: "NamedType", name: { kind: "Name", value: "User" } },
-          directives: [],
-        },
-        {
-          kind: "FieldDefinition",
-          name: { kind: "Name", value: "users" },
-          arguments: [],
-          type: {
-            kind: "NonNullType",
-            type: {
-              kind: "ListType",
-              type: {
-                kind: "NonNullType",
-                type: {
-                  kind: "NamedType",
-                  name: { kind: "Name", value: "User" },
+                  name: { kind: "Name", value: "CacheEntry" },
                 },
               },
             },
@@ -1201,8 +1250,74 @@ export const typeDefs = {
           directives: [],
         },
       ],
-      directives: [],
+    },
+    {
+      kind: "ObjectTypeDefinition",
+      name: { kind: "Name", value: "CacheEntry" },
       interfaces: [],
+      directives: [],
+      fields: [
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "sheet" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "patches" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "ListType",
+              type: {
+                kind: "NonNullType",
+                type: {
+                  kind: "NamedType",
+                  name: { kind: "Name", value: "CachePatch" },
+                },
+              },
+            },
+          },
+          directives: [],
+        },
+      ],
+    },
+    {
+      kind: "ObjectTypeDefinition",
+      name: { kind: "Name", value: "CachePatch" },
+      interfaces: [],
+      directives: [],
+      fields: [
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "id" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "operations" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "JSON" } },
+          },
+          directives: [],
+        },
+      ],
     },
     {
       kind: "ScalarTypeDefinition",

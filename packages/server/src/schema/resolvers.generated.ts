@@ -1,6 +1,7 @@
 /* This file was automatically generated. DO NOT UPDATE MANUALLY. */
 import type { Resolvers } from "./types.generated";
 import { games as Query_games } from "./game/resolvers/Query/games";
+import { getCacheInfo as Query_getCacheInfo } from "./admin/resolvers/Query/getCacheInfo";
 import { me as Query_me } from "./user/resolvers/Query/me";
 import { moneyTransfers as Query_moneyTransfers } from "./money/resolvers/Query/moneyTransfers";
 import { nextParty as Query_nextParty } from "./party/resolvers/Query/nextParty";
@@ -51,6 +52,9 @@ import { Attending as game_Attending } from "./game/resolvers/Attending";
 import { Attending as user_Attending } from "./user/resolvers/Attending";
 import { AuthDevice } from "./user/resolvers/AuthDevice";
 import { AuthResponse } from "./user/resolvers/AuthResponse";
+import { CacheEntry } from "./admin/resolvers/CacheEntry";
+import { CacheInfo } from "./admin/resolvers/CacheInfo";
+import { CachePatch } from "./admin/resolvers/CachePatch";
 import { Donation } from "./donation/resolvers/Donation";
 import { Event } from "./events/resolvers/Event";
 import { Game } from "./game/resolvers/Game";
@@ -79,6 +83,7 @@ import {
 export const resolvers: Resolvers = {
   Query: {
     games: Query_games,
+    getCacheInfo: Query_getCacheInfo,
     me: Query_me,
     moneyTransfers: Query_moneyTransfers,
     nextParty: Query_nextParty,
@@ -131,6 +136,9 @@ export const resolvers: Resolvers = {
   Attending: { ...party_Attending, ...game_Attending, ...user_Attending },
   AuthDevice: AuthDevice,
   AuthResponse: AuthResponse,
+  CacheEntry: CacheEntry,
+  CacheInfo: CacheInfo,
+  CachePatch: CachePatch,
   Donation: Donation,
   Event: Event,
   Game: Game,

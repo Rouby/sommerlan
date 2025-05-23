@@ -97,6 +97,24 @@ export type AuthResponse = {
   token: Scalars["JWT"]["output"];
 };
 
+export type CacheEntry = {
+  __typename?: "CacheEntry";
+  patches: Array<CachePatch>;
+  sheet: Scalars["String"]["output"];
+};
+
+export type CacheInfo = {
+  __typename?: "CacheInfo";
+  entries: Array<CacheEntry>;
+  lastSync?: Maybe<Scalars["DateTime"]["output"]>;
+};
+
+export type CachePatch = {
+  __typename?: "CachePatch";
+  id: Scalars["ID"]["output"];
+  operations: Scalars["JSON"]["output"];
+};
+
 export type Donation = {
   __typename?: "Donation";
   amount: Scalars["Float"]["output"];
@@ -457,6 +475,7 @@ export type ProfileInput = {
 export type Query = {
   __typename?: "Query";
   games: Array<Game>;
+  getCacheInfo?: Maybe<CacheInfo>;
   me?: Maybe<User>;
   moneyTransfers: Array<MoneyTransfer>;
   nextParty?: Maybe<Party>;
@@ -618,6 +637,9 @@ export type ResolversTypes = {
   String: ResolverTypeWrapper<Scalars["String"]["output"]>;
   AuthResponse: ResolverTypeWrapper<AuthResponse>;
   BoundingBox: ResolverTypeWrapper<Scalars["BoundingBox"]["output"]>;
+  CacheEntry: ResolverTypeWrapper<CacheEntry>;
+  CacheInfo: ResolverTypeWrapper<CacheInfo>;
+  CachePatch: ResolverTypeWrapper<CachePatch>;
   Date: ResolverTypeWrapper<Scalars["Date"]["output"]>;
   DateTime: ResolverTypeWrapper<Scalars["DateTime"]["output"]>;
   Donation: ResolverTypeWrapper<DonationMapper>;
@@ -677,6 +699,9 @@ export type ResolversParentTypes = {
   String: Scalars["String"]["output"];
   AuthResponse: AuthResponse;
   BoundingBox: Scalars["BoundingBox"]["output"];
+  CacheEntry: CacheEntry;
+  CacheInfo: CacheInfo;
+  CachePatch: CachePatch;
   Date: Scalars["Date"]["output"];
   DateTime: Scalars["DateTime"]["output"];
   Donation: DonationMapper;
@@ -805,6 +830,48 @@ export interface BoundingBoxScalarConfig
   extends GraphQLScalarTypeConfig<ResolversTypes["BoundingBox"], any> {
   name: "BoundingBox";
 }
+
+export type CacheEntryResolvers<
+  ContextType = Context,
+  ParentType extends
+    ResolversParentTypes["CacheEntry"] = ResolversParentTypes["CacheEntry"],
+> = {
+  patches?: Resolver<
+    Array<ResolversTypes["CachePatch"]>,
+    ParentType,
+    ContextType
+  >;
+  sheet?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CacheInfoResolvers<
+  ContextType = Context,
+  ParentType extends
+    ResolversParentTypes["CacheInfo"] = ResolversParentTypes["CacheInfo"],
+> = {
+  entries?: Resolver<
+    Array<ResolversTypes["CacheEntry"]>,
+    ParentType,
+    ContextType
+  >;
+  lastSync?: Resolver<
+    Maybe<ResolversTypes["DateTime"]>,
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CachePatchResolvers<
+  ContextType = Context,
+  ParentType extends
+    ResolversParentTypes["CachePatch"] = ResolversParentTypes["CachePatch"],
+> = {
+  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+  operations?: Resolver<ResolversTypes["JSON"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
 
 export interface DateScalarConfig
   extends GraphQLScalarTypeConfig<ResolversTypes["Date"], any> {
@@ -1277,6 +1344,11 @@ export type QueryResolvers<
     ResolversParentTypes["Query"] = ResolversParentTypes["Query"],
 > = {
   games?: Resolver<Array<ResolversTypes["Game"]>, ParentType, ContextType>;
+  getCacheInfo?: Resolver<
+    Maybe<ResolversTypes["CacheInfo"]>,
+    ParentType,
+    ContextType
+  >;
   me?: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
   moneyTransfers?: Resolver<
     Array<ResolversTypes["MoneyTransfer"]>,
@@ -1360,6 +1432,9 @@ export type Resolvers<ContextType = Context> = {
   AuthDevice?: AuthDeviceResolvers<ContextType>;
   AuthResponse?: AuthResponseResolvers<ContextType>;
   BoundingBox?: GraphQLScalarType;
+  CacheEntry?: CacheEntryResolvers<ContextType>;
+  CacheInfo?: CacheInfoResolvers<ContextType>;
+  CachePatch?: CachePatchResolvers<ContextType>;
   Date?: GraphQLScalarType;
   DateTime?: GraphQLScalarType;
   Donation?: DonationResolvers<ContextType>;

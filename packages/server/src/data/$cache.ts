@@ -100,6 +100,7 @@ export async function allRows<T extends Base>(
   });
 }
 
+let lastSync: Date | null = null;
 let syncingCache: Promise<void> | undefined;
 export async function syncCache(clearCache = false) {
   if (syncingCache) {
@@ -180,11 +181,29 @@ export async function syncCache(clearCache = false) {
     if (clearCache) {
       cache.clear();
     }
+    lastSync = new Date();
   });
 
   await syncingCache;
 
   syncingCache = undefined;
+}
+
+export function getCacheInfo() {
+  return {
+    lastSync,
+    entries: [...patches.entries()].map(([cls, entities]) => {
+      return {
+        sheet: cls.prototype.sheetName,
+        patches: [...entities.entries()].map(([id, operations]) => {
+          return {
+            id,
+            operations: operations === deleteMarker ? "delete" : operations,
+          };
+        }),
+      };
+    }),
+  };
 }
 
 const fillingCache = new Map<string, Promise<void>>();

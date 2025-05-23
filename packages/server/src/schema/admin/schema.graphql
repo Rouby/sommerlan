@@ -1,3 +1,22 @@
+extend type Query {
+  getCacheInfo: CacheInfo
+}
+
 extend type Mutation {
   syncCache(clear: Boolean): Boolean
+}
+
+type CacheInfo {
+  lastSync: DateTime
+  entries: [CacheEntry!]!
+}
+
+type CacheEntry {
+  sheet: String!
+  patches: [CachePatch!]!
+}
+
+type CachePatch {
+  id: ID!
+  operations: JSON!
 }

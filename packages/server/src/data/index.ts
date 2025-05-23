@@ -1,4 +1,4 @@
-export { syncCache } from "./$cache";
+export { getCacheInfo, syncCache } from "./$cache";
 export * from "./attendings";
 export * from "./donations";
 export * from "./events";

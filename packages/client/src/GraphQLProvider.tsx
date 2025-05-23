@@ -42,6 +42,9 @@ export function GraphQLProvider({ children }: { children: React.ReactNode }) {
             keys: {
               AuthResponse: () => null,
               PictureMeta: () => null,
+              CacheInfo: () => null,
+              CacheEntry: () => null,
+              CachePatch: () => null,
             },
             resolvers: {
               Query: {

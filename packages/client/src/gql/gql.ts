@@ -75,6 +75,7 @@ const documents = {
     "\n      mutation registerPasskey(\n        $userId: String!\n        $name: String!\n        $response: JSON!\n      ) {\n        registerPasskey(userId: $userId, name: $name, response: $response) {\n          token\n          device {\n            id\n            name\n          }\n        }\n      }\n    ": types.RegisterPasskeyDocument,
     "\n        mutation loginMagicLink($magicLinkId: String!) {\n          loginMagicLink(magicLinkId: $magicLinkId) {\n            token\n            refreshToken\n          }\n        }\n      ": types.LoginMagicLinkDocument,
     "\n        mutation syncCache {\n          syncCache(clear: true)\n        }\n      ": types.SyncCacheDocument,
+    "\n        query getCacheInfo {\n          getCacheInfo {\n            lastSync\n            entries {\n              sheet\n              patches {\n                id\n                operations\n              }\n            }\n          }\n        }\n      ": types.GetCacheInfoDocument,
 };
 
 /**
@@ -339,6 +340,10 @@ export function graphql(source: "\n        mutation loginMagicLink($magicLinkId:
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n        mutation syncCache {\n          syncCache(clear: true)\n        }\n      "): (typeof documents)["\n        mutation syncCache {\n          syncCache(clear: true)\n        }\n      "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n        query getCacheInfo {\n          getCacheInfo {\n            lastSync\n            entries {\n              sheet\n              patches {\n                id\n                operations\n              }\n            }\n          }\n        }\n      "): (typeof documents)["\n        query getCacheInfo {\n          getCacheInfo {\n            lastSync\n            entries {\n              sheet\n              patches {\n                id\n                operations\n              }\n            }\n          }\n        }\n      "];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};
