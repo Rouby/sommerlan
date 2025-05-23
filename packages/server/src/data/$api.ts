@@ -26,6 +26,7 @@ export function createFakeApi() {
   return {
     data: {
       syncCache: async () => {},
+      getCacheInfo: () => ({ lastSync: new Date(), entries: [] }),
       Attending: class Attending extends Models.Attending {
         static rows: Attending[] = [];
         static get cache() {
