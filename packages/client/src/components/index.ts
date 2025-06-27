@@ -6,6 +6,7 @@ export * from "./LAN";
 export * from "./NavLink";
 export * from "./PartyInfo";
 export * from "./PartyList";
+export * from "./RelativeTime";
 export * from "./TextLink";
 export * from "./UserAvatar";
 export * from "./UserMenu";

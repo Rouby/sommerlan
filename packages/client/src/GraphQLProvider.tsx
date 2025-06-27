@@ -45,6 +45,7 @@ export function GraphQLProvider({ children }: { children: React.ReactNode }) {
               CacheInfo: () => null,
               CacheEntry: () => null,
               CachePatch: () => null,
+              Location: () => null,
             },
             resolvers: {
               Query: {

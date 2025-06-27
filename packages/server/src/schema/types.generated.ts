@@ -173,6 +173,13 @@ export type GameOnParty = {
   players: Array<User>;
 };
 
+export type Location = {
+  __typename?: "Location";
+  latitude: Scalars["Float"]["output"];
+  longitude: Scalars["Float"]["output"];
+  timestamp: Scalars["DateTime"]["output"];
+};
+
 export type LoginResponse = {
   __typename?: "LoginResponse";
   credentialID: Array<Scalars["Int"]["output"]>;
@@ -225,6 +232,7 @@ export type Mutation = {
   syncCache?: Maybe<Scalars["Boolean"]["output"]>;
   updateAuthDevice: AuthDevice;
   updateGame: Game;
+  updateLocation: User;
   updatePaidDues?: Maybe<Attending>;
   updateParty: Party;
   updateProfile: User;
@@ -370,6 +378,11 @@ export type MutationupdateGameArgs = {
   input: GameInput;
 };
 
+export type MutationupdateLocationArgs = {
+  latitude: Scalars["Float"]["input"];
+  longitude: Scalars["Float"]["input"];
+};
+
 export type MutationupdatePaidDuesArgs = {
   attendingId: Scalars["ID"]["input"];
   paidDues: Scalars["Float"]["input"];
@@ -398,8 +411,10 @@ export type Party = {
   finalCostPerDay?: Maybe<Scalars["Float"]["output"]>;
   gamesPlayed: Array<GameOnParty>;
   id: Scalars["ID"]["output"];
+  latitude: Scalars["Float"]["output"];
   location: Scalars["String"]["output"];
   locationWidgetSrc?: Maybe<Scalars["String"]["output"]>;
+  longitude: Scalars["Float"]["output"];
   paidDues?: Maybe<Scalars["Float"]["output"]>;
   payday?: Maybe<Scalars["Date"]["output"]>;
   pictures: Array<Picture>;
@@ -513,6 +528,8 @@ export type User = {
   displayName: Scalars["String"]["output"];
   email: Scalars["String"]["output"];
   id: Scalars["ID"]["output"];
+  lastKnownLocation?: Maybe<Location>;
+  locations: Array<Location>;
   name: Scalars["String"]["output"];
   roles: Array<Role>;
 };
@@ -659,6 +676,7 @@ export type ResolversTypes = {
   >;
   JSON: ResolverTypeWrapper<Scalars["JSON"]["output"]>;
   JWT: ResolverTypeWrapper<Scalars["JWT"]["output"]>;
+  Location: ResolverTypeWrapper<Location>;
   LoginResponse: ResolverTypeWrapper<LoginResponse>;
   Int: ResolverTypeWrapper<Scalars["Int"]["output"]>;
   MoneyTransfer: ResolverTypeWrapper<MoneyTransferMapper>;
@@ -718,6 +736,7 @@ export type ResolversParentTypes = {
   };
   JSON: Scalars["JSON"]["output"];
   JWT: Scalars["JWT"]["output"];
+  Location: Location;
   LoginResponse: LoginResponse;
   Int: Scalars["Int"]["output"];
   MoneyTransfer: MoneyTransferMapper;
@@ -975,6 +994,17 @@ export interface JWTScalarConfig
   name: "JWT";
 }
 
+export type LocationResolvers<
+  ContextType = Context,
+  ParentType extends
+    ResolversParentTypes["Location"] = ResolversParentTypes["Location"],
+> = {
+  latitude?: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
+  longitude?: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
+  timestamp?: Resolver<ResolversTypes["DateTime"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type LoginResponseResolvers<
   ContextType = Context,
   ParentType extends
@@ -1209,6 +1239,12 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationupdateGameArgs, "input">
   >;
+  updateLocation?: Resolver<
+    ResolversTypes["User"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationupdateLocationArgs, "latitude" | "longitude">
+  >;
   updatePaidDues?: Resolver<
     Maybe<ResolversTypes["Attending"]>,
     ParentType,
@@ -1269,12 +1305,14 @@ export type PartyResolvers<
     ContextType
   >;
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+  latitude?: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
   location?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   locationWidgetSrc?: Resolver<
     Maybe<ResolversTypes["String"]>,
     ParentType,
     ContextType
   >;
+  longitude?: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
   paidDues?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
   payday?: Resolver<Maybe<ResolversTypes["Date"]>, ParentType, ContextType>;
   pictures?: Resolver<
@@ -1421,6 +1459,16 @@ export type UserResolvers<
   displayName?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   email?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+  lastKnownLocation?: Resolver<
+    Maybe<ResolversTypes["Location"]>,
+    ParentType,
+    ContextType
+  >;
+  locations?: Resolver<
+    Array<ResolversTypes["Location"]>,
+    ParentType,
+    ContextType
+  >;
   name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   roles?: Resolver<Array<ResolversTypes["Role"]>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -1445,6 +1493,7 @@ export type Resolvers<ContextType = Context> = {
   GameOnParty?: GameOnPartyResolvers<ContextType>;
   JSON?: GraphQLScalarType;
   JWT?: GraphQLScalarType;
+  Location?: LocationResolvers<ContextType>;
   LoginResponse?: LoginResponseResolvers<ContextType>;
   MoneyTransfer?: MoneyTransferResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;

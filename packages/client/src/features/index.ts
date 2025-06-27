@@ -11,6 +11,7 @@ export * from "./PartyDonations";
 export * from "./PartyEvents";
 export * from "./PartyGames";
 export * from "./PartyLocation";
+export * from "./PartyOverwatch";
 export * from "./PartyPayment";
 export * from "./PartyRooms";
 export * from "./SignUp";

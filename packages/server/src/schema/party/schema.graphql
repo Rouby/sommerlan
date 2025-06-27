@@ -33,6 +33,8 @@ type Party @rbac {
   startDate: Date!
   endDate: Date!
   tentative: Boolean!
+  latitude: Float!
+  longitude: Float!
   location: String!
   locationWidgetSrc: String
   roomsAvailable: Int!

@@ -1,0 +1,14 @@
+extend type Mutation {
+  updateLocation(latitude: Float!, longitude: Float!): User!
+}
+
+type Location {
+  latitude: Float!
+  longitude: Float!
+  timestamp: DateTime!
+}
+
+extend type User {
+  locations: [Location!]!
+  lastKnownLocation: Location
+}

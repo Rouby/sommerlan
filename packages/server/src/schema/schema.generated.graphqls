@@ -116,6 +116,12 @@ scalar JSON
 
 scalar JWT
 
+type Location {
+  latitude: Float!
+  longitude: Float!
+  timestamp: DateTime!
+}
+
 type LoginResponse {
   credentialID: [Int!]!
   refreshToken: String!
@@ -177,6 +183,7 @@ type Mutation {
   syncCache(clear: Boolean): Boolean
   updateAuthDevice(id: ID!, name: String!): AuthDevice!
   updateGame(input: GameInput!): Game!
+  updateLocation(latitude: Float!, longitude: Float!): User!
   updatePaidDues(attendingId: ID!, paidDues: Float!): Attending
   updateParty(input: PartyInput!): Party!
   updateProfile(input: ProfileInput!): User!
@@ -192,8 +199,10 @@ type Party {
   finalCostPerDay: Float
   gamesPlayed: [GameOnParty!]!
   id: ID!
+  latitude: Float!
   location: String!
   locationWidgetSrc: String
+  longitude: Float!
   paidDues: Float
   payday: Date
   pictures: [Picture!]!
@@ -302,6 +311,8 @@ type User {
   displayName: String!
   email: String!
   id: ID!
+  lastKnownLocation: Location
+  locations: [Location!]!
   name: String!
   roles: [Role!]!
 }

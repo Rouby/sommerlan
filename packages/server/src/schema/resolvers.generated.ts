@@ -42,6 +42,7 @@ import { setGamesPlayed as Mutation_setGamesPlayed } from "./game/resolvers/Muta
 import { syncCache as Mutation_syncCache } from "./admin/resolvers/Mutation/syncCache";
 import { updateAuthDevice as Mutation_updateAuthDevice } from "./user/resolvers/Mutation/updateAuthDevice";
 import { updateGame as Mutation_updateGame } from "./game/resolvers/Mutation/updateGame";
+import { updateLocation as Mutation_updateLocation } from "./overwatch/resolvers/Mutation/updateLocation";
 import { updatePaidDues as Mutation_updatePaidDues } from "./party/resolvers/Mutation/updatePaidDues";
 import { updateParty as Mutation_updateParty } from "./party/resolvers/Mutation/updateParty";
 import { updateProfile as Mutation_updateProfile } from "./user/resolvers/Mutation/updateProfile";
@@ -59,6 +60,7 @@ import { Donation } from "./donation/resolvers/Donation";
 import { Event } from "./events/resolvers/Event";
 import { Game } from "./game/resolvers/Game";
 import { GameOnParty } from "./game/resolvers/GameOnParty";
+import { Location } from "./overwatch/resolvers/Location";
 import { LoginResponse } from "./user/resolvers/LoginResponse";
 import { MoneyTransfer } from "./money/resolvers/MoneyTransfer";
 import { Party as party_Party } from "./party/resolvers/Party";
@@ -70,7 +72,8 @@ import { PictureMeta } from "./party/resolvers/PictureMeta";
 import { PictureTag } from "./party/resolvers/PictureTag";
 import { RegisterDeviceResponse } from "./user/resolvers/RegisterDeviceResponse";
 import { RegisterResponse } from "./user/resolvers/RegisterResponse";
-import { User } from "./user/resolvers/User";
+import { User as user_User } from "./user/resolvers/User";
+import { User as overwatch_User } from "./overwatch/resolvers/User";
 import { BoundingBox } from "./party/resolvers/BoundingBox";
 import { File } from "./base/resolvers/File";
 import {
@@ -126,6 +129,7 @@ export const resolvers: Resolvers = {
     syncCache: Mutation_syncCache,
     updateAuthDevice: Mutation_updateAuthDevice,
     updateGame: Mutation_updateGame,
+    updateLocation: Mutation_updateLocation,
     updatePaidDues: Mutation_updatePaidDues,
     updateParty: Mutation_updateParty,
     updateProfile: Mutation_updateProfile,
@@ -143,6 +147,7 @@ export const resolvers: Resolvers = {
   Event: Event,
   Game: Game,
   GameOnParty: GameOnParty,
+  Location: Location,
   LoginResponse: LoginResponse,
   MoneyTransfer: MoneyTransfer,
   Party: { ...party_Party, ...donation_Party, ...events_Party, ...game_Party },
@@ -151,7 +156,7 @@ export const resolvers: Resolvers = {
   PictureTag: PictureTag,
   RegisterDeviceResponse: RegisterDeviceResponse,
   RegisterResponse: RegisterResponse,
-  User: User,
+  User: { ...user_User, ...overwatch_User },
   BoundingBox: BoundingBox,
   File: File,
   Date: DateResolver,

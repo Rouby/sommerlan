@@ -416,6 +416,41 @@ export const typeDefs = {
         },
         {
           kind: "FieldDefinition",
+          name: { kind: "Name", value: "updateLocation" },
+          arguments: [
+            {
+              kind: "InputValueDefinition",
+              name: { kind: "Name", value: "latitude" },
+              type: {
+                kind: "NonNullType",
+                type: {
+                  kind: "NamedType",
+                  name: { kind: "Name", value: "Float" },
+                },
+              },
+              directives: [],
+            },
+            {
+              kind: "InputValueDefinition",
+              name: { kind: "Name", value: "longitude" },
+              type: {
+                kind: "NonNullType",
+                type: {
+                  kind: "NamedType",
+                  name: { kind: "Name", value: "Float" },
+                },
+              },
+              directives: [],
+            },
+          ],
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "User" } },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
           name: { kind: "Name", value: "setAttendance" },
           arguments: [
             {
@@ -1455,6 +1490,26 @@ export const typeDefs = {
         },
         {
           kind: "FieldDefinition",
+          name: { kind: "Name", value: "latitude" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Float" } },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "longitude" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Float" } },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
           name: { kind: "Name", value: "location" },
           arguments: [],
           type: {
@@ -2232,6 +2287,191 @@ export const typeDefs = {
     },
     {
       kind: "ObjectTypeDefinition",
+      name: { kind: "Name", value: "Location" },
+      interfaces: [],
+      directives: [],
+      fields: [
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "latitude" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Float" } },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "longitude" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Float" } },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "timestamp" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "DateTime" },
+            },
+          },
+          directives: [],
+        },
+      ],
+    },
+    {
+      name: { kind: "Name", value: "User" },
+      kind: "ObjectTypeDefinition",
+      fields: [
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "locations" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "ListType",
+              type: {
+                kind: "NonNullType",
+                type: {
+                  kind: "NamedType",
+                  name: { kind: "Name", value: "Location" },
+                },
+              },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "lastKnownLocation" },
+          arguments: [],
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "Location" },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "id" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "name" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "displayName" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "email" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "avatar" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "avatarUrl" },
+          arguments: [],
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "devices" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "ListType",
+              type: {
+                kind: "NonNullType",
+                type: {
+                  kind: "NamedType",
+                  name: { kind: "Name", value: "AuthDevice" },
+                },
+              },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "roles" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "ListType",
+              type: {
+                kind: "NonNullType",
+                type: {
+                  kind: "NamedType",
+                  name: { kind: "Name", value: "Role" },
+                },
+              },
+            },
+          },
+          directives: [],
+        },
+      ],
+      directives: [],
+      interfaces: [],
+    },
+    {
+      kind: "ObjectTypeDefinition",
       name: { kind: "Name", value: "Picture" },
       interfaces: [],
       directives: [],
@@ -2729,121 +2969,6 @@ export const typeDefs = {
             type: {
               kind: "NamedType",
               name: { kind: "Name", value: "AuthDevice" },
-            },
-          },
-          directives: [],
-        },
-      ],
-    },
-    {
-      kind: "ObjectTypeDefinition",
-      name: { kind: "Name", value: "User" },
-      interfaces: [],
-      directives: [],
-      fields: [
-        {
-          kind: "FieldDefinition",
-          name: { kind: "Name", value: "id" },
-          arguments: [],
-          type: {
-            kind: "NonNullType",
-            type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
-          },
-          directives: [],
-        },
-        {
-          kind: "FieldDefinition",
-          name: { kind: "Name", value: "name" },
-          arguments: [],
-          type: {
-            kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "String" },
-            },
-          },
-          directives: [],
-        },
-        {
-          kind: "FieldDefinition",
-          name: { kind: "Name", value: "displayName" },
-          arguments: [],
-          type: {
-            kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "String" },
-            },
-          },
-          directives: [],
-        },
-        {
-          kind: "FieldDefinition",
-          name: { kind: "Name", value: "email" },
-          arguments: [],
-          type: {
-            kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "String" },
-            },
-          },
-          directives: [],
-        },
-        {
-          kind: "FieldDefinition",
-          name: { kind: "Name", value: "avatar" },
-          arguments: [],
-          type: {
-            kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "String" },
-            },
-          },
-          directives: [],
-        },
-        {
-          kind: "FieldDefinition",
-          name: { kind: "Name", value: "avatarUrl" },
-          arguments: [],
-          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
-          directives: [],
-        },
-        {
-          kind: "FieldDefinition",
-          name: { kind: "Name", value: "devices" },
-          arguments: [],
-          type: {
-            kind: "NonNullType",
-            type: {
-              kind: "ListType",
-              type: {
-                kind: "NonNullType",
-                type: {
-                  kind: "NamedType",
-                  name: { kind: "Name", value: "AuthDevice" },
-                },
-              },
-            },
-          },
-          directives: [],
-        },
-        {
-          kind: "FieldDefinition",
-          name: { kind: "Name", value: "roles" },
-          arguments: [],
-          type: {
-            kind: "NonNullType",
-            type: {
-              kind: "ListType",
-              type: {
-                kind: "NonNullType",
-                type: {
-                  kind: "NamedType",
-                  name: { kind: "Name", value: "Role" },
-                },
-              },
             },
           },
           directives: [],

@@ -76,7 +76,13 @@ export async function createAbility(
     });
 
     if (user.roles.includes(User.Role.Trusted)) {
-      can("read", "User", ["displayName", "avatar", "avatarUrl", "email"]);
+      can("read", "User", [
+        "displayName",
+        "avatar",
+        "avatarUrl",
+        "email",
+        "location",
+      ]);
       can("create", "Event", { organizerId: user.id });
       can("update", "Event", { organizerId: user.id }); // TODO ids?
       can("create", "Game");

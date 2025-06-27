@@ -138,6 +138,13 @@ export type GameOnParty = {
   players: Array<User>;
 };
 
+export type Location = {
+  __typename?: 'Location';
+  latitude: Scalars['Float']['output'];
+  longitude: Scalars['Float']['output'];
+  timestamp: Scalars['DateTime']['output'];
+};
+
 export type LoginResponse = {
   __typename?: 'LoginResponse';
   credentialID: Array<Scalars['Int']['output']>;
@@ -190,6 +197,7 @@ export type Mutation = {
   syncCache?: Maybe<Scalars['Boolean']['output']>;
   updateAuthDevice: AuthDevice;
   updateGame: Game;
+  updateLocation: User;
   updatePaidDues?: Maybe<Attending>;
   updateParty: Party;
   updateProfile: User;
@@ -367,6 +375,12 @@ export type MutationUpdateGameArgs = {
 };
 
 
+export type MutationUpdateLocationArgs = {
+  latitude: Scalars['Float']['input'];
+  longitude: Scalars['Float']['input'];
+};
+
+
 export type MutationUpdatePaidDuesArgs = {
   attendingId: Scalars['ID']['input'];
   paidDues: Scalars['Float']['input'];
@@ -398,8 +412,10 @@ export type Party = {
   finalCostPerDay?: Maybe<Scalars['Float']['output']>;
   gamesPlayed: Array<GameOnParty>;
   id: Scalars['ID']['output'];
+  latitude: Scalars['Float']['output'];
   location: Scalars['String']['output'];
   locationWidgetSrc?: Maybe<Scalars['String']['output']>;
+  longitude: Scalars['Float']['output'];
   paidDues?: Maybe<Scalars['Float']['output']>;
   payday?: Maybe<Scalars['Date']['output']>;
   pictures: Array<Picture>;
@@ -523,6 +539,8 @@ export type User = {
   displayName: Scalars['String']['output'];
   email: Scalars['String']['output'];
   id: Scalars['ID']['output'];
+  lastKnownLocation?: Maybe<Location>;
+  locations: Array<Location>;
   name: Scalars['String']['output'];
   roles: Array<Role>;
 };
@@ -786,6 +804,19 @@ export type NextPartyLocationQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type NextPartyLocationQuery = { __typename?: 'Query', nextParty?: { __typename?: 'Party', id: string, locationWidgetSrc?: string | null } | null };
 
+export type GetUserLocationsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetUserLocationsQuery = { __typename?: 'Query', nextParty?: { __typename?: 'Party', id: string, startDate: any, latitude: number, longitude: number, attendings: Array<{ __typename?: 'Attending', id: string, user: { __typename?: 'User', id: string, displayName: string, locations: Array<{ __typename?: 'Location', latitude: number, longitude: number, timestamp: any }>, lastKnownLocation?: { __typename?: 'Location', latitude: number, longitude: number, timestamp: any } | null } }> } | null };
+
+export type UpdateLocationMutationVariables = Exact<{
+  latitude: Scalars['Float']['input'];
+  longitude: Scalars['Float']['input'];
+}>;
+
+
+export type UpdateLocationMutation = { __typename?: 'Mutation', updateLocation: { __typename?: 'User', id: string, lastKnownLocation?: { __typename?: 'Location', latitude: number, longitude: number, timestamp: any } | null } };
+
 export type PartyPaymentInfoQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -983,6 +1014,8 @@ export const PartyGamesDocument = {"kind":"Document","definitions":[{"kind":"Ope
 export const AddGameToPartyDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"addGameToParty"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"partyId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addGameToParty"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}},{"kind":"Argument","name":{"kind":"Name","value":"partyId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"partyId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"game"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"image"}}]}},{"kind":"Field","name":{"kind":"Name","value":"attending"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"gamesPlayed"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"image"}}]}}]}}]}}]}}]} as unknown as DocumentNode<AddGameToPartyMutation, AddGameToPartyMutationVariables>;
 export const SetGamesPlayedDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"setGamesPlayed"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"partyId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"gameIds"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"setGamesPlayed"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"partyId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"partyId"}}},{"kind":"Argument","name":{"kind":"Name","value":"gameIds"},"value":{"kind":"Variable","name":{"kind":"Name","value":"gameIds"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"gamesPlayed"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"image"}}]}}]}}]}}]} as unknown as DocumentNode<SetGamesPlayedMutation, SetGamesPlayedMutationVariables>;
 export const NextPartyLocationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"nextPartyLocation"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nextParty"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"locationWidgetSrc"}}]}}]}}]} as unknown as DocumentNode<NextPartyLocationQuery, NextPartyLocationQueryVariables>;
+export const GetUserLocationsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetUserLocations"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nextParty"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"latitude"}},{"kind":"Field","name":{"kind":"Name","value":"longitude"}},{"kind":"Field","name":{"kind":"Name","value":"attendings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"locations"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"latitude"}},{"kind":"Field","name":{"kind":"Name","value":"longitude"}},{"kind":"Field","name":{"kind":"Name","value":"timestamp"}}]}},{"kind":"Field","name":{"kind":"Name","value":"lastKnownLocation"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"latitude"}},{"kind":"Field","name":{"kind":"Name","value":"longitude"}},{"kind":"Field","name":{"kind":"Name","value":"timestamp"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetUserLocationsQuery, GetUserLocationsQueryVariables>;
+export const UpdateLocationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateLocation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"latitude"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"longitude"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateLocation"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"latitude"},"value":{"kind":"Variable","name":{"kind":"Name","value":"latitude"}}},{"kind":"Argument","name":{"kind":"Name","value":"longitude"},"value":{"kind":"Variable","name":{"kind":"Name","value":"longitude"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"lastKnownLocation"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"latitude"}},{"kind":"Field","name":{"kind":"Name","value":"longitude"}},{"kind":"Field","name":{"kind":"Name","value":"timestamp"}}]}}]}}]}}]} as unknown as DocumentNode<UpdateLocationMutation, UpdateLocationMutationVariables>;
 export const PartyPaymentInfoDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PartyPaymentInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nextParty"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"finalCostPerDay"}},{"kind":"Field","name":{"kind":"Name","value":"payday"}},{"kind":"Field","name":{"kind":"Name","value":"attendings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"dates"}},{"kind":"Field","name":{"kind":"Name","value":"paidDues"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"donations"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"dedication"}},{"kind":"Field","name":{"kind":"Name","value":"donator"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]}}]} as unknown as DocumentNode<PartyPaymentInfoQuery, PartyPaymentInfoQueryVariables>;
 export const CreatePayPalOrderDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreatePayPalOrder"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createPayPalOrder"}}]}}]} as unknown as DocumentNode<CreatePayPalOrderMutation, CreatePayPalOrderMutationVariables>;
 export const CapturePayPalOrderDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CapturePayPalOrder"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orderId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"capturePayPalOrder"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"orderId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orderId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"paidDues"}}]}}]}}]} as unknown as DocumentNode<CapturePayPalOrderMutation, CapturePayPalOrderMutationVariables>;
