@@ -46,7 +46,7 @@ export const abilityAtom = atom((get) => {
 
   if ((jwtPayload?.abilityRules.length ?? 0) > 0) {
     can("checkIn", "Party", {
-      startDate: { $lte: dayjs().toDate() },
+      startDate: { $lte: dayjs().add(1, "day").toDate() },
       endDate: { $gte: dayjs().toDate() },
     });
   }
