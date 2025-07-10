@@ -5,6 +5,7 @@ import {
   Checkbox,
   Divider,
   Group,
+  Indicator,
   Skeleton,
   Switch,
   Text,
@@ -188,18 +189,34 @@ export function PartyAttendings() {
                 {showNames ? (
                   <Group wrap="wrap" gap="0 16px">
                     {attendingsOnDate.map((attending) => (
-                      <UserAvatar
+                      <Indicator
                         key={attending.id}
-                        user={attending.user}
-                        showName
-                      />
+                        disabled={attending.room !== "GRANTED"}
+                        position="top-start"
+                        label="🛏️"
+                        size={16}
+                        offset={7}
+                        color="transparent"
+                      >
+                        <UserAvatar user={attending.user} showName />
+                      </Indicator>
                     ))}
                   </Group>
                 ) : (
                   <Tooltip.Group openDelay={300} closeDelay={100}>
                     <Avatar.Group spacing="sm" style={{ flexWrap: "wrap" }}>
                       {attendingsOnDate.map((attending) => (
-                        <UserAvatar key={attending.id} user={attending.user} />
+                        <Indicator
+                          key={attending.id}
+                          disabled={attending.room !== "GRANTED"}
+                          position="top-start"
+                          label="🛏️"
+                          size={16}
+                          offset={7}
+                          color="transparent"
+                        >
+                          <UserAvatar user={attending.user} />
+                        </Indicator>
                       ))}
                     </Avatar.Group>
                   </Tooltip.Group>
