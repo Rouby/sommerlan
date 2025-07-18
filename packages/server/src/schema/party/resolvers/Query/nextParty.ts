@@ -8,7 +8,7 @@ export const nextParty: NonNullable<QueryResolvers["nextParty"]> = async (
   _arg,
   ctx,
 ) => {
-  const party = await ctx.data.Party.findLatest();
+  const party = await ctx.data.Party.findNextParty();
 
   if (!party) return null;
 

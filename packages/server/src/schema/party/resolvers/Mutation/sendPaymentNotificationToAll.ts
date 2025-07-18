@@ -6,7 +6,7 @@ import type { MutationResolvers } from "./../../../types.generated";
 export const sendPaymentNotificationToAll: NonNullable<
   MutationResolvers["sendPaymentNotificationToAll"]
 > = async (_parent, _arg, ctx) => {
-  const party = await ctx.data.Party.findLatest();
+  const party = await ctx.data.Party.findNextParty();
 
   if (!party?.finalCostPerDay) {
     throw new GraphQLError("No party found");
