@@ -75,6 +75,19 @@ export function PartyCheckIn() {
                 <IconCheck color="green" />
                 <Text fs="italic">Checked in</Text>
               </Group>
+            ) : data.nextParty.attending.checkOut ? (
+              <Group>
+                <IconCheck color="green" />
+                <Text fs="italic">Checked out</Text>
+                <Text fs="italic">
+                  Du warst vom{" "}
+                  {formatRange(
+                    dayjs(data.nextParty.attending.checkIn).toDate(),
+                    dayjs(data.nextParty.attending.checkOut).toDate(),
+                  )}{" "}
+                  anwesend.
+                </Text>
+              </Group>
             ) : (
               <div>Lass den QR Code beim Check-In scannen!</div>
             )}
