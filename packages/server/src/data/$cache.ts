@@ -109,11 +109,11 @@ export async function syncCache(clearCache = false) {
 
   syncingCache = newrelic.startBackgroundTransaction(`syncCache`, async () => {
     logger.trace("Syncing cache");
+    const doc = await getSheet();
     for (const [cls, entities] of patches.entries()) {
       const sheetName = cls.prototype.sheetName;
       await newrelic.startSegment(`syncCache.${sheetName}`, true, async () => {
         const objectKeys = Object.keys(new cls());
-        const doc = await getSheet();
         const rows = await doc.sheetsByTitle[sheetName].getRows();
         for (const [id, operations] of entities.entries()) {
           const row = rows.find((row) => row.id === JSON.stringify(id));
