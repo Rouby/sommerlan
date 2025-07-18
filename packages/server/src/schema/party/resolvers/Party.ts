@@ -3,8 +3,9 @@ export const Party: Pick<
   PartyResolvers,
   | "attending"
   | "attendings"
+  | "costPerDay"
   | "endDate"
-  | "finalCostPerDay"
+  | "feedingCosts"
   | "id"
   | "latitude"
   | "location"
@@ -44,6 +45,22 @@ export const Party: Pick<
     return ctx.data.Attending.findByPartyIdAndUserId(
       parent.id,
       userId ?? ctx.jwt.user.id,
+    );
+  },
+  costPerDay: async (parent, _arg, ctx) => {
+    const attendings = await ctx.data.Attending.filterByPartyId(parent.id);
+    const daysWithAttending = attendings.reduce(
+      (acc, attending) => acc + Math.max(attending.dates.length - 1, 0),
+      0,
+    );
+    const donations = await ctx.data.Donation.filterByPartyId(parent.id);
+    const donationsForRent = donations
+      .filter((donation) => donation.dedication === "rent")
+      .reduce((acc, donation) => acc + donation.amount, 0);
+
+    return (
+      (parent.rentalCosts + parent.feedingCosts - donationsForRent) /
+      daysWithAttending
     );
   },
 };

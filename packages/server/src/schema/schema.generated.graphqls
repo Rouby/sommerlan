@@ -193,10 +193,11 @@ type Mutation {
 type Party {
   attending(userId: ID): Attending
   attendings: [Attending!]!
+  costPerDay: Float!
   donations: [Donation!]!
   endDate: Date!
   events: [Event!]!
-  finalCostPerDay: Float
+  feedingCosts: Float!
   gamesPlayed: [GameOnParty!]!
   id: ID!
   latitude: Float!

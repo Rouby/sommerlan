@@ -1550,6 +1550,16 @@ export const typeDefs = {
         },
         {
           kind: "FieldDefinition",
+          name: { kind: "Name", value: "feedingCosts" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Float" } },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
           name: { kind: "Name", value: "attendings" },
           arguments: [],
           type: {
@@ -1629,9 +1639,12 @@ export const typeDefs = {
         },
         {
           kind: "FieldDefinition",
-          name: { kind: "Name", value: "finalCostPerDay" },
+          name: { kind: "Name", value: "costPerDay" },
           arguments: [],
-          type: { kind: "NamedType", name: { kind: "Name", value: "Float" } },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Float" } },
+          },
           directives: [],
         },
         {

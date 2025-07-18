@@ -39,13 +39,14 @@ type Party @rbac {
   locationWidgetSrc: String
   roomsAvailable: Int!
   rentalCosts: Float!
+  feedingCosts: Float!
   attendings: [Attending!]!
   attending(userId: ID): Attending
   pictures: [Picture!]!
   seatsAvailable: Int!
   registrationDeadline: Date
   payday: Date
-  finalCostPerDay: Float
+  costPerDay: Float!
   paidDues: Float
 }
 

@@ -405,10 +405,11 @@ export type Party = {
   __typename?: "Party";
   attending?: Maybe<Attending>;
   attendings: Array<Attending>;
+  costPerDay: Scalars["Float"]["output"];
   donations: Array<Donation>;
   endDate: Scalars["Date"]["output"];
   events: Array<Event>;
-  finalCostPerDay?: Maybe<Scalars["Float"]["output"]>;
+  feedingCosts: Scalars["Float"]["output"];
   gamesPlayed: Array<GameOnParty>;
   id: Scalars["ID"]["output"];
   latitude: Scalars["Float"]["output"];
@@ -1287,6 +1288,7 @@ export type PartyResolvers<
     ParentType,
     ContextType
   >;
+  costPerDay?: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
   donations?: Resolver<
     Array<ResolversTypes["Donation"]>,
     ParentType,
@@ -1294,11 +1296,7 @@ export type PartyResolvers<
   >;
   endDate?: Resolver<ResolversTypes["Date"], ParentType, ContextType>;
   events?: Resolver<Array<ResolversTypes["Event"]>, ParentType, ContextType>;
-  finalCostPerDay?: Resolver<
-    Maybe<ResolversTypes["Float"]>,
-    ParentType,
-    ContextType
-  >;
+  feedingCosts?: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
   gamesPlayed?: Resolver<
     Array<ResolversTypes["GameOnParty"]>,
     ParentType,

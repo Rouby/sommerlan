@@ -26,7 +26,7 @@ export function PartyPayment() {
       query PartyPaymentInfo {
         nextParty {
           id
-          finalCostPerDay
+          costPerDay
           payday
           attendings {
             id
@@ -87,7 +87,7 @@ export function PartyPayment() {
     );
   }
 
-  if (!data?.nextParty || !data.nextParty.finalCostPerDay) {
+  if (!data?.nextParty || !data.nextParty.payday) {
     return (
       <Alert
         icon={<IconAlertCircle size="1rem" />}
@@ -120,7 +120,7 @@ export function PartyPayment() {
 
   // Calculate costs
   const myDaysAttending = Math.max(0, myAttending.dates.length - 1); // First day is free
-  const myRentDues = myDaysAttending * (party.finalCostPerDay || 0);
+  const myRentDues = myDaysAttending * party.costPerDay;
 
   // Calculate donations made by this user
   const myDonations = party.donations
@@ -180,7 +180,7 @@ export function PartyPayment() {
 
           <Group justify="space-between">
             <Text fw="bold">Cost per day:</Text>
-            <Text>{formatCurrency(party.finalCostPerDay || 0)}</Text>
+            <Text>{formatCurrency(party.costPerDay)}</Text>
           </Group>
 
           <Group justify="space-between">

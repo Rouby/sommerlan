@@ -7,7 +7,6 @@ import {
   PartyDateAndTime,
   PartyDonations,
   PartyLocation,
-  PartyOverwatch,
   PartyRooms,
 } from "../../features";
 
@@ -24,10 +23,6 @@ export const Route = createLazyFileRoute("/party/")({
         }
       >
         <PartyDateAndTime />
-
-        <Space h="md" />
-
-        <PartyOverwatch />
 
         <Space h="md" />
 

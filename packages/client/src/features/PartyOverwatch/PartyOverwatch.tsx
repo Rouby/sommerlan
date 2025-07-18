@@ -128,7 +128,6 @@ export function PartyOverwatch() {
         checked={isTracking}
         onChange={(event) => setIsTracking(event.currentTarget.checked)}
         mb="md"
-        size="xl"
       />
       {userLocations.length > 0 && (
         <MapContainer

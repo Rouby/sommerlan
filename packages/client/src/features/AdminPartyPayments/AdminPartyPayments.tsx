@@ -19,7 +19,7 @@ export function AdminPartyPayments() {
       query NextPartyBudget {
         nextParty {
           id
-          finalCostPerDay
+          costPerDay
           donations {
             id
             donator {
@@ -72,8 +72,8 @@ export function AdminPartyPayments() {
   return (
     <Box p="sm">
       <Text mb="md">
-        Kosten pro Tag: {formatCurrency(data?.nextParty?.finalCostPerDay ?? 0)}{" "}
-        (der erste Tag ist immer umsonst).
+        Kosten pro Tag: {formatCurrency(data?.nextParty?.costPerDay ?? 0)} (der
+        erste Tag ist immer umsonst).
       </Text>
       <Table>
         <Table.Thead>

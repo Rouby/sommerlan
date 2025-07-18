@@ -17,8 +17,9 @@ export function PartyCosts() {
           id
           tentative
           rentalCosts
+          feedingCosts
           paidDues
-          finalCostPerDay
+          costPerDay
           payday
           donations {
             id
@@ -53,18 +54,9 @@ export function PartyCosts() {
 
   const party = data.nextParty;
 
-  const daysWithAttending = party.attendings.reduce(
-    (acc, attending) => acc + Math.max(attending.dates.length - 1, 0),
-    0,
-  );
-
   const donationsForRent = party.donations
     .filter((donation) => donation.dedication === DonationDedication.Rent)
     .reduce((acc, donation) => acc + donation.amount, 0);
-
-  const costPerDay = party.finalCostPerDay
-    ? party.finalCostPerDay
-    : (party.rentalCosts - donationsForRent) / daysWithAttending;
 
   const myDaysAttending = Math.max(
     0,
@@ -73,7 +65,7 @@ export function PartyCosts() {
   );
 
   const myCosts = toFixed(
-    myDaysAttending * costPerDay +
+    myDaysAttending * party.costPerDay +
       party.donations
         .filter((donation) => donation.donator?.id === user.id)
         .reduce((acc, donation) => acc + donation.amount, 0),
@@ -92,7 +84,7 @@ export function PartyCosts() {
         <Text fw="bold">Spendenbeitrag:</Text>
         <Text>{formatCurrency(donationsForRent)}</Text>
         <Text fw="bold">Kosten pro Tag:</Text>
-        <Text>{formatCurrency(costPerDay)}</Text>
+        <Text>{formatCurrency(party.costPerDay)}</Text>
         {myDaysAttending > 0 && (
           <>
             <Text fw="bold">Deine Kosten:</Text>
@@ -100,7 +92,7 @@ export function PartyCosts() {
           </>
         )}
       </Box>
-      {party.finalCostPerDay && party.payday ? (
+      {party.payday ? (
         (myPaidDues ?? 0) >= myCosts ? (
           <Text>Du hast bereits alles bezahlt!</Text>
         ) : (
@@ -118,7 +110,7 @@ export function PartyCosts() {
           immer gratis.
         </Text>
       )}
-      {party.finalCostPerDay && party.payday ? (
+      {party.payday ? (
         <>
           <Text ta="center" mt="sm">
             Mietkosten Fortschritt
