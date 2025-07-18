@@ -5,7 +5,9 @@ export const donate: NonNullable<MutationResolvers["donate"]> = async (
   { amount, incognito, dedication },
   ctx,
 ) => {
-  const party = await ctx.data.Party.findNextParty();
+  const party =
+    (await ctx.data.Party.findCurrentParty()) ||
+    (await ctx.data.Party.findLatestParty());
 
   if (!party) {
     throw createGraphQLError("Party not found");

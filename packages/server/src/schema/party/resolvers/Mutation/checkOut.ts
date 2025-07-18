@@ -10,7 +10,7 @@ export const checkOut: NonNullable<MutationResolvers["checkOut"]> = async (
 ) => {
   ForbiddenError.from(ctx.ability).throwUnlessCan("checkOut", "User");
 
-  const party = await ctx.data.Party.findNextParty();
+  const party = await ctx.data.Party.findCurrentParty();
 
   if (!party) {
     throw createGraphQLError("Party not found");

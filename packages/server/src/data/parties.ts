@@ -1,5 +1,4 @@
 import { randomUUID } from "crypto";
-import * as dayjs from "dayjs";
 import { Base, Values } from "./$base";
 
 export class Party extends Base {
@@ -47,14 +46,19 @@ export class Party extends Base {
     if (props) Object.assign(this, props);
   }
 
-  static async findNextParty() {
+  static async findCurrentParty() {
     const parties = await this.all();
 
-    return parties
-      .filter((party) => dayjs(party.endDate).endOf("day").isAfter(dayjs()))
-      .filter((party) => !party.tentative)
-      .filter((party) => party.seatsAvailable > 0)
-      .sort((a, b) => (a.startDate < b.startDate ? 1 : -1))
-      .at(0);
+    const now = new Date();
+    return parties.find(
+      (party) =>
+        new Date(party.startDate) <= now && new Date(party.endDate) >= now,
+    );
+  }
+
+  static async findLatestParty() {
+    const parties = await this.all();
+
+    return parties.sort((a, b) => (a.startDate < b.startDate ? 1 : -1)).at(0);
   }
 }

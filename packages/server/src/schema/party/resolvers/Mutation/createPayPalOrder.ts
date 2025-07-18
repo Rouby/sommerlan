@@ -6,7 +6,7 @@ export const createPayPalOrder: NonNullable<
 > = async (_parent, _arg, ctx) => {
   ForbiddenError.from(ctx.ability).throwUnlessCan("payWithPayPal", "Party");
 
-  const party = await ctx.data.Party.findNextParty();
+  const party = await ctx.data.Party.findLatestParty();
 
   if (!party) {
     throw new Error("Party not found");

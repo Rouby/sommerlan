@@ -11,7 +11,7 @@ export const capturePayPalOrder: NonNullable<
     throw new GraphQLError("PayPal order not completed");
   }
 
-  const party = await ctx.data.Party.findNextParty();
+  const party = await ctx.data.Party.findLatestParty();
 
   if (!party) {
     throw new Error("Party not found");
