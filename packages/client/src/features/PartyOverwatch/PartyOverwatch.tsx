@@ -7,7 +7,7 @@ import { RelativeTime } from "../../components";
 import { graphql } from "../../gql";
 
 export function PartyOverwatch() {
-  const [{ data, fetching }] = useQuery({
+  const [{ data, fetching }, refetch] = useQuery({
     query: graphql(`
       query GetUserLocations {
         nextParty {
@@ -81,6 +81,13 @@ export function PartyOverwatch() {
       }
     };
   }, [isTracking, updateLocation]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refetch();
+    }, 10000); // Refetch every 10 seconds
+    return () => clearInterval(interval);
+  }, [refetch]);
 
   const userLocations =
     data?.nextParty?.attendings
