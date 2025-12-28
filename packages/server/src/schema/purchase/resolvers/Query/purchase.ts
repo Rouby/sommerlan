@@ -16,5 +16,5 @@ export const purchase: NonNullable<QueryResolvers["purchase"]> = async (
     throw createGraphQLError("Not authorized to view this purchase");
   }
 
-  return purchase;
+  return purchase as any;
 };

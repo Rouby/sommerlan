@@ -2,7 +2,12 @@ import type { PurchaseResolvers } from "./../../types.generated";
 
 export const Purchase: PurchaseResolvers = {
   proposer: (parent, _args, ctx) => {
-    return ctx.data.User.findByIdOrThrow(parent.proposerId);
+    // If proposer is already resolved (from GraphQL), return it
+    if ('proposer' in parent && parent.proposer) {
+      return parent.proposer as any;
+    }
+    // Otherwise resolve from proposerId (from database model)
+    return ctx.data.User.findByIdOrThrow((parent as any).proposerId) as any;
   },
   
   status: ({ status }) => {
@@ -10,11 +15,11 @@ export const Purchase: PurchaseResolvers = {
   },
   
   votes: async (parent, _args, ctx) => {
-    return ctx.data.Vote.filterByPurchaseId(parent.id);
+    return ctx.data.Vote.filterByPurchaseId(String(parent.id)) as any;
   },
   
   voteCount: async (parent, _args, ctx) => {
-    const votes = await ctx.data.Vote.filterByPurchaseId(parent.id);
+    const votes = await ctx.data.Vote.filterByPurchaseId(String(parent.id));
     return {
       yes: votes.filter((v) => v.vote === "yes").length,
       no: votes.filter((v) => v.vote === "no").length,
@@ -24,6 +29,9 @@ export const Purchase: PurchaseResolvers = {
   
   userVote: async (parent, _args, ctx) => {
     if (!ctx.jwt?.user?.id) return null;
-    return ctx.data.Vote.findByUserAndPurchase(ctx.jwt.user.id, parent.id);
+    return (await ctx.data.Vote.findByUserAndPurchase(
+      ctx.jwt.user.id,
+      String(parent.id),
+    )) as any;
   },
 };

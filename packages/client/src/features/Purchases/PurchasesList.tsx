@@ -20,7 +20,6 @@ import { graphql } from "../../gql";
 import { VoteValue, PurchaseStatus } from "../../gql/graphql";
 import { formatCurrency } from "../../utils";
 import { UserAvatar } from "../../components";
-import classes from "./styles.module.css";
 
 export function PurchasesList() {
   const [{ data, fetching }] = useQuery({

@@ -13,7 +13,6 @@ import {
   IconCloudComputing,
   IconDeviceGamepad,
   IconHome,
-  IconShoppingCart,
 } from "@tabler/icons-react";
 import {
   Link,
