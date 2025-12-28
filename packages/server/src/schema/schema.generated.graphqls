@@ -143,6 +143,11 @@ type Mutation {
   checkIn(userId: ID!): Attending
   checkOut(userId: ID!): Attending
   createPayPalOrder: ID!
+  createPurchase(
+    description: String!
+    estimatedCost: Float!
+    title: String!
+  ): Purchase!
   deleteAuthDevice(id: ID!): AuthDevice!
   denyRoom(attendingId: ID!): Attending
   donate(
@@ -187,7 +192,9 @@ type Mutation {
   updatePaidDues(attendingId: ID!, paidDues: Float!): Attending
   updateParty(input: PartyInput!): Party!
   updateProfile(input: ProfileInput!): User!
+  updatePurchaseStatus(purchaseId: ID!, status: PurchaseStatus!): Purchase!
   updateRoles(id: ID!, roles: [Role!]!): User!
+  voteOnPurchase(purchaseId: ID!, vote: VoteValue!): Vote!
 }
 
 type Party {
@@ -269,6 +276,26 @@ input ProfileInput {
   password: String
 }
 
+type Purchase {
+  createdAt: String!
+  description: String!
+  estimatedCost: Float!
+  id: ID!
+  proposer: User!
+  status: PurchaseStatus!
+  title: String!
+  userVote: Vote
+  voteCount: VoteCount!
+  votes: [Vote!]!
+}
+
+enum PurchaseStatus {
+  APPROVED
+  COMPLETED
+  PROPOSED
+  REJECTED
+}
+
 type Query {
   games: [Game!]!
   getCacheInfo: CacheInfo
@@ -277,6 +304,8 @@ type Query {
   nextParty: Party
   parties: [Party!]!
   party(id: ID!): Party
+  purchase(id: ID!): Purchase
+  purchases: [Purchase!]!
   users: [User!]!
 }
 
@@ -316,4 +345,24 @@ type User {
   locations: [Location!]!
   name: String!
   roles: [Role!]!
+}
+
+type Vote {
+  createdAt: String!
+  id: ID!
+  purchase: Purchase!
+  user: User!
+  vote: VoteValue!
+}
+
+type VoteCount {
+  abstain: Int!
+  no: Int!
+  yes: Int!
+}
+
+enum VoteValue {
+  ABSTAIN
+  NO
+  YES
 }
