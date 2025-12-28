@@ -17,5 +17,5 @@ export const updatePurchaseStatus: NonNullable<
   purchase.status = status.toLowerCase() as Lowercase<typeof status>;
   await purchase.save();
 
-  return purchase;
+  return purchase as any;
 };

@@ -227,6 +227,56 @@ export function createFakeApi() {
           };
         }
       },
+      Purchase: class Purchase extends Models.Purchase {
+        static rows: Purchase[] = [];
+        static get cache() {
+          return {
+            allRows: async <T>() => this.rows as T[],
+            deleteRow: async (_: new () => unknown, __: string, id: string) => {
+              const index = this.rows.findIndex((row) => row.id === id);
+              this.rows.splice(index, 1);
+            },
+            updateRow: async (
+              _: new () => unknown,
+              __: string,
+              id: string,
+              values: Record<string, unknown>,
+            ) => {
+              const row = this.rows.find((row) => row.id === id);
+              if (row) {
+                Object.assign(row, values);
+              } else {
+                this.rows.push(new Purchase(values));
+              }
+            },
+          };
+        }
+      },
+      Vote: class Vote extends Models.Vote {
+        static rows: Vote[] = [];
+        static get cache() {
+          return {
+            allRows: async <T>() => this.rows as T[],
+            deleteRow: async (_: new () => unknown, __: string, id: string) => {
+              const index = this.rows.findIndex((row) => row.id === id);
+              this.rows.splice(index, 1);
+            },
+            updateRow: async (
+              _: new () => unknown,
+              __: string,
+              id: string,
+              values: Record<string, unknown>,
+            ) => {
+              const row = this.rows.find((row) => row.id === id);
+              if (row) {
+                Object.assign(row, values);
+              } else {
+                this.rows.push(new Vote(values));
+              }
+            },
+          };
+        }
+      },
     },
   };
 }
@@ -240,6 +290,8 @@ export const fakeGoogleSheetApi = {
     Parties: fakeSheet("Party"),
     Pictures: fakeSheet("Picture"),
     Users: fakeSheet("User"),
+    Purchases: fakeSheet("Purchase"),
+    Votes: fakeSheet("Vote"),
   },
 
   seedRow(clsName: string, data: any) {

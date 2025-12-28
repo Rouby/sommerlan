@@ -23,7 +23,7 @@ export const voteOnPurchase: NonNullable<
   if (existingVote) {
     existingVote.vote = vote.toLowerCase() as Lowercase<typeof vote>;
     await existingVote.save();
-    return existingVote;
+    return existingVote as any;
   }
 
   const newVote = new ctx.data.Vote({
@@ -34,5 +34,5 @@ export const voteOnPurchase: NonNullable<
 
   await newVote.save();
 
-  return newVote;
+  return newVote as any;
 };

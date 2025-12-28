@@ -65,10 +65,11 @@ export function CreatePurchaseForm() {
         onSubmit={async (event) => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
+          const formData = new FormData(form);
 
-          const title = form["title"].value;
-          const description = form["description"].value;
-          const estimatedCost = +form["estimatedCost"].value;
+          const title = formData.get("title") as string;
+          const description = formData.get("description") as string;
+          const estimatedCost = +(formData.get("estimatedCost") as string);
 
           const result = await createPurchase({
             title,

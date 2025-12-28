@@ -30,6 +30,10 @@ export type AppAbility = MongoAbility<
       | "Budget"
       | { __typename: "MoneyTransfer" }
       | "MoneyTransfer"
+      | { __typename: "Purchase" }
+      | "Purchase"
+      | { __typename: "Vote" }
+      | "Vote"
     ),
   ]
 >;

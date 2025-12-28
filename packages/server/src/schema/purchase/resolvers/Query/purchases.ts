@@ -10,5 +10,5 @@ export const purchases: NonNullable<QueryResolvers["purchases"]> = async (
 
   return ctx.data.Purchase.filter((purchase) =>
     ctx.ability.can("read", purchase),
-  );
+  ) as any;
 };

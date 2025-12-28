@@ -18,5 +18,5 @@ export const createPurchase: NonNullable<
 
   await purchase.save();
 
-  return purchase;
+  return purchase as any;
 };

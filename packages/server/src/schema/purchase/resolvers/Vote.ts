@@ -1,12 +1,12 @@
 import type { VoteResolvers } from "./../../types.generated";
 
 export const Vote: VoteResolvers = {
-  purchase: (parent, _args, ctx) => {
-    return ctx.data.Purchase.findByIdOrThrow(parent.purchaseId);
+  purchase: (parent) => {
+    return parent.purchase;
   },
   
-  user: (parent, _args, ctx) => {
-    return ctx.data.User.findByIdOrThrow(parent.userId);
+  user: (parent) => {
+    return parent.user;
   },
   
   vote: ({ vote }) => {
