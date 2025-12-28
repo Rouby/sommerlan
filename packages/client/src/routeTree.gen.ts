@@ -20,6 +20,7 @@ import { Route as PartyCheckInImport } from './routes/party/check-in'
 const ImprintLazyImport = createFileRoute('/imprint')()
 const AdminLazyImport = createFileRoute('/admin')()
 const IndexLazyImport = createFileRoute('/')()
+const PurchasesIndexLazyImport = createFileRoute('/purchases/')()
 const ProfileIndexLazyImport = createFileRoute('/profile/')()
 const PartyIndexLazyImport = createFileRoute('/party/')()
 const GamesIndexLazyImport = createFileRoute('/games/')()
@@ -48,6 +49,13 @@ const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+
+const PurchasesIndexLazyRoute = PurchasesIndexLazyImport.update({
+  path: '/purchases/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/purchases/index.lazy').then((d) => d.Route),
+)
 
 const ProfileIndexLazyRoute = ProfileIndexLazyImport.update({
   path: '/profile/',
@@ -205,6 +213,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileIndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/purchases/': {
+      id: '/purchases/'
+      path: '/purchases'
+      fullPath: '/purchases'
+      preLoaderRoute: typeof PurchasesIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/admin/users/check-in': {
       id: '/admin/users/check-in'
       path: '/admin/users/check-in'
@@ -245,6 +260,7 @@ export const routeTree = rootRoute.addChildren({
   GamesIndexLazyRoute,
   PartyIndexLazyRoute,
   ProfileIndexLazyRoute,
+  PurchasesIndexLazyRoute,
   AdminUsersCheckInLazyRoute,
   PartyArchiveIdLazyRoute,
   PartyArchiveIndexLazyRoute,
@@ -266,6 +282,7 @@ export const routeTree = rootRoute.addChildren({
         "/games/",
         "/party/",
         "/profile/",
+        "/purchases/",
         "/admin/users/check-in",
         "/party/archive/$id",
         "/party/archive/"
@@ -316,6 +333,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/profile/": {
       "filePath": "profile/index.lazy.tsx"
+    },
+    "/purchases/": {
+      "filePath": "purchases/index.lazy.tsx"
     },
     "/admin/users/check-in": {
       "filePath": "admin_/users/check-in.lazy.tsx"
