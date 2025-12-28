@@ -169,6 +169,7 @@ export type Mutation = {
   checkIn?: Maybe<Attending>;
   checkOut?: Maybe<Attending>;
   createPayPalOrder: Scalars['ID']['output'];
+  createPurchase: Purchase;
   deleteAuthDevice: AuthDevice;
   denyRoom?: Maybe<Attending>;
   donate: Donation;
@@ -201,7 +202,9 @@ export type Mutation = {
   updatePaidDues?: Maybe<Attending>;
   updateParty: Party;
   updateProfile: User;
+  updatePurchaseStatus: Purchase;
   updateRoles: User;
+  voteOnPurchase: Vote;
 };
 
 
@@ -228,6 +231,13 @@ export type MutationCheckInArgs = {
 
 export type MutationCheckOutArgs = {
   userId: Scalars['ID']['input'];
+};
+
+
+export type MutationCreatePurchaseArgs = {
+  description: Scalars['String']['input'];
+  estimatedCost: Scalars['Float']['input'];
+  title: Scalars['String']['input'];
 };
 
 
@@ -397,9 +407,21 @@ export type MutationUpdateProfileArgs = {
 };
 
 
+export type MutationUpdatePurchaseStatusArgs = {
+  purchaseId: Scalars['ID']['input'];
+  status: PurchaseStatus;
+};
+
+
 export type MutationUpdateRolesArgs = {
   id: Scalars['ID']['input'];
   roles: Array<Role>;
+};
+
+
+export type MutationVoteOnPurchaseArgs = {
+  purchaseId: Scalars['ID']['input'];
+  vote: VoteValue;
 };
 
 export type Party = {
@@ -490,6 +512,27 @@ export type ProfileInput = {
   password?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type Purchase = {
+  __typename?: 'Purchase';
+  createdAt: Scalars['String']['output'];
+  description: Scalars['String']['output'];
+  estimatedCost: Scalars['Float']['output'];
+  id: Scalars['ID']['output'];
+  proposer: User;
+  status: PurchaseStatus;
+  title: Scalars['String']['output'];
+  userVote?: Maybe<Vote>;
+  voteCount: VoteCount;
+  votes: Array<Vote>;
+};
+
+export enum PurchaseStatus {
+  Approved = 'APPROVED',
+  Completed = 'COMPLETED',
+  Proposed = 'PROPOSED',
+  Rejected = 'REJECTED'
+}
+
 export type Query = {
   __typename?: 'Query';
   games: Array<Game>;
@@ -499,11 +542,18 @@ export type Query = {
   nextParty?: Maybe<Party>;
   parties: Array<Party>;
   party?: Maybe<Party>;
+  purchase?: Maybe<Purchase>;
+  purchases: Array<Purchase>;
   users: Array<User>;
 };
 
 
 export type QueryPartyArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryPurchaseArgs = {
   id: Scalars['ID']['input'];
 };
 
@@ -545,6 +595,28 @@ export type User = {
   name: Scalars['String']['output'];
   roles: Array<Role>;
 };
+
+export type Vote = {
+  __typename?: 'Vote';
+  createdAt: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  purchase: Purchase;
+  user: User;
+  vote: VoteValue;
+};
+
+export type VoteCount = {
+  __typename?: 'VoteCount';
+  abstain: Scalars['Int']['output'];
+  no: Scalars['Int']['output'];
+  yes: Scalars['Int']['output'];
+};
+
+export enum VoteValue {
+  Abstain = 'ABSTAIN',
+  No = 'NO',
+  Yes = 'YES'
+}
 
 export type RefreshLoginMutationVariables = Exact<{
   refreshToken: Scalars['String']['input'];
@@ -868,6 +940,28 @@ export type DenyRoomMutationVariables = Exact<{
 
 export type DenyRoomMutation = { __typename?: 'Mutation', denyRoom?: { __typename?: 'Attending', id: string, room?: RoomStatus | null } | null };
 
+export type CreatePurchaseMutationVariables = Exact<{
+  title: Scalars['String']['input'];
+  description: Scalars['String']['input'];
+  estimatedCost: Scalars['Float']['input'];
+}>;
+
+
+export type CreatePurchaseMutation = { __typename?: 'Mutation', createPurchase: { __typename?: 'Purchase', id: string, title: string, description: string, estimatedCost: number, status: PurchaseStatus, proposer: { __typename?: 'User', id: string, displayName: string, avatar: string }, voteCount: { __typename?: 'VoteCount', yes: number, no: number, abstain: number } } };
+
+export type PurchasesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PurchasesQuery = { __typename?: 'Query', purchases: Array<{ __typename?: 'Purchase', id: string, title: string, description: string, estimatedCost: number, status: PurchaseStatus, createdAt: string, proposer: { __typename?: 'User', id: string, displayName: string, avatar: string }, voteCount: { __typename?: 'VoteCount', yes: number, no: number, abstain: number }, userVote?: { __typename?: 'Vote', id: string, vote: VoteValue } | null }> };
+
+export type VoteOnPurchaseMutationVariables = Exact<{
+  purchaseId: Scalars['ID']['input'];
+  vote: VoteValue;
+}>;
+
+
+export type VoteOnPurchaseMutation = { __typename?: 'Mutation', voteOnPurchase: { __typename?: 'Vote', id: string, vote: VoteValue, purchase: { __typename?: 'Purchase', id: string, voteCount: { __typename?: 'VoteCount', yes: number, no: number, abstain: number }, userVote?: { __typename?: 'Vote', id: string, vote: VoteValue } | null } } };
+
 export type RegisterMutationVariables = Exact<{
   userName: Scalars['String']['input'];
   email: Scalars['String']['input'];
@@ -1025,6 +1119,9 @@ export const RequestRoomDocument = {"kind":"Document","definitions":[{"kind":"Op
 export const RecindRoomDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"recindRoom"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"partyId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"recindRoom"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"partyId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"partyId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"dates"}},{"kind":"Field","name":{"kind":"Name","value":"room"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}}]}}]}}]}}]} as unknown as DocumentNode<RecindRoomMutation, RecindRoomMutationVariables>;
 export const GrantRoomDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"grantRoom"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"attendingId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"grantRoom"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"attendingId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"attendingId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"room"}}]}}]}}]} as unknown as DocumentNode<GrantRoomMutation, GrantRoomMutationVariables>;
 export const DenyRoomDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"denyRoom"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"attendingId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"denyRoom"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"attendingId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"attendingId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"room"}}]}}]}}]} as unknown as DocumentNode<DenyRoomMutation, DenyRoomMutationVariables>;
+export const CreatePurchaseDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createPurchase"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"title"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"description"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"estimatedCost"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createPurchase"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"title"},"value":{"kind":"Variable","name":{"kind":"Name","value":"title"}}},{"kind":"Argument","name":{"kind":"Name","value":"description"},"value":{"kind":"Variable","name":{"kind":"Name","value":"description"}}},{"kind":"Argument","name":{"kind":"Name","value":"estimatedCost"},"value":{"kind":"Variable","name":{"kind":"Name","value":"estimatedCost"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"estimatedCost"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"proposer"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}}]}},{"kind":"Field","name":{"kind":"Name","value":"voteCount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"yes"}},{"kind":"Field","name":{"kind":"Name","value":"no"}},{"kind":"Field","name":{"kind":"Name","value":"abstain"}}]}}]}}]}}]} as unknown as DocumentNode<CreatePurchaseMutation, CreatePurchaseMutationVariables>;
+export const PurchasesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"purchases"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"purchases"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"estimatedCost"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"proposer"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}}]}},{"kind":"Field","name":{"kind":"Name","value":"voteCount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"yes"}},{"kind":"Field","name":{"kind":"Name","value":"no"}},{"kind":"Field","name":{"kind":"Name","value":"abstain"}}]}},{"kind":"Field","name":{"kind":"Name","value":"userVote"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"vote"}}]}}]}}]}}]} as unknown as DocumentNode<PurchasesQuery, PurchasesQueryVariables>;
+export const VoteOnPurchaseDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"voteOnPurchase"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"purchaseId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"vote"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"VoteValue"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"voteOnPurchase"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"purchaseId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"purchaseId"}}},{"kind":"Argument","name":{"kind":"Name","value":"vote"},"value":{"kind":"Variable","name":{"kind":"Name","value":"vote"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"vote"}},{"kind":"Field","name":{"kind":"Name","value":"purchase"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"voteCount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"yes"}},{"kind":"Field","name":{"kind":"Name","value":"no"}},{"kind":"Field","name":{"kind":"Name","value":"abstain"}}]}},{"kind":"Field","name":{"kind":"Name","value":"userVote"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"vote"}}]}}]}}]}}]}}]} as unknown as DocumentNode<VoteOnPurchaseMutation, VoteOnPurchaseMutationVariables>;
 export const RegisterDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"register"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userName"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"email"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"password"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"register"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"userName"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userName"}}},{"kind":"Argument","name":{"kind":"Name","value":"email"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}},{"kind":"Argument","name":{"kind":"Name","value":"password"},"value":{"kind":"Variable","name":{"kind":"Name","value":"password"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"refreshToken"}}]}}]}}]} as unknown as DocumentNode<RegisterMutation, RegisterMutationVariables>;
 export const SendEmailLinkDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"sendEmailLink"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"email"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"sendMagicLink"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"email"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}}]}]}}]} as unknown as DocumentNode<SendEmailLinkMutation, SendEmailLinkMutationVariables>;
 export const LoginPasswordDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"loginPassword"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"email"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"password"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"loginPassword"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"email"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}},{"kind":"Argument","name":{"kind":"Name","value":"password"},"value":{"kind":"Variable","name":{"kind":"Name","value":"password"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"refreshToken"}}]}}]}}]} as unknown as DocumentNode<LoginPasswordMutation, LoginPasswordMutationVariables>;

@@ -13,6 +13,7 @@ import {
   IconCloudComputing,
   IconDeviceGamepad,
   IconHome,
+  IconShoppingCart,
 } from "@tabler/icons-react";
 import {
   Link,
@@ -107,6 +108,9 @@ export const Route = createRootRoute({
                 </Link>
                 <Link to="/events">
                   <Button variant="subtle">Events</Button>
+                </Link>
+                <Link to="/purchases">
+                  <Button variant="subtle">Anschaffungen</Button>
                 </Link>
                 <Link to="/imprint">
                   <Button variant="subtle">Impressum</Button>
