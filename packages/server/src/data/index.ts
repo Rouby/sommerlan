@@ -6,4 +6,5 @@ export * from "./games";
 export * from "./moneyTransfers";
 export * from "./parties";
 export * from "./pictures";
+export * from "./purchases";
 export * from "./users";

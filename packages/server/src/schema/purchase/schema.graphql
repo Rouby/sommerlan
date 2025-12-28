@@ -1,0 +1,62 @@
+extend type Query {
+  purchases: [Purchase!]!
+  purchase(id: ID!): Purchase
+}
+
+extend type Mutation {
+  createPurchase(
+    title: String!
+    description: String!
+    estimatedCost: Float!
+  ): Purchase!
+  
+  voteOnPurchase(
+    purchaseId: ID!
+    vote: VoteValue!
+  ): Vote!
+  
+  updatePurchaseStatus(
+    purchaseId: ID!
+    status: PurchaseStatus!
+  ): Purchase!
+}
+
+type Purchase {
+  id: ID!
+  title: String!
+  description: String!
+  estimatedCost: Float!
+  proposer: User!
+  status: PurchaseStatus!
+  createdAt: String!
+  votes: [Vote!]!
+  voteCount: VoteCount!
+  userVote: Vote
+}
+
+type Vote {
+  id: ID!
+  purchase: Purchase!
+  user: User!
+  vote: VoteValue!
+  createdAt: String!
+}
+
+type VoteCount {
+  yes: Int!
+  no: Int!
+  abstain: Int!
+}
+
+enum VoteValue {
+  YES
+  NO
+  ABSTAIN
+}
+
+enum PurchaseStatus {
+  PROPOSED
+  APPROVED
+  REJECTED
+  COMPLETED
+}

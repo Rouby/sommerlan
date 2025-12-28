@@ -7,6 +7,8 @@ import { moneyTransfers as Query_moneyTransfers } from "./money/resolvers/Query/
 import { nextParty as Query_nextParty } from "./party/resolvers/Query/nextParty";
 import { parties as Query_parties } from "./party/resolvers/Query/parties";
 import { party as Query_party } from "./party/resolvers/Query/party";
+import { purchase as Query_purchase } from "./purchase/resolvers/Query/purchase";
+import { purchases as Query_purchases } from "./purchase/resolvers/Query/purchases";
 import { users as Query_users } from "./user/resolvers/Query/users";
 import { addGameToParty as Mutation_addGameToParty } from "./game/resolvers/Mutation/addGameToParty";
 import { addPicture as Mutation_addPicture } from "./party/resolvers/Mutation/addPicture";
@@ -14,6 +16,7 @@ import { capturePayPalOrder as Mutation_capturePayPalOrder } from "./party/resol
 import { checkIn as Mutation_checkIn } from "./party/resolvers/Mutation/checkIn";
 import { checkOut as Mutation_checkOut } from "./party/resolvers/Mutation/checkOut";
 import { createPayPalOrder as Mutation_createPayPalOrder } from "./party/resolvers/Mutation/createPayPalOrder";
+import { createPurchase as Mutation_createPurchase } from "./purchase/resolvers/Mutation/createPurchase";
 import { deleteAuthDevice as Mutation_deleteAuthDevice } from "./user/resolvers/Mutation/deleteAuthDevice";
 import { denyRoom as Mutation_denyRoom } from "./party/resolvers/Mutation/denyRoom";
 import { donate as Mutation_donate } from "./donation/resolvers/Mutation/donate";
@@ -46,7 +49,9 @@ import { updateLocation as Mutation_updateLocation } from "./overwatch/resolvers
 import { updatePaidDues as Mutation_updatePaidDues } from "./party/resolvers/Mutation/updatePaidDues";
 import { updateParty as Mutation_updateParty } from "./party/resolvers/Mutation/updateParty";
 import { updateProfile as Mutation_updateProfile } from "./user/resolvers/Mutation/updateProfile";
+import { updatePurchaseStatus as Mutation_updatePurchaseStatus } from "./purchase/resolvers/Mutation/updatePurchaseStatus";
 import { updateRoles as Mutation_updateRoles } from "./user/resolvers/Mutation/updateRoles";
+import { voteOnPurchase as Mutation_voteOnPurchase } from "./purchase/resolvers/Mutation/voteOnPurchase";
 import { AddGameResult } from "./game/resolvers/AddGameResult";
 import { Attending as party_Attending } from "./party/resolvers/Attending";
 import { Attending as game_Attending } from "./game/resolvers/Attending";
@@ -70,10 +75,13 @@ import { Party as game_Party } from "./game/resolvers/Party";
 import { Picture } from "./party/resolvers/Picture";
 import { PictureMeta } from "./party/resolvers/PictureMeta";
 import { PictureTag } from "./party/resolvers/PictureTag";
+import { Purchase } from "./purchase/resolvers/Purchase";
 import { RegisterDeviceResponse } from "./user/resolvers/RegisterDeviceResponse";
 import { RegisterResponse } from "./user/resolvers/RegisterResponse";
 import { User as user_User } from "./user/resolvers/User";
 import { User as overwatch_User } from "./overwatch/resolvers/User";
+import { Vote } from "./purchase/resolvers/Vote";
+import { VoteCount } from "./purchase/resolvers/VoteCount";
 import { BoundingBox } from "./party/resolvers/BoundingBox";
 import { File } from "./base/resolvers/File";
 import {
@@ -92,6 +100,8 @@ export const resolvers: Resolvers = {
     nextParty: Query_nextParty,
     parties: Query_parties,
     party: Query_party,
+    purchase: Query_purchase,
+    purchases: Query_purchases,
     users: Query_users,
   },
   Mutation: {
@@ -101,6 +111,7 @@ export const resolvers: Resolvers = {
     checkIn: Mutation_checkIn,
     checkOut: Mutation_checkOut,
     createPayPalOrder: Mutation_createPayPalOrder,
+    createPurchase: Mutation_createPurchase,
     deleteAuthDevice: Mutation_deleteAuthDevice,
     denyRoom: Mutation_denyRoom,
     donate: Mutation_donate,
@@ -133,7 +144,9 @@ export const resolvers: Resolvers = {
     updatePaidDues: Mutation_updatePaidDues,
     updateParty: Mutation_updateParty,
     updateProfile: Mutation_updateProfile,
+    updatePurchaseStatus: Mutation_updatePurchaseStatus,
     updateRoles: Mutation_updateRoles,
+    voteOnPurchase: Mutation_voteOnPurchase,
   },
 
   AddGameResult: AddGameResult,
@@ -154,9 +167,12 @@ export const resolvers: Resolvers = {
   Picture: Picture,
   PictureMeta: PictureMeta,
   PictureTag: PictureTag,
+  Purchase: Purchase,
   RegisterDeviceResponse: RegisterDeviceResponse,
   RegisterResponse: RegisterResponse,
   User: { ...user_User, ...overwatch_User },
+  Vote: Vote,
+  VoteCount: VoteCount,
   BoundingBox: BoundingBox,
   File: File,
   Date: DateResolver,

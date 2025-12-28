@@ -11,7 +11,9 @@ import {
   MoneyTransfer,
   Party,
   Picture,
+  Purchase,
   User,
+  Vote,
 } from "./data";
 
 export type AppAbility = MongoAbility<
@@ -36,6 +38,10 @@ export type AppAbility = MongoAbility<
       | "Budget"
       | MoneyTransfer
       | "MoneyTransfer"
+      | Purchase
+      | "Purchase"
+      | Vote
+      | "Vote"
     ),
   ]
 >;
@@ -75,6 +81,10 @@ export async function createAbility(
       userId: { $ne: user.id },
     });
 
+    // Purchase permissions
+    can("read", "Purchase");
+    can("vote", "Purchase");
+
     if (user.roles.includes(User.Role.Trusted)) {
       can("read", "User", [
         "displayName",
@@ -88,6 +98,7 @@ export async function createAbility(
       can("create", "Game");
       can("create", "Picture");
       can("payWithPayPal", "Party");
+      can("create", "Purchase");
     }
 
     if (user.roles.includes(User.Role.Admin)) {
@@ -100,6 +111,7 @@ export async function createAbility(
       can("participateOthers", "Event");
       can(["create", "read", "update", "delete"], "Cache");
       can(["create", "read", "update", "delete"], "Picture");
+      can(["create", "update", "delete"], "Purchase");
     }
 
     if (user.roles.includes(User.Role.Doorkeeper)) {
@@ -126,4 +138,4 @@ export async function createAbility(
   });
 }
 
-export const AbilityVersion = 6 as const;
+export const AbilityVersion = 7 as const;

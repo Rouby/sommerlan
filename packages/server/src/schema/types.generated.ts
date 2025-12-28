@@ -204,6 +204,7 @@ export type Mutation = {
   checkIn?: Maybe<Attending>;
   checkOut?: Maybe<Attending>;
   createPayPalOrder: Scalars["ID"]["output"];
+  createPurchase: Purchase;
   deleteAuthDevice: AuthDevice;
   denyRoom?: Maybe<Attending>;
   donate: Donation;
@@ -236,7 +237,9 @@ export type Mutation = {
   updatePaidDues?: Maybe<Attending>;
   updateParty: Party;
   updateProfile: User;
+  updatePurchaseStatus: Purchase;
   updateRoles: User;
+  voteOnPurchase: Vote;
 };
 
 export type MutationaddGameToPartyArgs = {
@@ -258,6 +261,12 @@ export type MutationcheckInArgs = {
 
 export type MutationcheckOutArgs = {
   userId: Scalars["ID"]["input"];
+};
+
+export type MutationcreatePurchaseArgs = {
+  description: Scalars["String"]["input"];
+  estimatedCost: Scalars["Float"]["input"];
+  title: Scalars["String"]["input"];
 };
 
 export type MutationdeleteAuthDeviceArgs = {
@@ -396,9 +405,19 @@ export type MutationupdateProfileArgs = {
   input: ProfileInput;
 };
 
+export type MutationupdatePurchaseStatusArgs = {
+  purchaseId: Scalars["ID"]["input"];
+  status: PurchaseStatus;
+};
+
 export type MutationupdateRolesArgs = {
   id: Scalars["ID"]["input"];
   roles: Array<Role>;
+};
+
+export type MutationvoteOnPurchaseArgs = {
+  purchaseId: Scalars["ID"]["input"];
+  vote: VoteValue;
 };
 
 export type Party = {
@@ -488,6 +507,22 @@ export type ProfileInput = {
   password?: InputMaybe<Scalars["String"]["input"]>;
 };
 
+export type Purchase = {
+  __typename?: "Purchase";
+  createdAt: Scalars["String"]["output"];
+  description: Scalars["String"]["output"];
+  estimatedCost: Scalars["Float"]["output"];
+  id: Scalars["ID"]["output"];
+  proposer: User;
+  status: PurchaseStatus;
+  title: Scalars["String"]["output"];
+  userVote?: Maybe<Vote>;
+  voteCount: VoteCount;
+  votes: Array<Vote>;
+};
+
+export type PurchaseStatus = "APPROVED" | "COMPLETED" | "PROPOSED" | "REJECTED";
+
 export type Query = {
   __typename?: "Query";
   games: Array<Game>;
@@ -497,10 +532,16 @@ export type Query = {
   nextParty?: Maybe<Party>;
   parties: Array<Party>;
   party?: Maybe<Party>;
+  purchase?: Maybe<Purchase>;
+  purchases: Array<Purchase>;
   users: Array<User>;
 };
 
 export type QuerypartyArgs = {
+  id: Scalars["ID"]["input"];
+};
+
+export type QuerypurchaseArgs = {
   id: Scalars["ID"]["input"];
 };
 
@@ -534,6 +575,24 @@ export type User = {
   name: Scalars["String"]["output"];
   roles: Array<Role>;
 };
+
+export type Vote = {
+  __typename?: "Vote";
+  createdAt: Scalars["String"]["output"];
+  id: Scalars["ID"]["output"];
+  purchase: Purchase;
+  user: User;
+  vote: VoteValue;
+};
+
+export type VoteCount = {
+  __typename?: "VoteCount";
+  abstain: Scalars["Int"]["output"];
+  no: Scalars["Int"]["output"];
+  yes: Scalars["Int"]["output"];
+};
+
+export type VoteValue = "ABSTAIN" | "NO" | "YES";
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
 
@@ -690,6 +749,17 @@ export type ResolversTypes = {
   PictureTag: ResolverTypeWrapper<PictureTagMapper>;
   PictureTagInput: PictureTagInput;
   ProfileInput: ProfileInput;
+  Purchase: ResolverTypeWrapper<
+    Omit<Purchase, "proposer" | "status" | "userVote" | "votes"> & {
+      proposer: ResolversTypes["User"];
+      status: ResolversTypes["PurchaseStatus"];
+      userVote?: Maybe<ResolversTypes["Vote"]>;
+      votes: Array<ResolversTypes["Vote"]>;
+    }
+  >;
+  PurchaseStatus: ResolverTypeWrapper<
+    "PROPOSED" | "APPROVED" | "REJECTED" | "COMPLETED"
+  >;
   Query: ResolverTypeWrapper<{}>;
   RegisterDeviceResponse: ResolverTypeWrapper<
     Omit<RegisterDeviceResponse, "device"> & {
@@ -703,6 +773,15 @@ export type ResolversTypes = {
   RoomStatus: ResolverTypeWrapper<"REQUESTED" | "GRANTED">;
   Time: ResolverTypeWrapper<Scalars["Time"]["output"]>;
   User: ResolverTypeWrapper<UserMapper>;
+  Vote: ResolverTypeWrapper<
+    Omit<Vote, "purchase" | "user" | "vote"> & {
+      purchase: ResolversTypes["Purchase"];
+      user: ResolversTypes["User"];
+      vote: ResolversTypes["VoteValue"];
+    }
+  >;
+  VoteCount: ResolverTypeWrapper<VoteCount>;
+  VoteValue: ResolverTypeWrapper<"YES" | "NO" | "ABSTAIN">;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -750,6 +829,11 @@ export type ResolversParentTypes = {
   PictureTag: PictureTagMapper;
   PictureTagInput: PictureTagInput;
   ProfileInput: ProfileInput;
+  Purchase: Omit<Purchase, "proposer" | "userVote" | "votes"> & {
+    proposer: ResolversParentTypes["User"];
+    userVote?: Maybe<ResolversParentTypes["Vote"]>;
+    votes: Array<ResolversParentTypes["Vote"]>;
+  };
   Query: {};
   RegisterDeviceResponse: Omit<RegisterDeviceResponse, "device"> & {
     device: ResolversParentTypes["AuthDevice"];
@@ -759,6 +843,11 @@ export type ResolversParentTypes = {
   };
   Time: Scalars["Time"]["output"];
   User: UserMapper;
+  Vote: Omit<Vote, "purchase" | "user"> & {
+    purchase: ResolversParentTypes["Purchase"];
+    user: ResolversParentTypes["User"];
+  };
+  VoteCount: VoteCount;
 };
 
 export type rbacDirectiveArgs = {};
@@ -1074,6 +1163,15 @@ export type MutationResolvers<
     RequireFields<MutationcheckOutArgs, "userId">
   >;
   createPayPalOrder?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+  createPurchase?: Resolver<
+    ResolversTypes["Purchase"],
+    ParentType,
+    ContextType,
+    RequireFields<
+      MutationcreatePurchaseArgs,
+      "description" | "estimatedCost" | "title"
+    >
+  >;
   deleteAuthDevice?: Resolver<
     ResolversTypes["AuthDevice"],
     ParentType,
@@ -1264,11 +1362,23 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationupdateProfileArgs, "input">
   >;
+  updatePurchaseStatus?: Resolver<
+    ResolversTypes["Purchase"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationupdatePurchaseStatusArgs, "purchaseId" | "status">
+  >;
   updateRoles?: Resolver<
     ResolversTypes["User"],
     ParentType,
     ContextType,
     RequireFields<MutationupdateRolesArgs, "id" | "roles">
+  >;
+  voteOnPurchase?: Resolver<
+    ResolversTypes["Vote"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationvoteOnPurchaseArgs, "purchaseId" | "vote">
   >;
 };
 
@@ -1374,6 +1484,29 @@ export type PictureTagResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type PurchaseResolvers<
+  ContextType = Context,
+  ParentType extends
+    ResolversParentTypes["Purchase"] = ResolversParentTypes["Purchase"],
+> = {
+  createdAt?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  estimatedCost?: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+  proposer?: Resolver<ResolversTypes["User"], ParentType, ContextType>;
+  status?: Resolver<ResolversTypes["PurchaseStatus"], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  userVote?: Resolver<Maybe<ResolversTypes["Vote"]>, ParentType, ContextType>;
+  voteCount?: Resolver<ResolversTypes["VoteCount"], ParentType, ContextType>;
+  votes?: Resolver<Array<ResolversTypes["Vote"]>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PurchaseStatusResolvers = EnumResolverSignature<
+  { APPROVED?: any; COMPLETED?: any; PROPOSED?: any; REJECTED?: any },
+  ResolversTypes["PurchaseStatus"]
+>;
+
 export type QueryResolvers<
   ContextType = Context,
   ParentType extends
@@ -1398,6 +1531,17 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     RequireFields<QuerypartyArgs, "id">
+  >;
+  purchase?: Resolver<
+    Maybe<ResolversTypes["Purchase"]>,
+    ParentType,
+    ContextType,
+    RequireFields<QuerypurchaseArgs, "id">
+  >;
+  purchases?: Resolver<
+    Array<ResolversTypes["Purchase"]>,
+    ParentType,
+    ContextType
   >;
   users?: Resolver<Array<ResolversTypes["User"]>, ParentType, ContextType>;
 };
@@ -1472,6 +1616,35 @@ export type UserResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type VoteResolvers<
+  ContextType = Context,
+  ParentType extends
+    ResolversParentTypes["Vote"] = ResolversParentTypes["Vote"],
+> = {
+  createdAt?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+  purchase?: Resolver<ResolversTypes["Purchase"], ParentType, ContextType>;
+  user?: Resolver<ResolversTypes["User"], ParentType, ContextType>;
+  vote?: Resolver<ResolversTypes["VoteValue"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type VoteCountResolvers<
+  ContextType = Context,
+  ParentType extends
+    ResolversParentTypes["VoteCount"] = ResolversParentTypes["VoteCount"],
+> = {
+  abstain?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  no?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  yes?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type VoteValueResolvers = EnumResolverSignature<
+  { ABSTAIN?: any; NO?: any; YES?: any },
+  ResolversTypes["VoteValue"]
+>;
+
 export type Resolvers<ContextType = Context> = {
   AddGameResult?: AddGameResultResolvers<ContextType>;
   Attending?: AttendingResolvers<ContextType>;
@@ -1499,6 +1672,8 @@ export type Resolvers<ContextType = Context> = {
   Picture?: PictureResolvers<ContextType>;
   PictureMeta?: PictureMetaResolvers<ContextType>;
   PictureTag?: PictureTagResolvers<ContextType>;
+  Purchase?: PurchaseResolvers<ContextType>;
+  PurchaseStatus?: PurchaseStatusResolvers;
   Query?: QueryResolvers<ContextType>;
   RegisterDeviceResponse?: RegisterDeviceResponseResolvers<ContextType>;
   RegisterResponse?: RegisterResponseResolvers<ContextType>;
@@ -1506,6 +1681,9 @@ export type Resolvers<ContextType = Context> = {
   RoomStatus?: RoomStatusResolvers;
   Time?: GraphQLScalarType;
   User?: UserResolvers<ContextType>;
+  Vote?: VoteResolvers<ContextType>;
+  VoteCount?: VoteCountResolvers<ContextType>;
+  VoteValue?: VoteValueResolvers;
 };
 
 export type DirectiveResolvers<ContextType = Context> = {
