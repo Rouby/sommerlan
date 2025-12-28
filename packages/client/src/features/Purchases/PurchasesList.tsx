@@ -125,6 +125,7 @@ function VoteResults({ voteCount }: { voteCount: { yes: number; no: number; abst
 
   const yesPercent = (voteCount.yes / total) * 100;
   const noPercent = (voteCount.no / total) * 100;
+  const abstainPercent = (voteCount.abstain / total) * 100;
 
   return (
     <Box mb="md">
@@ -145,10 +146,13 @@ function VoteResults({ voteCount }: { voteCount: { yes: number; no: number; abst
       
       <Progress.Root size="xl">
         <Progress.Section value={yesPercent} color="green">
-          <Progress.Label>{Math.round(yesPercent)}%</Progress.Label>
+          <Progress.Label>{yesPercent > 5 ? Math.round(yesPercent) + '%' : ''}</Progress.Label>
         </Progress.Section>
         <Progress.Section value={noPercent} color="red">
-          <Progress.Label>{Math.round(noPercent)}%</Progress.Label>
+          <Progress.Label>{noPercent > 5 ? Math.round(noPercent) + '%' : ''}</Progress.Label>
+        </Progress.Section>
+        <Progress.Section value={abstainPercent} color="gray">
+          <Progress.Label>{abstainPercent > 5 ? Math.round(abstainPercent) + '%' : ''}</Progress.Label>
         </Progress.Section>
       </Progress.Root>
     </Box>
