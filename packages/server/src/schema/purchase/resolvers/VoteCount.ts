@@ -1,4 +1,5 @@
 import type { VoteCountResolvers } from "./../../types.generated";
-export const VoteCount: VoteCountResolvers = {
-  /* Implement VoteCount resolver logic here */
-};
+
+// VoteCount is a simple object type with scalar fields
+// No custom resolvers needed - default resolvers will handle it
+export const VoteCount: VoteCountResolvers = {};

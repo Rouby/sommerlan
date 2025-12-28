@@ -1,13 +1,15 @@
 import type { PurchaseResolvers } from "./../../types.generated";
+import type { Purchase as PurchaseModel } from "../../../data";
 
 export const Purchase: PurchaseResolvers = {
   proposer: (parent, _args, ctx) => {
-    // If proposer is already resolved (from GraphQL), return it
-    if ('proposer' in parent && parent.proposer) {
-      return parent.proposer as any;
+    // Check if this is a raw database model with proposerId
+    const purchaseModel = parent as unknown as PurchaseModel;
+    if (purchaseModel.proposerId) {
+      return ctx.data.User.findByIdOrThrow(purchaseModel.proposerId) as any;
     }
-    // Otherwise resolve from proposerId (from database model)
-    return ctx.data.User.findByIdOrThrow((parent as any).proposerId) as any;
+    // Otherwise, proposer is already resolved
+    return parent.proposer as any;
   },
   
   status: ({ status }) => {
