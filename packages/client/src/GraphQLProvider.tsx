@@ -203,6 +203,22 @@ export function GraphQLProvider({ children }: { children: React.ReactNode }) {
                     }
                   }
                 },
+                createPurchase: (result, _args, cache, _info) => {
+                  if (
+                    typeof result.createPurchase === "object" &&
+                    result.createPurchase
+                  ) {
+                    const purchases = cache.resolve("Query", "purchases");
+                    if (Array.isArray(purchases)) {
+                      purchases.push(result.createPurchase as Data);
+                      cache.link(
+                        "Query",
+                        "purchases",
+                        purchases as Link<Entity>,
+                      );
+                    }
+                  }
+                },
               },
             },
             optimistic: {

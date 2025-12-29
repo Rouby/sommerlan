@@ -1,5 +1,5 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { Container, Title } from "@mantine/core";
+import { Center, Container, Title } from "@mantine/core";
 import { PurchasesList } from "../../features/Purchases/PurchasesList";
 import { CreatePurchaseForm } from "../../features/Purchases/CreatePurchaseForm";
 import { Can } from "../../components";
@@ -7,15 +7,21 @@ import { Can } from "../../components";
 export const Route = createLazyFileRoute("/purchases/")({
   component: () => (
     <Container>
-      <Title order={1} mb="md">
-        Geplante Anschaffungen
-      </Title>
+      <Can
+        I="update"
+        a="User"
+        otherwise={
+          <Center>
+            Logge dich ein um Informationen zur Party zu bekommen!
+          </Center>
+        }
+      >
+        <Can I="create" a="Purchase">
+          <CreatePurchaseForm />
+        </Can>
 
-      <Can I="create" a="Purchase">
-        <CreatePurchaseForm />
+        <PurchasesList />
       </Can>
-
-      <PurchasesList />
     </Container>
   ),
 });
