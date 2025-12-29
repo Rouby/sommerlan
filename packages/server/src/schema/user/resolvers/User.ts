@@ -1,16 +1,5 @@
 import type { UserResolvers } from "./../../types.generated";
-export const User: Pick<
-  UserResolvers,
-  | "avatar"
-  | "avatarUrl"
-  | "devices"
-  | "displayName"
-  | "email"
-  | "id"
-  | "name"
-  | "roles"
-  | "__isTypeOf"
-> = {
+export const User: Pick<UserResolvers, 'avatar'|'avatarUrl'|'devices'|'displayName'|'email'|'id'|'name'|'roles'|'__isTypeOf'> = {
   /* Implement User resolver logic here */
   displayName: (parent, __, ctx) => {
     if (!ctx.ability.can("read", parent, "displayName")) {
@@ -35,5 +24,5 @@ export const User: Pick<
       return "";
     }
     return parent.displayName;
-  },
+  }
 };

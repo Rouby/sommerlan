@@ -6,9 +6,7 @@ import { expectedOrigin, rpID } from "../../../../env";
 import { signRefreshToken, signToken } from "../../../../signToken";
 import type { MutationResolvers } from "./../../../types.generated";
 
-export const loginPasskey: NonNullable<
-  MutationResolvers["loginPasskey"]
-> = async (_parent, { response }, ctx) => {
+export const loginPasskey: NonNullable<MutationResolvers['loginPasskey']> = async (_parent, { response }, ctx) => {
   const credId = Array.from(base64url.toBuffer(response.rawId)).join(",");
   const user = await ctx.data.User.find((user) =>
     user.devices.some((dev) => dev.credentialID.join(",") === credId),

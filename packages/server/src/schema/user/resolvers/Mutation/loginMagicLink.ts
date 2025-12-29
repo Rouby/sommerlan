@@ -2,9 +2,7 @@ import { createGraphQLError } from "graphql-yoga";
 import { getTokenFromMagicLink } from "../../../../services";
 import type { MutationResolvers } from "./../../../types.generated";
 
-export const loginMagicLink: NonNullable<
-  MutationResolvers["loginMagicLink"]
-> = async (_parent, { magicLinkId }, _ctx) => {
+export const loginMagicLink: NonNullable<MutationResolvers['loginMagicLink']> = async (_parent, { magicLinkId }, _ctx) => {
   const token = getTokenFromMagicLink(magicLinkId);
 
   if (!token) {

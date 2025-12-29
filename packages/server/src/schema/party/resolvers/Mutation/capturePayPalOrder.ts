@@ -1,9 +1,7 @@
 import { GraphQLError } from "graphql";
 import { capturePayPalOrder as captureOrder } from "../../../../services";
 import type { MutationResolvers } from "./../../../types.generated";
-export const capturePayPalOrder: NonNullable<
-  MutationResolvers["capturePayPalOrder"]
-> = async (_parent, { orderId }, ctx) => {
+export const capturePayPalOrder: NonNullable<MutationResolvers['capturePayPalOrder']> = async (_parent, { orderId }, ctx) => {
   /* Implement Mutation.capturePayPalOrder resolver logic here */
   const response = await captureOrder(orderId);
 

@@ -1,7 +1,7 @@
 import { createGraphQLError } from "graphql-yoga";
 import type { QueryResolvers } from "./../../../types.generated";
 
-export const purchase: NonNullable<QueryResolvers["purchase"]> = async (
+export const purchase: NonNullable<QueryResolvers['purchase']> = async (
   _parent,
   { id },
   ctx,

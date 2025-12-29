@@ -3,9 +3,7 @@ import { issuedChallenges } from "../../../../auth";
 import { rpID } from "../../../../env";
 import type { MutationResolvers } from "./../../../types.generated";
 
-export const generatePasskeyLoginOptions: NonNullable<
-  MutationResolvers["generatePasskeyLoginOptions"]
-> = async (_parent, { userId }, ctx) => {
+export const generatePasskeyLoginOptions: NonNullable<MutationResolvers['generatePasskeyLoginOptions']> = async (_parent, { userId }, ctx) => {
   const user = userId ? await ctx.data.User.findById(userId) : null;
 
   const options = generateAuthenticationOptions({

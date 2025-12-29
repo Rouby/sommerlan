@@ -2,7 +2,7 @@ import { ForbiddenError } from "@casl/ability";
 import { createGraphQLError } from "graphql-yoga";
 import { storeFile } from "../../../../storeFile";
 import type { MutationResolvers } from "./../../../types.generated";
-export const updateGame: NonNullable<MutationResolvers["updateGame"]> = async (
+export const updateGame: NonNullable<MutationResolvers['updateGame']> = async (
   _parent,
   { input: { id, image } },
   ctx,

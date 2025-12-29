@@ -13,7 +13,7 @@ extend type Mutation {
   voteOnPurchase(
     purchaseId: ID!
     vote: VoteValue!
-  ): Vote!
+  ): Purchase!
   
   updatePurchaseStatus(
     purchaseId: ID!
@@ -29,14 +29,12 @@ type Purchase {
   proposer: User!
   status: PurchaseStatus!
   createdAt: String!
-  votes: [Vote!]!
+  votes: [PurchaseVote!]!
   voteCount: VoteCount!
-  userVote: Vote
+  userVote: PurchaseVote
 }
 
-type Vote {
-  id: ID!
-  purchase: Purchase!
+type PurchaseVote {
   user: User!
   vote: VoteValue!
   createdAt: String!

@@ -2,7 +2,7 @@ import { ForbiddenError } from "@casl/ability";
 import { createGraphQLError } from "graphql-yoga";
 import type { MutationResolvers } from "./../../../types.generated";
 
-export const leaveEvent: NonNullable<MutationResolvers["leaveEvent"]> = async (
+export const leaveEvent: NonNullable<MutationResolvers['leaveEvent']> = async (
   _parent,
   { id, userId },
   ctx,

@@ -3,7 +3,7 @@ import type { QueryResolvers } from "./../../../types.generated";
 // @ts-ignore
 import dayjs = require("dayjs");
 
-export const nextParty: NonNullable<QueryResolvers["nextParty"]> = async (
+export const nextParty: NonNullable<QueryResolvers['nextParty']> = async (
   _parent,
   _arg,
   ctx,

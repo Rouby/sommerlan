@@ -3,7 +3,7 @@ import * as dayjs from "dayjs";
 import { createGraphQLError } from "graphql-yoga";
 import type { MutationResolvers } from "./../../../types.generated";
 
-export const checkIn: NonNullable<MutationResolvers["checkIn"]> = async (
+export const checkIn: NonNullable<MutationResolvers['checkIn']> = async (
   _parent,
   { userId },
   ctx,

@@ -1,9 +1,7 @@
 import { ForbiddenError } from "@casl/ability";
 import { createPayPalOrder as createOrder } from "../../../../services";
 import type { MutationResolvers } from "./../../../types.generated";
-export const createPayPalOrder: NonNullable<
-  MutationResolvers["createPayPalOrder"]
-> = async (_parent, _arg, ctx) => {
+export const createPayPalOrder: NonNullable<MutationResolvers['createPayPalOrder']> = async (_parent, _arg, ctx) => {
   ForbiddenError.from(ctx.ability).throwUnlessCan("payWithPayPal", "Party");
 
   const party = await ctx.data.Party.findLatestParty();

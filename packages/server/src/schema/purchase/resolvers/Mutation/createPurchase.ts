@@ -1,9 +1,7 @@
 import { createGraphQLError } from "graphql-yoga";
 import type { MutationResolvers } from "./../../../types.generated";
 
-export const createPurchase: NonNullable<
-  MutationResolvers["createPurchase"]
-> = async (_parent, { title, description, estimatedCost }, ctx) => {
+export const createPurchase: NonNullable<MutationResolvers['createPurchase']> = async (_parent, { title, description, estimatedCost }, ctx) => {
   if (!ctx.ability.can("create", "Purchase")) {
     throw createGraphQLError("Not authorized to create purchases");
   }

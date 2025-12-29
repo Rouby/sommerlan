@@ -43,8 +43,10 @@ export function PurchasesList() {
             abstain
           }
           userVote {
-            id
             vote
+            user {
+              id
+            }
           }
         }
       }
@@ -164,24 +166,22 @@ function VoteButtons({
   userVote,
 }: {
   purchaseId: string;
-  userVote: { id: string; vote: VoteValue } | null | undefined;
+  userVote: { vote: VoteValue } | null | undefined;
 }) {
   const [{ fetching }, vote] = useMutation(
     graphql(`
       mutation voteOnPurchase($purchaseId: ID!, $vote: VoteValue!) {
         voteOnPurchase(purchaseId: $purchaseId, vote: $vote) {
           id
-          vote
-          purchase {
-            id
-            voteCount {
-              yes
-              no
-              abstain
-            }
-            userVote {
+          voteCount {
+            yes
+            no
+            abstain
+          }
+          userVote {
+            vote
+            user {
               id
-              vote
             }
           }
         }

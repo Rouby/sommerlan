@@ -1,7 +1,7 @@
 import { ForbiddenError } from "@casl/ability";
 import type { QueryResolvers } from "./../../../types.generated";
 
-export const purchases: NonNullable<QueryResolvers["purchases"]> = async (
+export const purchases: NonNullable<QueryResolvers['purchases']> = async (
   _parent,
   _arg,
   ctx,

@@ -1,8 +1,6 @@
 import { updateUserLocation } from "../../../../services";
 import type { MutationResolvers } from "./../../../types.generated";
-export const updateLocation: NonNullable<
-  MutationResolvers["updateLocation"]
-> = async (_parent, { latitude, longitude }, ctx) => {
+export const updateLocation: NonNullable<MutationResolvers['updateLocation']> = async (_parent, { latitude, longitude }, ctx) => {
   if (!ctx.jwt.user) {
     throw new Error("Unauthorized");
   }

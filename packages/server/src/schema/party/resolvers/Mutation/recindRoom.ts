@@ -2,7 +2,7 @@ import { ForbiddenError } from "@casl/ability";
 import { createGraphQLError } from "graphql-yoga";
 import type { MutationResolvers } from "./../../../types.generated";
 
-export const recindRoom: NonNullable<MutationResolvers["recindRoom"]> = async (
+export const recindRoom: NonNullable<MutationResolvers['recindRoom']> = async (
   _parent,
   { partyId },
   ctx,

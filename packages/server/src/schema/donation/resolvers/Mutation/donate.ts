@@ -1,6 +1,6 @@
 import { createGraphQLError } from "graphql-yoga";
 import type { MutationResolvers } from "./../../../types.generated";
-export const donate: NonNullable<MutationResolvers["donate"]> = async (
+export const donate: NonNullable<MutationResolvers['donate']> = async (
   _parent,
   { amount, incognito, dedication },
   ctx,

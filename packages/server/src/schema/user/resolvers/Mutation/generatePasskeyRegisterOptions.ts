@@ -4,9 +4,7 @@ import { issuedChallenges } from "../../../../auth";
 import { rpID } from "../../../../env";
 import type { MutationResolvers } from "./../../../types.generated";
 
-export const generatePasskeyRegisterOptions: NonNullable<
-  MutationResolvers["generatePasskeyRegisterOptions"]
-> = async (_parent, { userId }, ctx) => {
+export const generatePasskeyRegisterOptions: NonNullable<MutationResolvers['generatePasskeyRegisterOptions']> = async (_parent, { userId }, ctx) => {
   const user = await ctx.data.User.findById(userId);
 
   if (!user) {

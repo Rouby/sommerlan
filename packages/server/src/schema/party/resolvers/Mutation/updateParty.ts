@@ -4,9 +4,7 @@ import type { MutationResolvers } from "./../../../types.generated";
 // @ts-ignore
 import dayjs = require("dayjs");
 
-export const updateParty: NonNullable<
-  MutationResolvers["updateParty"]
-> = async (_parent, { input: { id, ...input } }, ctx) => {
+export const updateParty: NonNullable<MutationResolvers['updateParty']> = async (_parent, { input: { id, ...input } }, ctx) => {
   const party = id
     ? await ctx.data.Party.findById(id)
     : new ctx.data.Party({

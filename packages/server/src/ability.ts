@@ -13,7 +13,6 @@ import {
   Picture,
   Purchase,
   User,
-  Vote,
 } from "./data";
 
 export type AppAbility = MongoAbility<
@@ -40,8 +39,6 @@ export type AppAbility = MongoAbility<
       | "MoneyTransfer"
       | Purchase
       | "Purchase"
-      | Vote
-      | "Vote"
     ),
   ]
 >;

@@ -1,6 +1,12 @@
 import { randomUUID } from "crypto";
 import { Base, Values } from "./$base";
 
+export interface PurchaseVote {
+  userId: string;
+  vote: "yes" | "no" | "abstain";
+  createdAt: string;
+}
+
 export class Purchase extends Base {
   get sheetName() {
     return "Purchases" as const;
@@ -23,6 +29,8 @@ export class Purchase extends Base {
 
   public createdAt = new Date().toISOString();
 
+  public votes: PurchaseVote[] = [];
+
   constructor(props?: Values<Purchase>) {
     super();
     if (props) Object.assign(this, props);
@@ -31,38 +39,31 @@ export class Purchase extends Base {
   static async filterByStatus(status: Purchase["status"]) {
     return this.filter((purchase) => purchase.status === status);
   }
-}
 
-export class Vote extends Base {
-  get sheetName() {
-    return "Votes" as const;
-  }
-  get kind() {
-    return "Vote" as const;
+  getUserVote(userId: string): PurchaseVote | undefined {
+    return this.votes.find((v) => v.userId === userId);
   }
 
-  public id = randomUUID();
-
-  public purchaseId = "";
-
-  public userId = "";
-
-  public vote: "yes" | "no" | "abstain" = "abstain";
-
-  public createdAt = new Date().toISOString();
-
-  constructor(props?: Values<Vote>) {
-    super();
-    if (props) Object.assign(this, props);
+  addOrUpdateVote(userId: string, vote: "yes" | "no" | "abstain"): void {
+    const existingIndex = this.votes.findIndex((v) => v.userId === userId);
+    const voteData: PurchaseVote = {
+      userId,
+      vote,
+      createdAt: new Date().toISOString(),
+    };
+    
+    if (existingIndex >= 0) {
+      this.votes[existingIndex] = voteData;
+    } else {
+      this.votes.push(voteData);
+    }
   }
 
-  static async filterByPurchaseId(purchaseId: string) {
-    return this.filter((vote) => vote.purchaseId === purchaseId);
-  }
-
-  static async findByUserAndPurchase(userId: string, purchaseId: string) {
-    return this.find(
-      (vote) => vote.userId === userId && vote.purchaseId === purchaseId,
-    );
+  getVoteCount() {
+    return {
+      yes: this.votes.filter((v) => v.vote === "yes").length,
+      no: this.votes.filter((v) => v.vote === "no").length,
+      abstain: this.votes.filter((v) => v.vote === "abstain").length,
+    };
   }
 }
