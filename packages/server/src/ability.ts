@@ -78,10 +78,6 @@ export async function createAbility(
       userId: { $ne: user.id },
     });
 
-    // Purchase permissions
-    can("read", "Purchase");
-    can("vote", "Purchase");
-
     if (user.roles.includes(User.Role.Trusted)) {
       can("read", "User", [
         "displayName",
@@ -95,7 +91,10 @@ export async function createAbility(
       can("create", "Game");
       can("create", "Picture");
       can("payWithPayPal", "Party");
+      // Purchase permissions
       can("create", "Purchase");
+      can("read", "Purchase");
+      can("vote", "Purchase");
     }
 
     if (user.roles.includes(User.Role.Admin)) {
@@ -108,7 +107,6 @@ export async function createAbility(
       can("participateOthers", "Event");
       can(["create", "read", "update", "delete"], "Cache");
       can(["create", "read", "update", "delete"], "Picture");
-      can(["create", "update", "delete"], "Purchase");
     }
 
     if (user.roles.includes(User.Role.Doorkeeper)) {
@@ -121,6 +119,7 @@ export async function createAbility(
       can("rescind", "Donation");
       can("read", "Donation", "userId");
       can(["create", "read"], "MoneyTransfer");
+      can(["create", "update", "delete"], "Purchase");
     }
 
     cannot("participate", "Event", { organizerId: user.id }).because(

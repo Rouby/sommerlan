@@ -29,11 +29,12 @@ import { UserAvatar, Can } from "../../components";
 
 export function PurchasesList() {
   const [showCompleted, setShowCompleted] = useState(false);
-  
+
   const [{ data, fetching }] = useQuery({
     query: graphql(`
       query purchases {
         purchases {
+          __typename
           id
           title
           description
@@ -74,10 +75,14 @@ export function PurchasesList() {
   }
 
   const activePurchases = data.purchases.filter(
-    (p) => p.status === PurchaseStatus.Proposed || p.status === PurchaseStatus.Approved
+    (p) =>
+      p.status === PurchaseStatus.Proposed ||
+      p.status === PurchaseStatus.Approved,
   );
   const completedPurchases = data.purchases.filter(
-    (p) => p.status === PurchaseStatus.Completed || p.status === PurchaseStatus.Rejected
+    (p) =>
+      p.status === PurchaseStatus.Completed ||
+      p.status === PurchaseStatus.Rejected,
   );
 
   return (
@@ -91,10 +96,18 @@ export function PurchasesList() {
           <Button
             variant="subtle"
             onClick={() => setShowCompleted(!showCompleted)}
-            rightSection={showCompleted ? <IconChevronUp size={16} /> : <IconChevronDown size={16} />}
+            rightSection={
+              showCompleted ? (
+                <IconChevronUp size={16} />
+              ) : (
+                <IconChevronDown size={16} />
+              )
+            }
             fullWidth
           >
-            {showCompleted ? "Abgeschlossene ausblenden" : `Abgeschlossene anzeigen (${completedPurchases.length})`}
+            {showCompleted
+              ? "Abgeschlossene ausblenden"
+              : `Abgeschlossene anzeigen (${completedPurchases.length})`}
           </Button>
           <Collapse in={showCompleted}>
             <Stack mt="md" gap="md">
@@ -131,20 +144,15 @@ function PurchaseCard({ purchase }: { purchase: any }) {
 
       <Group mb="md">
         <UserAvatar user={purchase.proposer} />
-        <Text size="sm">
-          Vorgeschlagen von {purchase.proposer.displayName}
-        </Text>
+        <Text size="sm">Vorgeschlagen von {purchase.proposer.displayName}</Text>
       </Group>
 
       <VoteResults voteCount={purchase.voteCount} />
 
       {purchase.status === PurchaseStatus.Proposed && (
         <>
-          <VoteButtons
-            purchaseId={purchase.id}
-            userVote={purchase.userVote}
-          />
-          <Can I="update" this={{ __typename: "Purchase" } as any}>
+          <VoteButtons purchaseId={purchase.id} userVote={purchase.userVote} />
+          <Can I="update" this={purchase}>
             <AdminActions purchaseId={purchase.id} />
           </Can>
         </>
@@ -286,7 +294,10 @@ function VoteButtons({
 function AdminActions({ purchaseId }: { purchaseId: string }) {
   const [{ fetching }, updateStatus] = useMutation(
     graphql(`
-      mutation updatePurchaseStatus($purchaseId: ID!, $status: PurchaseStatus!) {
+      mutation updatePurchaseStatus(
+        $purchaseId: ID!
+        $status: PurchaseStatus!
+      ) {
         updatePurchaseStatus(purchaseId: $purchaseId, status: $status) {
           id
           status
@@ -300,7 +311,9 @@ function AdminActions({ purchaseId }: { purchaseId: string }) {
       <Button
         leftSection={<IconCheck size={16} />}
         color="green"
-        onClick={() => updateStatus({ purchaseId, status: PurchaseStatus.Approved })}
+        onClick={() =>
+          updateStatus({ purchaseId, status: PurchaseStatus.Approved })
+        }
         loading={fetching}
         size="sm"
       >
@@ -309,7 +322,9 @@ function AdminActions({ purchaseId }: { purchaseId: string }) {
       <Button
         leftSection={<IconX size={16} />}
         color="red"
-        onClick={() => updateStatus({ purchaseId, status: PurchaseStatus.Rejected })}
+        onClick={() =>
+          updateStatus({ purchaseId, status: PurchaseStatus.Rejected })
+        }
         loading={fetching}
         size="sm"
       >
