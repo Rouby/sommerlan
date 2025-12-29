@@ -1,5 +1,5 @@
 import type { PartyResolvers } from "./../../types.generated";
-export const Party: Pick<PartyResolvers, 'attending'|'attendings'|'costPerDay'|'endDate'|'feedingCosts'|'id'|'latitude'|'location'|'locationWidgetSrc'|'longitude'|'paidDues'|'payday'|'pictures'|'registrationDeadline'|'rentalCosts'|'roomsAvailable'|'seatsAvailable'|'startDate'|'tentative'|'__isTypeOf'> = {
+export const Party: Pick<PartyResolvers, 'attending' | 'attendings' | 'costPerDay' | 'endDate' | 'feedingCosts' | 'id' | 'latitude' | 'location' | 'locationWidgetSrc' | 'longitude' | 'paidDues' | 'payday' | 'pictures' | 'registrationDeadline' | 'rentalCosts' | 'roomsAvailable' | 'seatsAvailable' | 'startDate' | 'tentative' | '__isTypeOf'> = {
   attendings: async (parent, _arg, ctx) => {
     return ctx.data.Attending.filterByPartyId(parent.id);
   },
@@ -35,6 +35,10 @@ export const Party: Pick<PartyResolvers, 'attending'|'attendings'|'costPerDay'|'
     const donationsForRent = donations
       .filter((donation) => donation.dedication === "rent")
       .reduce((acc, donation) => acc + donation.amount, 0);
+
+    if (daysWithAttending === 0) {
+      return 0;
+    }
 
     return (
       (parent.rentalCosts + parent.feedingCosts - donationsForRent) /

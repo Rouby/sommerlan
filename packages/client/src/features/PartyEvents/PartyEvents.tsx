@@ -205,11 +205,7 @@ function EventCard({
 
       <Group mt="md" justify="apart" wrap="nowrap">
         <Text w={500}>{event.name}</Text>
-        <Can
-          I="update"
-          this={subject("Event", event as any) as any}
-          otherwise={<div />}
-        >
+        <Can I="update" this={subject("Event", event)} otherwise={<div />}>
           <ActionIcon
             size="xs"
             onClick={() => setShowEdit(true)}
