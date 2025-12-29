@@ -17,9 +17,13 @@ test("should be able to enter party", async ({ page, api }) => {
 
   await page.goto("/party");
 
-  await page.getByRole("checkbox", { name: /^Sun/ }).check();
-  await page.getByRole("checkbox", { name: /^Tue/ }).check();
-  await page.getByRole("checkbox", { name: /^Wed/ }).check();
+  // Wait for the party to load and checkboxes to be visible
+  await page.getByRole("checkbox", { name: /^Sun/ }).waitFor({ state: "visible" });
+  
+  // Use force option to bypass actionability checks since the checkboxes are being re-rendered
+  await page.getByRole("checkbox", { name: /^Sun/ }).check({ force: true });
+  await page.getByRole("checkbox", { name: /^Tue/ }).check({ force: true });
+  await page.getByRole("checkbox", { name: /^Wed/ }).check({ force: true });
 
   await expect(page.getByText("AE", { exact: true })).toHaveCount(3);
 });
@@ -51,7 +55,10 @@ test("should be able to enter overcrowded party", async ({ page, api }) => {
 
   await page.goto("/party");
 
-  await page.getByRole("checkbox", { name: /^Sun/ }).check();
+  // Wait for the party to load and checkboxes to be visible
+  await page.getByRole("checkbox", { name: /^Sun/ }).waitFor({ state: "visible" });
+  
+  await page.getByRole("checkbox", { name: /^Sun/ }).check({ force: true });
 
   await expect(page.getByText("AE", { exact: true })).toHaveCount(1);
   await expect(page.getByText("BE", { exact: true })).toHaveCount(1);

@@ -69,6 +69,9 @@ export default defineConfig({
       url: "http://127.0.0.1:2022/ready",
       reuseExistingServer: !process.env.CI,
       env: {
+        SESSION_SECRET: process.env.SESSION_SECRET || "kitty",
+        NEW_RELIC_ENABLED: process.env.NEW_RELIC_ENABLED || "false",
+        NEW_RELIC_LOGGING_ENABLED: process.env.NEW_RELIC_LOGGING_ENABLED || "false",
         DISCORD_BOT_TOKEN: "",
       }
     },
