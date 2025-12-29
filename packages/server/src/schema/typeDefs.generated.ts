@@ -948,7 +948,10 @@ export const typeDefs = {
           ],
           type: {
             kind: "NonNullType",
-            type: { kind: "NamedType", name: { kind: "Name", value: "Vote" } },
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "Purchase" },
+            },
           },
           directives: [],
         },
@@ -3094,7 +3097,7 @@ export const typeDefs = {
                 kind: "NonNullType",
                 type: {
                   kind: "NamedType",
-                  name: { kind: "Name", value: "Vote" },
+                  name: { kind: "Name", value: "PurchaseVote" },
                 },
               },
             },
@@ -3118,40 +3121,20 @@ export const typeDefs = {
           kind: "FieldDefinition",
           name: { kind: "Name", value: "userVote" },
           arguments: [],
-          type: { kind: "NamedType", name: { kind: "Name", value: "Vote" } },
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "PurchaseVote" },
+          },
           directives: [],
         },
       ],
     },
     {
       kind: "ObjectTypeDefinition",
-      name: { kind: "Name", value: "Vote" },
+      name: { kind: "Name", value: "PurchaseVote" },
       interfaces: [],
       directives: [],
       fields: [
-        {
-          kind: "FieldDefinition",
-          name: { kind: "Name", value: "id" },
-          arguments: [],
-          type: {
-            kind: "NonNullType",
-            type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
-          },
-          directives: [],
-        },
-        {
-          kind: "FieldDefinition",
-          name: { kind: "Name", value: "purchase" },
-          arguments: [],
-          type: {
-            kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "Purchase" },
-            },
-          },
-          directives: [],
-        },
         {
           kind: "FieldDefinition",
           name: { kind: "Name", value: "user" },

@@ -194,7 +194,7 @@ type Mutation {
   updateProfile(input: ProfileInput!): User!
   updatePurchaseStatus(purchaseId: ID!, status: PurchaseStatus!): Purchase!
   updateRoles(id: ID!, roles: [Role!]!): User!
-  voteOnPurchase(purchaseId: ID!, vote: VoteValue!): Vote!
+  voteOnPurchase(purchaseId: ID!, vote: VoteValue!): Purchase!
 }
 
 type Party {
@@ -284,9 +284,9 @@ type Purchase {
   proposer: User!
   status: PurchaseStatus!
   title: String!
-  userVote: Vote
+  userVote: PurchaseVote
   voteCount: VoteCount!
-  votes: [Vote!]!
+  votes: [PurchaseVote!]!
 }
 
 enum PurchaseStatus {
@@ -294,6 +294,12 @@ enum PurchaseStatus {
   COMPLETED
   PROPOSED
   REJECTED
+}
+
+type PurchaseVote {
+  createdAt: String!
+  user: User!
+  vote: VoteValue!
 }
 
 type Query {
@@ -345,14 +351,6 @@ type User {
   locations: [Location!]!
   name: String!
   roles: [Role!]!
-}
-
-type Vote {
-  createdAt: String!
-  id: ID!
-  purchase: Purchase!
-  user: User!
-  vote: VoteValue!
 }
 
 type VoteCount {

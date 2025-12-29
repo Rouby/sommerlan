@@ -6,7 +6,7 @@ import type { MutationResolvers } from "./../../../types.generated";
 // @ts-ignore
 import newrelic = require("newrelic");
 
-export const register: NonNullable<MutationResolvers["register"]> = async (
+export const register: NonNullable<MutationResolvers['register']> = async (
   _parent,
   { userName, email, password },
   ctx,

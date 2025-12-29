@@ -2,9 +2,7 @@ import { ForbiddenError } from "@casl/ability";
 import { createGraphQLError } from "graphql-yoga";
 import type { MutationResolvers } from "./../../../types.generated";
 
-export const deleteAuthDevice: NonNullable<
-  MutationResolvers["deleteAuthDevice"]
-> = async (_parent, { id }, ctx) => {
+export const deleteAuthDevice: NonNullable<MutationResolvers['deleteAuthDevice']> = async (_parent, { id }, ctx) => {
   const user = await ctx.data.User.findById(ctx.jwt.user.id);
 
   if (!user) {

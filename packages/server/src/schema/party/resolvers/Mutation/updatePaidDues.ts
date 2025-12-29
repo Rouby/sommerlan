@@ -1,9 +1,7 @@
 import { ForbiddenError } from "@casl/ability";
 import { createGraphQLError } from "graphql-yoga";
 import type { MutationResolvers } from "./../../../types.generated";
-export const updatePaidDues: NonNullable<
-  MutationResolvers["updatePaidDues"]
-> = async (_parent, { attendingId, paidDues }, ctx) => {
+export const updatePaidDues: NonNullable<MutationResolvers['updatePaidDues']> = async (_parent, { attendingId, paidDues }, ctx) => {
   /* Implement Mutation.updatePaidDues resolver logic here */
   const attending = await ctx.data.Attending.findById(attendingId);
 

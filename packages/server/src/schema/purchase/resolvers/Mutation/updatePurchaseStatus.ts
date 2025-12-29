@@ -1,9 +1,7 @@
 import { createGraphQLError } from "graphql-yoga";
 import type { MutationResolvers } from "./../../../types.generated";
 
-export const updatePurchaseStatus: NonNullable<
-  MutationResolvers["updatePurchaseStatus"]
-> = async (_parent, { purchaseId, status }, ctx) => {
+export const updatePurchaseStatus: NonNullable<MutationResolvers['updatePurchaseStatus']> = async (_parent, { purchaseId, status }, ctx) => {
   const purchase = await ctx.data.Purchase.findById(purchaseId);
 
   if (!purchase) {

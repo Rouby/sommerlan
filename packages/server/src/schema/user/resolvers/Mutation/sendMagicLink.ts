@@ -2,9 +2,7 @@ import { createGraphQLError } from "graphql-yoga";
 import { issueMagicLink, sendMail } from "../../../../services";
 import type { MutationResolvers } from "./../../../types.generated";
 
-export const sendMagicLink: NonNullable<
-  MutationResolvers["sendMagicLink"]
-> = async (_parent, { email }, ctx) => {
+export const sendMagicLink: NonNullable<MutationResolvers['sendMagicLink']> = async (_parent, { email }, ctx) => {
   const user = await ctx.data.User.findByEmail(email);
 
   if (!user) {

@@ -16,24 +16,19 @@ export const Purchase: PurchaseResolvers = {
     return status.toUpperCase() as Uppercase<typeof status>;
   },
   
-  votes: async (parent, _args, ctx) => {
-    return ctx.data.Vote.filterByPurchaseId(String(parent.id)) as any;
+  votes: async (parent) => {
+    const purchaseModel = parent as unknown as PurchaseModel;
+    return (purchaseModel.votes || []) as any;
   },
   
-  voteCount: async (parent, _args, ctx) => {
-    const votes = await ctx.data.Vote.filterByPurchaseId(String(parent.id));
-    return {
-      yes: votes.filter((v) => v.vote === "yes").length,
-      no: votes.filter((v) => v.vote === "no").length,
-      abstain: votes.filter((v) => v.vote === "abstain").length,
-    };
+  voteCount: async (parent) => {
+    const purchaseModel = parent as unknown as PurchaseModel;
+    return purchaseModel.getVoteCount();
   },
   
   userVote: async (parent, _args, ctx) => {
     if (!ctx.jwt?.user?.id) return null;
-    return (await ctx.data.Vote.findByUserAndPurchase(
-      ctx.jwt.user.id,
-      String(parent.id),
-    )) as any;
+    const purchaseModel = parent as unknown as PurchaseModel;
+    return (purchaseModel.getUserVote(ctx.jwt.user.id) || null) as any;
   },
 };

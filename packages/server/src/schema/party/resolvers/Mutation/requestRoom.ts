@@ -2,9 +2,7 @@ import { ForbiddenError } from "@casl/ability";
 import { createGraphQLError } from "graphql-yoga";
 import type { MutationResolvers } from "./../../../types.generated";
 
-export const requestRoom: NonNullable<
-  MutationResolvers["requestRoom"]
-> = async (_parent, { partyId }, ctx) => {
+export const requestRoom: NonNullable<MutationResolvers['requestRoom']> = async (_parent, { partyId }, ctx) => {
   const attending = await ctx.data.Attending.findByPartyIdAndUserId(
     partyId,
     ctx.jwt.user.id,

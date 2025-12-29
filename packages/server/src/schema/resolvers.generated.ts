@@ -76,11 +76,11 @@ import { Picture } from "./party/resolvers/Picture";
 import { PictureMeta } from "./party/resolvers/PictureMeta";
 import { PictureTag } from "./party/resolvers/PictureTag";
 import { Purchase } from "./purchase/resolvers/Purchase";
+import { PurchaseVote } from "./purchase/resolvers/PurchaseVote";
 import { RegisterDeviceResponse } from "./user/resolvers/RegisterDeviceResponse";
 import { RegisterResponse } from "./user/resolvers/RegisterResponse";
 import { User as user_User } from "./user/resolvers/User";
 import { User as overwatch_User } from "./overwatch/resolvers/User";
-import { Vote } from "./purchase/resolvers/Vote";
 import { VoteCount } from "./purchase/resolvers/VoteCount";
 import { BoundingBox } from "./party/resolvers/BoundingBox";
 import { File } from "./base/resolvers/File";
@@ -168,10 +168,10 @@ export const resolvers: Resolvers = {
   PictureMeta: PictureMeta,
   PictureTag: PictureTag,
   Purchase: Purchase,
+  PurchaseVote: PurchaseVote,
   RegisterDeviceResponse: RegisterDeviceResponse,
   RegisterResponse: RegisterResponse,
   User: { ...user_User, ...overwatch_User },
-  Vote: Vote,
   VoteCount: VoteCount,
   BoundingBox: BoundingBox,
   File: File,

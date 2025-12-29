@@ -3,9 +3,7 @@ import { GraphQLError } from "graphql";
 import { expectedOrigin } from "../../../../env";
 import { sendDiscordMessage } from "../../../../services";
 import type { MutationResolvers } from "./../../../types.generated";
-export const sendPaymentNotification: NonNullable<
-  MutationResolvers["sendPaymentNotification"]
-> = async (_parent, { userId }, ctx) => {
+export const sendPaymentNotification: NonNullable<MutationResolvers['sendPaymentNotification']> = async (_parent, { userId }, ctx) => {
   const party = await ctx.data.Party.findLatestParty();
 
   if (!party?.finalCostPerDay) {

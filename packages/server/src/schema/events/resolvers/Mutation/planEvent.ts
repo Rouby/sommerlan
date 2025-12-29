@@ -5,7 +5,7 @@ import type { MutationResolvers } from "./../../../types.generated";
 // @ts-ignore
 import dayjs = require("dayjs");
 
-export const planEvent: NonNullable<MutationResolvers["planEvent"]> = async (
+export const planEvent: NonNullable<MutationResolvers['planEvent']> = async (
   _parent,
   { input: { id, image, ...input } },
   ctx,

@@ -1,7 +1,7 @@
 import { ForbiddenError } from "@casl/ability";
 import type { MutationResolvers } from "./../../../types.generated";
 
-export const syncCache: NonNullable<MutationResolvers["syncCache"]> = async (
+export const syncCache: NonNullable<MutationResolvers['syncCache']> = async (
   _parent,
   { clear },
   ctx,

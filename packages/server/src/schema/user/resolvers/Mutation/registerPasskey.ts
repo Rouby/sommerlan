@@ -7,9 +7,7 @@ import { logger } from "../../../../logger";
 import { signToken } from "../../../../signToken";
 import type { MutationResolvers } from "./../../../types.generated";
 
-export const registerPasskey: NonNullable<
-  MutationResolvers["registerPasskey"]
-> = async (_parent, { userId, name, response }, ctx) => {
+export const registerPasskey: NonNullable<MutationResolvers['registerPasskey']> = async (_parent, { userId, name, response }, ctx) => {
   const expectedChallenge = ctx.req.cookies.challenge;
 
   if (!expectedChallenge) {

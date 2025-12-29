@@ -4,9 +4,7 @@ import { logger } from "../../../../logger";
 import { signRefreshToken, signToken } from "../../../../signToken";
 import type { MutationResolvers } from "./../../../types.generated";
 
-export const refreshLogin: NonNullable<
-  MutationResolvers["refreshLogin"]
-> = async (_parent, { refreshToken }, ctx) => {
+export const refreshLogin: NonNullable<MutationResolvers['refreshLogin']> = async (_parent, { refreshToken }, ctx) => {
   const { user } = await validateRefreshToken(refreshToken, ctx.data.User);
 
   return {

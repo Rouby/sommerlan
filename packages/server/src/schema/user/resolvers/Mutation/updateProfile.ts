@@ -3,9 +3,7 @@ import { createGraphQLError } from "graphql-yoga";
 import { storeFile } from "../../../../storeFile";
 import type { MutationResolvers } from "./../../../types.generated";
 
-export const updateProfile: NonNullable<
-  MutationResolvers["updateProfile"]
-> = async (_parent, { input: { id, ...input } }, ctx) => {
+export const updateProfile: NonNullable<MutationResolvers['updateProfile']> = async (_parent, { input: { id, ...input } }, ctx) => {
   const user = await ctx.data.User.findById(id ?? ctx.jwt.user.id);
 
   if (!user) {

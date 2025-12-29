@@ -3,7 +3,7 @@ import { createGraphQLError } from "graphql-yoga";
 import { storeFile } from "../../../../storeFile";
 import type { MutationResolvers } from "./../../../types.generated";
 
-export const addPicture: NonNullable<MutationResolvers["addPicture"]> = async (
+export const addPicture: NonNullable<MutationResolvers['addPicture']> = async (
   _parent,
   { input: { partyId, name, file, tags } },
   ctx,
