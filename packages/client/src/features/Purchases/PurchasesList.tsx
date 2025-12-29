@@ -8,20 +8,28 @@ import {
   Box,
   Progress,
   Loader,
+  Collapse,
 } from "@mantine/core";
 import {
   IconThumbUp,
   IconThumbDown,
   IconMinus,
   IconCurrencyEuro,
+  IconCheck,
+  IconX,
+  IconChevronDown,
+  IconChevronUp,
 } from "@tabler/icons-react";
+import { useState } from "react";
 import { useMutation, useQuery } from "urql";
 import { graphql } from "../../gql";
 import { VoteValue, PurchaseStatus } from "../../gql/graphql";
 import { formatCurrency } from "../../utils";
-import { UserAvatar } from "../../components";
+import { UserAvatar, Can } from "../../components";
 
 export function PurchasesList() {
+  const [showCompleted, setShowCompleted] = useState(false);
+  
   const [{ data, fetching }] = useQuery({
     query: graphql(`
       query purchases {
@@ -65,45 +73,83 @@ export function PurchasesList() {
     );
   }
 
+  const activePurchases = data.purchases.filter(
+    (p) => p.status === PurchaseStatus.Proposed || p.status === PurchaseStatus.Approved
+  );
+  const completedPurchases = data.purchases.filter(
+    (p) => p.status === PurchaseStatus.Completed || p.status === PurchaseStatus.Rejected
+  );
+
   return (
     <Stack mt="md" gap="md">
-      {data.purchases.map((purchase) => (
-        <Card key={purchase.id} shadow="sm" padding="lg" radius="md" withBorder>
-          <Group justify="space-between" mb="xs">
-            <Group>
-              <Text fw={500} size="lg">
-                {purchase.title}
-              </Text>
-              <PurchaseStatusBadge status={purchase.status} />
-            </Group>
-            <Group>
-              <IconCurrencyEuro size={16} />
-              <Text>{formatCurrency(purchase.estimatedCost)}</Text>
-            </Group>
-          </Group>
-
-          <Text size="sm" c="dimmed" mb="md">
-            {purchase.description}
-          </Text>
-
-          <Group mb="md">
-            <UserAvatar user={purchase.proposer} />
-            <Text size="sm">
-              Vorgeschlagen von {purchase.proposer.displayName}
-            </Text>
-          </Group>
-
-          <VoteResults voteCount={purchase.voteCount} />
-
-          {purchase.status === PurchaseStatus.Proposed && (
-            <VoteButtons
-              purchaseId={purchase.id}
-              userVote={purchase.userVote}
-            />
-          )}
-        </Card>
+      {activePurchases.map((purchase) => (
+        <PurchaseCard key={purchase.id} purchase={purchase} />
       ))}
+
+      {completedPurchases.length > 0 && (
+        <Box>
+          <Button
+            variant="subtle"
+            onClick={() => setShowCompleted(!showCompleted)}
+            rightSection={showCompleted ? <IconChevronUp size={16} /> : <IconChevronDown size={16} />}
+            fullWidth
+          >
+            {showCompleted ? "Abgeschlossene ausblenden" : `Abgeschlossene anzeigen (${completedPurchases.length})`}
+          </Button>
+          <Collapse in={showCompleted}>
+            <Stack mt="md" gap="md">
+              {completedPurchases.map((purchase) => (
+                <PurchaseCard key={purchase.id} purchase={purchase} />
+              ))}
+            </Stack>
+          </Collapse>
+        </Box>
+      )}
     </Stack>
+  );
+}
+
+function PurchaseCard({ purchase }: { purchase: any }) {
+  return (
+    <Card shadow="sm" padding="lg" radius="md" withBorder>
+      <Group justify="space-between" mb="xs">
+        <Group>
+          <Text fw={500} size="lg">
+            {purchase.title}
+          </Text>
+          <PurchaseStatusBadge status={purchase.status} />
+        </Group>
+        <Group>
+          <IconCurrencyEuro size={16} />
+          <Text>{formatCurrency(purchase.estimatedCost)}</Text>
+        </Group>
+      </Group>
+
+      <Text size="sm" c="dimmed" mb="md">
+        {purchase.description}
+      </Text>
+
+      <Group mb="md">
+        <UserAvatar user={purchase.proposer} />
+        <Text size="sm">
+          Vorgeschlagen von {purchase.proposer.displayName}
+        </Text>
+      </Group>
+
+      <VoteResults voteCount={purchase.voteCount} />
+
+      {purchase.status === PurchaseStatus.Proposed && (
+        <>
+          <VoteButtons
+            purchaseId={purchase.id}
+            userVote={purchase.userVote}
+          />
+          <Can I="update" this={{ __typename: "Purchase" } as any}>
+            <AdminActions purchaseId={purchase.id} />
+          </Can>
+        </>
+      )}
+    </Card>
   );
 }
 
@@ -232,6 +278,42 @@ function VoteButtons({
         loading={fetching}
       >
         Enthaltung
+      </Button>
+    </Group>
+  );
+}
+
+function AdminActions({ purchaseId }: { purchaseId: string }) {
+  const [{ fetching }, updateStatus] = useMutation(
+    graphql(`
+      mutation updatePurchaseStatus($purchaseId: ID!, $status: PurchaseStatus!) {
+        updatePurchaseStatus(purchaseId: $purchaseId, status: $status) {
+          id
+          status
+        }
+      }
+    `),
+  );
+
+  return (
+    <Group mt="md" justify="flex-end">
+      <Button
+        leftSection={<IconCheck size={16} />}
+        color="green"
+        onClick={() => updateStatus({ purchaseId, status: PurchaseStatus.Approved })}
+        loading={fetching}
+        size="sm"
+      >
+        Genehmigen
+      </Button>
+      <Button
+        leftSection={<IconX size={16} />}
+        color="red"
+        onClick={() => updateStatus({ purchaseId, status: PurchaseStatus.Rejected })}
+        loading={fetching}
+        size="sm"
+      >
+        Ablehnen
       </Button>
     </Group>
   );
