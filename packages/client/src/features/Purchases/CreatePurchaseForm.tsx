@@ -115,7 +115,7 @@ export function CreatePurchaseForm() {
           />
 
           <Button.Group>
-            <Button type="submit" leftSection={<IconPlus size={16} />}>
+            <Button type="submit" leftSection={<IconPlus size={16} />} mr="sm">
               Vorschlagen
             </Button>
             <Button variant="outline" onClick={() => setIsOpen(false)}>

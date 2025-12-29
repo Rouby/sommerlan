@@ -88,13 +88,18 @@ export function PurchasesList() {
 
           <Group mb="md">
             <UserAvatar user={purchase.proposer} />
-            <Text size="sm">Vorgeschlagen von {purchase.proposer.displayName}</Text>
+            <Text size="sm">
+              Vorgeschlagen von {purchase.proposer.displayName}
+            </Text>
           </Group>
 
           <VoteResults voteCount={purchase.voteCount} />
 
           {purchase.status === PurchaseStatus.Proposed && (
-            <VoteButtons purchaseId={purchase.id} userVote={purchase.userVote} />
+            <VoteButtons
+              purchaseId={purchase.id}
+              userVote={purchase.userVote}
+            />
           )}
         </Card>
       ))}
@@ -114,9 +119,13 @@ function PurchaseStatusBadge({ status }: { status: PurchaseStatus }) {
   return <Badge color={config.color}>{config.label}</Badge>;
 }
 
-function VoteResults({ voteCount }: { voteCount: { yes: number; no: number; abstain: number } }) {
+function VoteResults({
+  voteCount,
+}: {
+  voteCount: { yes: number; no: number; abstain: number };
+}) {
   const total = voteCount.yes + voteCount.no + voteCount.abstain;
-  
+
   if (total === 0) {
     return (
       <Text size="sm" c="dimmed" mb="md">
@@ -145,16 +154,22 @@ function VoteResults({ voteCount }: { voteCount: { yes: number; no: number; abst
           <Text size="sm">{voteCount.abstain} Enthaltung</Text>
         </Group>
       </Group>
-      
+
       <Progress.Root size="xl">
         <Progress.Section value={yesPercent} color="green">
-          <Progress.Label>{yesPercent > 5 ? Math.round(yesPercent) + '%' : ''}</Progress.Label>
+          <Progress.Label>
+            {yesPercent > 5 ? Math.round(yesPercent) + "%" : ""}
+          </Progress.Label>
         </Progress.Section>
         <Progress.Section value={noPercent} color="red">
-          <Progress.Label>{noPercent > 5 ? Math.round(noPercent) + '%' : ''}</Progress.Label>
+          <Progress.Label>
+            {noPercent > 5 ? Math.round(noPercent) + "%" : ""}
+          </Progress.Label>
         </Progress.Section>
         <Progress.Section value={abstainPercent} color="gray">
-          <Progress.Label>{abstainPercent > 5 ? Math.round(abstainPercent) + '%' : ''}</Progress.Label>
+          <Progress.Label>
+            {abstainPercent > 5 ? Math.round(abstainPercent) + "%" : ""}
+          </Progress.Label>
         </Progress.Section>
       </Progress.Root>
     </Box>
@@ -189,17 +204,13 @@ function VoteButtons({
     `),
   );
 
-  const handleVote = async (voteValue: VoteValue) => {
-    await vote({ purchaseId, vote: voteValue });
-  };
-
   return (
     <Group>
       <Button
         leftSection={<IconThumbUp size={16} />}
         color="green"
         variant={userVote?.vote === VoteValue.Yes ? "filled" : "outline"}
-        onClick={() => handleVote(VoteValue.Yes)}
+        onClick={() => vote({ purchaseId, vote: VoteValue.Yes })}
         loading={fetching}
       >
         Ja
@@ -208,7 +219,7 @@ function VoteButtons({
         leftSection={<IconThumbDown size={16} />}
         color="red"
         variant={userVote?.vote === VoteValue.No ? "filled" : "outline"}
-        onClick={() => handleVote(VoteValue.No)}
+        onClick={() => vote({ purchaseId, vote: VoteValue.No })}
         loading={fetching}
       >
         Nein
@@ -217,7 +228,7 @@ function VoteButtons({
         leftSection={<IconMinus size={16} />}
         color="gray"
         variant={userVote?.vote === VoteValue.Abstain ? "filled" : "outline"}
-        onClick={() => handleVote(VoteValue.Abstain)}
+        onClick={() => vote({ purchaseId, vote: VoteValue.Abstain })}
         loading={fetching}
       >
         Enthaltung
