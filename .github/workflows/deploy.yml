@@ -176,7 +176,7 @@ jobs:
 
   deploy:
     name: 🚀 Deploy
-    runs-on: arc-runner-set
+    runs-on: arc-runner-set-sommerlan
     container: ghcr.io/actions/actions-runner:latest
     needs: [lint, typecheck, test, integration, build]
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
