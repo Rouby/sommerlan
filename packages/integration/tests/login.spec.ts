@@ -24,6 +24,33 @@ test("should login with password", async ({ page, api }) => {
   await expect(page.getByTestId("user button")).toHaveText("Erwin Beispiel");
 });
 
+test("should login with password using different email casing", async ({
+  page,
+  api,
+}) => {
+  await api.seed("User", {
+    displayName: "Erwin Beispiel",
+    name: "Erwin Beispiel",
+    email: "erwin@example.com",
+    password: "hello",
+    roles: ["Trusted"],
+  });
+
+  await page.goto("/");
+
+  await page.getByText("Einloggen").first().click();
+
+  await page.getByText("Mit Passwort anmelden").click();
+
+  await page.getByLabel("Email").fill("Erwin@Example.COM");
+
+  await page.getByLabel("Passwort").fill("hello");
+
+  await page.getByText("Anmelden").click();
+
+  await expect(page.getByTestId("user button")).toHaveText("Erwin Beispiel");
+});
+
 test("should login with one-time-link", async ({ page, api }) => {
   await api.seed("User", {
     displayName: "Emma Beispiel",

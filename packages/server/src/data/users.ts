@@ -63,7 +63,9 @@ export class User extends Base {
   }
 
   static async findByEmail(email: string) {
-    return this.find((user) => user.email === email);
+    return this.find(
+      (user) => user.email?.toLowerCase() === email.toLowerCase(),
+    );
   }
 
   static async findByDiscordId(id: string) {
