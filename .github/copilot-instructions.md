@@ -253,6 +253,174 @@ The GitHub Actions workflow (`.github/workflows/deploy.yml`) runs on every push/
 
 ---
 
+## Package Manager
+
+Always use **yarn** for all package management operations. Never use `npm` or `pnpm`.
+
+| Task | Command |
+|------|---------|
+| Install all dependencies | `yarn` or `yarn install` |
+| Add a dependency | `yarn add <package>` |
+| Add a dev dependency | `yarn add -D <package>` |
+| Remove a dependency | `yarn remove <package>` |
+| Run a script | `yarn <script-name>` |
+| Update packages | `yarn upgrade` or `yarn upgrade-interactive` |
+| Run codegen | `yarn codegen` (from root) |
+| Run workspace command | `yarn workspace @sommerlan/<name> <command>` |
+
+---
+
+## GraphQL Schema Design
+
+When designing GraphQL schemas, prefer **generic update mutations** with input types over specific field-level mutations.
+
+**Do not** create multiple mutations for individual fields:
+```graphql
+# Bad
+type Mutation {
+  updatePlayerColor(gameId: ID!, color: String!): Player!
+  updatePlayerName(gameId: ID!, name: String!): Player!
+}
+```
+
+**Do** use a single generic mutation with an input type:
+```graphql
+# Good
+input UpdatePlayerInput {
+  color: String
+  name: String
+}
+
+type Mutation {
+  updatePlayer(gameId: ID!, input: UpdatePlayerInput!): Player!
+}
+```
+
+Guidelines:
+- Use `verb-noun` naming (e.g., `updatePlayer`, `createGame`) — avoid field-specific names
+- Make input fields optional when possible
+- Group related fields into a single update operation for extensibility
+
+---
+
+## GraphQL Codegen Workflow
+
+When modifying GraphQL schemas and resolvers, **always follow this order**:
+
+1. **Modify the `.graphql` schema file** — add/update types, inputs, queries, or mutations
+2. **Run `yarn codegen`** — regenerates TypeScript types before writing any resolver code
+3. **Implement or update resolvers** — use the generated types for type safety
+
+> **Never** write resolver code before running codegen after a schema change.
+
+Example:
+```bash
+# Step 1: edit packages/server/src/schema/<domain>/schema.graphql
+# Step 2:
+yarn codegen
+# Step 3: implement resolver using generated MutationResolvers["updatePlayer"] type
+```
+
+---
+
+## React Component Types
+
+When creating React components, **define prop types inline** in the function parameters rather than as separate interfaces or type aliases.
+
+```tsx
+// Bad: separate interface
+interface MyComponentProps {
+  name: string;
+  age: number;
+}
+export function MyComponent({ name, age }: MyComponentProps) { ... }
+
+// Good: inline type definition
+export function MyComponent({ name, age }: { name: string; age: number }) { ... }
+```
+
+**Exceptions** — use a separate type/interface when:
+- The same type is reused across multiple components
+- The component has more than ~5 props (group related props into logical sub-objects)
+- The type must be exported for use by other files
+
+---
+
+## Mantine UI Guidelines
+
+Always prefer Mantine components over plain HTML elements. Check for a Mantine equivalent before using a raw `div`, `button`, `input`, etc.
+
+### Component mapping
+
+| HTML element | Mantine component |
+|-------------|------------------|
+| `div` (layout) | `Group`, `Stack`, `Flex`, `Grid` |
+| `div` (container) | `Box`, `Paper`, `Container` |
+| `p`, `span` | `Text` |
+| `h1`–`h6` | `Title` |
+| `button` | `Button`, `ActionIcon` |
+| `input` | `TextInput`, `NumberInput`, etc. |
+| `ul` / `ol` | `List` |
+| `li` | `List.Item` |
+
+### Props mapping
+
+| CSS property | Mantine prop |
+|-------------|-------------|
+| `margin` / `padding` | `m` / `p` with theme values |
+| `display: flex` | `Group` or `Stack` |
+| `width` / `height` | `w` / `h` |
+| `background-color` | `bg` |
+
+Example:
+```tsx
+// Bad
+<div style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
+  <button>Click me</button>
+</div>
+
+// Good
+<Group mb="md" gap="sm">
+  <Button>Click me</Button>
+</Group>
+```
+
+---
+
+## Mantine Performance Guidelines
+
+When working with Mantine form inputs and loading states:
+
+### State management
+- Prefer **uncontrolled** inputs when real-time synchronization isn't necessary
+- Use `defaultValue` for initial state; only sync to the backend on final changes (e.g., `onBlur`)
+- Keep form submission state separate from UI preview state
+
+```tsx
+// Bad: controlled input that triggers updates on every keystroke
+<TextInput value={value} onChange={(e) => { setValue(e.target.value); handleSubmit(e.target.value); }} />
+
+// Good: uncontrolled input with submit on blur
+<TextInput defaultValue={initialValue} onChange={handleLocalPreview} onBlur={handleSubmit} />
+```
+
+### Loading states
+- Prefer component-specific loading states with `LoadingOverlay` over disabling inputs
+- Keep components interactive during loading when possible
+
+```tsx
+// Bad: disabling input during loading
+<Input disabled={isLoading} />
+
+// Good: overlay with interactive input
+<div style={{ position: 'relative' }}>
+  <LoadingOverlay visible={isLoading} />
+  <Input />
+</div>
+```
+
+---
+
 ## Deployment Notes
 
 The production Docker image is built for `linux/arm64` (the Kubernetes cluster runs on ARM). Local builds may require QEMU emulation:
