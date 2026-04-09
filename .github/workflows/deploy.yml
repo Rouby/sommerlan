@@ -6,6 +6,9 @@ on:
       - main
   pull_request: {}
 
+permissions:
+  contents: read
+
 jobs:
   lint:
     name: ⬣ Lint
@@ -125,6 +128,10 @@ jobs:
     name: 🏗️ Build
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      packages: write
+
     concurrency:
       group: build-${{ github.ref }}
       cancel-in-progress: true
@@ -132,14 +139,6 @@ jobs:
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v6
-
-      - name: ⚡️ Cache Docker layers
-        uses: actions/cache@v5
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v4
@@ -163,16 +162,8 @@ jobs:
           tags: |
             ${{ github.ref == 'refs/heads/main' && 'ghcr.io/rouby/sommerlan-app:latest' || '' }}
             ghcr.io/rouby/sommerlan-app:${{ github.ref == 'refs/heads/main' && github.ref_name || 'review' }}-${{ github.sha }}
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
-
-      - # Temp fix
-        # https://github.com/docker/build-push-action/issues/252
-        # https://github.com/moby/buildkit/issues/1896
-        name: Move cache
-        run: |
-          rm -rf /tmp/.buildx-cache
-          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
   deploy:
     name: 🚀 Deploy
