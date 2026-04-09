@@ -2,6 +2,16 @@ extend type Query {
   moneyTransfers: [MoneyTransfer!]!
 }
 
+extend type Mutation {
+  createMoneyTransfer(input: CreateMoneyTransferInput!): MoneyTransfer!
+}
+
+input CreateMoneyTransferInput {
+  amount: Float!
+  valuationDate: Date!
+  note: String!
+}
+
 type MoneyTransfer {
   id: ID!
   amount: Float!

@@ -219,6 +219,26 @@ export function GraphQLProvider({ children }: { children: React.ReactNode }) {
                     }
                   }
                 },
+                createMoneyTransfer: (result, _args, cache, _info) => {
+                  if (
+                    typeof result.createMoneyTransfer === "object" &&
+                    result.createMoneyTransfer
+                  ) {
+                    const moneyTransfers = cache.resolve(
+                      "Query",
+                      "moneyTransfers",
+                    );
+
+                    if (Array.isArray(moneyTransfers)) {
+                      moneyTransfers.push(result.createMoneyTransfer as Data);
+                      cache.link(
+                        "Query",
+                        "moneyTransfers",
+                        moneyTransfers as Link<Entity>,
+                      );
+                    }
+                  }
+                },
               },
             },
             optimistic: {

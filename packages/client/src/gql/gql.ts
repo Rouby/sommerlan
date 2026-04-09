@@ -23,6 +23,7 @@ const documents = {
     "\n      mutation registerExternal(\n        $userName: String!\n        $email: String!\n        $password: String\n      ) {\n        register(userName: $userName, email: $email, password: $password) {\n          token\n          refreshToken\n          user {\n            id\n            displayName\n            avatar\n          }\n        }\n      }\n    ": types.RegisterExternalDocument,
     "\n      query userList {\n        users {\n          id\n          displayName\n          avatar\n        }\n      }\n    ": types.UserListDocument,
     "\n      query MoneyTransfers {\n        moneyTransfers {\n          id\n          amount\n          valuationDate\n          note\n          correlationId\n        }\n      }\n    ": types.MoneyTransfersDocument,
+    "\n        mutation createMoneyTransfer($input: CreateMoneyTransferInput!) {\n          createMoneyTransfer(input: $input) {\n            id\n            amount\n            valuationDate\n            note\n            correlationId\n          }\n        }\n      ": types.CreateMoneyTransferDocument,
     "\n      query adminGames {\n        games {\n          id\n          name\n          image\n        }\n      }\n    ": types.AdminGamesDocument,
     "\n      mutation updateGame($id: ID!, $image: File!) {\n        updateGame(input: { id: $id, image: $image }) {\n          id\n          image\n        }\n      }\n    ": types.UpdateGameDocument,
     "\n      query NextPartyBudget {\n        nextParty {\n          id\n          costPerDay\n          donations {\n            id\n            donator {\n              id\n              displayName\n              avatar\n            }\n            amount\n            dedication\n          }\n          attendings {\n            id\n            dates\n            rentDues\n            paidDues\n            notificationSent\n            user {\n              id\n              displayName\n              avatar\n            }\n          }\n        }\n      }\n    ": types.NextPartyBudgetDocument,
@@ -138,6 +139,10 @@ export function graphql(source: "\n      query userList {\n        users {\n    
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n      query MoneyTransfers {\n        moneyTransfers {\n          id\n          amount\n          valuationDate\n          note\n          correlationId\n        }\n      }\n    "): (typeof documents)["\n      query MoneyTransfers {\n        moneyTransfers {\n          id\n          amount\n          valuationDate\n          note\n          correlationId\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n        mutation createMoneyTransfer($input: CreateMoneyTransferInput!) {\n          createMoneyTransfer(input: $input) {\n            id\n            amount\n            valuationDate\n            note\n            correlationId\n          }\n        }\n      "): (typeof documents)["\n        mutation createMoneyTransfer($input: CreateMoneyTransferInput!) {\n          createMoneyTransfer(input: $input) {\n            id\n            amount\n            valuationDate\n            note\n            correlationId\n          }\n        }\n      "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

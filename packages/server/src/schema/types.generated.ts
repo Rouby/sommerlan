@@ -115,6 +115,12 @@ export type CachePatch = {
   operations: Scalars["JSON"]["output"];
 };
 
+export type CreateMoneyTransferInput = {
+  amount: Scalars["Float"]["input"];
+  note: Scalars["String"]["input"];
+  valuationDate: Scalars["Date"]["input"];
+};
+
 export type Donation = {
   __typename?: "Donation";
   amount: Scalars["Float"]["output"];
@@ -203,6 +209,7 @@ export type Mutation = {
   capturePayPalOrder?: Maybe<Attending>;
   checkIn?: Maybe<Attending>;
   checkOut?: Maybe<Attending>;
+  createMoneyTransfer: MoneyTransfer;
   createPayPalOrder: Scalars["ID"]["output"];
   createPurchase: Purchase;
   deleteAuthDevice: AuthDevice;
@@ -261,6 +268,10 @@ export type MutationcheckInArgs = {
 
 export type MutationcheckOutArgs = {
   userId: Scalars["ID"]["input"];
+};
+
+export type MutationcreateMoneyTransferArgs = {
+  input: CreateMoneyTransferInput;
 };
 
 export type MutationcreatePurchaseArgs = {
@@ -715,6 +726,7 @@ export type ResolversTypes = {
   CacheEntry: ResolverTypeWrapper<CacheEntry>;
   CacheInfo: ResolverTypeWrapper<CacheInfo>;
   CachePatch: ResolverTypeWrapper<CachePatch>;
+  CreateMoneyTransferInput: CreateMoneyTransferInput;
   Date: ResolverTypeWrapper<Scalars["Date"]["output"]>;
   DateTime: ResolverTypeWrapper<Scalars["DateTime"]["output"]>;
   Donation: ResolverTypeWrapper<DonationMapper>;
@@ -797,6 +809,7 @@ export type ResolversParentTypes = {
   CacheEntry: CacheEntry;
   CacheInfo: CacheInfo;
   CachePatch: CachePatch;
+  CreateMoneyTransferInput: CreateMoneyTransferInput;
   Date: Scalars["Date"]["output"];
   DateTime: Scalars["DateTime"]["output"];
   Donation: DonationMapper;
@@ -1157,6 +1170,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationcheckOutArgs, "userId">
+  >;
+  createMoneyTransfer?: Resolver<
+    ResolversTypes["MoneyTransfer"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationcreateMoneyTransferArgs, "input">
   >;
   createPayPalOrder?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   createPurchase?: Resolver<

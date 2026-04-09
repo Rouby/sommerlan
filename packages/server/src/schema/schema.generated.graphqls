@@ -49,6 +49,12 @@ type CachePatch {
   operations: JSON!
 }
 
+input CreateMoneyTransferInput {
+  amount: Float!
+  note: String!
+  valuationDate: Date!
+}
+
 scalar Date
 
 scalar DateTime
@@ -142,6 +148,7 @@ type Mutation {
   capturePayPalOrder(orderId: ID!): Attending
   checkIn(userId: ID!): Attending
   checkOut(userId: ID!): Attending
+  createMoneyTransfer(input: CreateMoneyTransferInput!): MoneyTransfer!
   createPayPalOrder: ID!
   createPurchase(
     description: String!

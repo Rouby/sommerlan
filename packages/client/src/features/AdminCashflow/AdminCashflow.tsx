@@ -1,15 +1,20 @@
 import {
   Alert,
+  Button,
+  Group,
   Loader,
+  NumberInput,
   Paper,
   ScrollArea,
+  Stack,
   Table,
   Text,
+  TextInput,
   Title,
 } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
 import dayjs from "dayjs";
-import { useQuery } from "urql";
+import { useMutation, useQuery } from "urql";
 import { graphql } from "../../gql";
 import { formatCurrency } from "../../utils";
 
@@ -27,6 +32,21 @@ export function AdminCashflow() {
       }
     `),
   });
+
+  const [{ fetching: isCreating, error: createError }, createMoneyTransfer] =
+    useMutation(
+      graphql(`
+        mutation createMoneyTransfer($input: CreateMoneyTransferInput!) {
+          createMoneyTransfer(input: $input) {
+            id
+            amount
+            valuationDate
+            note
+            correlationId
+          }
+        }
+      `),
+    );
 
   if (fetching) {
     return <Loader />;
@@ -58,6 +78,68 @@ export function AdminCashflow() {
       <Title order={3} mb="md">
         Cashflow Overview
       </Title>
+
+      <form
+        onSubmit={async (event) => {
+          event.preventDefault();
+          const form = event.target as HTMLFormElement;
+
+          const amount = +form["amount"].value;
+          const note = form["note"].value;
+          const valuationDate = form["valuationDate"].value;
+
+          const result = await createMoneyTransfer({
+            input: {
+              amount,
+              note,
+              valuationDate,
+            },
+          });
+
+          if (!result.error) {
+            form.reset();
+          }
+        }}
+      >
+        <Stack gap="sm" mb="md">
+          <Group grow align="end">
+            <TextInput
+              required
+              type="date"
+              name="valuationDate"
+              label="Date"
+              defaultValue={dayjs().format("YYYY-MM-DD")}
+              disabled={isCreating}
+            />
+            <TextInput
+              required
+              name="note"
+              label="Note"
+              placeholder="e.g. Snacks reimbursement"
+              disabled={isCreating}
+            />
+            <NumberInput
+              required
+              name="amount"
+              label="Amount"
+              min={0}
+              decimalScale={2}
+              fixedDecimalScale
+              rightSection="€"
+              disabled={isCreating}
+            />
+            <Button type="submit" loading={isCreating}>
+              Add Entry
+            </Button>
+          </Group>
+          {createError && (
+            <Alert icon={<IconAlertTriangle size="1rem" />} color="red">
+              Failed to create cashflow entry: {createError.message}
+            </Alert>
+          )}
+        </Stack>
+      </form>
+
       <ScrollArea>
         <Table striped highlightOnHover withTableBorder withColumnBorders>
           <Table.Thead>

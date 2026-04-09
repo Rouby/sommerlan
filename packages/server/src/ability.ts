@@ -107,6 +107,7 @@ export async function createAbility(
       can("participateOthers", "Event");
       can(["create", "read", "update", "delete"], "Cache");
       can(["create", "read", "update", "delete"], "Picture");
+      can(["create", "read"], "MoneyTransfer");
     }
 
     if (user.roles.includes(User.Role.Doorkeeper)) {

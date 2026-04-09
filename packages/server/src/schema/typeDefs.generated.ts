@@ -458,6 +458,32 @@ export const typeDefs = {
         },
         {
           kind: "FieldDefinition",
+          name: { kind: "Name", value: "createMoneyTransfer" },
+          arguments: [
+            {
+              kind: "InputValueDefinition",
+              name: { kind: "Name", value: "input" },
+              type: {
+                kind: "NonNullType",
+                type: {
+                  kind: "NamedType",
+                  name: { kind: "Name", value: "CreateMoneyTransferInput" },
+                },
+              },
+              directives: [],
+            },
+          ],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "MoneyTransfer" },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
           name: { kind: "Name", value: "updateLocation" },
           arguments: [
             {
@@ -2409,6 +2435,43 @@ export const typeDefs = {
           type: {
             kind: "NonNullType",
             type: { kind: "NamedType", name: { kind: "Name", value: "File" } },
+          },
+          directives: [],
+        },
+      ],
+    },
+    {
+      kind: "InputObjectTypeDefinition",
+      name: { kind: "Name", value: "CreateMoneyTransferInput" },
+      directives: [],
+      fields: [
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "amount" },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Float" } },
+          },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "valuationDate" },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Date" } },
+          },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "note" },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
           },
           directives: [],
         },

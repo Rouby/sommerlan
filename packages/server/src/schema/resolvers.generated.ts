@@ -15,6 +15,7 @@ import { addPicture as Mutation_addPicture } from "./party/resolvers/Mutation/ad
 import { capturePayPalOrder as Mutation_capturePayPalOrder } from "./party/resolvers/Mutation/capturePayPalOrder";
 import { checkIn as Mutation_checkIn } from "./party/resolvers/Mutation/checkIn";
 import { checkOut as Mutation_checkOut } from "./party/resolvers/Mutation/checkOut";
+import { createMoneyTransfer as Mutation_createMoneyTransfer } from "./money/resolvers/Mutation/createMoneyTransfer";
 import { createPayPalOrder as Mutation_createPayPalOrder } from "./party/resolvers/Mutation/createPayPalOrder";
 import { createPurchase as Mutation_createPurchase } from "./purchase/resolvers/Mutation/createPurchase";
 import { deleteAuthDevice as Mutation_deleteAuthDevice } from "./user/resolvers/Mutation/deleteAuthDevice";
@@ -110,6 +111,7 @@ export const resolvers: Resolvers = {
     capturePayPalOrder: Mutation_capturePayPalOrder,
     checkIn: Mutation_checkIn,
     checkOut: Mutation_checkOut,
+    createMoneyTransfer: Mutation_createMoneyTransfer,
     createPayPalOrder: Mutation_createPayPalOrder,
     createPurchase: Mutation_createPurchase,
     deleteAuthDevice: Mutation_deleteAuthDevice,
