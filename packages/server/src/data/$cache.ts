@@ -26,10 +26,6 @@ export async function deleteRow<T extends Base>(
     patches.set(cls, new Map());
   }
 
-  if (!patches.get(cls)!.has(id)) {
-    patches.set(cls, new Map());
-  }
-
   patches.get(cls)!.set(id, deleteMarker);
 
   cache.set(sheetName, cache.get(sheetName)?.filter((d) => d.id !== id) ?? []);
@@ -110,11 +106,18 @@ export async function syncCache(clearCache = false) {
   syncingCache = newrelic.startBackgroundTransaction(`syncCache`, async () => {
     logger.trace("Syncing cache");
     const doc = await getSheet();
+    const successfulSyncs = new Map<new () => Base, Set<string>>();
+    const failedSyncs = new Map<new () => Base, Set<string>>();
+
     for (const [cls, entities] of patches.entries()) {
       const sheetName = cls.prototype.sheetName;
+      const successfulEntityIds = new Set<string>();
+      const failedEntityIds = new Set<string>();
+
       await newrelic.startSegment(`syncCache.${sheetName}`, true, async () => {
         const objectKeys = Object.keys(new cls());
         const rows = await doc.sheetsByTitle[sheetName].getRows();
+
         for (const [id, operations] of entities.entries()) {
           const row = rows.find((row) => row.id === JSON.stringify(id));
           await newrelic.startSegment(
@@ -127,66 +130,121 @@ export async function syncCache(clearCache = false) {
                 "entity.operations",
                 JSON.stringify(operations),
               );
+
               if (operations === deleteMarker) {
-                logger.trace({ sheetName, id }, "Deleting entity");
-                row?.delete();
-              } else {
-                const original = row
-                  ? Object.fromEntries(
-                      objectKeys.map((key) => [
-                        key,
-                        row[key]
-                          ? JSON.parse(row[key])
-                          : new cls()[key as keyof typeof cls],
-                      ]),
-                    )
-                  : {};
                 try {
-                  const { newDocument } = applyPatch(
-                    original,
-                    operations,
-                    true,
-                    false,
-                  );
-                  const values = Object.fromEntries(
-                    Object.entries(newDocument).map(([key, value]) => [
-                      key,
-                      JSON.stringify(value),
-                    ]),
-                  );
-                  logger.trace(
-                    { sheetName, id, operations, values },
-                    "Syncing entity",
-                  );
-                  if (row) {
-                    Object.assign(row, values);
-                    await row.save();
-                  } else {
-                    await doc.sheetsByTitle[sheetName].addRow(values);
-                  }
+                  logger.trace({ sheetName, id }, "Deleting entity");
+                  await row?.delete();
+                  successfulEntityIds.add(id);
                 } catch (err) {
+                  failedEntityIds.add(id);
                   logger.error(
-                    { err, sheetName, id, operations, original },
-                    "Failed to apply patch",
+                    { err, sheetName, id, operations },
+                    "Failed to delete entity",
                   );
                 }
+                return;
+              }
+
+              const original = row
+                ? Object.fromEntries(
+                  objectKeys.map((key) => [
+                    key,
+                    row[key]
+                      ? JSON.parse(row[key])
+                      : new cls()[key as keyof typeof cls],
+                  ]),
+                )
+                : {};
+
+              try {
+                const { newDocument } = applyPatch(
+                  original,
+                  operations,
+                  true,
+                  false,
+                );
+                const values = Object.fromEntries(
+                  Object.entries(newDocument).map(([key, value]) => [
+                    key,
+                    JSON.stringify(value),
+                  ]),
+                );
+                logger.trace(
+                  { sheetName, id, operations, values },
+                  "Syncing entity",
+                );
+
+                if (row) {
+                  Object.assign(row, values);
+                  await row.save();
+                } else {
+                  await doc.sheetsByTitle[sheetName].addRow(values);
+                }
+
+                successfulEntityIds.add(id);
+              } catch (err) {
+                failedEntityIds.add(id);
+                logger.error(
+                  { err, sheetName, id, operations, original },
+                  "Failed to apply patch",
+                );
               }
             },
           );
         }
       });
+
+      if (successfulEntityIds.size > 0) {
+        successfulSyncs.set(cls, successfulEntityIds);
+      }
+      if (failedEntityIds.size > 0) {
+        failedSyncs.set(cls, failedEntityIds);
+      }
     }
-    logger.info("Synced cache", { patches: patches.entries() });
-    patches.clear();
-    if (clearCache) {
+
+    for (const [cls, ids] of successfulSyncs.entries()) {
+      const entities = patches.get(cls);
+      if (!entities) {
+        continue;
+      }
+
+      for (const id of ids) {
+        entities.delete(id);
+      }
+
+      if (entities.size === 0) {
+        patches.delete(cls);
+      }
+    }
+
+    logger.info("Synced cache", {
+      successfulSyncs: [...successfulSyncs.entries()].map(([cls, ids]) => ({
+        sheet: cls.prototype.sheetName,
+        ids: [...ids],
+      })),
+      failedSyncs: [...failedSyncs.entries()].map(([cls, ids]) => ({
+        sheet: cls.prototype.sheetName,
+        ids: [...ids],
+      })),
+    });
+
+    if (clearCache && patches.size === 0) {
       cache.clear();
     }
+
     lastSync = new Date();
   });
 
-  await syncingCache;
-
-  syncingCache = undefined;
+  try {
+    await syncingCache;
+  } catch (err) {
+    logger.error({ err }, "syncCache failed unexpectedly");
+    throw err;
+  } finally {
+    // Always unlock to avoid getting permanently stuck after one failed sync run.
+    syncingCache = undefined;
+  }
 }
 
 export function getCacheInfo() {
@@ -216,28 +274,32 @@ async function fillCache<T extends Base>(cls: new () => T, sheetName: string) {
     `${sheetName}.fillCache`,
     true,
     async () => {
-      newrelic.addCustomSpanAttribute("db.sheetName", sheetName);
-      const doc = await getSheet();
-      const rows = await doc.sheetsByTitle[sheetName].getRows();
-      const objectKeys = Object.keys(new cls());
-      cache.set(
-        sheetName,
-        rows.map((row) => {
-          return Object.fromEntries(
-            objectKeys.map((key) => [
-              key,
-              row[key]
-                ? row[key] === "FALSE"
-                  ? false
-                  : row[key] === "TRUE"
-                    ? true
-                    : JSON.parse(row[key])
-                : new cls()[key as keyof typeof cls],
-            ]),
-          );
-        }),
-      );
-      fillingCache.delete(sheetName);
+      try {
+        newrelic.addCustomSpanAttribute("db.sheetName", sheetName);
+        const doc = await getSheet();
+        const rows = await doc.sheetsByTitle[sheetName].getRows();
+        const objectKeys = Object.keys(new cls());
+        cache.set(
+          sheetName,
+          rows.map((row) => {
+            return Object.fromEntries(
+              objectKeys.map((key) => [
+                key,
+                row[key]
+                  ? row[key] === "FALSE"
+                    ? false
+                    : row[key] === "TRUE"
+                      ? true
+                      : JSON.parse(row[key])
+                  : new cls()[key as keyof typeof cls],
+              ]),
+            );
+          }),
+        );
+      } finally {
+        // Remove lock even after failures so the next read can retry.
+        fillingCache.delete(sheetName);
+      }
     },
   );
   fillingCache.set(sheetName, promise);
