@@ -14,6 +14,7 @@ import {
 } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
 import dayjs from "dayjs";
+import { useState } from "react";
 import { useMutation, useQuery } from "urql";
 import { graphql } from "../../gql";
 import { formatCurrency } from "../../utils";
@@ -32,6 +33,8 @@ export function AdminCashflow() {
       }
     `),
   });
+
+  const [formKey, setFormKey] = useState(0);
 
   const [{ fetching: isCreating, error: createError }, createMoneyTransfer] =
     useMutation(
@@ -80,6 +83,7 @@ export function AdminCashflow() {
       </Title>
 
       <form
+        key={formKey}
         onSubmit={async (event) => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
@@ -97,7 +101,7 @@ export function AdminCashflow() {
           });
 
           if (!result.error) {
-            form.reset();
+            setFormKey((k) => k + 1);
           }
         }}
       >
@@ -122,7 +126,6 @@ export function AdminCashflow() {
               required
               name="amount"
               label="Amount"
-              min={0}
               decimalScale={2}
               fixedDecimalScale
               rightSection="€"
