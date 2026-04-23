@@ -14,7 +14,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@casl/ability": "^6.7.1",
+    "@casl/ability": "^6.7.5",
     "@casl/react": "^3.1.0",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.4",
@@ -38,7 +38,7 @@
     "@tanstack/react-router": "^1.39.4",
     "@tiptap/core": "^2.3.1",
     "@tiptap/extension-highlight": "^2.3.1",
-    "@tiptap/extension-link": "^2.3.1",
+    "@tiptap/extension-link": "^2.10.4",
     "@tiptap/extension-placeholder": "^2.3.1",
     "@tiptap/pm": "^2.3.1",
     "@tiptap/react": "^2.3.1",
@@ -52,7 +52,7 @@
     "dayjs": "^1.11.10",
     "embla-carousel-react": "^8.0.4",
     "framer-motion": "^10.18.0",
-    "graphql": "^16.8.1",
+    "graphql": "^16.8.2",
     "jotai": "^2.2.1",
     "jwt-decode": "^3.1.2",
     "leaflet": "^1.9.4",
@@ -76,12 +76,12 @@
     "@types/react-dom": "^18.2.6",
     "@vitejs/plugin-react-swc": "^3.3.2",
     "typescript": "^5.5.4",
-    "vite": "^5.2.8",
+    "vite": "^5.4.21",
     "vite-plugin-graphql-codegen": "^3.3.6",
     "vite-plugin-html": "^3.2.2",
     "vite-plugin-pwa": "^1.0.0",
     "vite-plugin-svgr": "^4.2.0",
-    "vitest": "^1.4.0"
+    "vitest": "^1.6.1"
   },
   "engines": {
     "node": ">=20"
