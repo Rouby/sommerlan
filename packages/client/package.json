@@ -38,7 +38,7 @@
     "@tanstack/react-router": "^1.39.4",
     "@tiptap/core": "^2.3.1",
     "@tiptap/extension-highlight": "^2.3.1",
-    "@tiptap/extension-link": "^2.3.1",
+    "@tiptap/extension-link": "^3.22.2",
     "@tiptap/extension-placeholder": "^2.3.1",
     "@tiptap/pm": "^2.3.1",
     "@tiptap/react": "^2.3.1",
@@ -76,12 +76,12 @@
     "@types/react-dom": "^18.2.6",
     "@vitejs/plugin-react-swc": "^3.3.2",
     "typescript": "^5.5.4",
-    "vite": "^5.2.8",
+    "vite": "^8.0.5",
     "vite-plugin-graphql-codegen": "^3.3.6",
     "vite-plugin-html": "^3.2.2",
     "vite-plugin-pwa": "^1.0.0",
     "vite-plugin-svgr": "^4.2.0",
-    "vitest": "^1.4.0"
+    "vitest": "^4.1.2"
   },
   "engines": {
     "node": ">=20"
