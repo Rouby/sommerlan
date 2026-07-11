@@ -211,6 +211,54 @@ export function getQualifiedBeerPongTeams(
   return qualified.slice(0, tournament.knockoutSize);
 }
 
+function buildFirstRoundPairings(
+  qualified: BeerPongGroupStandingRow[],
+) {
+  const buckets = new Map<string, BeerPongGroupStandingRow[]>();
+
+  for (const team of qualified) {
+    const groupTeams = buckets.get(team.groupName) ?? [];
+    groupTeams.push(team);
+    buckets.set(team.groupName, groupTeams);
+  }
+
+  const pairings: Array<[BeerPongGroupStandingRow, BeerPongGroupStandingRow]> = [];
+
+  while (pairings.length * 2 < qualified.length) {
+    const groups = [...buckets.entries()]
+      .filter(([, teams]) => teams.length > 0)
+      .sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]));
+
+    if (groups.length === 0) {
+      break;
+    }
+
+    const [homeGroupName, homeGroupTeams] = groups[0]!;
+    const awayGroup = groups.find(([groupName]) => groupName !== homeGroupName);
+
+    if (!awayGroup) {
+      const home = homeGroupTeams.shift();
+      const away = homeGroupTeams.shift();
+      if (!home || !away) {
+        break;
+      }
+
+      pairings.push([home, away]);
+      continue;
+    }
+
+    const home = homeGroupTeams.shift();
+    const away = awayGroup[1].shift();
+    if (!home || !away) {
+      break;
+    }
+
+    pairings.push([home, away]);
+  }
+
+  return pairings;
+}
+
 function getKnockoutRoundName(round: number, totalRounds: number) {
   const roundsRemaining = totalRounds - round + 1;
 
@@ -227,6 +275,7 @@ export function createBeerPongKnockoutMatches(
   const qualified = getQualifiedBeerPongTeams(tournament, matches);
   const totalRounds = Math.log2(qualified.length);
   const rounds = Array.from({ length: totalRounds }, () => [] as BeerPongMatch[]);
+  const firstRoundPairings = buildFirstRoundPairings(qualified);
   let matchNumber =
     getTournamentMatches(matches, tournament.id).reduce(
       (current, match) => Math.max(current, match.matchNumber),
@@ -248,8 +297,11 @@ export function createBeerPongKnockoutMatches(
       });
 
       if (round === 1) {
-        const home = qualified[matchIndex];
-        const away = qualified[qualified.length - matchIndex - 1];
+        const [home, away] = firstRoundPairings[matchIndex] ?? [];
+        if (!home || !away) {
+          throw new Error("Ungültige Paarung für die erste K.-o.-Runde.");
+        }
+
         match.teamIds = [home.team.id, away.team.id];
         match.slotLabels = [home.team.name, away.team.name];
         match.remainingBeers = {
