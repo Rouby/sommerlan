@@ -1,6 +1,6 @@
 import { createGraphQLError } from "graphql-yoga";
 import { type Context } from "../context";
-import { BeerPongMatchPhase } from "../../data";
+import { BeerPongMatchPhase } from "../../data/beerPongMatches";
 
 export async function getBeerPongMatchOrThrow(ctx: Context, matchId: string) {
   const match = await ctx.data.BeerPongMatch.findById(matchId);

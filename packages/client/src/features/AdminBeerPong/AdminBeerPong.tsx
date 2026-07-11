@@ -18,7 +18,7 @@ import {
   Title,
 } from "@mantine/core";
 import {
-  IconBracket2,
+  IconBrackets,
   IconMinus,
   IconPlus,
   IconRefresh,
@@ -267,11 +267,13 @@ function createDefaultTeams() {
 }
 
 function toTeamForms(
-  tournament: NonNullable<
-    NonNullable<
-      ReturnType<typeof useQuery<typeof BeerPongTournamentQuery>>[0]["data"]
-    >["beerPongTournament"]
-  >,
+  tournament: {
+    teams: Array<{
+      id: string;
+      name: string;
+      players: Array<{ id: string }>;
+    }>;
+  },
 ) {
   return tournament.teams.map((team) => ({
     id: team.id,
@@ -704,7 +706,7 @@ export function AdminBeerPong() {
           <Tabs.Tab value="groups" leftSection={<IconUsersGroup size={16} />}>
             Gruppenphase
           </Tabs.Tab>
-          <Tabs.Tab value="knockout" leftSection={<IconBracket2 size={16} />}>
+          <Tabs.Tab value="knockout" leftSection={<IconBrackets size={16} />}>
             K.-o.-Phase
           </Tabs.Tab>
         </Tabs.List>

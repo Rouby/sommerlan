@@ -1,6 +1,7 @@
 /* This file was automatically generated. DO NOT UPDATE MANUALLY. */
 import type { Resolvers } from "./types.generated";
 import { beerPongMatches as Query_beerPongMatches } from "./beerPong/resolvers/Query/beerPongMatches";
+import { beerPongTournament as Query_beerPongTournament } from "./beerPong/resolvers/Query/beerPongTournament";
 import { games as Query_games } from "./game/resolvers/Query/games";
 import { getCacheInfo as Query_getCacheInfo } from "./admin/resolvers/Query/getCacheInfo";
 import { me as Query_me } from "./user/resolvers/Query/me";
@@ -25,6 +26,8 @@ import { deleteBeerPongMatch as Mutation_deleteBeerPongMatch } from "./beerPong/
 import { denyRoom as Mutation_denyRoom } from "./party/resolvers/Mutation/denyRoom";
 import { donate as Mutation_donate } from "./donation/resolvers/Mutation/donate";
 import { endBeerPongMatch as Mutation_endBeerPongMatch } from "./beerPong/resolvers/Mutation/endBeerPongMatch";
+import { generateBeerPongGroupStage as Mutation_generateBeerPongGroupStage } from "./beerPong/resolvers/Mutation/generateBeerPongGroupStage";
+import { generateBeerPongKnockoutStage as Mutation_generateBeerPongKnockoutStage } from "./beerPong/resolvers/Mutation/generateBeerPongKnockoutStage";
 import { generatePasskeyLoginOptions as Mutation_generatePasskeyLoginOptions } from "./user/resolvers/Mutation/generatePasskeyLoginOptions";
 import { generatePasskeyRegisterOptions as Mutation_generatePasskeyRegisterOptions } from "./user/resolvers/Mutation/generatePasskeyRegisterOptions";
 import { grantRoom as Mutation_grantRoom } from "./party/resolvers/Mutation/grantRoom";
@@ -49,6 +52,7 @@ import { setAttendance as Mutation_setAttendance } from "./party/resolvers/Mutat
 import { setGamesPlayed as Mutation_setGamesPlayed } from "./game/resolvers/Mutation/setGamesPlayed";
 import { syncCache as Mutation_syncCache } from "./admin/resolvers/Mutation/syncCache";
 import { updateAuthDevice as Mutation_updateAuthDevice } from "./user/resolvers/Mutation/updateAuthDevice";
+import { updateBeerPongMatch as Mutation_updateBeerPongMatch } from "./beerPong/resolvers/Mutation/updateBeerPongMatch";
 import { updateBeerPongPlayerStats as Mutation_updateBeerPongPlayerStats } from "./beerPong/resolvers/Mutation/updateBeerPongPlayerStats";
 import { updateGame as Mutation_updateGame } from "./game/resolvers/Mutation/updateGame";
 import { updateLocation as Mutation_updateLocation } from "./overwatch/resolvers/Mutation/updateLocation";
@@ -57,6 +61,7 @@ import { updateParty as Mutation_updateParty } from "./party/resolvers/Mutation/
 import { updateProfile as Mutation_updateProfile } from "./user/resolvers/Mutation/updateProfile";
 import { updatePurchaseStatus as Mutation_updatePurchaseStatus } from "./purchase/resolvers/Mutation/updatePurchaseStatus";
 import { updateRoles as Mutation_updateRoles } from "./user/resolvers/Mutation/updateRoles";
+import { upsertBeerPongTournament as Mutation_upsertBeerPongTournament } from "./beerPong/resolvers/Mutation/upsertBeerPongTournament";
 import { voteOnPurchase as Mutation_voteOnPurchase } from "./purchase/resolvers/Mutation/voteOnPurchase";
 import { AddGameResult } from "./game/resolvers/AddGameResult";
 import { Attending as party_Attending } from "./party/resolvers/Attending";
@@ -64,8 +69,14 @@ import { Attending as game_Attending } from "./game/resolvers/Attending";
 import { Attending as user_Attending } from "./user/resolvers/Attending";
 import { AuthDevice } from "./user/resolvers/AuthDevice";
 import { AuthResponse } from "./user/resolvers/AuthResponse";
+import { BeerPongGroup } from "./beerPong/resolvers/BeerPongGroup";
+import { BeerPongGroupStanding } from "./beerPong/resolvers/BeerPongGroupStanding";
+import { BeerPongKnockoutRound } from "./beerPong/resolvers/BeerPongKnockoutRound";
 import { BeerPongMatch } from "./beerPong/resolvers/BeerPongMatch";
+import { BeerPongMatchTeam } from "./beerPong/resolvers/BeerPongMatchTeam";
 import { BeerPongPlayerStats } from "./beerPong/resolvers/BeerPongPlayerStats";
+import { BeerPongTeam } from "./beerPong/resolvers/BeerPongTeam";
+import { BeerPongTournament } from "./beerPong/resolvers/BeerPongTournament";
 import { CacheEntry } from "./admin/resolvers/CacheEntry";
 import { CacheInfo } from "./admin/resolvers/CacheInfo";
 import { CachePatch } from "./admin/resolvers/CachePatch";
@@ -102,6 +113,7 @@ import {
 export const resolvers: Resolvers = {
   Query: {
     beerPongMatches: Query_beerPongMatches,
+    beerPongTournament: Query_beerPongTournament,
     games: Query_games,
     getCacheInfo: Query_getCacheInfo,
     me: Query_me,
@@ -128,6 +140,8 @@ export const resolvers: Resolvers = {
     denyRoom: Mutation_denyRoom,
     donate: Mutation_donate,
     endBeerPongMatch: Mutation_endBeerPongMatch,
+    generateBeerPongGroupStage: Mutation_generateBeerPongGroupStage,
+    generateBeerPongKnockoutStage: Mutation_generateBeerPongKnockoutStage,
     generatePasskeyLoginOptions: Mutation_generatePasskeyLoginOptions,
     generatePasskeyRegisterOptions: Mutation_generatePasskeyRegisterOptions,
     grantRoom: Mutation_grantRoom,
@@ -152,6 +166,7 @@ export const resolvers: Resolvers = {
     setGamesPlayed: Mutation_setGamesPlayed,
     syncCache: Mutation_syncCache,
     updateAuthDevice: Mutation_updateAuthDevice,
+    updateBeerPongMatch: Mutation_updateBeerPongMatch,
     updateBeerPongPlayerStats: Mutation_updateBeerPongPlayerStats,
     updateGame: Mutation_updateGame,
     updateLocation: Mutation_updateLocation,
@@ -160,6 +175,7 @@ export const resolvers: Resolvers = {
     updateProfile: Mutation_updateProfile,
     updatePurchaseStatus: Mutation_updatePurchaseStatus,
     updateRoles: Mutation_updateRoles,
+    upsertBeerPongTournament: Mutation_upsertBeerPongTournament,
     voteOnPurchase: Mutation_voteOnPurchase,
   },
 
@@ -167,8 +183,14 @@ export const resolvers: Resolvers = {
   Attending: { ...party_Attending, ...game_Attending, ...user_Attending },
   AuthDevice: AuthDevice,
   AuthResponse: AuthResponse,
+  BeerPongGroup: BeerPongGroup,
+  BeerPongGroupStanding: BeerPongGroupStanding,
+  BeerPongKnockoutRound: BeerPongKnockoutRound,
   BeerPongMatch: BeerPongMatch,
+  BeerPongMatchTeam: BeerPongMatchTeam,
   BeerPongPlayerStats: BeerPongPlayerStats,
+  BeerPongTeam: BeerPongTeam,
+  BeerPongTournament: BeerPongTournament,
   CacheEntry: CacheEntry,
   CacheInfo: CacheInfo,
   CachePatch: CachePatch,

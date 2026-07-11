@@ -43,7 +43,9 @@ export const updateBeerPongMatch: NonNullable<
 
   if (input.isFinished) {
     if (!match.winnerTeamId) {
-      throw createGraphQLError("Zum Abschließen muss ein Sieger ausgewählt werden.");
+      throw createGraphQLError(
+        "Zum Abschließen muss ein Sieger ausgewählt werden.",
+      );
     }
     match.endedAt = new Date().toISOString();
   }

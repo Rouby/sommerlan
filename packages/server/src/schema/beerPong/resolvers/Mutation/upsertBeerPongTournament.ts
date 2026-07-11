@@ -9,7 +9,10 @@ import {
 export const upsertBeerPongTournament: NonNullable<
   MutationResolvers["upsertBeerPongTournament"]
 > = async (_parent, { input }, ctx) => {
-  ForbiddenError.from(ctx.ability).throwUnlessCan("update", "BeerPongTournament");
+  ForbiddenError.from(ctx.ability).throwUnlessCan(
+    "update",
+    "BeerPongTournament",
+  );
 
   const teams = normalizeBeerPongTeams(input.teams);
 

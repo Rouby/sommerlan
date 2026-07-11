@@ -1,6 +1,6 @@
 import { Avatar, Group, Stack, Table, Tabs, Text, Title } from "@mantine/core";
 import {
-  IconBracket2,
+  IconBrackets,
   IconMedal,
   IconTable,
   IconTournament,
@@ -280,7 +280,7 @@ export function BeerPong() {
           <Tabs.Tab value="groups" leftSection={<IconTournament size={16} />}>
             Gruppen
           </Tabs.Tab>
-          <Tabs.Tab value="knockout" leftSection={<IconBracket2 size={16} />}>
+          <Tabs.Tab value="knockout" leftSection={<IconBrackets size={16} />}>
             K.-o.-Baum
           </Tabs.Tab>
           <Tabs.Tab value="matches" leftSection={<IconTable size={16} />}>

@@ -10,7 +10,10 @@ import {
   PictureTagMapper,
 } from "./party/schema.mappers";
 import { AuthDeviceMapper, UserMapper } from "./user/schema.mappers";
-import { BeerPongMatchMapper } from "./beerPong/schema.mappers";
+import {
+  BeerPongMatchMapper,
+  BeerPongTournamentMapper,
+} from "./beerPong/schema.mappers";
 import { DonationMapper } from "./donation/schema.mappers";
 import { EventMapper } from "./events/schema.mappers";
 import { GameMapper } from "./game/schema.mappers";
@@ -98,12 +101,58 @@ export type AuthResponse = {
   token: Scalars["JWT"]["output"];
 };
 
+export type BeerPongGroup = {
+  __typename?: "BeerPongGroup";
+  matches: Array<BeerPongMatch>;
+  name: Scalars["String"]["output"];
+  teams: Array<BeerPongGroupStanding>;
+};
+
+export type BeerPongGroupStanding = {
+  __typename?: "BeerPongGroupStanding";
+  losses: Scalars["Int"]["output"];
+  matches: Scalars["Int"]["output"];
+  rank: Scalars["Int"]["output"];
+  remainingBeerDiff: Scalars["Int"]["output"];
+  remainingBeers: Scalars["Int"]["output"];
+  team: BeerPongTeam;
+  wins: Scalars["Int"]["output"];
+};
+
+export type BeerPongKnockoutRound = {
+  __typename?: "BeerPongKnockoutRound";
+  matches: Array<BeerPongMatch>;
+  name: Scalars["String"]["output"];
+  round: Scalars["Int"]["output"];
+};
+
 export type BeerPongMatch = {
   __typename?: "BeerPongMatch";
   endedAt?: Maybe<Scalars["DateTime"]["output"]>;
+  groupName?: Maybe<Scalars["String"]["output"]>;
   id: Scalars["ID"]["output"];
+  matchNumber: Scalars["Int"]["output"];
+  phase: BeerPongMatchPhase;
   players: Array<BeerPongPlayerStats>;
+  round: Scalars["Int"]["output"];
   startedAt: Scalars["DateTime"]["output"];
+  teams: Array<BeerPongMatchTeam>;
+  winner?: Maybe<BeerPongTeam>;
+};
+
+export type BeerPongMatchPhase = "EXHIBITION" | "GROUP" | "KNOCKOUT";
+
+export type BeerPongMatchTeam = {
+  __typename?: "BeerPongMatchTeam";
+  isWinner: Scalars["Boolean"]["output"];
+  remainingBeers: Scalars["Int"]["output"];
+  slotLabel: Scalars["String"]["output"];
+  team?: Maybe<BeerPongTeam>;
+};
+
+export type BeerPongMatchTeamResultInput = {
+  remainingBeers: Scalars["Int"]["input"];
+  teamId: Scalars["ID"]["input"];
 };
 
 export type BeerPongPlayerStats = {
@@ -123,6 +172,32 @@ export type BeerPongPlayerStatsInput = {
   hits: Scalars["Int"]["input"];
   throws: Scalars["Int"]["input"];
   userId: Scalars["ID"]["input"];
+};
+
+export type BeerPongTeam = {
+  __typename?: "BeerPongTeam";
+  id: Scalars["ID"]["output"];
+  name: Scalars["String"]["output"];
+  players: Array<User>;
+  seed: Scalars["Int"]["output"];
+};
+
+export type BeerPongTeamInput = {
+  id?: InputMaybe<Scalars["ID"]["input"]>;
+  name: Scalars["String"]["input"];
+  playerIds: Array<Scalars["ID"]["input"]>;
+};
+
+export type BeerPongTournament = {
+  __typename?: "BeerPongTournament";
+  groupCount: Scalars["Int"]["output"];
+  groups: Array<BeerPongGroup>;
+  id: Scalars["ID"]["output"];
+  knockout: Array<BeerPongKnockoutRound>;
+  knockoutSize: Scalars["Int"]["output"];
+  matches: Array<BeerPongMatch>;
+  name: Scalars["String"]["output"];
+  teams: Array<BeerPongTeam>;
 };
 
 export type CacheEntry = {
@@ -246,6 +321,8 @@ export type Mutation = {
   denyRoom?: Maybe<Attending>;
   donate: Donation;
   endBeerPongMatch: BeerPongMatch;
+  generateBeerPongGroupStage: BeerPongTournament;
+  generateBeerPongKnockoutStage: BeerPongTournament;
   generatePasskeyLoginOptions: Scalars["JSON"]["output"];
   generatePasskeyRegisterOptions: Scalars["JSON"]["output"];
   grantRoom?: Maybe<Attending>;
@@ -270,6 +347,7 @@ export type Mutation = {
   setGamesPlayed: Attending;
   syncCache?: Maybe<Scalars["Boolean"]["output"]>;
   updateAuthDevice: AuthDevice;
+  updateBeerPongMatch: BeerPongMatch;
   updateBeerPongPlayerStats: BeerPongMatch;
   updateGame: Game;
   updateLocation: User;
@@ -278,6 +356,7 @@ export type Mutation = {
   updateProfile: User;
   updatePurchaseStatus: Purchase;
   updateRoles: User;
+  upsertBeerPongTournament: BeerPongTournament;
   voteOnPurchase: Purchase;
 };
 
@@ -336,6 +415,15 @@ export type MutationdonateArgs = {
 
 export type MutationendBeerPongMatchArgs = {
   matchId: Scalars["ID"]["input"];
+  winnerTeamId: Scalars["ID"]["input"];
+};
+
+export type MutationgenerateBeerPongGroupStageArgs = {
+  tournamentId: Scalars["ID"]["input"];
+};
+
+export type MutationgenerateBeerPongKnockoutStageArgs = {
+  tournamentId: Scalars["ID"]["input"];
 };
 
 export type MutationgeneratePasskeyLoginOptionsArgs = {
@@ -438,6 +526,10 @@ export type MutationupdateAuthDeviceArgs = {
   name: Scalars["String"]["input"];
 };
 
+export type MutationupdateBeerPongMatchArgs = {
+  input: UpdateBeerPongMatchInput;
+};
+
 export type MutationupdateBeerPongPlayerStatsArgs = {
   input: BeerPongPlayerStatsInput;
   matchId: Scalars["ID"]["input"];
@@ -473,6 +565,10 @@ export type MutationupdatePurchaseStatusArgs = {
 export type MutationupdateRolesArgs = {
   id: Scalars["ID"]["input"];
   roles: Array<Role>;
+};
+
+export type MutationupsertBeerPongTournamentArgs = {
+  input: UpsertBeerPongTournamentInput;
 };
 
 export type MutationvoteOnPurchaseArgs = {
@@ -593,6 +689,7 @@ export type PurchaseVote = {
 export type Query = {
   __typename?: "Query";
   beerPongMatches: Array<BeerPongMatch>;
+  beerPongTournament?: Maybe<BeerPongTournament>;
   games: Array<Game>;
   getCacheInfo?: Maybe<CacheInfo>;
   me?: Maybe<User>;
@@ -629,6 +726,22 @@ export type RegisterResponse = {
 export type Role = "Admin" | "Bookkeeper" | "Doorkeeper" | "Trusted";
 
 export type RoomStatus = "GRANTED" | "REQUESTED";
+
+export type UpdateBeerPongMatchInput = {
+  isFinished?: InputMaybe<Scalars["Boolean"]["input"]>;
+  matchId: Scalars["ID"]["input"];
+  playerStats?: InputMaybe<Array<BeerPongPlayerStatsInput>>;
+  teamResults?: InputMaybe<Array<BeerPongMatchTeamResultInput>>;
+  winnerTeamId?: InputMaybe<Scalars["ID"]["input"]>;
+};
+
+export type UpsertBeerPongTournamentInput = {
+  groupCount: Scalars["Int"]["input"];
+  id?: InputMaybe<Scalars["ID"]["input"]>;
+  knockoutSize: Scalars["Int"]["input"];
+  name: Scalars["String"]["input"];
+  teams: Array<BeerPongTeamInput>;
+};
 
 export type User = {
   __typename?: "User";
@@ -772,12 +885,41 @@ export type ResolversTypes = {
   AuthDevice: ResolverTypeWrapper<AuthDeviceMapper>;
   String: ResolverTypeWrapper<Scalars["String"]["output"]>;
   AuthResponse: ResolverTypeWrapper<AuthResponse>;
+  BeerPongGroup: ResolverTypeWrapper<
+    Omit<BeerPongGroup, "matches" | "teams"> & {
+      matches: Array<ResolversTypes["BeerPongMatch"]>;
+      teams: Array<ResolversTypes["BeerPongGroupStanding"]>;
+    }
+  >;
+  BeerPongGroupStanding: ResolverTypeWrapper<
+    Omit<BeerPongGroupStanding, "team"> & {
+      team: ResolversTypes["BeerPongTeam"];
+    }
+  >;
+  Int: ResolverTypeWrapper<Scalars["Int"]["output"]>;
+  BeerPongKnockoutRound: ResolverTypeWrapper<
+    Omit<BeerPongKnockoutRound, "matches"> & {
+      matches: Array<ResolversTypes["BeerPongMatch"]>;
+    }
+  >;
   BeerPongMatch: ResolverTypeWrapper<BeerPongMatchMapper>;
+  BeerPongMatchPhase: ResolverTypeWrapper<"EXHIBITION" | "GROUP" | "KNOCKOUT">;
+  BeerPongMatchTeam: ResolverTypeWrapper<
+    Omit<BeerPongMatchTeam, "team"> & {
+      team?: Maybe<ResolversTypes["BeerPongTeam"]>;
+    }
+  >;
+  Boolean: ResolverTypeWrapper<Scalars["Boolean"]["output"]>;
+  BeerPongMatchTeamResultInput: BeerPongMatchTeamResultInput;
   BeerPongPlayerStats: ResolverTypeWrapper<
     Omit<BeerPongPlayerStats, "user"> & { user: ResolversTypes["User"] }
   >;
-  Int: ResolverTypeWrapper<Scalars["Int"]["output"]>;
   BeerPongPlayerStatsInput: BeerPongPlayerStatsInput;
+  BeerPongTeam: ResolverTypeWrapper<
+    Omit<BeerPongTeam, "players"> & { players: Array<ResolversTypes["User"]> }
+  >;
+  BeerPongTeamInput: BeerPongTeamInput;
+  BeerPongTournament: ResolverTypeWrapper<BeerPongTournamentMapper>;
   BoundingBox: ResolverTypeWrapper<Scalars["BoundingBox"]["output"]>;
   CacheEntry: ResolverTypeWrapper<CacheEntry>;
   CacheInfo: ResolverTypeWrapper<CacheInfo>;
@@ -786,7 +928,6 @@ export type ResolversTypes = {
   Date: ResolverTypeWrapper<Scalars["Date"]["output"]>;
   DateTime: ResolverTypeWrapper<Scalars["DateTime"]["output"]>;
   Donation: ResolverTypeWrapper<DonationMapper>;
-  Boolean: ResolverTypeWrapper<Scalars["Boolean"]["output"]>;
   DonationDedication: ResolverTypeWrapper<"RENT" | "WARCHEST">;
   Event: ResolverTypeWrapper<EventMapper>;
   EventInput: EventInput;
@@ -843,6 +984,8 @@ export type ResolversTypes = {
   Role: ResolverTypeWrapper<"Trusted" | "Admin" | "Doorkeeper" | "Bookkeeper">;
   RoomStatus: ResolverTypeWrapper<"REQUESTED" | "GRANTED">;
   Time: ResolverTypeWrapper<Scalars["Time"]["output"]>;
+  UpdateBeerPongMatchInput: UpdateBeerPongMatchInput;
+  UpsertBeerPongTournamentInput: UpsertBeerPongTournamentInput;
   User: ResolverTypeWrapper<UserMapper>;
   VoteCount: ResolverTypeWrapper<VoteCount>;
   VoteValue: ResolverTypeWrapper<"YES" | "NO" | "ABSTAIN">;
@@ -860,12 +1003,32 @@ export type ResolversParentTypes = {
   AuthDevice: AuthDeviceMapper;
   String: Scalars["String"]["output"];
   AuthResponse: AuthResponse;
+  BeerPongGroup: Omit<BeerPongGroup, "matches" | "teams"> & {
+    matches: Array<ResolversParentTypes["BeerPongMatch"]>;
+    teams: Array<ResolversParentTypes["BeerPongGroupStanding"]>;
+  };
+  BeerPongGroupStanding: Omit<BeerPongGroupStanding, "team"> & {
+    team: ResolversParentTypes["BeerPongTeam"];
+  };
+  Int: Scalars["Int"]["output"];
+  BeerPongKnockoutRound: Omit<BeerPongKnockoutRound, "matches"> & {
+    matches: Array<ResolversParentTypes["BeerPongMatch"]>;
+  };
   BeerPongMatch: BeerPongMatchMapper;
+  BeerPongMatchTeam: Omit<BeerPongMatchTeam, "team"> & {
+    team?: Maybe<ResolversParentTypes["BeerPongTeam"]>;
+  };
+  Boolean: Scalars["Boolean"]["output"];
+  BeerPongMatchTeamResultInput: BeerPongMatchTeamResultInput;
   BeerPongPlayerStats: Omit<BeerPongPlayerStats, "user"> & {
     user: ResolversParentTypes["User"];
   };
-  Int: Scalars["Int"]["output"];
   BeerPongPlayerStatsInput: BeerPongPlayerStatsInput;
+  BeerPongTeam: Omit<BeerPongTeam, "players"> & {
+    players: Array<ResolversParentTypes["User"]>;
+  };
+  BeerPongTeamInput: BeerPongTeamInput;
+  BeerPongTournament: BeerPongTournamentMapper;
   BoundingBox: Scalars["BoundingBox"]["output"];
   CacheEntry: CacheEntry;
   CacheInfo: CacheInfo;
@@ -874,7 +1037,6 @@ export type ResolversParentTypes = {
   Date: Scalars["Date"]["output"];
   DateTime: Scalars["DateTime"]["output"];
   Donation: DonationMapper;
-  Boolean: Scalars["Boolean"]["output"];
   Event: EventMapper;
   EventInput: EventInput;
   File: Scalars["File"]["output"];
@@ -915,6 +1077,8 @@ export type ResolversParentTypes = {
     user: ResolversParentTypes["User"];
   };
   Time: Scalars["Time"]["output"];
+  UpdateBeerPongMatchInput: UpdateBeerPongMatchInput;
+  UpsertBeerPongTournamentInput: UpsertBeerPongTournamentInput;
   User: UserMapper;
   VoteCount: VoteCount;
 };
@@ -1004,6 +1168,55 @@ export type AuthResponseResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type BeerPongGroupResolvers<
+  ContextType = Context,
+  ParentType extends
+    ResolversParentTypes["BeerPongGroup"] = ResolversParentTypes["BeerPongGroup"],
+> = {
+  matches?: Resolver<
+    Array<ResolversTypes["BeerPongMatch"]>,
+    ParentType,
+    ContextType
+  >;
+  name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  teams?: Resolver<
+    Array<ResolversTypes["BeerPongGroupStanding"]>,
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type BeerPongGroupStandingResolvers<
+  ContextType = Context,
+  ParentType extends
+    ResolversParentTypes["BeerPongGroupStanding"] = ResolversParentTypes["BeerPongGroupStanding"],
+> = {
+  losses?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  matches?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  rank?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  remainingBeerDiff?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  remainingBeers?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  team?: Resolver<ResolversTypes["BeerPongTeam"], ParentType, ContextType>;
+  wins?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type BeerPongKnockoutRoundResolvers<
+  ContextType = Context,
+  ParentType extends
+    ResolversParentTypes["BeerPongKnockoutRound"] = ResolversParentTypes["BeerPongKnockoutRound"],
+> = {
+  matches?: Resolver<
+    Array<ResolversTypes["BeerPongMatch"]>,
+    ParentType,
+    ContextType
+  >;
+  name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  round?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type BeerPongMatchResolvers<
   ContextType = Context,
   ParentType extends
@@ -1014,13 +1227,56 @@ export type BeerPongMatchResolvers<
     ParentType,
     ContextType
   >;
+  groupName?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+  matchNumber?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  phase?: Resolver<
+    ResolversTypes["BeerPongMatchPhase"],
+    ParentType,
+    ContextType
+  >;
   players?: Resolver<
     Array<ResolversTypes["BeerPongPlayerStats"]>,
     ParentType,
     ContextType
   >;
+  round?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
   startedAt?: Resolver<ResolversTypes["DateTime"], ParentType, ContextType>;
+  teams?: Resolver<
+    Array<ResolversTypes["BeerPongMatchTeam"]>,
+    ParentType,
+    ContextType
+  >;
+  winner?: Resolver<
+    Maybe<ResolversTypes["BeerPongTeam"]>,
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type BeerPongMatchPhaseResolvers = EnumResolverSignature<
+  { EXHIBITION?: any; GROUP?: any; KNOCKOUT?: any },
+  ResolversTypes["BeerPongMatchPhase"]
+>;
+
+export type BeerPongMatchTeamResolvers<
+  ContextType = Context,
+  ParentType extends
+    ResolversParentTypes["BeerPongMatchTeam"] = ResolversParentTypes["BeerPongMatchTeam"],
+> = {
+  isWinner?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  remainingBeers?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  slotLabel?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  team?: Resolver<
+    Maybe<ResolversTypes["BeerPongTeam"]>,
+    ParentType,
+    ContextType
+  >;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -1035,6 +1291,50 @@ export type BeerPongPlayerStatsResolvers<
   hits?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
   throws?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
   user?: Resolver<ResolversTypes["User"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type BeerPongTeamResolvers<
+  ContextType = Context,
+  ParentType extends
+    ResolversParentTypes["BeerPongTeam"] = ResolversParentTypes["BeerPongTeam"],
+> = {
+  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  players?: Resolver<Array<ResolversTypes["User"]>, ParentType, ContextType>;
+  seed?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type BeerPongTournamentResolvers<
+  ContextType = Context,
+  ParentType extends
+    ResolversParentTypes["BeerPongTournament"] = ResolversParentTypes["BeerPongTournament"],
+> = {
+  groupCount?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  groups?: Resolver<
+    Array<ResolversTypes["BeerPongGroup"]>,
+    ParentType,
+    ContextType
+  >;
+  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+  knockout?: Resolver<
+    Array<ResolversTypes["BeerPongKnockoutRound"]>,
+    ParentType,
+    ContextType
+  >;
+  knockoutSize?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  matches?: Resolver<
+    Array<ResolversTypes["BeerPongMatch"]>,
+    ParentType,
+    ContextType
+  >;
+  name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  teams?: Resolver<
+    Array<ResolversTypes["BeerPongTeam"]>,
+    ParentType,
+    ContextType
+  >;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -1315,7 +1615,19 @@ export type MutationResolvers<
     ResolversTypes["BeerPongMatch"],
     ParentType,
     ContextType,
-    RequireFields<MutationendBeerPongMatchArgs, "matchId">
+    RequireFields<MutationendBeerPongMatchArgs, "matchId" | "winnerTeamId">
+  >;
+  generateBeerPongGroupStage?: Resolver<
+    ResolversTypes["BeerPongTournament"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationgenerateBeerPongGroupStageArgs, "tournamentId">
+  >;
+  generateBeerPongKnockoutStage?: Resolver<
+    ResolversTypes["BeerPongTournament"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationgenerateBeerPongKnockoutStageArgs, "tournamentId">
   >;
   generatePasskeyLoginOptions?: Resolver<
     ResolversTypes["JSON"],
@@ -1459,6 +1771,12 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationupdateAuthDeviceArgs, "id" | "name">
   >;
+  updateBeerPongMatch?: Resolver<
+    ResolversTypes["BeerPongMatch"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationupdateBeerPongMatchArgs, "input">
+  >;
   updateBeerPongPlayerStats?: Resolver<
     ResolversTypes["BeerPongMatch"],
     ParentType,
@@ -1506,6 +1824,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationupdateRolesArgs, "id" | "roles">
+  >;
+  upsertBeerPongTournament?: Resolver<
+    ResolversTypes["BeerPongTournament"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationupsertBeerPongTournamentArgs, "input">
   >;
   voteOnPurchase?: Resolver<
     ResolversTypes["Purchase"],
@@ -1669,6 +1993,11 @@ export type QueryResolvers<
     ParentType,
     ContextType
   >;
+  beerPongTournament?: Resolver<
+    Maybe<ResolversTypes["BeerPongTournament"]>,
+    ParentType,
+    ContextType
+  >;
   games?: Resolver<Array<ResolversTypes["Game"]>, ParentType, ContextType>;
   getCacheInfo?: Resolver<
     Maybe<ResolversTypes["CacheInfo"]>,
@@ -1794,8 +2123,15 @@ export type Resolvers<ContextType = Context> = {
   Attending?: AttendingResolvers<ContextType>;
   AuthDevice?: AuthDeviceResolvers<ContextType>;
   AuthResponse?: AuthResponseResolvers<ContextType>;
+  BeerPongGroup?: BeerPongGroupResolvers<ContextType>;
+  BeerPongGroupStanding?: BeerPongGroupStandingResolvers<ContextType>;
+  BeerPongKnockoutRound?: BeerPongKnockoutRoundResolvers<ContextType>;
   BeerPongMatch?: BeerPongMatchResolvers<ContextType>;
+  BeerPongMatchPhase?: BeerPongMatchPhaseResolvers;
+  BeerPongMatchTeam?: BeerPongMatchTeamResolvers<ContextType>;
   BeerPongPlayerStats?: BeerPongPlayerStatsResolvers<ContextType>;
+  BeerPongTeam?: BeerPongTeamResolvers<ContextType>;
+  BeerPongTournament?: BeerPongTournamentResolvers<ContextType>;
   BoundingBox?: GraphQLScalarType;
   CacheEntry?: CacheEntryResolvers<ContextType>;
   CacheInfo?: CacheInfoResolvers<ContextType>;

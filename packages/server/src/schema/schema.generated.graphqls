@@ -32,11 +32,57 @@ type AuthResponse {
   token: JWT!
 }
 
+type BeerPongGroup {
+  matches: [BeerPongMatch!]!
+  name: String!
+  teams: [BeerPongGroupStanding!]!
+}
+
+type BeerPongGroupStanding {
+  losses: Int!
+  matches: Int!
+  rank: Int!
+  remainingBeerDiff: Int!
+  remainingBeers: Int!
+  team: BeerPongTeam!
+  wins: Int!
+}
+
+type BeerPongKnockoutRound {
+  matches: [BeerPongMatch!]!
+  name: String!
+  round: Int!
+}
+
 type BeerPongMatch {
   endedAt: DateTime
+  groupName: String
   id: ID!
+  matchNumber: Int!
+  phase: BeerPongMatchPhase!
   players: [BeerPongPlayerStats!]!
+  round: Int!
   startedAt: DateTime!
+  teams: [BeerPongMatchTeam!]!
+  winner: BeerPongTeam
+}
+
+enum BeerPongMatchPhase {
+  EXHIBITION
+  GROUP
+  KNOCKOUT
+}
+
+type BeerPongMatchTeam {
+  isWinner: Boolean!
+  remainingBeers: Int!
+  slotLabel: String!
+  team: BeerPongTeam
+}
+
+input BeerPongMatchTeamResultInput {
+  remainingBeers: Int!
+  teamId: ID!
 }
 
 type BeerPongPlayerStats {
@@ -55,6 +101,30 @@ input BeerPongPlayerStatsInput {
   hits: Int!
   throws: Int!
   userId: ID!
+}
+
+type BeerPongTeam {
+  id: ID!
+  name: String!
+  players: [User!]!
+  seed: Int!
+}
+
+input BeerPongTeamInput {
+  id: ID
+  name: String!
+  playerIds: [ID!]!
+}
+
+type BeerPongTournament {
+  groupCount: Int!
+  groups: [BeerPongGroup!]!
+  id: ID!
+  knockout: [BeerPongKnockoutRound!]!
+  knockoutSize: Int!
+  matches: [BeerPongMatch!]!
+  name: String!
+  teams: [BeerPongTeam!]!
 }
 
 scalar BoundingBox
@@ -189,7 +259,9 @@ type Mutation {
     dedication: DonationDedication
     incognito: Boolean
   ): Donation!
-  endBeerPongMatch(matchId: ID!): BeerPongMatch!
+  endBeerPongMatch(matchId: ID!, winnerTeamId: ID!): BeerPongMatch!
+  generateBeerPongGroupStage(tournamentId: ID!): BeerPongTournament!
+  generateBeerPongKnockoutStage(tournamentId: ID!): BeerPongTournament!
   generatePasskeyLoginOptions(userId: String): JSON!
   generatePasskeyRegisterOptions(userId: String!): JSON!
   grantRoom(attendingId: ID!): Attending
@@ -222,6 +294,7 @@ type Mutation {
   setGamesPlayed(gameIds: [ID!]!, partyId: ID!): Attending!
   syncCache(clear: Boolean): Boolean
   updateAuthDevice(id: ID!, name: String!): AuthDevice!
+  updateBeerPongMatch(input: UpdateBeerPongMatchInput!): BeerPongMatch!
   updateBeerPongPlayerStats(
     input: BeerPongPlayerStatsInput!
     matchId: ID!
@@ -233,6 +306,9 @@ type Mutation {
   updateProfile(input: ProfileInput!): User!
   updatePurchaseStatus(purchaseId: ID!, status: PurchaseStatus!): Purchase!
   updateRoles(id: ID!, roles: [Role!]!): User!
+  upsertBeerPongTournament(
+    input: UpsertBeerPongTournamentInput!
+  ): BeerPongTournament!
   voteOnPurchase(purchaseId: ID!, vote: VoteValue!): Purchase!
 }
 
@@ -343,6 +419,7 @@ type PurchaseVote {
 
 type Query {
   beerPongMatches: [BeerPongMatch!]!
+  beerPongTournament: BeerPongTournament
   games: [Game!]!
   getCacheInfo: CacheInfo
   me: User
@@ -379,6 +456,22 @@ enum RoomStatus {
 }
 
 scalar Time
+
+input UpdateBeerPongMatchInput {
+  isFinished: Boolean
+  matchId: ID!
+  playerStats: [BeerPongPlayerStatsInput!]
+  teamResults: [BeerPongMatchTeamResultInput!]
+  winnerTeamId: ID
+}
+
+input UpsertBeerPongTournamentInput {
+  groupCount: Int!
+  id: ID
+  knockoutSize: Int!
+  name: String!
+  teams: [BeerPongTeamInput!]!
+}
 
 type User {
   avatar: String!

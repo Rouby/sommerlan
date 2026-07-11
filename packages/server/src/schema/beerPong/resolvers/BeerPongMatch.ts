@@ -25,7 +25,22 @@ export const BeerPongMatch: BeerPongMatchResolvers = {
     const tournament = parent.tournamentId
       ? await ctx.data.BeerPongTournament.findById(parent.tournamentId)
       : null;
-    const teamsById = new Map(tournament?.teams.map((team) => [team.id, team]));
+    const users = await ctx.data.User.all();
+    const usersById = new Map<string, (typeof users)[number]>(
+      users.map((user) => [String(user.id), user]),
+    );
+    const teamsById = new Map(
+      tournament?.teams.map((team) => [
+        team.id,
+        {
+          ...team,
+          players: team.playerIds.flatMap((playerId) => {
+            const user = usersById.get(playerId);
+            return user ? [user] : [];
+          }),
+        },
+      ]),
+    );
     const slotCount = Math.max(parent.slotLabels.length, parent.teamIds.length, 2);
 
     return Array.from({ length: slotCount }, (_, index) => {
@@ -46,8 +61,15 @@ export const BeerPongMatch: BeerPongMatchResolvers = {
     }
 
     const tournament = await ctx.data.BeerPongTournament.findById(parent.tournamentId);
-    return (
-      tournament?.teams.find((team) => team.id === parent.winnerTeamId) ?? null
-    );
+    const team = tournament?.teams.find((entry) => entry.id === parent.winnerTeamId);
+    if (!team) {
+      return null;
+    }
+
+    const users = await ctx.data.User.filterByIds(team.playerIds);
+    return {
+      ...team,
+      players: users,
+    };
   },
 };

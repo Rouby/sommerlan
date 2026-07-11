@@ -1,7 +1,12 @@
 export { getCacheInfo, syncCache } from "./$cache";
 export * from "./attendings";
-export * from "./beerPongMatches";
-export * from "./beerPongTournaments";
+export { BeerPongMatch } from "./beerPongMatches";
+export type {
+  BeerPongMatchPhase,
+  BeerPongPlayerStatLine,
+} from "./beerPongMatches";
+export { BeerPongTournament } from "./beerPongTournaments";
+export type { BeerPongTournamentTeam } from "./beerPongTournaments";
 export * from "./donations";
 export * from "./events";
 export * from "./games";

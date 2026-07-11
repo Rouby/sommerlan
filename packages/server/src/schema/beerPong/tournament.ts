@@ -1,9 +1,10 @@
+import { randomUUID } from "crypto";
 import {
   BeerPongMatch,
-  BeerPongMatchPhase,
   BeerPongTournament,
   type BeerPongTournamentTeam,
 } from "../../data";
+import { BeerPongMatchPhase } from "../../data/beerPongMatches";
 
 export type BeerPongGroupStandingRow = {
   groupName: string;
@@ -24,7 +25,7 @@ export function normalizeBeerPongTeams(
   }>,
 ) {
   return teams.map((team, index) => ({
-    id: team.id?.trim() || crypto.randomUUID(),
+    id: team.id?.trim() || randomUUID(),
     name: team.name.trim(),
     playerIds: [...new Set(team.playerIds)],
     seed: index + 1,
@@ -241,7 +242,7 @@ export function createBeerPongKnockoutMatches(
         phase: BeerPongMatchPhase.Knockout,
         round,
         matchNumber: matchNumber++,
-        teamIds: [],
+        teamIds: ["", ""],
         slotLabels: ["", ""],
         remainingBeers: {},
       });

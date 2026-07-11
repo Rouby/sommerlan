@@ -6,11 +6,16 @@ import { createBeerPongGroupMatches } from "../../tournament";
 export const generateBeerPongGroupStage: NonNullable<
   MutationResolvers["generateBeerPongGroupStage"]
 > = async (_parent, { tournamentId }, ctx) => {
-  ForbiddenError.from(ctx.ability).throwUnlessCan("update", "BeerPongTournament");
+  ForbiddenError.from(ctx.ability).throwUnlessCan(
+    "update",
+    "BeerPongTournament",
+  );
 
   const tournament = await ctx.data.BeerPongTournament.findById(tournamentId);
   if (!tournament) {
-    throw createGraphQLError(`No BeerPongTournament found with id ${tournamentId}`);
+    throw createGraphQLError(
+      `No BeerPongTournament found with id ${tournamentId}`,
+    );
   }
 
   const matches = (await ctx.data.BeerPongMatch.all()).filter(
