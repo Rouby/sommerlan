@@ -33,6 +33,7 @@ export function UserMenu({
       shadow="lg"
       withArrow
       withinPortal
+      closeOnClickOutside={false}
     >
       <Menu.Target>
         <ActionIcon radius="xl" variant="default">
@@ -53,6 +54,7 @@ export function UserMenu({
             shadow="lg"
             opened={open}
             onClose={() => setOpen(false)}
+            closeOnClickOutside={false}
           >
             <Popover.Target>
               <Menu.Item
@@ -123,6 +125,7 @@ function AddUserForm({ onAdd }: { onAdd: () => void }) {
           name="username"
           autoComplete="username"
           placeholder="Nutzername"
+          autoFocus
         />
 
         <TextInput

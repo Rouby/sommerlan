@@ -125,6 +125,16 @@ export function UserMenu() {
               Cache verwalten
             </Menu.Item>
           </Can>
+
+          <Can I="update" a="BeerPongMatch">
+            <Menu.Item
+              component={Link}
+              leftSection={<IconClipboardCheck size={14} />}
+              to="/admin/beerPong"
+            >
+              Beer Pong verwalten
+            </Menu.Item>
+          </Can>
         </>
       )}
 

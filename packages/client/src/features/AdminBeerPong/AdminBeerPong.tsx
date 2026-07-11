@@ -19,9 +19,12 @@ import {
 } from "@mantine/core";
 import {
   IconBrackets,
+  IconArrowDown,
+  IconArrowUp,
   IconMinus,
   IconPlus,
   IconRefresh,
+  IconGripVertical,
   IconTrash,
   IconUsersGroup,
 } from "@tabler/icons-react";
@@ -247,6 +250,11 @@ type TeamForm = {
   playerIds: string[];
 };
 
+type GroupPreview = {
+  name: string;
+  teams: Array<TeamForm & { index: number }>;
+};
+
 type StatKey = "hits" | "edges" | "blocks" | "throws" | "bounceHits";
 
 const STAT_LABELS: Record<StatKey, string> = {
@@ -280,6 +288,22 @@ function toTeamForms(
     name: team.name,
     playerIds: team.players.map((player) => player.id),
   }));
+}
+
+function getPreviewGroups(teams: TeamForm[], groupCount: number) {
+  const groups = Array.from({ length: groupCount }, (_, index) => ({
+    name: String.fromCharCode(65 + index),
+    teams: [] as Array<TeamForm & { index: number }>,
+  }));
+
+  teams.forEach((team, index) => {
+    const offset = index % groupCount;
+    const row = Math.floor(index / groupCount);
+    const groupIndex = row % 2 === 0 ? offset : groupCount - offset - 1;
+    groups[groupIndex]?.teams.push({ ...team, index });
+  });
+
+  return groups as GroupPreview[];
 }
 
 function StatCounter({
@@ -567,6 +591,7 @@ export function AdminBeerPong() {
   const [knockoutSize, setKnockoutSize] = useState(4);
   const [teams, setTeams] = useState<TeamForm[]>(createDefaultTeams());
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [draggedTeamIndex, setDraggedTeamIndex] = useState<number | null>(null);
 
   const [, upsertTournament] = useMutation(UpsertBeerPongTournamentMutation);
   const [, generateGroupStage] = useMutation(GenerateBeerPongGroupStageMutation);
@@ -598,9 +623,44 @@ export function AdminBeerPong() {
     [users],
   );
 
+  const groupPreview = useMemo(
+    () => getPreviewGroups(teams, groupCount),
+    [teams, groupCount],
+  );
+
   async function handleRefetch() {
     setErrorMessage(null);
     await refetch({ requestPolicy: "network-only" });
+  }
+
+  function moveTeam(index: number, direction: -1 | 1) {
+    setTeams((previous) => {
+      const nextIndex = index + direction;
+
+      if (nextIndex < 0 || nextIndex >= previous.length) {
+        return previous;
+      }
+
+      const next = [...previous];
+      [next[index], next[nextIndex]] = [next[nextIndex]!, next[index]!];
+      return next;
+    });
+  }
+
+  function swapTeams(indexA: number, indexB: number) {
+    if (indexA === indexB) {
+      return;
+    }
+
+    setTeams((previous) => {
+      if (indexA < 0 || indexA >= previous.length || indexB < 0 || indexB >= previous.length) {
+        return previous;
+      }
+
+      const next = [...previous];
+      [next[indexA], next[indexB]] = [next[indexB]!, next[indexA]!];
+      return next;
+    });
   }
 
   async function handleSaveTournament() {
@@ -743,6 +803,9 @@ export function AdminBeerPong() {
                   />
                 </Group>
                 <Stack gap="sm">
+                  <Text size="sm" c="dimmed">
+                    Die Reihenfolge der Teams bestimmt die Gruppeneinteilung. Ändere sie vor dem Speichern und Erzeugen der Gruppenphase.
+                  </Text>
                   {teams.map((team, index) => (
                     <Paper key={team.id ?? index} withBorder p="sm" radius="md">
                       <Group align="start" wrap="nowrap">
@@ -777,6 +840,24 @@ export function AdminBeerPong() {
                           maxValues={2}
                           style={{ flex: 1 }}
                         />
+                        <Group gap={4} mt={30} wrap="nowrap">
+                          <ActionIcon
+                            variant="subtle"
+                            onClick={() => moveTeam(index, -1)}
+                            disabled={index === 0}
+                            aria-label="Team nach oben verschieben"
+                          >
+                            <IconArrowUp size={16} />
+                          </ActionIcon>
+                          <ActionIcon
+                            variant="subtle"
+                            onClick={() => moveTeam(index, 1)}
+                            disabled={index === teams.length - 1}
+                            aria-label="Team nach unten verschieben"
+                          >
+                            <IconArrowDown size={16} />
+                          </ActionIcon>
+                        </Group>
                         <ActionIcon
                           color="red"
                           variant="subtle"
@@ -809,6 +890,85 @@ export function AdminBeerPong() {
                   </Button>
                   <Button onClick={handleSaveTournament}>Turnier speichern</Button>
                 </Group>
+              </Stack>
+            </Paper>
+            <Paper withBorder p="md" radius="md">
+              <Stack gap="sm">
+                <Group justify="space-between" align="start">
+                  <Stack gap={2}>
+                    <Title order={4}>Gruppen-Vorschau</Title>
+                    <Text size="sm" c="dimmed">
+                      Diese Verteilung wird beim Erzeugen der Gruppenphase verwendet.
+                    </Text>
+                  </Stack>
+                  <Button variant="light" onClick={handleSaveTournament}>
+                    Reihenfolge speichern
+                  </Button>
+                </Group>
+                <SimpleGrid cols={{ base: 1, lg: Math.max(1, groupCount) }} spacing="md">
+                  {groupPreview.map((group) => (
+                    <Paper key={group.name} withBorder p="sm" radius="md">
+                      <Stack gap="xs">
+                        <Title order={5}>Gruppe {group.name}</Title>
+                        {group.teams.length ? (
+                          group.teams.map((team, index) => (
+                            <Paper
+                              key={`${group.name}-${team.id ?? team.name}-${team.index}`}
+                              withBorder
+                              p="xs"
+                              radius="md"
+                              draggable
+                              onDragStart={(event) => {
+                                event.dataTransfer.effectAllowed = "move";
+                                event.dataTransfer.setData("text/plain", String(team.index));
+                                setDraggedTeamIndex(team.index);
+                              }}
+                              onDragEnd={() => setDraggedTeamIndex(null)}
+                              onDragOver={(event) => {
+                                event.preventDefault();
+                                event.dataTransfer.dropEffect = "move";
+                              }}
+                              onDrop={(event) => {
+                                event.preventDefault();
+                                const sourceIndex = Number(event.dataTransfer.getData("text/plain"));
+
+                                if (Number.isNaN(sourceIndex)) {
+                                  return;
+                                }
+
+                                swapTeams(sourceIndex, team.index);
+                                setDraggedTeamIndex(null);
+                              }}
+                              style={{
+                                cursor: "grab",
+                                opacity: draggedTeamIndex === team.index ? 0.5 : 1,
+                                borderColor:
+                                  draggedTeamIndex === team.index ? "var(--mantine-color-blue-5)" : undefined,
+                                backgroundColor:
+                                  draggedTeamIndex === team.index ? "var(--mantine-color-blue-0)" : undefined,
+                              }}
+                            >
+                              <Group gap="xs" wrap="nowrap" justify="space-between">
+                                <Group gap="xs" wrap="nowrap">
+                                  <IconGripVertical size={16} />
+                                  <Badge variant="light">{index + 1}</Badge>
+                                  <Text fw={600}>{team.name}</Text>
+                                </Group>
+                                <Text size="xs" c="dimmed">
+                                  Ziehen
+                                </Text>
+                              </Group>
+                            </Paper>
+                          ))
+                        ) : (
+                          <Text size="sm" c="dimmed">
+                            Noch keine Teams zugewiesen.
+                          </Text>
+                        )}
+                      </Stack>
+                    </Paper>
+                  ))}
+                </SimpleGrid>
               </Stack>
             </Paper>
             {tournament ? (
