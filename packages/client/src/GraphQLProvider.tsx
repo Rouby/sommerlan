@@ -339,7 +339,7 @@ export function GraphQLProvider({ children }: { children: React.ReactNode }) {
                     .add(1, "minute")
                     .isAfter(dayjs.unix(decoded.exp));
 
-                  const isOldVersion = decoded.__version !== 7;
+                  const isOldVersion = decoded.__version !== 8;
 
                   return willSoonExpire || isOldVersion;
                 } catch {

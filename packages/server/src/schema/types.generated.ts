@@ -10,6 +10,7 @@ import {
   PictureTagMapper,
 } from "./party/schema.mappers";
 import { AuthDeviceMapper, UserMapper } from "./user/schema.mappers";
+import { BeerPongMatchMapper } from "./beerPong/schema.mappers";
 import { DonationMapper } from "./donation/schema.mappers";
 import { EventMapper } from "./events/schema.mappers";
 import { GameMapper } from "./game/schema.mappers";
@@ -95,6 +96,29 @@ export type AuthResponse = {
   __typename?: "AuthResponse";
   refreshToken: Scalars["String"]["output"];
   token: Scalars["JWT"]["output"];
+};
+
+export type BeerPongMatch = {
+  __typename?: "BeerPongMatch";
+  endedAt?: Maybe<Scalars["DateTime"]["output"]>;
+  id: Scalars["ID"]["output"];
+  players: Array<BeerPongPlayerStats>;
+  startedAt: Scalars["DateTime"]["output"];
+};
+
+export type BeerPongPlayerStats = {
+  __typename?: "BeerPongPlayerStats";
+  blocks: Scalars["Int"]["output"];
+  edges: Scalars["Int"]["output"];
+  hits: Scalars["Int"]["output"];
+  user: User;
+};
+
+export type BeerPongPlayerStatsInput = {
+  blocks: Scalars["Int"]["input"];
+  edges: Scalars["Int"]["input"];
+  hits: Scalars["Int"]["input"];
+  userId: Scalars["ID"]["input"];
 };
 
 export type CacheEntry = {
@@ -209,12 +233,15 @@ export type Mutation = {
   capturePayPalOrder?: Maybe<Attending>;
   checkIn?: Maybe<Attending>;
   checkOut?: Maybe<Attending>;
+  createBeerPongMatch: BeerPongMatch;
   createMoneyTransfer: MoneyTransfer;
   createPayPalOrder: Scalars["ID"]["output"];
   createPurchase: Purchase;
   deleteAuthDevice: AuthDevice;
+  deleteBeerPongMatch: Scalars["Boolean"]["output"];
   denyRoom?: Maybe<Attending>;
   donate: Donation;
+  endBeerPongMatch: BeerPongMatch;
   generatePasskeyLoginOptions: Scalars["JSON"]["output"];
   generatePasskeyRegisterOptions: Scalars["JSON"]["output"];
   grantRoom?: Maybe<Attending>;
@@ -239,6 +266,7 @@ export type Mutation = {
   setGamesPlayed: Attending;
   syncCache?: Maybe<Scalars["Boolean"]["output"]>;
   updateAuthDevice: AuthDevice;
+  updateBeerPongPlayerStats: BeerPongMatch;
   updateGame: Game;
   updateLocation: User;
   updatePaidDues?: Maybe<Attending>;
@@ -270,6 +298,10 @@ export type MutationcheckOutArgs = {
   userId: Scalars["ID"]["input"];
 };
 
+export type MutationcreateBeerPongMatchArgs = {
+  playerIds: Array<Scalars["ID"]["input"]>;
+};
+
 export type MutationcreateMoneyTransferArgs = {
   input: CreateMoneyTransferInput;
 };
@@ -284,6 +316,10 @@ export type MutationdeleteAuthDeviceArgs = {
   id: Scalars["ID"]["input"];
 };
 
+export type MutationdeleteBeerPongMatchArgs = {
+  matchId: Scalars["ID"]["input"];
+};
+
 export type MutationdenyRoomArgs = {
   attendingId: Scalars["ID"]["input"];
 };
@@ -292,6 +328,10 @@ export type MutationdonateArgs = {
   amount: Scalars["Float"]["input"];
   dedication?: InputMaybe<DonationDedication>;
   incognito?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type MutationendBeerPongMatchArgs = {
+  matchId: Scalars["ID"]["input"];
 };
 
 export type MutationgeneratePasskeyLoginOptionsArgs = {
@@ -392,6 +432,11 @@ export type MutationsyncCacheArgs = {
 export type MutationupdateAuthDeviceArgs = {
   id: Scalars["ID"]["input"];
   name: Scalars["String"]["input"];
+};
+
+export type MutationupdateBeerPongPlayerStatsArgs = {
+  input: BeerPongPlayerStatsInput;
+  matchId: Scalars["ID"]["input"];
 };
 
 export type MutationupdateGameArgs = {
@@ -543,6 +588,7 @@ export type PurchaseVote = {
 
 export type Query = {
   __typename?: "Query";
+  beerPongMatches: Array<BeerPongMatch>;
   games: Array<Game>;
   getCacheInfo?: Maybe<CacheInfo>;
   me?: Maybe<User>;
@@ -722,6 +768,12 @@ export type ResolversTypes = {
   AuthDevice: ResolverTypeWrapper<AuthDeviceMapper>;
   String: ResolverTypeWrapper<Scalars["String"]["output"]>;
   AuthResponse: ResolverTypeWrapper<AuthResponse>;
+  BeerPongMatch: ResolverTypeWrapper<BeerPongMatchMapper>;
+  BeerPongPlayerStats: ResolverTypeWrapper<
+    Omit<BeerPongPlayerStats, "user"> & { user: ResolversTypes["User"] }
+  >;
+  Int: ResolverTypeWrapper<Scalars["Int"]["output"]>;
+  BeerPongPlayerStatsInput: BeerPongPlayerStatsInput;
   BoundingBox: ResolverTypeWrapper<Scalars["BoundingBox"]["output"]>;
   CacheEntry: ResolverTypeWrapper<CacheEntry>;
   CacheInfo: ResolverTypeWrapper<CacheInfo>;
@@ -748,7 +800,6 @@ export type ResolversTypes = {
   JWT: ResolverTypeWrapper<Scalars["JWT"]["output"]>;
   Location: ResolverTypeWrapper<Location>;
   LoginResponse: ResolverTypeWrapper<LoginResponse>;
-  Int: ResolverTypeWrapper<Scalars["Int"]["output"]>;
   MoneyTransfer: ResolverTypeWrapper<MoneyTransferMapper>;
   Mutation: ResolverTypeWrapper<{}>;
   Party: ResolverTypeWrapper<PartyMapper>;
@@ -805,6 +856,12 @@ export type ResolversParentTypes = {
   AuthDevice: AuthDeviceMapper;
   String: Scalars["String"]["output"];
   AuthResponse: AuthResponse;
+  BeerPongMatch: BeerPongMatchMapper;
+  BeerPongPlayerStats: Omit<BeerPongPlayerStats, "user"> & {
+    user: ResolversParentTypes["User"];
+  };
+  Int: Scalars["Int"]["output"];
+  BeerPongPlayerStatsInput: BeerPongPlayerStatsInput;
   BoundingBox: Scalars["BoundingBox"]["output"];
   CacheEntry: CacheEntry;
   CacheInfo: CacheInfo;
@@ -828,7 +885,6 @@ export type ResolversParentTypes = {
   JWT: Scalars["JWT"]["output"];
   Location: Location;
   LoginResponse: LoginResponse;
-  Int: Scalars["Int"]["output"];
   MoneyTransfer: MoneyTransferMapper;
   Mutation: {};
   Party: PartyMapper;
@@ -941,6 +997,38 @@ export type AuthResponseResolvers<
 > = {
   refreshToken?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   token?: Resolver<ResolversTypes["JWT"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type BeerPongMatchResolvers<
+  ContextType = Context,
+  ParentType extends
+    ResolversParentTypes["BeerPongMatch"] = ResolversParentTypes["BeerPongMatch"],
+> = {
+  endedAt?: Resolver<
+    Maybe<ResolversTypes["DateTime"]>,
+    ParentType,
+    ContextType
+  >;
+  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+  players?: Resolver<
+    Array<ResolversTypes["BeerPongPlayerStats"]>,
+    ParentType,
+    ContextType
+  >;
+  startedAt?: Resolver<ResolversTypes["DateTime"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type BeerPongPlayerStatsResolvers<
+  ContextType = Context,
+  ParentType extends
+    ResolversParentTypes["BeerPongPlayerStats"] = ResolversParentTypes["BeerPongPlayerStats"],
+> = {
+  blocks?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  edges?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  hits?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  user?: Resolver<ResolversTypes["User"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -1171,6 +1259,12 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationcheckOutArgs, "userId">
   >;
+  createBeerPongMatch?: Resolver<
+    ResolversTypes["BeerPongMatch"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationcreateBeerPongMatchArgs, "playerIds">
+  >;
   createMoneyTransfer?: Resolver<
     ResolversTypes["MoneyTransfer"],
     ParentType,
@@ -1193,6 +1287,12 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationdeleteAuthDeviceArgs, "id">
   >;
+  deleteBeerPongMatch?: Resolver<
+    ResolversTypes["Boolean"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationdeleteBeerPongMatchArgs, "matchId">
+  >;
   denyRoom?: Resolver<
     Maybe<ResolversTypes["Attending"]>,
     ParentType,
@@ -1204,6 +1304,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationdonateArgs, "amount">
+  >;
+  endBeerPongMatch?: Resolver<
+    ResolversTypes["BeerPongMatch"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationendBeerPongMatchArgs, "matchId">
   >;
   generatePasskeyLoginOptions?: Resolver<
     ResolversTypes["JSON"],
@@ -1346,6 +1452,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationupdateAuthDeviceArgs, "id" | "name">
+  >;
+  updateBeerPongPlayerStats?: Resolver<
+    ResolversTypes["BeerPongMatch"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationupdateBeerPongPlayerStatsArgs, "input" | "matchId">
   >;
   updateGame?: Resolver<
     ResolversTypes["Game"],
@@ -1546,6 +1658,11 @@ export type QueryResolvers<
   ParentType extends
     ResolversParentTypes["Query"] = ResolversParentTypes["Query"],
 > = {
+  beerPongMatches?: Resolver<
+    Array<ResolversTypes["BeerPongMatch"]>,
+    ParentType,
+    ContextType
+  >;
   games?: Resolver<Array<ResolversTypes["Game"]>, ParentType, ContextType>;
   getCacheInfo?: Resolver<
     Maybe<ResolversTypes["CacheInfo"]>,
@@ -1671,6 +1788,8 @@ export type Resolvers<ContextType = Context> = {
   Attending?: AttendingResolvers<ContextType>;
   AuthDevice?: AuthDeviceResolvers<ContextType>;
   AuthResponse?: AuthResponseResolvers<ContextType>;
+  BeerPongMatch?: BeerPongMatchResolvers<ContextType>;
+  BeerPongPlayerStats?: BeerPongPlayerStatsResolvers<ContextType>;
   BoundingBox?: GraphQLScalarType;
   CacheEntry?: CacheEntryResolvers<ContextType>;
   CacheInfo?: CacheInfoResolvers<ContextType>;

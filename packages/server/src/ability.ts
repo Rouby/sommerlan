@@ -5,6 +5,7 @@ import {
 } from "@casl/ability";
 import {
   Attending,
+  BeerPongMatch,
   Donation,
   Event,
   Game,
@@ -39,6 +40,8 @@ export type AppAbility = MongoAbility<
       | "MoneyTransfer"
       | Purchase
       | "Purchase"
+      | BeerPongMatch
+      | "BeerPongMatch"
     ),
   ]
 >;
@@ -108,6 +111,7 @@ export async function createAbility(
       can(["create", "read", "update", "delete"], "Cache");
       can(["create", "read", "update", "delete"], "Picture");
       can(["create", "read"], "MoneyTransfer");
+      can(["create", "read", "update", "delete"], "BeerPongMatch");
     }
 
     if (user.roles.includes(User.Role.Doorkeeper)) {
@@ -135,4 +139,4 @@ export async function createAbility(
   });
 }
 
-export const AbilityVersion = 7 as const;
+export const AbilityVersion = 8 as const;

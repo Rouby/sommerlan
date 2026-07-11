@@ -22,6 +22,11 @@ const documents = {
     "\n      mutation updateParty($input: PartyInput!) {\n        updateParty(input: $input) {\n          id\n          startDate\n          endDate\n          location\n          roomsAvailable\n        }\n      }\n    ": types.UpdatePartyDocument,
     "\n      mutation registerExternal(\n        $userName: String!\n        $email: String!\n        $password: String\n      ) {\n        register(userName: $userName, email: $email, password: $password) {\n          token\n          refreshToken\n          user {\n            id\n            displayName\n            avatar\n          }\n        }\n      }\n    ": types.RegisterExternalDocument,
     "\n      query userList {\n        users {\n          id\n          displayName\n          avatar\n        }\n      }\n    ": types.UserListDocument,
+    "\n  query beerPongMatchesAdmin {\n    beerPongMatches {\n      id\n      startedAt\n      endedAt\n      players {\n        user {\n          id\n          displayName\n          avatar\n        }\n        hits\n        edges\n        blocks\n      }\n    }\n    users {\n      id\n      displayName\n      avatar\n    }\n  }\n": types.BeerPongMatchesAdminDocument,
+    "\n  mutation createBeerPongMatch($playerIds: [ID!]!) {\n    createBeerPongMatch(playerIds: $playerIds) {\n      id\n      startedAt\n      endedAt\n      players {\n        user {\n          id\n          displayName\n          avatar\n        }\n        hits\n        edges\n        blocks\n      }\n    }\n  }\n": types.CreateBeerPongMatchDocument,
+    "\n  mutation updateBeerPongPlayerStats(\n    $matchId: ID!\n    $input: BeerPongPlayerStatsInput!\n  ) {\n    updateBeerPongPlayerStats(matchId: $matchId, input: $input) {\n      id\n      players {\n        user {\n          id\n          displayName\n        }\n        hits\n        edges\n        blocks\n      }\n    }\n  }\n": types.UpdateBeerPongPlayerStatsDocument,
+    "\n  mutation endBeerPongMatch($matchId: ID!) {\n    endBeerPongMatch(matchId: $matchId) {\n      id\n      endedAt\n    }\n  }\n": types.EndBeerPongMatchDocument,
+    "\n  mutation deleteBeerPongMatch($matchId: ID!) {\n    deleteBeerPongMatch(matchId: $matchId)\n  }\n": types.DeleteBeerPongMatchDocument,
     "\n      query MoneyTransfers {\n        moneyTransfers {\n          id\n          amount\n          valuationDate\n          note\n          correlationId\n        }\n      }\n    ": types.MoneyTransfersDocument,
     "\n        mutation createMoneyTransfer($input: CreateMoneyTransferInput!) {\n          createMoneyTransfer(input: $input) {\n            id\n            amount\n            valuationDate\n            note\n            correlationId\n          }\n        }\n      ": types.CreateMoneyTransferDocument,
     "\n      query adminGames {\n        games {\n          id\n          name\n          image\n        }\n      }\n    ": types.AdminGamesDocument,
@@ -135,6 +140,26 @@ export function graphql(source: "\n      mutation registerExternal(\n        $us
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n      query userList {\n        users {\n          id\n          displayName\n          avatar\n        }\n      }\n    "): (typeof documents)["\n      query userList {\n        users {\n          id\n          displayName\n          avatar\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query beerPongMatchesAdmin {\n    beerPongMatches {\n      id\n      startedAt\n      endedAt\n      players {\n        user {\n          id\n          displayName\n          avatar\n        }\n        hits\n        edges\n        blocks\n      }\n    }\n    users {\n      id\n      displayName\n      avatar\n    }\n  }\n"): (typeof documents)["\n  query beerPongMatchesAdmin {\n    beerPongMatches {\n      id\n      startedAt\n      endedAt\n      players {\n        user {\n          id\n          displayName\n          avatar\n        }\n        hits\n        edges\n        blocks\n      }\n    }\n    users {\n      id\n      displayName\n      avatar\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation createBeerPongMatch($playerIds: [ID!]!) {\n    createBeerPongMatch(playerIds: $playerIds) {\n      id\n      startedAt\n      endedAt\n      players {\n        user {\n          id\n          displayName\n          avatar\n        }\n        hits\n        edges\n        blocks\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation createBeerPongMatch($playerIds: [ID!]!) {\n    createBeerPongMatch(playerIds: $playerIds) {\n      id\n      startedAt\n      endedAt\n      players {\n        user {\n          id\n          displayName\n          avatar\n        }\n        hits\n        edges\n        blocks\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation updateBeerPongPlayerStats(\n    $matchId: ID!\n    $input: BeerPongPlayerStatsInput!\n  ) {\n    updateBeerPongPlayerStats(matchId: $matchId, input: $input) {\n      id\n      players {\n        user {\n          id\n          displayName\n        }\n        hits\n        edges\n        blocks\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation updateBeerPongPlayerStats(\n    $matchId: ID!\n    $input: BeerPongPlayerStatsInput!\n  ) {\n    updateBeerPongPlayerStats(matchId: $matchId, input: $input) {\n      id\n      players {\n        user {\n          id\n          displayName\n        }\n        hits\n        edges\n        blocks\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation endBeerPongMatch($matchId: ID!) {\n    endBeerPongMatch(matchId: $matchId) {\n      id\n      endedAt\n    }\n  }\n"): (typeof documents)["\n  mutation endBeerPongMatch($matchId: ID!) {\n    endBeerPongMatch(matchId: $matchId) {\n      id\n      endedAt\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation deleteBeerPongMatch($matchId: ID!) {\n    deleteBeerPongMatch(matchId: $matchId)\n  }\n"): (typeof documents)["\n  mutation deleteBeerPongMatch($matchId: ID!) {\n    deleteBeerPongMatch(matchId: $matchId)\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

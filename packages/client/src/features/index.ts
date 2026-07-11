@@ -1,3 +1,4 @@
+export * from "./AdminBeerPong";
 export * from "./AdminCashflow";
 export * from "./AdminGames";
 export * from "./AdminPartyPayments";

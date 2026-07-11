@@ -1,0 +1,34 @@
+extend type Query {
+  beerPongMatches: [BeerPongMatch!]!
+}
+
+extend type Mutation {
+  createBeerPongMatch(playerIds: [ID!]!): BeerPongMatch!
+  updateBeerPongPlayerStats(
+    matchId: ID!
+    input: BeerPongPlayerStatsInput!
+  ): BeerPongMatch!
+  endBeerPongMatch(matchId: ID!): BeerPongMatch!
+  deleteBeerPongMatch(matchId: ID!): Boolean!
+}
+
+type BeerPongMatch {
+  id: ID!
+  startedAt: DateTime!
+  endedAt: DateTime
+  players: [BeerPongPlayerStats!]!
+}
+
+type BeerPongPlayerStats {
+  user: User!
+  hits: Int!
+  edges: Int!
+  blocks: Int!
+}
+
+input BeerPongPlayerStatsInput {
+  userId: ID!
+  hits: Int!
+  edges: Int!
+  blocks: Int!
+}

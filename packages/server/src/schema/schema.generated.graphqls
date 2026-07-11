@@ -32,6 +32,27 @@ type AuthResponse {
   token: JWT!
 }
 
+type BeerPongMatch {
+  endedAt: DateTime
+  id: ID!
+  players: [BeerPongPlayerStats!]!
+  startedAt: DateTime!
+}
+
+type BeerPongPlayerStats {
+  blocks: Int!
+  edges: Int!
+  hits: Int!
+  user: User!
+}
+
+input BeerPongPlayerStatsInput {
+  blocks: Int!
+  edges: Int!
+  hits: Int!
+  userId: ID!
+}
+
 scalar BoundingBox
 
 type CacheEntry {
@@ -148,6 +169,7 @@ type Mutation {
   capturePayPalOrder(orderId: ID!): Attending
   checkIn(userId: ID!): Attending
   checkOut(userId: ID!): Attending
+  createBeerPongMatch(playerIds: [ID!]!): BeerPongMatch!
   createMoneyTransfer(input: CreateMoneyTransferInput!): MoneyTransfer!
   createPayPalOrder: ID!
   createPurchase(
@@ -156,12 +178,14 @@ type Mutation {
     title: String!
   ): Purchase!
   deleteAuthDevice(id: ID!): AuthDevice!
+  deleteBeerPongMatch(matchId: ID!): Boolean!
   denyRoom(attendingId: ID!): Attending
   donate(
     amount: Float!
     dedication: DonationDedication
     incognito: Boolean
   ): Donation!
+  endBeerPongMatch(matchId: ID!): BeerPongMatch!
   generatePasskeyLoginOptions(userId: String): JSON!
   generatePasskeyRegisterOptions(userId: String!): JSON!
   grantRoom(attendingId: ID!): Attending
@@ -194,6 +218,10 @@ type Mutation {
   setGamesPlayed(gameIds: [ID!]!, partyId: ID!): Attending!
   syncCache(clear: Boolean): Boolean
   updateAuthDevice(id: ID!, name: String!): AuthDevice!
+  updateBeerPongPlayerStats(
+    input: BeerPongPlayerStatsInput!
+    matchId: ID!
+  ): BeerPongMatch!
   updateGame(input: GameInput!): Game!
   updateLocation(latitude: Float!, longitude: Float!): User!
   updatePaidDues(attendingId: ID!, paidDues: Float!): Attending
@@ -310,6 +338,7 @@ type PurchaseVote {
 }
 
 type Query {
+  beerPongMatches: [BeerPongMatch!]!
   games: [Game!]!
   getCacheInfo: CacheInfo
   me: User
