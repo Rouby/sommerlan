@@ -4,7 +4,7 @@ import { AdminBeerPong } from "../../features";
 
 export const Route = createLazyFileRoute("/admin/beerPong")({
   component: () => (
-    <CardWithHeader header="Bierpong Statistiken">
+    <CardWithHeader header="Bierpong Turnier">
       <AdminBeerPong />
     </CardWithHeader>
   ),

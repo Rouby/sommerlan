@@ -6,6 +6,7 @@ import {
 import {
   Attending,
   BeerPongMatch,
+  BeerPongTournament,
   Donation,
   Event,
   Game,
@@ -42,6 +43,8 @@ export type AppAbility = MongoAbility<
       | "Purchase"
       | BeerPongMatch
       | "BeerPongMatch"
+      | BeerPongTournament
+      | "BeerPongTournament"
     ),
   ]
 >;
@@ -62,6 +65,7 @@ export async function createAbility(
     "gamesPlayed",
   ]);
   can("read", "BeerPongMatch");
+  can("read", "BeerPongTournament");
 
   if (user) {
     can("read", "Party");
@@ -113,6 +117,7 @@ export async function createAbility(
       can(["create", "read", "update", "delete"], "Picture");
       can(["create", "read"], "MoneyTransfer");
       can(["create", "read", "update", "delete"], "BeerPongMatch");
+      can(["create", "read", "update", "delete"], "BeerPongTournament");
     }
 
     if (user.roles.includes(User.Role.Doorkeeper)) {

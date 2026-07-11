@@ -1,22 +1,86 @@
 extend type Query {
   beerPongMatches: [BeerPongMatch!]!
+  beerPongTournament: BeerPongTournament
 }
 
 extend type Mutation {
+  upsertBeerPongTournament(input: UpsertBeerPongTournamentInput!): BeerPongTournament!
+  generateBeerPongGroupStage(tournamentId: ID!): BeerPongTournament!
+  generateBeerPongKnockoutStage(tournamentId: ID!): BeerPongTournament!
   createBeerPongMatch(playerIds: [ID!]!): BeerPongMatch!
+  updateBeerPongMatch(input: UpdateBeerPongMatchInput!): BeerPongMatch!
   updateBeerPongPlayerStats(
     matchId: ID!
     input: BeerPongPlayerStatsInput!
   ): BeerPongMatch!
-  endBeerPongMatch(matchId: ID!): BeerPongMatch!
+  endBeerPongMatch(matchId: ID!, winnerTeamId: ID!): BeerPongMatch!
   deleteBeerPongMatch(matchId: ID!): Boolean!
+}
+
+type BeerPongTournament {
+  id: ID!
+  name: String!
+  groupCount: Int!
+  knockoutSize: Int!
+  teams: [BeerPongTeam!]!
+  matches: [BeerPongMatch!]!
+  groups: [BeerPongGroup!]!
+  knockout: [BeerPongKnockoutRound!]!
+}
+
+type BeerPongTeam {
+  id: ID!
+  name: String!
+  seed: Int!
+  players: [User!]!
+}
+
+type BeerPongGroup {
+  name: String!
+  teams: [BeerPongGroupStanding!]!
+  matches: [BeerPongMatch!]!
+}
+
+type BeerPongGroupStanding {
+  team: BeerPongTeam!
+  rank: Int!
+  matches: Int!
+  wins: Int!
+  losses: Int!
+  remainingBeers: Int!
+  remainingBeerDiff: Int!
+}
+
+type BeerPongKnockoutRound {
+  round: Int!
+  name: String!
+  matches: [BeerPongMatch!]!
+}
+
+enum BeerPongMatchPhase {
+  EXHIBITION
+  GROUP
+  KNOCKOUT
 }
 
 type BeerPongMatch {
   id: ID!
   startedAt: DateTime!
   endedAt: DateTime
+  phase: BeerPongMatchPhase!
+  groupName: String
+  round: Int!
+  matchNumber: Int!
+  teams: [BeerPongMatchTeam!]!
+  winner: BeerPongTeam
   players: [BeerPongPlayerStats!]!
+}
+
+type BeerPongMatchTeam {
+  team: BeerPongTeam
+  slotLabel: String!
+  remainingBeers: Int!
+  isWinner: Boolean!
 }
 
 type BeerPongPlayerStats {
@@ -28,6 +92,20 @@ type BeerPongPlayerStats {
   bounceHits: Int!
 }
 
+input BeerPongTeamInput {
+  id: ID
+  name: String!
+  playerIds: [ID!]!
+}
+
+input UpsertBeerPongTournamentInput {
+  id: ID
+  name: String!
+  groupCount: Int!
+  knockoutSize: Int!
+  teams: [BeerPongTeamInput!]!
+}
+
 input BeerPongPlayerStatsInput {
   userId: ID!
   hits: Int!
@@ -35,4 +113,17 @@ input BeerPongPlayerStatsInput {
   blocks: Int!
   throws: Int!
   bounceHits: Int!
+}
+
+input BeerPongMatchTeamResultInput {
+  teamId: ID!
+  remainingBeers: Int!
+}
+
+input UpdateBeerPongMatchInput {
+  matchId: ID!
+  playerStats: [BeerPongPlayerStatsInput!]
+  teamResults: [BeerPongMatchTeamResultInput!]
+  winnerTeamId: ID
+  isFinished: Boolean
 }

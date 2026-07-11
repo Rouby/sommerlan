@@ -277,6 +277,31 @@ export function createFakeApi() {
           };
         }
       },
+      BeerPongTournament: class BeerPongTournament extends Models.BeerPongTournament {
+        static rows: BeerPongTournament[] = [];
+        static get cache() {
+          return {
+            allRows: async <T>() => this.rows as T[],
+            deleteRow: async (_: new () => unknown, __: string, id: string) => {
+              const index = this.rows.findIndex((row) => row.id === id);
+              this.rows.splice(index, 1);
+            },
+            updateRow: async (
+              _: new () => unknown,
+              __: string,
+              id: string,
+              values: Record<string, unknown>,
+            ) => {
+              const row = this.rows.find((row) => row.id === id);
+              if (row) {
+                Object.assign(row, values);
+              } else {
+                this.rows.push(new BeerPongTournament(values));
+              }
+            },
+          };
+        }
+      },
     },
   };
 }
@@ -285,6 +310,7 @@ export const fakeGoogleSheetApi = {
   sheetsByTitle: {
     Attendings: fakeSheet("Attending"),
     BeerPongMatches: fakeSheet("BeerPongMatch"),
+    BeerPongTournaments: fakeSheet("BeerPongTournament"),
     Donations: fakeSheet("Donation"),
     Events: fakeSheet("Event"),
     Games: fakeSheet("Game"),

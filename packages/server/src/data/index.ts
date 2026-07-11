@@ -1,6 +1,7 @@
 export { getCacheInfo, syncCache } from "./$cache";
 export * from "./attendings";
 export * from "./beerPongMatches";
+export * from "./beerPongTournaments";
 export * from "./donations";
 export * from "./events";
 export * from "./games";
