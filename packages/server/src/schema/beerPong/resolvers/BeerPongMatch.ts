@@ -10,6 +10,8 @@ export const BeerPongMatch: BeerPongMatchResolvers = {
       hits: parent.playerStats[user.id]?.hits ?? 0,
       edges: parent.playerStats[user.id]?.edges ?? 0,
       blocks: parent.playerStats[user.id]?.blocks ?? 0,
+      throws: parent.playerStats[user.id]?.throws ?? 0,
+      bounceHits: parent.playerStats[user.id]?.bounceHits ?? 0,
     }));
   },
 };

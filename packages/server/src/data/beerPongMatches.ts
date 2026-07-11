@@ -20,6 +20,8 @@ export class BeerPongMatch extends Base {
       hits: number;
       edges: number;
       blocks: number;
+      throws: number;
+      bounceHits: number;
     };
   } = {};
 

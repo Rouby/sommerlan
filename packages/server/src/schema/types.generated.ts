@@ -109,15 +109,19 @@ export type BeerPongMatch = {
 export type BeerPongPlayerStats = {
   __typename?: "BeerPongPlayerStats";
   blocks: Scalars["Int"]["output"];
+  bounceHits: Scalars["Int"]["output"];
   edges: Scalars["Int"]["output"];
   hits: Scalars["Int"]["output"];
+  throws: Scalars["Int"]["output"];
   user: User;
 };
 
 export type BeerPongPlayerStatsInput = {
   blocks: Scalars["Int"]["input"];
+  bounceHits: Scalars["Int"]["input"];
   edges: Scalars["Int"]["input"];
   hits: Scalars["Int"]["input"];
+  throws: Scalars["Int"]["input"];
   userId: Scalars["ID"]["input"];
 };
 
@@ -1026,8 +1030,10 @@ export type BeerPongPlayerStatsResolvers<
     ResolversParentTypes["BeerPongPlayerStats"] = ResolversParentTypes["BeerPongPlayerStats"],
 > = {
   blocks?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  bounceHits?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
   edges?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
   hits?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  throws?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
   user?: Resolver<ResolversTypes["User"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
