@@ -7,7 +7,7 @@ export const createBeerPongMatch: NonNullable<MutationResolvers['createBeerPongM
   const match = new ctx.data.BeerPongMatch({
     startedAt: new Date().toISOString(),
     playerStats: Object.fromEntries(
-      playerIds.map((id) => [id, { hits: 0, edges: 0, blocks: 0 }]),
+      playerIds.map((id) => [id, { hits: 0, edges: 0, blocks: 0, throws: 0, bounceHits: 0 }]),
     ),
   });
 

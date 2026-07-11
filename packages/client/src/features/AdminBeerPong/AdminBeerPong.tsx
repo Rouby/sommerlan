@@ -5,14 +5,13 @@ import {
   Button,
   Group,
   MultiSelect,
-  NumberInput,
   Paper,
+  SimpleGrid,
   Stack,
-  Table,
   Text,
   Title,
 } from "@mantine/core";
-import { IconPlus, IconPlayerStop, IconTrash } from "@tabler/icons-react";
+import { IconMinus, IconPlus, IconPlayerStop, IconTrash } from "@tabler/icons-react";
 import { useState } from "react";
 import { useMutation, useQuery } from "urql";
 import { graphql } from "../../gql";
@@ -32,6 +31,8 @@ const BeerPongMatchesQuery = graphql(`
         hits
         edges
         blocks
+        throws
+        bounceHits
       }
     }
     users {
@@ -57,6 +58,8 @@ const CreateBeerPongMatchMutation = graphql(`
         hits
         edges
         blocks
+        throws
+        bounceHits
       }
     }
   }
@@ -77,6 +80,8 @@ const UpdateBeerPongPlayerStatsMutation = graphql(`
         hits
         edges
         blocks
+        throws
+        bounceHits
       }
     }
   }
@@ -136,10 +141,12 @@ export function AdminBeerPong() {
     hits: number,
     edges: number,
     blocks: number,
+    throws: number,
+    bounceHits: number,
   ) {
     await updateStats({
       matchId,
-      input: { userId, hits, edges, blocks },
+      input: { userId, hits, edges, blocks, throws, bounceHits },
     });
   }
 
@@ -240,6 +247,8 @@ type MatchPlayer = {
   hits: number;
   edges: number;
   blocks: number;
+  throws: number;
+  bounceHits: number;
 };
 
 type Match = {
@@ -248,6 +257,64 @@ type Match = {
   endedAt?: string | null;
   players: MatchPlayer[];
 };
+
+type StatKey = "hits" | "edges" | "blocks" | "throws" | "bounceHits";
+
+const STAT_LABELS: Record<StatKey, string> = {
+  throws: "Würfe",
+  hits: "Treffer",
+  bounceHits: "Bounce",
+  edges: "Kanten",
+  blocks: "Abwehr",
+};
+
+const STAT_ORDER: StatKey[] = ["throws", "hits", "bounceHits", "edges", "blocks"];
+
+function StatCounter({
+  label,
+  value,
+  onIncrement,
+  onDecrement,
+  disabled,
+}: {
+  label: string;
+  value: number;
+  onIncrement: () => void;
+  onDecrement: () => void;
+  disabled: boolean;
+}) {
+  return (
+    <Group justify="space-between" wrap="nowrap" gap="xs">
+      <Text size="sm" c="dimmed" style={{ minWidth: 60 }}>
+        {label}
+      </Text>
+      <Group gap="xs" wrap="nowrap">
+        <ActionIcon
+          variant="light"
+          color="gray"
+          size="lg"
+          onClick={onDecrement}
+          disabled={disabled || value <= 0}
+          aria-label={`${label} verringern`}
+        >
+          <IconMinus size={16} />
+        </ActionIcon>
+        <Text fw={700} size="lg" style={{ minWidth: 32, textAlign: "center" }}>
+          {value}
+        </Text>
+        <ActionIcon
+          variant="filled"
+          size="lg"
+          onClick={onIncrement}
+          disabled={disabled}
+          aria-label={`${label} erhöhen`}
+        >
+          <IconPlus size={16} />
+        </ActionIcon>
+      </Group>
+    </Group>
+  );
+}
 
 function MatchCard({
   match,
@@ -262,45 +329,44 @@ function MatchCard({
     hits: number,
     edges: number,
     blocks: number,
+    throws: number,
+    bounceHits: number,
   ) => Promise<void>;
   onEndMatch: (matchId: string) => Promise<void>;
   onDeleteMatch: (matchId: string) => Promise<void>;
 }) {
   const isActive = !match.endedAt;
   const [localStats, setLocalStats] = useState<
-    Record<string, { hits: number; edges: number; blocks: number }>
+    Record<string, { hits: number; edges: number; blocks: number; throws: number; bounceHits: number }>
   >(
     Object.fromEntries(
       match.players.map((p) => [
         p.user.id,
-        { hits: p.hits, edges: p.edges, blocks: p.blocks },
+        { hits: p.hits, edges: p.edges, blocks: p.blocks, throws: p.throws, bounceHits: p.bounceHits },
       ]),
     ),
   );
 
-  function handleStatChange(
-    userId: string,
-    field: "hits" | "edges" | "blocks",
-    value: number,
-  ) {
-    setLocalStats((prev) => ({
-      ...prev,
-      [userId]: { ...prev[userId], [field]: value },
-    }));
-    const stats = localStats[userId] ?? { hits: 0, edges: 0, blocks: 0 };
+  function handleStatChange(userId: string, field: StatKey, delta: number) {
+    const current = localStats[userId] ?? { hits: 0, edges: 0, blocks: 0, throws: 0, bounceHits: 0 };
+    const newValue = Math.max(0, current[field] + delta);
+    const updated = { ...current, [field]: newValue };
+    setLocalStats((prev) => ({ ...prev, [userId]: updated }));
     onUpdateStats(
       match.id,
       userId,
-      field === "hits" ? value : stats.hits,
-      field === "edges" ? value : stats.edges,
-      field === "blocks" ? value : stats.blocks,
+      updated.hits,
+      updated.edges,
+      updated.blocks,
+      updated.throws,
+      updated.bounceHits,
     );
   }
 
   return (
     <Paper withBorder p="md">
-      <Stack>
-        <Group justify="space-between">
+      <Stack gap="md">
+        <Group justify="space-between" wrap="wrap">
           <Group>
             <Text fw={500}>
               {new Date(match.startedAt).toLocaleString("de-DE")}
@@ -315,7 +381,7 @@ function MatchCard({
           <Group>
             {isActive && (
               <Button
-                size="xs"
+                size="sm"
                 color="orange"
                 leftSection={<IconPlayerStop size={14} />}
                 onClick={() => onEndMatch(match.id)}
@@ -333,81 +399,39 @@ function MatchCard({
           </Group>
         </Group>
 
-        <Table>
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th>Spieler</Table.Th>
-              <Table.Th>Treffer</Table.Th>
-              <Table.Th>Kanten</Table.Th>
-              <Table.Th>Abwehr</Table.Th>
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>
-            {match.players.map((player) => {
-              const stats = localStats[player.user.id] ?? {
-                hits: player.hits,
-                edges: player.edges,
-                blocks: player.blocks,
-              };
-              return (
-                <Table.Tr key={player.user.id}>
-                  <Table.Td>
-                    <Group gap="xs">
-                      <Avatar src={player.user.avatar} size="sm" radius="xl" />
-                      <Text size="sm">{player.user.displayName}</Text>
-                    </Group>
-                  </Table.Td>
-                  <Table.Td>
-                    <NumberInput
-                      value={stats.hits}
-                      min={0}
-                      w={80}
+        <SimpleGrid cols={{ base: 1, sm: match.players.length > 1 ? 2 : 1 }} spacing="md">
+          {match.players.map((player) => {
+            const stats = localStats[player.user.id] ?? {
+              hits: player.hits,
+              edges: player.edges,
+              blocks: player.blocks,
+              throws: player.throws,
+              bounceHits: player.bounceHits,
+            };
+            return (
+              <Paper key={player.user.id} withBorder p="sm" radius="md">
+                <Stack gap="sm">
+                  <Group gap="xs">
+                    <Avatar src={player.user.avatar} size="sm" radius="xl" />
+                    <Text fw={600}>{player.user.displayName}</Text>
+                  </Group>
+                  {STAT_ORDER.map((stat) => (
+                    <StatCounter
+                      key={stat}
+                      label={STAT_LABELS[stat]}
+                      value={stats[stat]}
+                      onIncrement={() => handleStatChange(player.user.id, stat, 1)}
+                      onDecrement={() => handleStatChange(player.user.id, stat, -1)}
                       disabled={!isActive}
-                      onChange={(v) =>
-                        handleStatChange(
-                          player.user.id,
-                          "hits",
-                          typeof v === "number" ? v : 0,
-                        )
-                      }
                     />
-                  </Table.Td>
-                  <Table.Td>
-                    <NumberInput
-                      value={stats.edges}
-                      min={0}
-                      w={80}
-                      disabled={!isActive}
-                      onChange={(v) =>
-                        handleStatChange(
-                          player.user.id,
-                          "edges",
-                          typeof v === "number" ? v : 0,
-                        )
-                      }
-                    />
-                  </Table.Td>
-                  <Table.Td>
-                    <NumberInput
-                      value={stats.blocks}
-                      min={0}
-                      w={80}
-                      disabled={!isActive}
-                      onChange={(v) =>
-                        handleStatChange(
-                          player.user.id,
-                          "blocks",
-                          typeof v === "number" ? v : 0,
-                        )
-                      }
-                    />
-                  </Table.Td>
-                </Table.Tr>
-              );
-            })}
-          </Table.Tbody>
-        </Table>
+                  ))}
+                </Stack>
+              </Paper>
+            );
+          })}
+        </SimpleGrid>
       </Stack>
     </Paper>
   );
 }
+

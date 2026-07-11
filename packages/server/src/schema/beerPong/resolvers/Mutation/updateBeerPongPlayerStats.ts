@@ -16,6 +16,8 @@ export const updateBeerPongPlayerStats: NonNullable<MutationResolvers['updateBee
       hits: input.hits,
       edges: input.edges,
       blocks: input.blocks,
+      throws: input.throws,
+      bounceHits: input.bounceHits,
     },
   };
 

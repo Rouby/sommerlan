@@ -41,15 +41,19 @@ type BeerPongMatch {
 
 type BeerPongPlayerStats {
   blocks: Int!
+  bounceHits: Int!
   edges: Int!
   hits: Int!
+  throws: Int!
   user: User!
 }
 
 input BeerPongPlayerStatsInput {
   blocks: Int!
+  bounceHits: Int!
   edges: Int!
   hits: Int!
+  throws: Int!
   userId: ID!
 }
 
