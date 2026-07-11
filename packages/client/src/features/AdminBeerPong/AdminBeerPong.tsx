@@ -364,7 +364,7 @@ function MatchCard({
   }
 
   return (
-    <Paper withBorder p="md">
+    <Paper withBorder p="md" miw="100vw">
       <Stack gap="md">
         <Group justify="space-between" wrap="wrap">
           <Group>
