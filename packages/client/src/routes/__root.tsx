@@ -9,6 +9,7 @@ import {
 } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import {
+  IconBeer,
   IconCalendar,
   IconCloudComputing,
   IconDeviceGamepad,
@@ -105,6 +106,9 @@ export const Route = createRootRoute({
                 <Link to="/games">
                   <Button variant="subtle">Spiele</Button>
                 </Link>
+                <Link to="/beerPong">
+                  <Button variant="subtle">Bierpong</Button>
+                </Link>
                 <Link to="/events">
                   <Button variant="subtle">Events</Button>
                 </Link>
@@ -145,6 +149,9 @@ export const Route = createRootRoute({
               </Link>
               <Link to="/games" activeProps={linkActiveProps}>
                 <NavButton icon={<IconDeviceGamepad />} label="Spiele" />
+              </Link>
+              <Link to="/beerPong" activeProps={linkActiveProps}>
+                <NavButton icon={<IconBeer />} label="Bierpong" />
               </Link>
               <Link to="/events" activeProps={linkActiveProps}>
                 <NavButton icon={<IconCalendar />} label="Events" />

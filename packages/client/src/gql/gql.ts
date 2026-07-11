@@ -37,6 +37,7 @@ const documents = {
     "\n      mutation updatePaidDues($id: ID!, $paidDues: Float!) {\n        updatePaidDues(attendingId: $id, paidDues: $paidDues) {\n          id\n          paidDues\n        }\n      }\n    ": types.UpdatePaidDuesDocument,
     "\n      query adminUsers {\n        users {\n          id\n          displayName\n          avatar\n          email\n          roles\n        }\n      }\n    ": types.AdminUsersDocument,
     "\n      mutation updateUserRoles($id: ID!, $roles: [Role!]!) {\n        updateRoles(id: $id, roles: $roles) {\n          id\n          roles\n        }\n      }\n    ": types.UpdateUserRolesDocument,
+    "\n  query beerPongMatchesPublic {\n    beerPongMatches {\n      id\n      startedAt\n      endedAt\n      players {\n        user {\n          id\n          displayName\n          avatar\n        }\n        hits\n        edges\n        blocks\n        throws\n        bounceHits\n      }\n    }\n  }\n": types.BeerPongMatchesPublicDocument,
     "\n      query gameCarousel {\n        nextParty {\n          gamesPlayed {\n            id\n            game {\n              id\n              name\n              image\n            }\n          }\n        }\n      }\n    ": types.GameCarouselDocument,
     "\n      query partyAttending {\n        nextParty {\n          id\n          tentative\n          startDate\n          endDate\n          roomsAvailable\n          seatsAvailable\n          registrationDeadline\n          attendings {\n            id\n            dates\n            room\n            applicationDate\n            user {\n              id\n              displayName\n              avatar\n            }\n          }\n        }\n      }\n    ": types.PartyAttendingDocument,
     "\n      mutation setMyOrOtherAttendance(\n        $partyId: ID!\n        $dates: [Date!]!\n        $userId: ID\n      ) {\n        setAttendance(partyId: $partyId, dates: $dates, userId: $userId) {\n          id\n          attendings {\n            id\n            dates\n          }\n        }\n      }\n    ": types.SetMyOrOtherAttendanceDocument,
@@ -200,6 +201,10 @@ export function graphql(source: "\n      query adminUsers {\n        users {\n  
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n      mutation updateUserRoles($id: ID!, $roles: [Role!]!) {\n        updateRoles(id: $id, roles: $roles) {\n          id\n          roles\n        }\n      }\n    "): (typeof documents)["\n      mutation updateUserRoles($id: ID!, $roles: [Role!]!) {\n        updateRoles(id: $id, roles: $roles) {\n          id\n          roles\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query beerPongMatchesPublic {\n    beerPongMatches {\n      id\n      startedAt\n      endedAt\n      players {\n        user {\n          id\n          displayName\n          avatar\n        }\n        hits\n        edges\n        blocks\n        throws\n        bounceHits\n      }\n    }\n  }\n"): (typeof documents)["\n  query beerPongMatchesPublic {\n    beerPongMatches {\n      id\n      startedAt\n      endedAt\n      players {\n        user {\n          id\n          displayName\n          avatar\n        }\n        hits\n        edges\n        blocks\n        throws\n        bounceHits\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

@@ -61,6 +61,7 @@ export async function createAbility(
     "locationWidgetSrc",
     "gamesPlayed",
   ]);
+  can("read", "BeerPongMatch");
 
   if (user) {
     can("read", "Party");
