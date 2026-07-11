@@ -1,5 +1,6 @@
 /* This file was automatically generated. DO NOT UPDATE MANUALLY. */
 import type { Resolvers } from "./types.generated";
+import { beerPongMatches as Query_beerPongMatches } from "./beerPong/resolvers/Query/beerPongMatches";
 import { games as Query_games } from "./game/resolvers/Query/games";
 import { getCacheInfo as Query_getCacheInfo } from "./admin/resolvers/Query/getCacheInfo";
 import { me as Query_me } from "./user/resolvers/Query/me";
@@ -15,12 +16,15 @@ import { addPicture as Mutation_addPicture } from "./party/resolvers/Mutation/ad
 import { capturePayPalOrder as Mutation_capturePayPalOrder } from "./party/resolvers/Mutation/capturePayPalOrder";
 import { checkIn as Mutation_checkIn } from "./party/resolvers/Mutation/checkIn";
 import { checkOut as Mutation_checkOut } from "./party/resolvers/Mutation/checkOut";
+import { createBeerPongMatch as Mutation_createBeerPongMatch } from "./beerPong/resolvers/Mutation/createBeerPongMatch";
 import { createMoneyTransfer as Mutation_createMoneyTransfer } from "./money/resolvers/Mutation/createMoneyTransfer";
 import { createPayPalOrder as Mutation_createPayPalOrder } from "./party/resolvers/Mutation/createPayPalOrder";
 import { createPurchase as Mutation_createPurchase } from "./purchase/resolvers/Mutation/createPurchase";
 import { deleteAuthDevice as Mutation_deleteAuthDevice } from "./user/resolvers/Mutation/deleteAuthDevice";
+import { deleteBeerPongMatch as Mutation_deleteBeerPongMatch } from "./beerPong/resolvers/Mutation/deleteBeerPongMatch";
 import { denyRoom as Mutation_denyRoom } from "./party/resolvers/Mutation/denyRoom";
 import { donate as Mutation_donate } from "./donation/resolvers/Mutation/donate";
+import { endBeerPongMatch as Mutation_endBeerPongMatch } from "./beerPong/resolvers/Mutation/endBeerPongMatch";
 import { generatePasskeyLoginOptions as Mutation_generatePasskeyLoginOptions } from "./user/resolvers/Mutation/generatePasskeyLoginOptions";
 import { generatePasskeyRegisterOptions as Mutation_generatePasskeyRegisterOptions } from "./user/resolvers/Mutation/generatePasskeyRegisterOptions";
 import { grantRoom as Mutation_grantRoom } from "./party/resolvers/Mutation/grantRoom";
@@ -45,6 +49,7 @@ import { setAttendance as Mutation_setAttendance } from "./party/resolvers/Mutat
 import { setGamesPlayed as Mutation_setGamesPlayed } from "./game/resolvers/Mutation/setGamesPlayed";
 import { syncCache as Mutation_syncCache } from "./admin/resolvers/Mutation/syncCache";
 import { updateAuthDevice as Mutation_updateAuthDevice } from "./user/resolvers/Mutation/updateAuthDevice";
+import { updateBeerPongPlayerStats as Mutation_updateBeerPongPlayerStats } from "./beerPong/resolvers/Mutation/updateBeerPongPlayerStats";
 import { updateGame as Mutation_updateGame } from "./game/resolvers/Mutation/updateGame";
 import { updateLocation as Mutation_updateLocation } from "./overwatch/resolvers/Mutation/updateLocation";
 import { updatePaidDues as Mutation_updatePaidDues } from "./party/resolvers/Mutation/updatePaidDues";
@@ -59,6 +64,8 @@ import { Attending as game_Attending } from "./game/resolvers/Attending";
 import { Attending as user_Attending } from "./user/resolvers/Attending";
 import { AuthDevice } from "./user/resolvers/AuthDevice";
 import { AuthResponse } from "./user/resolvers/AuthResponse";
+import { BeerPongMatch } from "./beerPong/resolvers/BeerPongMatch";
+import { BeerPongPlayerStats } from "./beerPong/resolvers/BeerPongPlayerStats";
 import { CacheEntry } from "./admin/resolvers/CacheEntry";
 import { CacheInfo } from "./admin/resolvers/CacheInfo";
 import { CachePatch } from "./admin/resolvers/CachePatch";
@@ -94,6 +101,7 @@ import {
 } from "graphql-scalars";
 export const resolvers: Resolvers = {
   Query: {
+    beerPongMatches: Query_beerPongMatches,
     games: Query_games,
     getCacheInfo: Query_getCacheInfo,
     me: Query_me,
@@ -111,12 +119,15 @@ export const resolvers: Resolvers = {
     capturePayPalOrder: Mutation_capturePayPalOrder,
     checkIn: Mutation_checkIn,
     checkOut: Mutation_checkOut,
+    createBeerPongMatch: Mutation_createBeerPongMatch,
     createMoneyTransfer: Mutation_createMoneyTransfer,
     createPayPalOrder: Mutation_createPayPalOrder,
     createPurchase: Mutation_createPurchase,
     deleteAuthDevice: Mutation_deleteAuthDevice,
+    deleteBeerPongMatch: Mutation_deleteBeerPongMatch,
     denyRoom: Mutation_denyRoom,
     donate: Mutation_donate,
+    endBeerPongMatch: Mutation_endBeerPongMatch,
     generatePasskeyLoginOptions: Mutation_generatePasskeyLoginOptions,
     generatePasskeyRegisterOptions: Mutation_generatePasskeyRegisterOptions,
     grantRoom: Mutation_grantRoom,
@@ -141,6 +152,7 @@ export const resolvers: Resolvers = {
     setGamesPlayed: Mutation_setGamesPlayed,
     syncCache: Mutation_syncCache,
     updateAuthDevice: Mutation_updateAuthDevice,
+    updateBeerPongPlayerStats: Mutation_updateBeerPongPlayerStats,
     updateGame: Mutation_updateGame,
     updateLocation: Mutation_updateLocation,
     updatePaidDues: Mutation_updatePaidDues,
@@ -155,6 +167,8 @@ export const resolvers: Resolvers = {
   Attending: { ...party_Attending, ...game_Attending, ...user_Attending },
   AuthDevice: AuthDevice,
   AuthResponse: AuthResponse,
+  BeerPongMatch: BeerPongMatch,
+  BeerPongPlayerStats: BeerPongPlayerStats,
   CacheEntry: CacheEntry,
   CacheInfo: CacheInfo,
   CachePatch: CachePatch,

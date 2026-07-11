@@ -59,6 +59,29 @@ export type AuthResponse = {
   token: Scalars['JWT']['output'];
 };
 
+export type BeerPongMatch = {
+  __typename?: 'BeerPongMatch';
+  endedAt?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['ID']['output'];
+  players: Array<BeerPongPlayerStats>;
+  startedAt: Scalars['DateTime']['output'];
+};
+
+export type BeerPongPlayerStats = {
+  __typename?: 'BeerPongPlayerStats';
+  blocks: Scalars['Int']['output'];
+  edges: Scalars['Int']['output'];
+  hits: Scalars['Int']['output'];
+  user: User;
+};
+
+export type BeerPongPlayerStatsInput = {
+  blocks: Scalars['Int']['input'];
+  edges: Scalars['Int']['input'];
+  hits: Scalars['Int']['input'];
+  userId: Scalars['ID']['input'];
+};
+
 export type CacheEntry = {
   __typename?: 'CacheEntry';
   patches: Array<CachePatch>;
@@ -174,12 +197,15 @@ export type Mutation = {
   capturePayPalOrder?: Maybe<Attending>;
   checkIn?: Maybe<Attending>;
   checkOut?: Maybe<Attending>;
+  createBeerPongMatch: BeerPongMatch;
   createMoneyTransfer: MoneyTransfer;
   createPayPalOrder: Scalars['ID']['output'];
   createPurchase: Purchase;
   deleteAuthDevice: AuthDevice;
+  deleteBeerPongMatch: Scalars['Boolean']['output'];
   denyRoom?: Maybe<Attending>;
   donate: Donation;
+  endBeerPongMatch: BeerPongMatch;
   generatePasskeyLoginOptions: Scalars['JSON']['output'];
   generatePasskeyRegisterOptions: Scalars['JSON']['output'];
   grantRoom?: Maybe<Attending>;
@@ -204,6 +230,7 @@ export type Mutation = {
   setGamesPlayed: Attending;
   syncCache?: Maybe<Scalars['Boolean']['output']>;
   updateAuthDevice: AuthDevice;
+  updateBeerPongPlayerStats: BeerPongMatch;
   updateGame: Game;
   updateLocation: User;
   updatePaidDues?: Maybe<Attending>;
@@ -241,6 +268,11 @@ export type MutationCheckOutArgs = {
 };
 
 
+export type MutationCreateBeerPongMatchArgs = {
+  playerIds: Array<Scalars['ID']['input']>;
+};
+
+
 export type MutationCreateMoneyTransferArgs = {
   input: CreateMoneyTransferInput;
 };
@@ -258,6 +290,11 @@ export type MutationDeleteAuthDeviceArgs = {
 };
 
 
+export type MutationDeleteBeerPongMatchArgs = {
+  matchId: Scalars['ID']['input'];
+};
+
+
 export type MutationDenyRoomArgs = {
   attendingId: Scalars['ID']['input'];
 };
@@ -267,6 +304,11 @@ export type MutationDonateArgs = {
   amount: Scalars['Float']['input'];
   dedication?: InputMaybe<DonationDedication>;
   incognito?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationEndBeerPongMatchArgs = {
+  matchId: Scalars['ID']['input'];
 };
 
 
@@ -389,6 +431,12 @@ export type MutationSyncCacheArgs = {
 export type MutationUpdateAuthDeviceArgs = {
   id: Scalars['ID']['input'];
   name: Scalars['String']['input'];
+};
+
+
+export type MutationUpdateBeerPongPlayerStatsArgs = {
+  input: BeerPongPlayerStatsInput;
+  matchId: Scalars['ID']['input'];
 };
 
 
@@ -554,6 +602,7 @@ export type PurchaseVote = {
 
 export type Query = {
   __typename?: 'Query';
+  beerPongMatches: Array<BeerPongMatch>;
   games: Array<Game>;
   getCacheInfo?: Maybe<CacheInfo>;
   me?: Maybe<User>;
@@ -689,6 +738,40 @@ export type UserListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type UserListQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, displayName: string, avatar: string }> };
+
+export type BeerPongMatchesAdminQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type BeerPongMatchesAdminQuery = { __typename?: 'Query', beerPongMatches: Array<{ __typename?: 'BeerPongMatch', id: string, startedAt: any, endedAt?: any | null, players: Array<{ __typename?: 'BeerPongPlayerStats', hits: number, edges: number, blocks: number, user: { __typename?: 'User', id: string, displayName: string, avatar: string } }> }>, users: Array<{ __typename?: 'User', id: string, displayName: string, avatar: string }> };
+
+export type CreateBeerPongMatchMutationVariables = Exact<{
+  playerIds: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+}>;
+
+
+export type CreateBeerPongMatchMutation = { __typename?: 'Mutation', createBeerPongMatch: { __typename?: 'BeerPongMatch', id: string, startedAt: any, endedAt?: any | null, players: Array<{ __typename?: 'BeerPongPlayerStats', hits: number, edges: number, blocks: number, user: { __typename?: 'User', id: string, displayName: string, avatar: string } }> } };
+
+export type UpdateBeerPongPlayerStatsMutationVariables = Exact<{
+  matchId: Scalars['ID']['input'];
+  input: BeerPongPlayerStatsInput;
+}>;
+
+
+export type UpdateBeerPongPlayerStatsMutation = { __typename?: 'Mutation', updateBeerPongPlayerStats: { __typename?: 'BeerPongMatch', id: string, players: Array<{ __typename?: 'BeerPongPlayerStats', hits: number, edges: number, blocks: number, user: { __typename?: 'User', id: string, displayName: string } }> } };
+
+export type EndBeerPongMatchMutationVariables = Exact<{
+  matchId: Scalars['ID']['input'];
+}>;
+
+
+export type EndBeerPongMatchMutation = { __typename?: 'Mutation', endBeerPongMatch: { __typename?: 'BeerPongMatch', id: string, endedAt?: any | null } };
+
+export type DeleteBeerPongMatchMutationVariables = Exact<{
+  matchId: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteBeerPongMatchMutation = { __typename?: 'Mutation', deleteBeerPongMatch: boolean };
 
 export type MoneyTransfersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1105,6 +1188,11 @@ export const PartyRowDocument = {"kind":"Document","definitions":[{"kind":"Opera
 export const UpdatePartyDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateParty"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"PartyInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateParty"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"roomsAvailable"}}]}}]}}]} as unknown as DocumentNode<UpdatePartyMutation, UpdatePartyMutationVariables>;
 export const RegisterExternalDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"registerExternal"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userName"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"email"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"password"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"register"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"userName"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userName"}}},{"kind":"Argument","name":{"kind":"Name","value":"email"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}},{"kind":"Argument","name":{"kind":"Name","value":"password"},"value":{"kind":"Variable","name":{"kind":"Name","value":"password"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"refreshToken"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}}]}}]}}]}}]} as unknown as DocumentNode<RegisterExternalMutation, RegisterExternalMutationVariables>;
 export const UserListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"userList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"users"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}}]}}]}}]} as unknown as DocumentNode<UserListQuery, UserListQueryVariables>;
+export const BeerPongMatchesAdminDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"beerPongMatchesAdmin"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"beerPongMatches"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"startedAt"}},{"kind":"Field","name":{"kind":"Name","value":"endedAt"}},{"kind":"Field","name":{"kind":"Name","value":"players"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}}]}},{"kind":"Field","name":{"kind":"Name","value":"hits"}},{"kind":"Field","name":{"kind":"Name","value":"edges"}},{"kind":"Field","name":{"kind":"Name","value":"blocks"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"users"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}}]}}]}}]} as unknown as DocumentNode<BeerPongMatchesAdminQuery, BeerPongMatchesAdminQueryVariables>;
+export const CreateBeerPongMatchDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createBeerPongMatch"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"playerIds"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createBeerPongMatch"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"playerIds"},"value":{"kind":"Variable","name":{"kind":"Name","value":"playerIds"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"startedAt"}},{"kind":"Field","name":{"kind":"Name","value":"endedAt"}},{"kind":"Field","name":{"kind":"Name","value":"players"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}}]}},{"kind":"Field","name":{"kind":"Name","value":"hits"}},{"kind":"Field","name":{"kind":"Name","value":"edges"}},{"kind":"Field","name":{"kind":"Name","value":"blocks"}}]}}]}}]}}]} as unknown as DocumentNode<CreateBeerPongMatchMutation, CreateBeerPongMatchMutationVariables>;
+export const UpdateBeerPongPlayerStatsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateBeerPongPlayerStats"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"matchId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BeerPongPlayerStatsInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateBeerPongPlayerStats"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"matchId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"matchId"}}},{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"players"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"hits"}},{"kind":"Field","name":{"kind":"Name","value":"edges"}},{"kind":"Field","name":{"kind":"Name","value":"blocks"}}]}}]}}]}}]} as unknown as DocumentNode<UpdateBeerPongPlayerStatsMutation, UpdateBeerPongPlayerStatsMutationVariables>;
+export const EndBeerPongMatchDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"endBeerPongMatch"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"matchId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"endBeerPongMatch"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"matchId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"matchId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"endedAt"}}]}}]}}]} as unknown as DocumentNode<EndBeerPongMatchMutation, EndBeerPongMatchMutationVariables>;
+export const DeleteBeerPongMatchDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"deleteBeerPongMatch"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"matchId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteBeerPongMatch"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"matchId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"matchId"}}}]}]}}]} as unknown as DocumentNode<DeleteBeerPongMatchMutation, DeleteBeerPongMatchMutationVariables>;
 export const MoneyTransfersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"MoneyTransfers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"moneyTransfers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"valuationDate"}},{"kind":"Field","name":{"kind":"Name","value":"note"}},{"kind":"Field","name":{"kind":"Name","value":"correlationId"}}]}}]}}]} as unknown as DocumentNode<MoneyTransfersQuery, MoneyTransfersQueryVariables>;
 export const CreateMoneyTransferDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createMoneyTransfer"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateMoneyTransferInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createMoneyTransfer"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"valuationDate"}},{"kind":"Field","name":{"kind":"Name","value":"note"}},{"kind":"Field","name":{"kind":"Name","value":"correlationId"}}]}}]}}]} as unknown as DocumentNode<CreateMoneyTransferMutation, CreateMoneyTransferMutationVariables>;
 export const AdminGamesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"adminGames"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"games"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"image"}}]}}]}}]} as unknown as DocumentNode<AdminGamesQuery, AdminGamesQueryVariables>;

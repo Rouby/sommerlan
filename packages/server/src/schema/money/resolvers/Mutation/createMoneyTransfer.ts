@@ -2,9 +2,7 @@ import { ForbiddenError } from "@casl/ability";
 import * as dayjs from "dayjs";
 import type { MutationResolvers } from "./../../../types.generated";
 
-export const createMoneyTransfer: NonNullable<
-  MutationResolvers["createMoneyTransfer"]
-> = async (_parent, { input }, ctx) => {
+export const createMoneyTransfer: NonNullable<MutationResolvers['createMoneyTransfer']> = async (_parent, { input }, ctx) => {
   ForbiddenError.from(ctx.ability).throwUnlessCan("create", "MoneyTransfer");
 
   const transfer = new ctx.data.MoneyTransfer({

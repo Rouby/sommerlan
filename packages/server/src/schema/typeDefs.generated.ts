@@ -25,6 +25,25 @@ export const typeDefs = {
         },
         {
           kind: "FieldDefinition",
+          name: { kind: "Name", value: "beerPongMatches" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "ListType",
+              type: {
+                kind: "NonNullType",
+                type: {
+                  kind: "NamedType",
+                  name: { kind: "Name", value: "BeerPongMatch" },
+                },
+              },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
           name: { kind: "Name", value: "games" },
           arguments: [],
           type: {
@@ -198,6 +217,128 @@ export const typeDefs = {
             },
           ],
           type: { kind: "NamedType", name: { kind: "Name", value: "Boolean" } },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "createBeerPongMatch" },
+          arguments: [
+            {
+              kind: "InputValueDefinition",
+              name: { kind: "Name", value: "playerIds" },
+              type: {
+                kind: "NonNullType",
+                type: {
+                  kind: "ListType",
+                  type: {
+                    kind: "NonNullType",
+                    type: {
+                      kind: "NamedType",
+                      name: { kind: "Name", value: "ID" },
+                    },
+                  },
+                },
+              },
+              directives: [],
+            },
+          ],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "BeerPongMatch" },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "updateBeerPongPlayerStats" },
+          arguments: [
+            {
+              kind: "InputValueDefinition",
+              name: { kind: "Name", value: "matchId" },
+              type: {
+                kind: "NonNullType",
+                type: {
+                  kind: "NamedType",
+                  name: { kind: "Name", value: "ID" },
+                },
+              },
+              directives: [],
+            },
+            {
+              kind: "InputValueDefinition",
+              name: { kind: "Name", value: "input" },
+              type: {
+                kind: "NonNullType",
+                type: {
+                  kind: "NamedType",
+                  name: { kind: "Name", value: "BeerPongPlayerStatsInput" },
+                },
+              },
+              directives: [],
+            },
+          ],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "BeerPongMatch" },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "endBeerPongMatch" },
+          arguments: [
+            {
+              kind: "InputValueDefinition",
+              name: { kind: "Name", value: "matchId" },
+              type: {
+                kind: "NonNullType",
+                type: {
+                  kind: "NamedType",
+                  name: { kind: "Name", value: "ID" },
+                },
+              },
+              directives: [],
+            },
+          ],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "BeerPongMatch" },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "deleteBeerPongMatch" },
+          arguments: [
+            {
+              kind: "InputValueDefinition",
+              name: { kind: "Name", value: "matchId" },
+              type: {
+                kind: "NonNullType",
+                type: {
+                  kind: "NamedType",
+                  name: { kind: "Name", value: "ID" },
+                },
+              },
+              directives: [],
+            },
+          ],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "Boolean" },
+            },
+          },
           directives: [],
         },
         {
@@ -1577,6 +1718,157 @@ export const typeDefs = {
       kind: "ScalarTypeDefinition",
       name: { kind: "Name", value: "File" },
       directives: [],
+    },
+    {
+      kind: "ObjectTypeDefinition",
+      name: { kind: "Name", value: "BeerPongMatch" },
+      interfaces: [],
+      directives: [],
+      fields: [
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "id" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "startedAt" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "DateTime" },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "endedAt" },
+          arguments: [],
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "DateTime" },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "players" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "ListType",
+              type: {
+                kind: "NonNullType",
+                type: {
+                  kind: "NamedType",
+                  name: { kind: "Name", value: "BeerPongPlayerStats" },
+                },
+              },
+            },
+          },
+          directives: [],
+        },
+      ],
+    },
+    {
+      kind: "ObjectTypeDefinition",
+      name: { kind: "Name", value: "BeerPongPlayerStats" },
+      interfaces: [],
+      directives: [],
+      fields: [
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "user" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "User" } },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "hits" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "edges" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "blocks" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
+          },
+          directives: [],
+        },
+      ],
+    },
+    {
+      kind: "InputObjectTypeDefinition",
+      name: { kind: "Name", value: "BeerPongPlayerStatsInput" },
+      directives: [],
+      fields: [
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "userId" },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
+          },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "hits" },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
+          },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "edges" },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
+          },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "blocks" },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
+          },
+          directives: [],
+        },
+      ],
     },
     {
       name: { kind: "Name", value: "Party" },
