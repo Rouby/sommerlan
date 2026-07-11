@@ -731,6 +731,7 @@ export type UpdateBeerPongMatchInput = {
   isFinished?: InputMaybe<Scalars["Boolean"]["input"]>;
   matchId: Scalars["ID"]["input"];
   playerStats?: InputMaybe<Array<BeerPongPlayerStatsInput>>;
+  startedAt?: InputMaybe<Scalars["DateTime"]["input"]>;
   teamResults?: InputMaybe<Array<BeerPongMatchTeamResultInput>>;
   winnerTeamId?: InputMaybe<Scalars["ID"]["input"]>;
 };

@@ -461,6 +461,7 @@ input UpdateBeerPongMatchInput {
   isFinished: Boolean
   matchId: ID!
   playerStats: [BeerPongPlayerStatsInput!]
+  startedAt: DateTime
   teamResults: [BeerPongMatchTeamResultInput!]
   winnerTeamId: ID
 }

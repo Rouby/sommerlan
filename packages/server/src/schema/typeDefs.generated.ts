@@ -2704,6 +2704,15 @@ export const typeDefs = {
         },
         {
           kind: "InputValueDefinition",
+          name: { kind: "Name", value: "startedAt" },
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "DateTime" },
+          },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
           name: { kind: "Name", value: "playerStats" },
           type: {
             kind: "ListType",
