@@ -5,6 +5,7 @@ import {
   Button,
   Group,
   MultiSelect,
+  Modal,
   NumberInput,
   Paper,
   ScrollArea,
@@ -24,6 +25,7 @@ import {
   IconMinus,
   IconPlus,
   IconRefresh,
+  IconTargetArrow,
   IconGripVertical,
   IconTrash,
   IconUsersGroup,
@@ -256,6 +258,14 @@ type GroupPreview = {
 };
 
 type StatKey = "hits" | "edges" | "blocks" | "throws" | "bounceHits";
+type ThrowOutcome = "miss" | "hit" | "bounce" | "edge";
+type PlayerStatLine = {
+  hits: number;
+  edges: number;
+  blocks: number;
+  throws: number;
+  bounceHits: number;
+};
 
 const STAT_LABELS: Record<StatKey, string> = {
   throws: "Würfe",
@@ -266,6 +276,26 @@ const STAT_LABELS: Record<StatKey, string> = {
 };
 
 const STAT_ORDER: StatKey[] = ["throws", "hits", "bounceHits", "edges", "blocks"];
+
+function toDateTimeLocalValue(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+  const offsetMs = date.getTimezoneOffset() * 60000;
+  return new Date(date.getTime() - offsetMs).toISOString().slice(0, 16);
+}
+
+function fromDateTimeLocalValue(value: string) {
+  if (!value) {
+    return null;
+  }
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return null;
+  }
+  return date.toISOString();
+}
 
 function createDefaultTeams() {
   return Array.from({ length: 8 }, (_, index) => ({
@@ -360,6 +390,7 @@ function EditableMatchCard({
   match: BeerPongTournamentMatch & { winner?: { id: string } | null };
   onSave: (input: {
     matchId: string;
+    startedAt?: string;
     playerStats: Array<{
       userId: string;
       hits: number;
@@ -374,11 +405,16 @@ function EditableMatchCard({
   }) => Promise<void>;
   onDelete: (matchId: string) => Promise<void>;
 }) {
-  const [playerStats, setPlayerStats] = useState<
-    Record<string, { hits: number; edges: number; blocks: number; throws: number; bounceHits: number }>
-  >({});
+  const [playerStats, setPlayerStats] = useState<Record<string, PlayerStatLine>>({});
   const [remainingBeers, setRemainingBeers] = useState<Record<string, number>>({});
   const [winnerTeamId, setWinnerTeamId] = useState<string | null>(null);
+  const [startedAtInput, setStartedAtInput] = useState("");
+  const [trackingOpened, setTrackingOpened] = useState(false);
+  const [activeTeamIndex, setActiveTeamIndex] = useState(0);
+  const [activePlayerIndex, setActivePlayerIndex] = useState(0);
+  const [trackingHistory, setTrackingHistory] = useState<
+    Array<{ userId: string; previousStats: PlayerStatLine; teamIndex: number; playerIndex: number }>
+  >([]);
 
   useEffect(() => {
     setPlayerStats(
@@ -403,11 +439,17 @@ function EditableMatchCard({
       ),
     );
     setWinnerTeamId(match.winner?.id ?? null);
+    setStartedAtInput(toDateTimeLocalValue(match.startedAt));
+    setActiveTeamIndex(0);
+    setActivePlayerIndex(0);
+    setTrackingHistory([]);
   }, [match]);
 
   async function handleSave(isFinished = false) {
+    const startedAt = fromDateTimeLocalValue(startedAtInput);
     await onSave({
       matchId: match.id,
+      startedAt: startedAt ?? undefined,
       playerStats: Object.entries(playerStats).map(([userId, stats]) => ({
         userId,
         ...stats,
@@ -447,6 +489,82 @@ function EditableMatchCard({
   }
 
   const resolvedTeams = match.teams.filter((team) => team.team);
+  const activeTeam = resolvedTeams[activeTeamIndex]?.team;
+  const activePlayer = activeTeam?.players[activePlayerIndex];
+
+  function applyThrowOutcome(userId: string, outcome: ThrowOutcome) {
+    setTrackingHistory((previous) => [
+      ...previous,
+      {
+        userId,
+        previousStats: playerStats[userId] ?? {
+          hits: 0,
+          edges: 0,
+          blocks: 0,
+          throws: 0,
+          bounceHits: 0,
+        },
+        teamIndex: activeTeamIndex,
+        playerIndex: activePlayerIndex,
+      },
+    ]);
+
+    setPlayerStats((previous) => {
+      const stats = previous[userId] ?? {
+        hits: 0,
+        edges: 0,
+        blocks: 0,
+        throws: 0,
+        bounceHits: 0,
+      };
+      const next: PlayerStatLine = {
+        ...stats,
+        throws: stats.throws + 1,
+      };
+
+      if (outcome === "hit") {
+        next.hits += 1;
+      } else if (outcome === "bounce") {
+        next.hits += 1;
+        next.bounceHits += 1;
+      } else if (outcome === "edge") {
+        next.edges += 1;
+      }
+
+      return {
+        ...previous,
+        [userId]: next,
+      };
+    });
+
+    const currentPlayers = activeTeam?.players ?? [];
+    if (activePlayerIndex < currentPlayers.length - 1) {
+      setActivePlayerIndex(activePlayerIndex + 1);
+      return;
+    }
+
+    if (resolvedTeams.length > 1) {
+      setActiveTeamIndex((activeTeamIndex + 1) % resolvedTeams.length);
+    }
+    setActivePlayerIndex(0);
+  }
+
+  function handleUndoTracking() {
+    setTrackingHistory((previous) => {
+      const lastEntry = previous[previous.length - 1];
+      if (!lastEntry) {
+        return previous;
+      }
+
+      setPlayerStats((previousStats) => ({
+        ...previousStats,
+        [lastEntry.userId]: lastEntry.previousStats,
+      }));
+      setActiveTeamIndex(lastEntry.teamIndex);
+      setActivePlayerIndex(lastEntry.playerIndex);
+      return previous.slice(0, -1);
+    });
+  }
 
   return (
     <Paper withBorder p="md" radius="md">
@@ -462,6 +580,15 @@ function EditableMatchCard({
             </Text>
           </Group>
           <Group>
+            <Button
+              variant="light"
+              size="sm"
+              leftSection={<IconTargetArrow size={16} />}
+              onClick={() => setTrackingOpened(true)}
+              disabled={resolvedTeams.length === 0}
+            >
+              Tracking
+            </Button>
             <Button variant="light" size="sm" onClick={() => handleSave(false)}>
               Speichern
             </Button>
@@ -484,6 +611,13 @@ function EditableMatchCard({
             </ActionIcon>
           </Group>
         </Group>
+
+        <TextInput
+          label="Startzeit"
+          type="datetime-local"
+          value={startedAtInput}
+          onChange={(event) => setStartedAtInput(event.currentTarget.value)}
+        />
 
         <Select
           label="Sieger"
@@ -576,6 +710,126 @@ function EditableMatchCard({
             );
           })}
         </SimpleGrid>
+
+        <Modal
+          opened={trackingOpened}
+          onClose={() => setTrackingOpened(false)}
+          fullScreen
+          title={`Match #${match.matchNumber} Tracking`}
+        >
+          <Stack gap="md">
+            <Group justify="space-between" wrap="wrap">
+              <Group>
+                {resolvedTeams.map((team, index) => (
+                  <Button
+                    key={team.team!.id}
+                    variant={index === activeTeamIndex ? "filled" : "light"}
+                    onClick={() => {
+                      setActiveTeamIndex(index);
+                      setActivePlayerIndex(0);
+                    }}
+                  >
+                    {team.team!.name}
+                  </Button>
+                ))}
+              </Group>
+              <Button variant="light" onClick={handleUndoTracking} disabled={trackingHistory.length === 0}>
+                Letzte Eingabe rückgängig
+              </Button>
+            </Group>
+
+            {activeTeam && activePlayer ? (
+              <Paper withBorder p="md" radius="md">
+                <Stack gap="sm">
+                  <Text size="sm" c="dimmed">
+                    Aktive Seite
+                  </Text>
+                  <Title order={3}>{activeTeam.name}</Title>
+                  <Group gap="xs">
+                    <Avatar src={activePlayer.avatar} radius="xl" />
+                    <Text fw={700}>{activePlayer.displayName}</Text>
+                  </Group>
+                  <SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }} spacing="sm">
+                    <Button onClick={() => applyThrowOutcome(activePlayer.id, "miss")}>Fehlwurf</Button>
+                    <Button color="green" onClick={() => applyThrowOutcome(activePlayer.id, "hit")}>
+                      Treffer
+                    </Button>
+                    <Button color="lime" onClick={() => applyThrowOutcome(activePlayer.id, "bounce")}>
+                      Bounce
+                    </Button>
+                    <Button color="yellow" onClick={() => applyThrowOutcome(activePlayer.id, "edge")}>
+                      Kante
+                    </Button>
+                  </SimpleGrid>
+                </Stack>
+              </Paper>
+            ) : (
+              <Text c="dimmed">Für dieses Match sind noch keine Teams vorhanden.</Text>
+            )}
+
+            {resolvedTeams.map((team) => (
+              <Paper key={team.team!.id} withBorder p="md" radius="md">
+                <Stack gap="sm">
+                  <Group justify="space-between">
+                    <Title order={4}>{team.team!.name}</Title>
+                    <NumberInput
+                      label="Restbiere"
+                      min={0}
+                      value={remainingBeers[team.team!.id] ?? 0}
+                      onChange={(value) =>
+                        setRemainingBeers((previous) => ({
+                          ...previous,
+                          [team.team!.id]:
+                            typeof value === "number" && Number.isFinite(value) ? value : 0,
+                        }))
+                      }
+                      w={120}
+                    />
+                  </Group>
+                  <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
+                    {team.team!.players.map((player) => {
+                      const stats = playerStats[player.id] ?? {
+                        hits: 0,
+                        edges: 0,
+                        blocks: 0,
+                        throws: 0,
+                        bounceHits: 0,
+                      };
+
+                      return (
+                        <Paper key={player.id} withBorder p="sm" radius="md">
+                          <Stack gap={4}>
+                            <Group gap="xs">
+                              <Avatar src={player.avatar} size="sm" radius="xl" />
+                              <Text fw={600}>{player.displayName}</Text>
+                            </Group>
+                            {STAT_ORDER.map((stat) => (
+                              <Text key={stat} size="sm">
+                                {STAT_LABELS[stat]}: <Text span fw={700}>{stats[stat]}</Text>
+                              </Text>
+                            ))}
+                          </Stack>
+                        </Paper>
+                      );
+                    })}
+                  </SimpleGrid>
+                </Stack>
+              </Paper>
+            ))}
+
+            <Group justify="end">
+              <Button variant="light" onClick={() => setTrackingOpened(false)}>
+                Zurück
+              </Button>
+              <Button onClick={() => handleSave(false)}>Tracking speichern</Button>
+              {!match.endedAt && (
+                <Button color="orange" disabled={!winnerTeamId} onClick={() => handleSave(true)}>
+                  Speichern & abschließen
+                </Button>
+              )}
+            </Group>
+          </Stack>
+        </Modal>
       </Stack>
     </Paper>
   );
@@ -708,6 +962,7 @@ export function AdminBeerPong() {
 
   async function handleSaveMatch(input: {
     matchId: string;
+    startedAt?: string;
     playerStats: Array<{
       userId: string;
       hits: number;

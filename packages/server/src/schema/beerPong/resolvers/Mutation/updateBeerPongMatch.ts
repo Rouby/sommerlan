@@ -10,6 +10,10 @@ export const updateBeerPongMatch: NonNullable<
 
   const match = await getBeerPongMatchOrThrow(ctx, input.matchId);
 
+  if (typeof input.startedAt === "string") {
+    match.startedAt = input.startedAt;
+  }
+
   if (input.playerStats) {
     match.playerStats = Object.fromEntries(
       input.playerStats.map((playerStats) => [

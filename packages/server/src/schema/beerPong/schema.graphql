@@ -122,6 +122,7 @@ input BeerPongMatchTeamResultInput {
 
 input UpdateBeerPongMatchInput {
   matchId: ID!
+  startedAt: DateTime
   playerStats: [BeerPongPlayerStatsInput!]
   teamResults: [BeerPongMatchTeamResultInput!]
   winnerTeamId: ID
