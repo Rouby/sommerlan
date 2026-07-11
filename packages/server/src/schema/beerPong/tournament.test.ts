@@ -7,7 +7,7 @@ import {
 
 function createTournament() {
   return new BeerPongTournament({
-    id: "tournament-1",
+    id: "tournament-1-1-1-1",
     groupCount: 3,
     knockoutSize: 4,
     teams: [
