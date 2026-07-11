@@ -3,6 +3,7 @@ import { BeerPongTournament } from "../../data";
 import {
   createBeerPongKnockoutMatches,
   getBeerPongTournamentGroups,
+  getKnockoutRounds,
 } from "./tournament";
 
 function createTournament() {
@@ -38,5 +39,30 @@ describe("createBeerPongKnockoutMatches", () => {
       const [homeId, awayId] = match.teamIds;
       expect(groupsByTeamId.get(homeId)).not.toBe(groupsByTeamId.get(awayId));
     }
+  });
+
+  it("creates a third-place match for semifinal losers", () => {
+    const tournament = createTournament();
+
+    const matches = createBeerPongKnockoutMatches(tournament, []);
+    const thirdPlaceMatches = matches.filter((match) => match.isThirdPlaceMatch);
+
+    expect(thirdPlaceMatches).toHaveLength(1);
+    expect(thirdPlaceMatches[0]?.slotLabels).toEqual([
+      "Verlierer Halbfinale 1",
+      "Verlierer Halbfinale 2",
+    ]);
+
+    const semifinalMatches = matches.filter((match) => match.round === 1);
+    expect(semifinalMatches).toHaveLength(2);
+    semifinalMatches.forEach((match, index) => {
+      expect(match.thirdPlaceMatchId).toBe(thirdPlaceMatches[0]?.id);
+      expect(match.thirdPlaceMatchSlot).toBe(index);
+    });
+
+    const rounds = getKnockoutRounds(tournament, matches);
+    expect(rounds).toHaveLength(3);
+    expect(rounds[2]?.name).toBe("Spiel um Platz 3");
+    expect(rounds[2]?.matches).toHaveLength(1);
   });
 });

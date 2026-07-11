@@ -54,6 +54,12 @@ export class BeerPongMatch extends Base {
 
   public nextMatchSlot: number | null = null;
 
+  public thirdPlaceMatchId: string | null = null;
+
+  public thirdPlaceMatchSlot: number | null = null;
+
+  public isThirdPlaceMatch = false;
+
   public playerStats: { [userId: string]: BeerPongPlayerStatLine } = {};
 
   constructor(props?: Values<BeerPongMatch>) {

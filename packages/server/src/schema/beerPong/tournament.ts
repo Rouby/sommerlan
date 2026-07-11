@@ -276,6 +276,19 @@ export function createBeerPongKnockoutMatches(
   const totalRounds = Math.log2(qualified.length);
   const rounds = Array.from({ length: totalRounds }, () => [] as BeerPongMatch[]);
   const firstRoundPairings = buildFirstRoundPairings(qualified);
+  const thirdPlaceMatch =
+    totalRounds >= 2
+      ? new BeerPongMatch({
+          tournamentId: tournament.id,
+          phase: BeerPongMatchPhase.Knockout,
+          round: totalRounds,
+          matchNumber: 0,
+          teamIds: ["", ""],
+          slotLabels: ["Verlierer Halbfinale 1", "Verlierer Halbfinale 2"],
+          remainingBeers: {},
+          isThirdPlaceMatch: true,
+        })
+      : null;
   let matchNumber =
     getTournamentMatches(matches, tournament.id).reduce(
       (current, match) => Math.max(current, match.matchNumber),
@@ -318,6 +331,15 @@ export function createBeerPongKnockoutMatches(
         ];
       }
 
+      if (
+        thirdPlaceMatch &&
+        round === totalRounds - 1 &&
+        matchIndex < thirdPlaceMatch.slotLabels.length
+      ) {
+        match.thirdPlaceMatchId = thirdPlaceMatch.id;
+        match.thirdPlaceMatchSlot = matchIndex;
+      }
+
       rounds[round - 1]!.push(match);
     }
   }
@@ -332,7 +354,7 @@ export function createBeerPongKnockoutMatches(
     });
   });
 
-  return rounds.flat();
+  return [...rounds.flat(), ...(thirdPlaceMatch ? [thirdPlaceMatch] : [])];
 }
 
 export function getKnockoutRounds(
@@ -342,17 +364,33 @@ export function getKnockoutRounds(
   const knockoutMatches = getTournamentMatches(matches, tournament.id).filter(
     (match) => match.phase === BeerPongMatchPhase.Knockout,
   );
+  const thirdPlaceMatches = knockoutMatches.filter(
+    (match) => match.isThirdPlaceMatch,
+  );
+  const regularMatches = knockoutMatches.filter(
+    (match) => !match.isThirdPlaceMatch,
+  );
 
   const maxRound = knockoutMatches.reduce(
     (current, match) => Math.max(current, match.round),
     0,
   );
 
-  return Array.from({ length: maxRound }, (_, index) => ({
+  const rounds = Array.from({ length: maxRound }, (_, index) => ({
     round: index + 1,
     name: getKnockoutRoundName(index + 1, maxRound),
-    matches: knockoutMatches.filter((match) => match.round === index + 1),
+    matches: regularMatches.filter((match) => match.round === index + 1),
   }));
+
+  if (thirdPlaceMatches.length > 0) {
+    rounds.push({
+      round: maxRound + 1,
+      name: "Spiel um Platz 3",
+      matches: thirdPlaceMatches,
+    });
+  }
+
+  return rounds;
 }
 
 export function validateBeerPongTournament(
