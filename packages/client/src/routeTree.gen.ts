@@ -25,6 +25,7 @@ const ProfileIndexLazyImport = createFileRoute('/profile/')()
 const PartyIndexLazyImport = createFileRoute('/party/')()
 const GamesIndexLazyImport = createFileRoute('/games/')()
 const EventsIndexLazyImport = createFileRoute('/events/')()
+const BeerPongIndexLazyImport = createFileRoute('/beerPong/')()
 const AdminUsersLazyImport = createFileRoute('/admin/users')()
 const AdminGamesLazyImport = createFileRoute('/admin/games')()
 const AdminCacheLazyImport = createFileRoute('/admin/cache')()
@@ -77,6 +78,13 @@ const EventsIndexLazyRoute = EventsIndexLazyImport.update({
   path: '/events/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/events/index.lazy').then((d) => d.Route))
+
+const BeerPongIndexLazyRoute = BeerPongIndexLazyImport.update({
+  path: '/beerPong/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/beerPong/index.lazy').then((d) => d.Route),
+)
 
 const AdminUsersLazyRoute = AdminUsersLazyImport.update({
   path: '/users',
@@ -207,6 +215,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EventsIndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/beerPong/': {
+      id: '/beerPong/'
+      path: '/beerPong'
+      fullPath: '/beerPong'
+      preLoaderRoute: typeof BeerPongIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/games/': {
       id: '/games/'
       path: '/games'
@@ -273,6 +288,7 @@ export const routeTree = rootRoute.addChildren({
   ImprintLazyRoute,
   PartyCheckInRoute,
   EventsIndexLazyRoute,
+  BeerPongIndexLazyRoute,
   GamesIndexLazyRoute,
   PartyIndexLazyRoute,
   ProfileIndexLazyRoute,
@@ -295,6 +311,7 @@ export const routeTree = rootRoute.addChildren({
         "/imprint",
         "/party/check-in",
         "/events/",
+        "/beerPong/",
         "/games/",
         "/party/",
         "/profile/",
@@ -345,6 +362,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/events/": {
       "filePath": "events/index.lazy.tsx"
+    },
+    "/beerPong/": {
+      "filePath": "beerPong/index.lazy.tsx"
     },
     "/games/": {
       "filePath": "games/index.lazy.tsx"
