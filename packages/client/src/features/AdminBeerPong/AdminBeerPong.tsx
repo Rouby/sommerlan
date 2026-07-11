@@ -3,6 +3,7 @@ import {
   Avatar,
   Badge,
   Button,
+  Checkbox,
   Group,
   MultiSelect,
   Modal,
@@ -258,13 +259,17 @@ type GroupPreview = {
 };
 
 type StatKey = "hits" | "edges" | "blocks" | "throws" | "bounceHits";
-type ThrowOutcome = "miss" | "hit" | "bounce" | "edge";
+type ThrowOutcome = "miss" | "hit";
 type PlayerStatLine = {
   hits: number;
   edges: number;
   blocks: number;
   throws: number;
   bounceHits: number;
+};
+type TrackingModifiers = {
+  bounce: boolean;
+  edge: boolean;
 };
 
 const STAT_LABELS: Record<StatKey, string> = {
@@ -412,6 +417,10 @@ function EditableMatchCard({
   const [trackingOpened, setTrackingOpened] = useState(false);
   const [activeTeamIndex, setActiveTeamIndex] = useState(0);
   const [activePlayerIndex, setActivePlayerIndex] = useState(0);
+  const [trackingModifiers, setTrackingModifiers] = useState<TrackingModifiers>({
+    bounce: false,
+    edge: false,
+  });
   const [trackingHistory, setTrackingHistory] = useState<
     Array<{ userId: string; previousStats: PlayerStatLine; teamIndex: number; playerIndex: number }>
   >([]);
@@ -442,6 +451,10 @@ function EditableMatchCard({
     setStartedAtInput(toDateTimeLocalValue(match.startedAt));
     setActiveTeamIndex(0);
     setActivePlayerIndex(0);
+    setTrackingModifiers({
+      bounce: false,
+      edge: false,
+    });
     setTrackingHistory([]);
   }, [match]);
 
@@ -523,11 +536,14 @@ function EditableMatchCard({
       };
 
       if (outcome === "hit") {
-        next.hits += 1;
-      } else if (outcome === "bounce") {
-        next.hits += 1;
+        next.hits += trackingModifiers.bounce ? 2 : 1;
+      }
+
+      if (outcome === "hit" && trackingModifiers.bounce) {
         next.bounceHits += 1;
-      } else if (outcome === "edge") {
+      }
+
+      if (trackingModifiers.edge) {
         next.edges += 1;
       }
 
@@ -749,16 +765,37 @@ function EditableMatchCard({
                     <Avatar src={activePlayer.avatar} radius="xl" />
                     <Text fw={700}>{activePlayer.displayName}</Text>
                   </Group>
-                  <SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }} spacing="sm">
+                  <Stack gap="xs">
+                    <Text size="sm" c="dimmed">
+                      Modifier
+                    </Text>
+                    <Group gap="md">
+                      <Checkbox
+                        label="Bounce"
+                        checked={trackingModifiers.bounce}
+                        onChange={(event) =>
+                          setTrackingModifiers((previous) => ({
+                            ...previous,
+                            bounce: event.currentTarget.checked,
+                          }))
+                        }
+                      />
+                      <Checkbox
+                        label="Kanten getroffen"
+                        checked={trackingModifiers.edge}
+                        onChange={(event) =>
+                          setTrackingModifiers((previous) => ({
+                            ...previous,
+                            edge: event.currentTarget.checked,
+                          }))
+                        }
+                      />
+                    </Group>
+                  </Stack>
+                  <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
                     <Button onClick={() => applyThrowOutcome(activePlayer.id, "miss")}>Fehlwurf</Button>
                     <Button color="green" onClick={() => applyThrowOutcome(activePlayer.id, "hit")}>
                       Treffer
-                    </Button>
-                    <Button color="lime" onClick={() => applyThrowOutcome(activePlayer.id, "bounce")}>
-                      Bounce
-                    </Button>
-                    <Button color="yellow" onClick={() => applyThrowOutcome(activePlayer.id, "edge")}>
-                      Kante
                     </Button>
                   </SimpleGrid>
                 </Stack>
