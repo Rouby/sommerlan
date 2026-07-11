@@ -25,11 +25,11 @@ const ProfileIndexLazyImport = createFileRoute('/profile/')()
 const PartyIndexLazyImport = createFileRoute('/party/')()
 const GamesIndexLazyImport = createFileRoute('/games/')()
 const EventsIndexLazyImport = createFileRoute('/events/')()
+const AdminBeerPongLazyImport = createFileRoute('/admin/beerPong')()
 const AdminUsersLazyImport = createFileRoute('/admin/users')()
 const AdminGamesLazyImport = createFileRoute('/admin/games')()
 const AdminCacheLazyImport = createFileRoute('/admin/cache')()
 const AdminBudgetLazyImport = createFileRoute('/admin/budget')()
-const AdminBeerPongLazyImport = createFileRoute('/admin/beerPong')()
 const PartyArchiveIndexLazyImport = createFileRoute('/party/archive/')()
 const PartyArchiveIdLazyImport = createFileRoute('/party/archive/$id')()
 const AdminUsersCheckInLazyImport = createFileRoute('/admin/users/check-in')()
@@ -78,6 +78,13 @@ const EventsIndexLazyRoute = EventsIndexLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/events/index.lazy').then((d) => d.Route))
 
+const AdminBeerPongLazyRoute = AdminBeerPongLazyImport.update({
+  path: '/admin/beerPong',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/admin_/beerPong.lazy').then((d) => d.Route),
+)
+
 const AdminUsersLazyRoute = AdminUsersLazyImport.update({
   path: '/users',
   getParentRoute: () => AdminLazyRoute,
@@ -97,13 +104,6 @@ const AdminBudgetLazyRoute = AdminBudgetLazyImport.update({
   path: '/budget',
   getParentRoute: () => AdminLazyRoute,
 } as any).lazy(() => import('./routes/admin/budget.lazy').then((d) => d.Route))
-
-const AdminBeerPongLazyRoute = AdminBeerPongLazyImport.update({
-  path: '/beerPong',
-  getParentRoute: () => AdminLazyRoute,
-} as any).lazy(() =>
-  import('./routes/admin/beerPong.lazy').then((d) => d.Route),
-)
 
 const PartyCheckInRoute = PartyCheckInImport.update({
   path: '/party/check-in',
@@ -165,13 +165,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PartyCheckInImport
       parentRoute: typeof rootRoute
     }
-    '/admin/beerPong': {
-      id: '/admin/beerPong'
-      path: '/beerPong'
-      fullPath: '/admin/beerPong'
-      preLoaderRoute: typeof AdminBeerPongLazyImport
-      parentRoute: typeof AdminLazyImport
-    }
     '/admin/budget': {
       id: '/admin/budget'
       path: '/budget'
@@ -199,6 +192,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/users'
       preLoaderRoute: typeof AdminUsersLazyImport
       parentRoute: typeof AdminLazyImport
+    }
+    '/admin/beerPong': {
+      id: '/admin/beerPong'
+      path: '/admin/beerPong'
+      fullPath: '/admin/beerPong'
+      preLoaderRoute: typeof AdminBeerPongLazyImport
+      parentRoute: typeof rootRoute
     }
     '/events/': {
       id: '/events/'
@@ -264,7 +264,6 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren({
   IndexLazyRoute,
   AdminLazyRoute: AdminLazyRoute.addChildren({
-    AdminBeerPongLazyRoute,
     AdminBudgetLazyRoute,
     AdminCacheLazyRoute,
     AdminGamesLazyRoute,
@@ -272,6 +271,7 @@ export const routeTree = rootRoute.addChildren({
   }),
   ImprintLazyRoute,
   PartyCheckInRoute,
+  AdminBeerPongLazyRoute,
   EventsIndexLazyRoute,
   GamesIndexLazyRoute,
   PartyIndexLazyRoute,
@@ -294,6 +294,7 @@ export const routeTree = rootRoute.addChildren({
         "/admin",
         "/imprint",
         "/party/check-in",
+        "/admin/beerPong",
         "/events/",
         "/games/",
         "/party/",
@@ -310,7 +311,6 @@ export const routeTree = rootRoute.addChildren({
     "/admin": {
       "filePath": "admin.lazy.tsx",
       "children": [
-        "/admin/beerPong",
         "/admin/budget",
         "/admin/cache",
         "/admin/games",
@@ -322,10 +322,6 @@ export const routeTree = rootRoute.addChildren({
     },
     "/party/check-in": {
       "filePath": "party/check-in.tsx"
-    },
-    "/admin/beerPong": {
-      "filePath": "admin/beerPong.lazy.tsx",
-      "parent": "/admin"
     },
     "/admin/budget": {
       "filePath": "admin/budget.lazy.tsx",
@@ -342,6 +338,9 @@ export const routeTree = rootRoute.addChildren({
     "/admin/users": {
       "filePath": "admin/users.lazy.tsx",
       "parent": "/admin"
+    },
+    "/admin/beerPong": {
+      "filePath": "admin_/beerPong.lazy.tsx"
     },
     "/events/": {
       "filePath": "events/index.lazy.tsx"

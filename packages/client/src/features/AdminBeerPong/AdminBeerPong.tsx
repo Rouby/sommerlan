@@ -161,9 +161,8 @@ export function AdminBeerPong() {
   }
 
   return (
-    <Stack>
+    <Stack p="md">
       {showNewMatchForm ? (
-        <Paper withBorder p="md">
           <Stack>
             <Title order={4}>Neue Partie</Title>
             <MultiSelect
@@ -195,7 +194,6 @@ export function AdminBeerPong() {
               </Button>
             </Group>
           </Stack>
-        </Paper>
       ) : (
         <Button
           leftSection={<IconPlus size={16} />}
@@ -364,7 +362,7 @@ function MatchCard({
   }
 
   return (
-    <Paper withBorder p="md" miw="100vw">
+    <Paper withBorder p="md">
       <Stack gap="md">
         <Group justify="space-between" wrap="wrap">
           <Group>
