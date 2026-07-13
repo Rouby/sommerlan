@@ -106,9 +106,9 @@ export const Route = createRootRoute({
                 <Link to="/games">
                   <Button variant="subtle">Spiele</Button>
                 </Link>
-                <Link to="/beerPong">
+                {false && <Link to="/beerPong">
                   <Button variant="subtle">Bierpong</Button>
-                </Link>
+                </Link>}
                 <Link to="/events">
                   <Button variant="subtle">Events</Button>
                 </Link>
@@ -150,9 +150,9 @@ export const Route = createRootRoute({
               <Link to="/games" activeProps={linkActiveProps}>
                 <NavButton icon={<IconDeviceGamepad />} label="Spiele" />
               </Link>
-              <Link to="/beerPong" activeProps={linkActiveProps}>
+              {false && <Link to="/beerPong" activeProps={linkActiveProps}>
                 <NavButton icon={<IconBeer />} label="Bierpong" />
-              </Link>
+              </Link>}
               <Link to="/events" activeProps={linkActiveProps}>
                 <NavButton icon={<IconCalendar />} label="Events" />
               </Link>
