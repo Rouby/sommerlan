@@ -84,7 +84,9 @@ export type Attending = {
   party: Party;
   rentDues?: Maybe<Scalars["Float"]["output"]>;
   room?: Maybe<RoomStatus>;
+  seatNumber?: Maybe<Scalars["String"]["output"]>;
   user: User;
+  withPc?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type AuthDevice = {
@@ -346,6 +348,7 @@ export type Mutation = {
   setAttendance: Party;
   setGamesPlayed: Attending;
   syncCache?: Maybe<Scalars["Boolean"]["output"]>;
+  updateAttending: Attending;
   updateAuthDevice: AuthDevice;
   updateBeerPongMatch: BeerPongMatch;
   updateBeerPongPlayerStats: BeerPongMatch;
@@ -519,6 +522,11 @@ export type MutationsetGamesPlayedArgs = {
 
 export type MutationsyncCacheArgs = {
   clear?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type MutationupdateAttendingArgs = {
+  input: UpdateAttendingInput;
+  partyId: Scalars["ID"]["input"];
 };
 
 export type MutationupdateAuthDeviceArgs = {
@@ -727,6 +735,11 @@ export type Role = "Admin" | "Bookkeeper" | "Doorkeeper" | "Trusted";
 
 export type RoomStatus = "GRANTED" | "REQUESTED";
 
+export type UpdateAttendingInput = {
+  seatNumber?: InputMaybe<Scalars["String"]["input"]>;
+  withPc?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
 export type UpdateBeerPongMatchInput = {
   isFinished?: InputMaybe<Scalars["Boolean"]["input"]>;
   matchId: Scalars["ID"]["input"];
@@ -883,8 +896,9 @@ export type ResolversTypes = {
   Attending: ResolverTypeWrapper<AttendingMapper>;
   ID: ResolverTypeWrapper<Scalars["ID"]["output"]>;
   Float: ResolverTypeWrapper<Scalars["Float"]["output"]>;
-  AuthDevice: ResolverTypeWrapper<AuthDeviceMapper>;
   String: ResolverTypeWrapper<Scalars["String"]["output"]>;
+  Boolean: ResolverTypeWrapper<Scalars["Boolean"]["output"]>;
+  AuthDevice: ResolverTypeWrapper<AuthDeviceMapper>;
   AuthResponse: ResolverTypeWrapper<AuthResponse>;
   BeerPongGroup: ResolverTypeWrapper<
     Omit<BeerPongGroup, "matches" | "teams"> & {
@@ -910,7 +924,6 @@ export type ResolversTypes = {
       team?: Maybe<ResolversTypes["BeerPongTeam"]>;
     }
   >;
-  Boolean: ResolverTypeWrapper<Scalars["Boolean"]["output"]>;
   BeerPongMatchTeamResultInput: BeerPongMatchTeamResultInput;
   BeerPongPlayerStats: ResolverTypeWrapper<
     Omit<BeerPongPlayerStats, "user"> & { user: ResolversTypes["User"] }
@@ -985,6 +998,7 @@ export type ResolversTypes = {
   Role: ResolverTypeWrapper<"Trusted" | "Admin" | "Doorkeeper" | "Bookkeeper">;
   RoomStatus: ResolverTypeWrapper<"REQUESTED" | "GRANTED">;
   Time: ResolverTypeWrapper<Scalars["Time"]["output"]>;
+  UpdateAttendingInput: UpdateAttendingInput;
   UpdateBeerPongMatchInput: UpdateBeerPongMatchInput;
   UpsertBeerPongTournamentInput: UpsertBeerPongTournamentInput;
   User: ResolverTypeWrapper<UserMapper>;
@@ -1001,8 +1015,9 @@ export type ResolversParentTypes = {
   Attending: AttendingMapper;
   ID: Scalars["ID"]["output"];
   Float: Scalars["Float"]["output"];
-  AuthDevice: AuthDeviceMapper;
   String: Scalars["String"]["output"];
+  Boolean: Scalars["Boolean"]["output"];
+  AuthDevice: AuthDeviceMapper;
   AuthResponse: AuthResponse;
   BeerPongGroup: Omit<BeerPongGroup, "matches" | "teams"> & {
     matches: Array<ResolversParentTypes["BeerPongMatch"]>;
@@ -1019,7 +1034,6 @@ export type ResolversParentTypes = {
   BeerPongMatchTeam: Omit<BeerPongMatchTeam, "team"> & {
     team?: Maybe<ResolversParentTypes["BeerPongTeam"]>;
   };
-  Boolean: Scalars["Boolean"]["output"];
   BeerPongMatchTeamResultInput: BeerPongMatchTeamResultInput;
   BeerPongPlayerStats: Omit<BeerPongPlayerStats, "user"> & {
     user: ResolversParentTypes["User"];
@@ -1078,6 +1092,7 @@ export type ResolversParentTypes = {
     user: ResolversParentTypes["User"];
   };
   Time: Scalars["Time"]["output"];
+  UpdateAttendingInput: UpdateAttendingInput;
   UpdateBeerPongMatchInput: UpdateBeerPongMatchInput;
   UpsertBeerPongTournamentInput: UpsertBeerPongTournamentInput;
   User: UserMapper;
@@ -1135,7 +1150,13 @@ export type AttendingResolvers<
   party?: Resolver<ResolversTypes["Party"], ParentType, ContextType>;
   rentDues?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
   room?: Resolver<Maybe<ResolversTypes["RoomStatus"]>, ParentType, ContextType>;
+  seatNumber?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
   user?: Resolver<ResolversTypes["User"], ParentType, ContextType>;
+  withPc?: Resolver<Maybe<ResolversTypes["Boolean"]>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -1765,6 +1786,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     Partial<MutationsyncCacheArgs>
+  >;
+  updateAttending?: Resolver<
+    ResolversTypes["Attending"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationupdateAttendingArgs, "input" | "partyId">
   >;
   updateAuthDevice?: Resolver<
     ResolversTypes["AuthDevice"],

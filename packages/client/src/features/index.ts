@@ -16,6 +16,7 @@ export * from "./PartyLocation";
 export * from "./PartyOverwatch";
 export * from "./PartyPayment";
 export * from "./PartyRooms";
+export * from "./PartySeatPlan";
 export * from "./Purchases";
 export * from "./SignUp";
 export * from "./UserButton";

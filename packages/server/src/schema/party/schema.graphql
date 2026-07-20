@@ -14,6 +14,8 @@ extend type Mutation {
 
   updateParty(input: PartyInput!): Party!
 
+  updateAttending(partyId: ID!, input: UpdateAttendingInput!): Attending!
+
   addPicture(input: PictureInput!): Picture!
 
   checkIn(userId: ID!): Attending
@@ -108,6 +110,13 @@ type Attending {
   checkIn: DateTime
   checkOut: DateTime
   notificationSent: DateTime
+  withPc: Boolean
+  seatNumber: String
+}
+
+input UpdateAttendingInput {
+  withPc: Boolean
+  seatNumber: String
 }
 
 enum RoomStatus {

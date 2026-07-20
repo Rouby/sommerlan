@@ -51,6 +51,7 @@ import { sendPaymentNotificationToAll as Mutation_sendPaymentNotificationToAll }
 import { setAttendance as Mutation_setAttendance } from "./party/resolvers/Mutation/setAttendance";
 import { setGamesPlayed as Mutation_setGamesPlayed } from "./game/resolvers/Mutation/setGamesPlayed";
 import { syncCache as Mutation_syncCache } from "./admin/resolvers/Mutation/syncCache";
+import { updateAttending as Mutation_updateAttending } from "./party/resolvers/Mutation/updateAttending";
 import { updateAuthDevice as Mutation_updateAuthDevice } from "./user/resolvers/Mutation/updateAuthDevice";
 import { updateBeerPongMatch as Mutation_updateBeerPongMatch } from "./beerPong/resolvers/Mutation/updateBeerPongMatch";
 import { updateBeerPongPlayerStats as Mutation_updateBeerPongPlayerStats } from "./beerPong/resolvers/Mutation/updateBeerPongPlayerStats";
@@ -165,6 +166,7 @@ export const resolvers: Resolvers = {
     setAttendance: Mutation_setAttendance,
     setGamesPlayed: Mutation_setGamesPlayed,
     syncCache: Mutation_syncCache,
+    updateAttending: Mutation_updateAttending,
     updateAuthDevice: Mutation_updateAuthDevice,
     updateBeerPongMatch: Mutation_updateBeerPongMatch,
     updateBeerPongPlayerStats: Mutation_updateBeerPongPlayerStats,
