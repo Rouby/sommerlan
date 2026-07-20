@@ -30,7 +30,7 @@ export class Attending extends Base {
 
   public notificationSent = "";
 
-  public withPc: boolean | null = null;
+  public withPc = false;
 
   public seatNumber = "";
 

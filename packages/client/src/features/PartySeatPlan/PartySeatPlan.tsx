@@ -1,5 +1,4 @@
 import {
-  Badge,
   Box,
   Card,
   Group,
@@ -8,7 +7,13 @@ import {
   Title,
   Tooltip,
 } from "@mantine/core";
-import { IconDeviceDesktop, IconUser } from "@tabler/icons-react";
+import {
+  IconDoorEnter,
+  IconDoorExit,
+  IconSnowflake,
+  IconArmchair,
+  IconDoor,
+} from "@tabler/icons-react";
 import { useAtomValue } from "jotai";
 import { useMutation, useQuery } from "urql";
 import { UserAvatar } from "../../components";
@@ -29,14 +34,16 @@ export function PartySeatPlan() {
           tentative
           registrationDeadline
           seatPlan {
-            numRows
-            numCols
-            seats {
+            width
+            height
+            elements {
               id
+              type
+              x
+              y
+              width
+              height
               label
-              row
-              col
-              section
             }
           }
           attendings {
@@ -91,26 +98,28 @@ export function PartySeatPlan() {
   );
 
   const myCurrentSeat = myAttending.seatNumber || null;
+  const hasPc = myAttending.withPc === true;
 
   function handleSeatClick(seatId: string) {
-    if (!registrationOpen || saving) return;
+    if (!registrationOpen || saving || !hasPc) return;
     const newSeat = myCurrentSeat === seatId ? "" : seatId;
     updateAttending({ partyId: nextParty.id, input: { seatNumber: newSeat } });
   }
 
   const gridWidth =
-    seatPlan.numCols * SEAT_SIZE + (seatPlan.numCols - 1) * SEAT_GAP;
+    seatPlan.width * SEAT_SIZE + (seatPlan.width - 1) * SEAT_GAP;
   const gridHeight =
-    seatPlan.numRows * SEAT_SIZE + (seatPlan.numRows - 1) * SEAT_GAP;
+    seatPlan.height * SEAT_SIZE + (seatPlan.height - 1) * SEAT_GAP;
 
   return (
     <Card withBorder mt="md" p="md" radius="md">
       <Title order={4} mb="xs">
         Sitzplan
       </Title>
-      <Text size="sm" c="dimmed" mb="md">
-        Wähle deinen Wunschplatz. Klicke auf einen freien Platz, um ihn zu
-        reservieren. Dein Platz ist blau markiert.
+      <Text size="sm" c={hasPc ? "dimmed" : "red"} mb="md" fw={hasPc ? undefined : "bold"}>
+        {hasPc
+          ? "Wähle deinen Wunschplatz. Klicke auf einen freien Platz, um ihn zu reservieren. Dein Platz ist blau markiert."
+          : "Nur Teilnehmer mit einem PC können einen Sitzplatz reservieren."}
       </Text>
 
       <Box style={{ overflowX: "auto" }}>
@@ -122,78 +131,160 @@ export function PartySeatPlan() {
             margin: "0 auto",
           }}
         >
-          {seatPlan.seats.map((seat) => {
-            const left = seat.col * (SEAT_SIZE + SEAT_GAP);
-            const top = seat.row * (SEAT_SIZE + SEAT_GAP);
-            const occupant = attendingBySeat.get(seat.id);
-            const isMySeat = myCurrentSeat === seat.id;
-            const isTaken = !!occupant && occupant.user.id !== user.id;
-            const isIsland = seat.section === "ISLAND";
+          {seatPlan.elements.map((element) => {
+            const left = element.x * (SEAT_SIZE + SEAT_GAP);
+            const top = element.y * (SEAT_SIZE + SEAT_GAP);
+            const width = element.width * (SEAT_SIZE + SEAT_GAP) - SEAT_GAP;
+            const height = element.height * (SEAT_SIZE + SEAT_GAP) - SEAT_GAP;
+
+            // If the element is a TABLE, render it as a selectable seat
+            if (element.type === "TABLE") {
+              const occupant = attendingBySeat.get(element.id);
+              const isMySeat = myCurrentSeat === element.id;
+              const isTaken = !!occupant && occupant.user.id !== user.id;
+
+              return (
+                <Tooltip
+                  key={element.id}
+                  label={
+                    occupant
+                      ? false
+                      : `Platz ${element.label || element.id} (frei)`
+                  }
+                  withArrow
+                  hidden={Boolean(occupant)}
+                >
+                  <Card
+                    withBorder
+                    p={4}
+                    radius="sm"
+                    style={{
+                      position: "absolute",
+                      left,
+                      top,
+                      width,
+                      height,
+                      cursor:
+                        isTaken || (!registrationOpen && !isMySeat) || !hasPc
+                          ? "default"
+                          : "pointer",
+                      opacity: saving ? 0.6 : 1,
+                      backgroundColor: occupant ? "var(--mantine-color-gray-7)" : "var(--mantine-color-body)",
+                      borderColor: isMySeat
+                        ? "var(--mantine-color-blue-5)"
+                        : undefined,
+                      borderWidth: isMySeat ? 4 : undefined,
+                      transition: "background-color 0.15s, border-color 0.15s",
+                      zIndex: 3,
+                    }}
+                    onClick={() => !isTaken && handleSeatClick(element.id)}
+                  >
+                    <Stack align="center" justify="center" gap={2} h="100%">
+                      <Text size="xs" fw="bold" c={occupant ? "red" : "dimmed"} lh={1}>
+                        {element.label || element.id}
+                      </Text>
+                      {occupant ? (
+                        <UserAvatar user={occupant.user} size={32} />
+                      ) : (
+                        <Box
+                          style={{
+                            width: 32,
+                            height: 32,
+                            borderRadius: "50%",
+                            border: "2px dashed var(--mantine-color-gray-4)",
+                        }}
+                      />
+                      )}
+                    </Stack>
+                  </Card>
+                </Tooltip>
+              );
+            }
+
+            // Static/decorative room elements
+            let bg = "var(--mantine-color-gray-1)";
+            let border = "1px solid var(--mantine-color-gray-3)";
+            let borderRadius = "md";
+            let icon = null;
+            let textColor = "var(--mantine-color-text)";
+
+            switch (element.type) {
+              case "COLUMN":
+                bg = "var(--mantine-color-gray-5)";
+                border = "2px solid var(--mantine-color-gray-7)";
+                borderRadius = "50%";
+                break;
+              case "FRIDGE":
+                bg = "var(--mantine-color-cyan-0)";
+                border = "2px solid var(--mantine-color-cyan-2)";
+                borderRadius = "sm";
+                icon = <IconSnowflake size={18} style={{ color: "var(--mantine-color-cyan-6)" }} />;
+                break;
+              case "ENTRANCE":
+                bg = "var(--mantine-color-green-0)";
+                border = "2px dashed var(--mantine-color-green-3)";
+                borderRadius = "sm";
+                icon = <IconDoorEnter size={18} style={{ color: "var(--mantine-color-green-6)" }} />;
+                break;
+              case "EXIT":
+                bg = "var(--mantine-color-red-0)";
+                border = "2px dashed var(--mantine-color-red-3)";
+                borderRadius = "sm";
+                icon = <IconDoorExit size={18} style={{ color: "var(--mantine-color-red-6)" }} />;
+                break;
+              case "COUCH":
+                bg = "var(--mantine-color-grape-0)";
+                border = "2px solid var(--mantine-color-grape-2)";
+                borderRadius = "md";
+                icon = <IconArmchair size={18} style={{ color: "var(--mantine-color-grape-6)" }} />;
+                break;
+              case "DOOR":
+                bg = "var(--mantine-color-gray-2)";
+                border = "2px solid var(--mantine-color-gray-4)";
+                borderRadius = "none";
+                icon = <IconDoor size={18} style={{ color: "var(--mantine-color-gray-6)" }} />;
+                break;
+              default:
+                break;
+            }
 
             return (
-              <Tooltip
-                key={seat.id}
-                label={
-                  occupant
-                    ? `${occupant.user.displayName}${occupant.withPc === true ? " (mit PC)" : occupant.withPc === false ? " (ohne PC)" : ""}`
-                    : `Platz ${seat.label} (frei)`
-                }
-                withArrow
-              >
-                <Card
-                  withBorder
-                  p={4}
-                  radius="sm"
+              <Tooltip key={element.id} label={element.label || element.type} withArrow>
+                <Box
                   style={{
                     position: "absolute",
                     left,
                     top,
-                    width: SEAT_SIZE,
-                    height: SEAT_SIZE,
-                    cursor:
-                      isTaken || (!registrationOpen && !isMySeat)
-                        ? "default"
-                        : "pointer",
-                    opacity: saving ? 0.6 : 1,
-                    backgroundColor: isMySeat
-                      ? "var(--mantine-color-blue-1)"
-                      : isIsland
-                        ? "var(--mantine-color-violet-0)"
-                        : undefined,
-                    borderColor: isMySeat
-                      ? "var(--mantine-color-blue-5)"
-                      : isIsland
-                        ? "var(--mantine-color-violet-4)"
-                        : undefined,
-                    transition: "background-color 0.15s, border-color 0.15s",
+                    width,
+                    height,
+                    backgroundColor: bg,
+                    border,
+                    borderRadius,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: 4,
+                    zIndex: 2,
                   }}
-                  onClick={() => !isTaken && handleSeatClick(seat.id)}
                 >
-                  <Stack align="center" justify="center" gap={2} h="100%">
-                    <Text size="xs" fw="bold" c="dimmed" lh={1}>
-                      {seat.label}
+                  {icon}
+                  {element.label && element.type !== "COLUMN" && (
+                    <Text
+                      size="xs"
+                      fw="bold"
+                      c={textColor}
+                      style={{
+                        textAlign: "center",
+                        lineHeight: 1.1,
+                        marginTop: icon ? 2 : 0,
+                        fontSize: "11px",
+                      }}
+                    >
+                      {element.label}
                     </Text>
-                    {occupant ? (
-                      <>
-                        <UserAvatar user={occupant.user} size={32} />
-                        {occupant.withPc === true ? (
-                          <IconDeviceDesktop size={14} />
-                        ) : occupant.withPc === false ? (
-                          <IconUser size={14} />
-                        ) : null}
-                      </>
-                    ) : (
-                      <Box
-                        style={{
-                          width: 32,
-                          height: 32,
-                          borderRadius: "50%",
-                          border: "2px dashed var(--mantine-color-gray-4)",
-                        }}
-                      />
-                    )}
-                  </Stack>
-                </Card>
+                  )}
+                </Box>
               </Tooltip>
             );
           })}
@@ -207,7 +298,7 @@ export function PartySeatPlan() {
               width: 16,
               height: 16,
               borderRadius: 4,
-              backgroundColor: "var(--mantine-color-blue-1)",
+              backgroundColor: "var(--mantine-color-body)",
               border: "2px solid var(--mantine-color-blue-5)",
             }}
           />
@@ -235,24 +326,6 @@ export function PartySeatPlan() {
           />
           <Text size="sm">Frei</Text>
         </Group>
-        <Group gap="xs">
-          <Box
-            style={{
-              width: 16,
-              height: 16,
-              borderRadius: 4,
-              backgroundColor: "var(--mantine-color-violet-0)",
-              border: "2px solid var(--mantine-color-violet-4)",
-            }}
-          />
-          <Text size="sm">Insel</Text>
-        </Group>
-        <Badge leftSection={<IconDeviceDesktop size={12} />} color="blue" variant="light">
-          Mit PC
-        </Badge>
-        <Badge leftSection={<IconUser size={12} />} color="gray" variant="light">
-          Ohne PC
-        </Badge>
       </Group>
     </Card>
   );
