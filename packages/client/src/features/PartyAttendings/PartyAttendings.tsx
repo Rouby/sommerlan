@@ -62,9 +62,20 @@ export function PartyAttendings() {
       ) {
         setAttendance(partyId: $partyId, dates: $dates, userId: $userId) {
           id
+          rentalCostPerDay
+          billableDaysCount
+          dayBreakdown {
+            date
+            isBillable
+            rentalCost
+            participantsCount
+            costPerParticipant
+          }
           attendings {
             id
             dates
+            rentDues
+            feedingDues
           }
         }
       }
@@ -75,9 +86,20 @@ export function PartyAttendings() {
       mutation removeAttendance($partyId: ID!) {
         removeAttendance(partyId: $partyId) {
           id
+          rentalCostPerDay
+          billableDaysCount
+          dayBreakdown {
+            date
+            isBillable
+            rentalCost
+            participantsCount
+            costPerParticipant
+          }
           attendings {
             id
             dates
+            rentDues
+            feedingDues
           }
         }
       }

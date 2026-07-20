@@ -3,14 +3,18 @@ import { GraphQLError } from "graphql";
 import { expectedOrigin } from "../../../../env";
 import { sendDiscordMessage } from "../../../../services";
 import type { MutationResolvers } from "./../../../types.generated";
+import { calculatePartyCosts } from "../../partyCosts";
+
 export const sendPaymentNotificationToAll: NonNullable<MutationResolvers['sendPaymentNotificationToAll']> = async (_parent, _arg, ctx) => {
   const party = await ctx.data.Party.findLatestParty();
 
-  if (!party?.finalCostPerDay) {
-    throw new GraphQLError("No party found");
+  if (!party || !party.payday) {
+    throw new GraphQLError("Zahlungsfrist (Payday) ist noch nicht gesetzt.");
   }
 
   const attendings = await ctx.data.Attending.filterByPartyId(party?.id);
+  const allDonations = await ctx.data.Donation.filterByPartyId(party.id);
+  const costs = calculatePartyCosts(party, attendings, allDonations);
 
   for (const attending of attendings) {
     if (attending.paidDues) {
@@ -20,6 +24,11 @@ export const sendPaymentNotificationToAll: NonNullable<MutationResolvers['sendPa
     const user = await ctx.data.User.findById(attending.userId);
 
     if (!user) {
+      continue;
+    }
+
+    const userCosts = costs.duesByAttendingId[attending.id];
+    if (!userCosts) {
       continue;
     }
 
@@ -46,7 +55,7 @@ export const sendPaymentNotificationToAll: NonNullable<MutationResolvers['sendPa
               },
               {
                 name: "Dein Beitrag",
-                value: `${attending.rentDues(party.finalCostPerDay)} €`,
+                value: `Miete: ${userCosts.rentDues} €\nVerpflegung: ${userCosts.feedingDues} €` + (userCosts.totalDonations > 0 ? `\nSpende: ${userCosts.totalDonations} €` : "") + `\n**Gesamt: ${userCosts.totalDues} €**`,
               },
               {
                 name: "Zahlbar bis",

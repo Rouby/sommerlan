@@ -74,9 +74,20 @@ export function PartyInfo({ id }: { id: string }) {
       mutation setAttendance($partyId: ID!, $dates: [Date!]!) {
         setAttendance(partyId: $partyId, dates: $dates) {
           id
+          rentalCostPerDay
+          billableDaysCount
+          dayBreakdown {
+            date
+            isBillable
+            rentalCost
+            participantsCount
+            costPerParticipant
+          }
           attendings {
             id
             dates
+            rentDues
+            feedingDues
           }
         }
       }

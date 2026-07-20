@@ -19,7 +19,6 @@ export function AdminPartyPayments() {
       query NextPartyBudget {
         nextParty {
           id
-          costPerDay
           donations {
             id
             donator {
@@ -34,6 +33,7 @@ export function AdminPartyPayments() {
             id
             dates
             rentDues
+            feedingDues
             paidDues
             notificationSent
             user {
@@ -72,14 +72,14 @@ export function AdminPartyPayments() {
   return (
     <Box p="sm">
       <Text mb="md">
-        Kosten pro Tag: {formatCurrency(data?.nextParty?.costPerDay ?? 0)} (der
-        erste Tag ist immer umsonst).
+        Mietkosten und Verpflegungskosten werden taggenau bzw. anteilig berechnet (der erste und letzte Tag sind kostenlos).
       </Text>
       <Table>
         <Table.Thead>
           <Table.Tr>
             <Table.Th>Nutzer</Table.Th>
             <Table.Th>Miete</Table.Th>
+            <Table.Th>Verpflegung</Table.Th>
             <Table.Th>Spenden</Table.Th>
             <Table.Th>Gesamt</Table.Th>
             <Table.Th>Bezahlt</Table.Th>
@@ -89,7 +89,7 @@ export function AdminPartyPayments() {
           {data?.nextParty?.attendings
             .filter(
               (attending) =>
-                attending.dates.length > 1 ||
+                attending.dates.length > 0 ||
                 data.nextParty?.donations.some(
                   (donation) => donation.donator?.id === attending.user.id,
                 ),
@@ -102,6 +102,7 @@ export function AdminPartyPayments() {
                 ...attending,
 
                 rentDues: attending.rentDues ?? 0,
+                feedingDues: attending.feedingDues ?? 0,
 
                 rentDonationSum:
                   donations
@@ -114,35 +115,36 @@ export function AdminPartyPayments() {
                     ?.reduce((acc, donation) => acc + donation.amount, 0) ?? 0,
               };
             })
-            .sort((a, b) =>
-              // sort first by who paid up, second by amount to be paid
-              a.paidDues >= a.rentDues + a.rentDonationSum
-                ? -1
-                : b.paidDues >= b.rentDues + b.rentDonationSum
-                  ? 1
-                  : a.rentDues + a.rentDonationSum - a.paidDues >
-                      b.rentDues + b.rentDonationSum - b.paidDues
-                    ? -1
-                    : 1,
-            )
+            .sort((a, b) => {
+              const aTotal = a.rentDues + a.feedingDues + a.rentDonationSum + a.otherDonationSum;
+              const bTotal = b.rentDues + b.feedingDues + b.rentDonationSum + b.otherDonationSum;
+              const aPaid = a.paidDues >= a.rentDues + a.feedingDues + a.rentDonationSum;
+              const bPaid = b.paidDues >= b.rentDues + b.feedingDues + b.rentDonationSum;
+
+              if (aPaid && !bPaid) return -1;
+              if (!aPaid && bPaid) return 1;
+
+              const aOutstanding = aTotal - a.paidDues;
+              const bOutstanding = bTotal - b.paidDues;
+              return bOutstanding - aOutstanding;
+            })
             .map((attending) => {
+              const totalDues = attending.rentDues + attending.feedingDues + attending.rentDonationSum + attending.otherDonationSum;
+              const paidUpLimit = attending.rentDues + attending.feedingDues + attending.rentDonationSum;
               return (
                 <Table.Tr key={attending.id}>
                   <Table.Td>
                     <UserAvatar user={attending.user} showName />
                   </Table.Td>
                   <Table.Td>{formatCurrency(attending.rentDues)}</Table.Td>
+                  <Table.Td>{formatCurrency(attending.feedingDues)}</Table.Td>
                   <Table.Td>
                     {formatCurrency(
                       attending.rentDonationSum + attending.otherDonationSum,
                     )}
                   </Table.Td>
                   <Table.Td>
-                    {formatCurrency(
-                      attending.rentDues +
-                        attending.rentDonationSum +
-                        attending.otherDonationSum,
-                    )}
+                    {formatCurrency(totalDues)}
                   </Table.Td>
                   <Table.Td>
                     <Group>
@@ -150,8 +152,7 @@ export function AdminPartyPayments() {
                         id={attending.id}
                         paidDues={attending.paidDues}
                       />
-                      {attending.paidDues >=
-                      attending.rentDues + attending.rentDonationSum ? (
+                      {attending.paidDues >= paidUpLimit ? (
                         <IconCheckbox color="green" size="18" />
                       ) : (
                         <IconClockDollar size="18" />

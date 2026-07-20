@@ -26,11 +26,12 @@ export function PartyPayment() {
       query PartyPaymentInfo {
         nextParty {
           id
-          costPerDay
           payday
           attendings {
             id
             dates
+            rentDues
+            feedingDues
             paidDues
             user {
               id
@@ -118,9 +119,9 @@ export function PartyPayment() {
     );
   }
 
-  // Calculate costs
-  const myDaysAttending = Math.max(0, myAttending.dates.length - 1); // First day is free
-  const myRentDues = myDaysAttending * party.costPerDay;
+  // Retrieve calculated dues from the backend
+  const myRentDues = myAttending.rentDues ?? 0;
+  const myFeedingDues = myAttending.feedingDues ?? 0;
 
   // Calculate donations made by this user
   const myDonations = party.donations
@@ -128,7 +129,7 @@ export function PartyPayment() {
     .reduce((acc, donation) => acc + donation.amount, 0);
 
   // Total amount to pay
-  const totalDues = myRentDues + myDonations;
+  const totalDues = myRentDues + myFeedingDues + myDonations;
 
   // Amount already paid
   const alreadyPaid = myAttending.paidDues || 0;
@@ -174,18 +175,18 @@ export function PartyPayment() {
           <Group justify="space-between">
             <Text fw="bold">Days attending:</Text>
             <Text>
-              {myAttending.dates.length} days ({myDaysAttending} billable days)
+              {myAttending.dates.length} days
             </Text>
           </Group>
 
           <Group justify="space-between">
-            <Text fw="bold">Cost per day:</Text>
-            <Text>{formatCurrency(party.costPerDay)}</Text>
+            <Text fw="bold">Rental costs share:</Text>
+            <Text>{formatCurrency(myRentDues)}</Text>
           </Group>
 
           <Group justify="space-between">
-            <Text fw="bold">Rental costs:</Text>
-            <Text>{formatCurrency(myRentDues)}</Text>
+            <Text fw="bold">Feeding costs share:</Text>
+            <Text>{formatCurrency(myFeedingDues)}</Text>
           </Group>
 
           {myDonations > 0 && (

@@ -1,4 +1,8 @@
-import type { PartyResolvers, SeatPlanElementType } from "./../../types.generated";
+import type {
+  PartyResolvers,
+  SeatPlanElementType,
+} from "./../../types.generated";
+import { calculatePartyCosts } from "../partyCosts";
 
 /**
  * Visual layout template string using fitting emojis.
@@ -35,7 +39,9 @@ function parseVisualLayout(template: string) {
     .filter((line) => line.length > 0);
 
   // Parse each line character by character (supports surrogate pair emojis), filtering out whitespace
-  const grid = lines.map((line) => Array.from(line).filter((char) => !/\s/.test(char)));
+  const grid = lines.map((line) =>
+    Array.from(line).filter((char) => !/\s/.test(char)),
+  );
   const height = grid.length;
   const width = Math.max(...grid.map((row) => row.length));
 
@@ -142,14 +148,16 @@ function parseVisualLayout(template: string) {
         let type: SeatPlanElementType = "TABLE";
         let label: string | null = null;
 
-        if (token === "🏛") { // Stripped column emoji
+        if (token === "🏛") {
+          // Stripped column emoji
           type = "COLUMN";
           label = "Säule";
           x = x + 0.25;
           y = y + 0.25;
           w = 0.5;
           h = 0.5;
-        } else if (token === "❄") { // Stripped fridge emoji
+        } else if (token === "❄") {
+          // Stripped fridge emoji
           type = "FRIDGE";
           label = "Kühlschrank";
         } else if (token === "🚪") {
@@ -170,7 +178,8 @@ function parseVisualLayout(template: string) {
           y = y + 0.1;
           w = 0.8;
           h = 0.8;
-        } else if (token === "🛋") { // Stripped couch emoji
+        } else if (token === "🛋") {
+          // Stripped couch emoji
           type = "COUCH";
           label = "Sofa";
         }
@@ -197,8 +206,33 @@ function parseVisualLayout(template: string) {
 
 const SEAT_PLAN = parseVisualLayout(LAYOUT_TEMPLATE);
 
-
-export const Party: Pick<PartyResolvers, 'attending' | 'attendings' | 'costPerDay' | 'endDate' | 'feedingCosts' | 'id' | 'latitude' | 'location' | 'locationWidgetSrc' | 'longitude' | 'paidDues' | 'payday' | 'pictures' | 'registrationDeadline' | 'rentalCosts' | 'roomsAvailable' | 'seatPlan' | 'seatsAvailable' | 'startDate' | 'tentative' | '__isTypeOf'> = {
+export const Party: Pick<
+  PartyResolvers,
+  | "attending"
+  | "attendings"
+  | "billableDaysCount"
+  | "costPerDay"
+  | "dayBreakdown"
+  | "endDate"
+  | "feedingCosts"
+  | "id"
+  | "latitude"
+  | "location"
+  | "locationWidgetSrc"
+  | "longitude"
+  | "paidDues"
+  | "payday"
+  | "pictures"
+  | "registrationDeadline"
+  | "rentalCostPerDay"
+  | "rentalCosts"
+  | "roomsAvailable"
+  | "seatPlan"
+  | "seatsAvailable"
+  | "startDate"
+  | "tentative"
+  | "__isTypeOf"
+> = {
   attendings: async (parent, _arg, ctx) => {
     return ctx.data.Attending.filterByPartyId(parent.id);
   },
@@ -226,26 +260,30 @@ export const Party: Pick<PartyResolvers, 'attending' | 'attendings' | 'costPerDa
   },
   costPerDay: async (parent, _arg, ctx) => {
     const attendings = await ctx.data.Attending.filterByPartyId(parent.id);
-    const daysWithAttending = attendings.reduce(
-      (acc, attending) => acc + Math.max(attending.dates.length - 1, 0),
-      0,
-    );
     const donations = await ctx.data.Donation.filterByPartyId(parent.id);
-    const donationsForRent = donations
-      .filter((donation) => donation.dedication === "rent")
-      .reduce((acc, donation) => acc + donation.amount, 0);
-
-    if (daysWithAttending === 0) {
-      return 0;
-    }
-
-    return (
-      (parent.rentalCosts + parent.feedingCosts - donationsForRent) /
-      daysWithAttending
-    );
+    const costs = calculatePartyCosts(parent, attendings, donations);
+    return costs.rentalCostPerDay;
   },
   seatPlan: () => SEAT_PLAN,
   seatsAvailable: () => {
     return SEAT_PLAN.elements.filter((el) => el.type === "TABLE").length;
+  },
+  billableDaysCount: async (parent, _arg, ctx) => {
+    const attendings = await ctx.data.Attending.filterByPartyId(parent.id);
+    const donations = await ctx.data.Donation.filterByPartyId(parent.id);
+    const costs = calculatePartyCosts(parent, attendings, donations);
+    return costs.billableDaysCount;
+  },
+  dayBreakdown: async (parent, _arg, ctx) => {
+    const attendings = await ctx.data.Attending.filterByPartyId(parent.id);
+    const donations = await ctx.data.Donation.filterByPartyId(parent.id);
+    const costs = calculatePartyCosts(parent, attendings, donations);
+    return costs.dayBreakdown;
+  },
+  rentalCostPerDay: async (parent, _arg, ctx) => {
+    const attendings = await ctx.data.Attending.filterByPartyId(parent.id);
+    const donations = await ctx.data.Donation.filterByPartyId(parent.id);
+    const costs = calculatePartyCosts(parent, attendings, donations);
+    return costs.rentalCostPerDay;
   },
 };

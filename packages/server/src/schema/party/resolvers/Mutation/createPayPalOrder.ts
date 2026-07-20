@@ -1,6 +1,8 @@
 import { ForbiddenError } from "@casl/ability";
 import { createPayPalOrder as createOrder } from "../../../../services";
 import type { MutationResolvers } from "./../../../types.generated";
+import { calculatePartyCosts } from "../../partyCosts";
+
 export const createPayPalOrder: NonNullable<MutationResolvers['createPayPalOrder']> = async (_parent, _arg, ctx) => {
   ForbiddenError.from(ctx.ability).throwUnlessCan("payWithPayPal", "Party");
 
@@ -19,22 +21,10 @@ export const createPayPalOrder: NonNullable<MutationResolvers['createPayPalOrder
     throw new Error("Attending not found");
   }
 
-  const donations = await ctx.data.Donation.filter(
-    (d) => d.partyId === party.id && d.userId === ctx.jwt.user.id,
-  );
-
-  // Calculate costs
-  const daysAttending = Math.max(0, attending.dates.length - 1); // First day is free
-  const rentDues = daysAttending * (party.finalCostPerDay || 0);
-
-  // Calculate donations made by this user
-  const donationSum = donations.reduce(
-    (acc, donation) => acc + donation.amount,
-    0,
-  );
-
-  // Total amount to pay
-  const totalDues = rentDues + donationSum;
+  const allDonations = await ctx.data.Donation.filterByPartyId(party.id);
+  const attendings = await ctx.data.Attending.filterByPartyId(party.id);
+  const costs = calculatePartyCosts(party, attendings, allDonations);
+  const totalDues = costs.duesByAttendingId[attending.id]?.totalDues ?? 0;
 
   const order = await createOrder(totalDues);
 

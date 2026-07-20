@@ -49,8 +49,19 @@ type Party @rbac {
   registrationDeadline: Date
   payday: Date
   costPerDay: Float!
+  rentalCostPerDay: Float!
+  billableDaysCount: Int!
+  dayBreakdown: [PartyDayBreakdown!]!
   paidDues: Float
   seatPlan: SeatPlan!
+}
+
+type PartyDayBreakdown {
+  date: String!
+  isBillable: Boolean!
+  rentalCost: Float!
+  participantsCount: Int!
+  costPerParticipant: Float!
 }
 enum SeatPlanElementType {
   TABLE
@@ -137,6 +148,8 @@ type Attending {
   room: RoomStatus
   applicationDate: Date!
   rentDues: Float
+  feedingDues: Float
+  totalDues: Float
   paidDues: Float!
   checkIn: DateTime
   checkOut: DateTime

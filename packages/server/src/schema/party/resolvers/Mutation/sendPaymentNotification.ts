@@ -3,11 +3,13 @@ import { GraphQLError } from "graphql";
 import { expectedOrigin } from "../../../../env";
 import { sendDiscordMessage } from "../../../../services";
 import type { MutationResolvers } from "./../../../types.generated";
+import { calculatePartyCosts } from "../../partyCosts";
+
 export const sendPaymentNotification: NonNullable<MutationResolvers['sendPaymentNotification']> = async (_parent, { userId }, ctx) => {
   const party = await ctx.data.Party.findLatestParty();
 
-  if (!party?.finalCostPerDay) {
-    throw new GraphQLError("No party found");
+  if (!party || !party.payday) {
+    throw new GraphQLError("Zahlungsfrist (Payday) ist noch nicht gesetzt.");
   }
 
   const attending = await ctx.data.Attending.findByPartyIdAndUserId(
@@ -19,10 +21,6 @@ export const sendPaymentNotification: NonNullable<MutationResolvers['sendPayment
     throw new GraphQLError("No attending found");
   }
 
-  // if (attending.notificationSent) {
-  //   throw new GraphQLError("Notification already sent");
-  // }
-
   if (attending.paidDues) {
     throw new GraphQLError("User already paid dues");
   }
@@ -31,6 +29,15 @@ export const sendPaymentNotification: NonNullable<MutationResolvers['sendPayment
 
   if (!user) {
     throw new GraphQLError("User not found");
+  }
+
+  const allDonations = await ctx.data.Donation.filterByPartyId(party.id);
+  const attendings = await ctx.data.Attending.filterByPartyId(party.id);
+  const costs = calculatePartyCosts(party, attendings, allDonations);
+  const userCosts = costs.duesByAttendingId[attending.id];
+
+  if (!userCosts) {
+    throw new GraphQLError("No costs found for attending");
   }
 
   if (user.discordUserId) {
@@ -56,7 +63,7 @@ export const sendPaymentNotification: NonNullable<MutationResolvers['sendPayment
             },
             {
               name: "Dein Beitrag",
-              value: `${attending.rentDues(party.finalCostPerDay)} €`,
+              value: `Miete: ${userCosts.rentDues} €\nVerpflegung: ${userCosts.feedingDues} €` + (userCosts.totalDonations > 0 ? `\nSpende: ${userCosts.totalDonations} €` : "") + `\n**Gesamt: ${userCosts.totalDues} €**`,
             },
             {
               name: "Zahlbar bis",

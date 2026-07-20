@@ -1,6 +1,24 @@
 import * as dayjs from "dayjs";
 import type { AttendingResolvers } from "./../../types.generated";
-export const Attending: Pick<AttendingResolvers, 'applicationDate'|'checkIn'|'checkOut'|'dates'|'id'|'notificationSent'|'paidDues'|'party'|'rentDues'|'room'|'seatNumber'|'withPc'|'__isTypeOf'> = {
+import { calculatePartyCosts } from "../partyCosts";
+export const Attending: Pick<
+  AttendingResolvers,
+  | "applicationDate"
+  | "checkIn"
+  | "checkOut"
+  | "dates"
+  | "feedingDues"
+  | "id"
+  | "notificationSent"
+  | "paidDues"
+  | "party"
+  | "rentDues"
+  | "room"
+  | "seatNumber"
+  | "totalDues"
+  | "withPc"
+  | "__isTypeOf"
+> = {
   /* Implement Attending resolver logic here */
   party: async (parent, _arg, ctx) => {
     const party = await ctx.data.Party.findById(parent.partyId);
@@ -33,17 +51,32 @@ export const Attending: Pick<AttendingResolvers, 'applicationDate'|'checkIn'|'ch
   },
   rentDues: async (parent, _arg, ctx) => {
     const party = await ctx.data.Party.findById(parent.partyId);
-
-    if (!party?.finalCostPerDay) {
-      return null;
-    }
-
-    return parent.rentDues(party.finalCostPerDay);
+    if (!party) return null;
+    const attendings = await ctx.data.Attending.filterByPartyId(party.id);
+    const donations = await ctx.data.Donation.filterByPartyId(party.id);
+    const costs = calculatePartyCosts(party, attendings, donations);
+    return costs.duesByAttendingId[parent.id]?.rentDues ?? 0;
   },
   withPc: (parent) => {
     return parent.withPc ?? null;
   },
   seatNumber: (parent) => {
     return parent.seatNumber || null;
-  }
+  },
+  feedingDues: async (parent, _arg, ctx) => {
+    const party = await ctx.data.Party.findById(parent.partyId);
+    if (!party) return null;
+    const attendings = await ctx.data.Attending.filterByPartyId(party.id);
+    const donations = await ctx.data.Donation.filterByPartyId(party.id);
+    const costs = calculatePartyCosts(party, attendings, donations);
+    return costs.duesByAttendingId[parent.id]?.feedingDues ?? 0;
+  },
+  totalDues: async (parent, _arg, ctx) => {
+    const party = await ctx.data.Party.findById(parent.partyId);
+    if (!party) return null;
+    const attendings = await ctx.data.Attending.filterByPartyId(party.id);
+    const donations = await ctx.data.Donation.filterByPartyId(party.id);
+    const costs = calculatePartyCosts(party, attendings, donations);
+    return costs.duesByAttendingId[parent.id]?.totalDues ?? 0;
+  },
 };

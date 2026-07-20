@@ -10,6 +10,7 @@ type Attending {
   checkIn: DateTime
   checkOut: DateTime
   dates: [Date!]!
+  feedingDues: Float
   gamesPlayed: [Game!]!
   id: ID!
   notificationSent: DateTime
@@ -18,6 +19,7 @@ type Attending {
   rentDues: Float
   room: RoomStatus
   seatNumber: String
+  totalDues: Float
   user: User!
   withPc: Boolean
 }
@@ -318,7 +320,9 @@ type Mutation {
 type Party {
   attending(userId: ID): Attending
   attendings: [Attending!]!
+  billableDaysCount: Int!
   costPerDay: Float!
+  dayBreakdown: [PartyDayBreakdown!]!
   donations: [Donation!]!
   endDate: Date!
   events: [Event!]!
@@ -333,12 +337,21 @@ type Party {
   payday: Date
   pictures: [Picture!]!
   registrationDeadline: Date
+  rentalCostPerDay: Float!
   rentalCosts: Float!
   roomsAvailable: Int!
   seatPlan: SeatPlan!
   seatsAvailable: Int!
   startDate: Date!
   tentative: Boolean!
+}
+
+type PartyDayBreakdown {
+  costPerParticipant: Float!
+  date: String!
+  isBillable: Boolean!
+  participantsCount: Int!
+  rentalCost: Float!
 }
 
 input PartyInput {

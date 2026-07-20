@@ -92,6 +92,7 @@ import { Party as party_Party } from "./party/resolvers/Party";
 import { Party as donation_Party } from "./donation/resolvers/Party";
 import { Party as events_Party } from "./events/resolvers/Party";
 import { Party as game_Party } from "./game/resolvers/Party";
+import { PartyDayBreakdown } from "./party/resolvers/PartyDayBreakdown";
 import { Picture } from "./party/resolvers/Picture";
 import { PictureMeta } from "./party/resolvers/PictureMeta";
 import { PictureTag } from "./party/resolvers/PictureTag";
@@ -206,6 +207,7 @@ export const resolvers: Resolvers = {
   LoginResponse: LoginResponse,
   MoneyTransfer: MoneyTransfer,
   Party: { ...party_Party, ...donation_Party, ...events_Party, ...game_Party },
+  PartyDayBreakdown: PartyDayBreakdown,
   Picture: Picture,
   PictureMeta: PictureMeta,
   PictureTag: PictureTag,

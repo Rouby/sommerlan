@@ -77,6 +77,7 @@ export type Attending = {
   checkIn?: Maybe<Scalars["DateTime"]["output"]>;
   checkOut?: Maybe<Scalars["DateTime"]["output"]>;
   dates: Array<Scalars["Date"]["output"]>;
+  feedingDues?: Maybe<Scalars["Float"]["output"]>;
   gamesPlayed: Array<Game>;
   id: Scalars["ID"]["output"];
   notificationSent?: Maybe<Scalars["DateTime"]["output"]>;
@@ -85,6 +86,7 @@ export type Attending = {
   rentDues?: Maybe<Scalars["Float"]["output"]>;
   room?: Maybe<RoomStatus>;
   seatNumber?: Maybe<Scalars["String"]["output"]>;
+  totalDues?: Maybe<Scalars["Float"]["output"]>;
   user: User;
   withPc?: Maybe<Scalars["Boolean"]["output"]>;
 };
@@ -588,7 +590,9 @@ export type Party = {
   __typename?: "Party";
   attending?: Maybe<Attending>;
   attendings: Array<Attending>;
+  billableDaysCount: Scalars["Int"]["output"];
   costPerDay: Scalars["Float"]["output"];
+  dayBreakdown: Array<PartyDayBreakdown>;
   donations: Array<Donation>;
   endDate: Scalars["Date"]["output"];
   events: Array<Event>;
@@ -603,6 +607,7 @@ export type Party = {
   payday?: Maybe<Scalars["Date"]["output"]>;
   pictures: Array<Picture>;
   registrationDeadline?: Maybe<Scalars["Date"]["output"]>;
+  rentalCostPerDay: Scalars["Float"]["output"];
   rentalCosts: Scalars["Float"]["output"];
   roomsAvailable: Scalars["Int"]["output"];
   seatPlan: SeatPlan;
@@ -613,6 +618,15 @@ export type Party = {
 
 export type PartyattendingArgs = {
   userId?: InputMaybe<Scalars["ID"]["input"]>;
+};
+
+export type PartyDayBreakdown = {
+  __typename?: "PartyDayBreakdown";
+  costPerParticipant: Scalars["Float"]["output"];
+  date: Scalars["String"]["output"];
+  isBillable: Scalars["Boolean"]["output"];
+  participantsCount: Scalars["Int"]["output"];
+  rentalCost: Scalars["Float"]["output"];
 };
 
 export type PartyInput = {
@@ -928,8 +942,8 @@ export type ResolversTypes = {
     }
   >;
   Attending: ResolverTypeWrapper<AttendingMapper>;
-  ID: ResolverTypeWrapper<Scalars["ID"]["output"]>;
   Float: ResolverTypeWrapper<Scalars["Float"]["output"]>;
+  ID: ResolverTypeWrapper<Scalars["ID"]["output"]>;
   String: ResolverTypeWrapper<Scalars["String"]["output"]>;
   Boolean: ResolverTypeWrapper<Scalars["Boolean"]["output"]>;
   AuthDevice: ResolverTypeWrapper<AuthDeviceMapper>;
@@ -996,6 +1010,7 @@ export type ResolversTypes = {
   MoneyTransfer: ResolverTypeWrapper<MoneyTransferMapper>;
   Mutation: ResolverTypeWrapper<{}>;
   Party: ResolverTypeWrapper<PartyMapper>;
+  PartyDayBreakdown: ResolverTypeWrapper<PartyDayBreakdown>;
   PartyInput: PartyInput;
   Picture: ResolverTypeWrapper<PictureMapper>;
   PictureInput: PictureInput;
@@ -1067,8 +1082,8 @@ export type ResolversParentTypes = {
     game: ResolversParentTypes["Game"];
   };
   Attending: AttendingMapper;
-  ID: Scalars["ID"]["output"];
   Float: Scalars["Float"]["output"];
+  ID: Scalars["ID"]["output"];
   String: Scalars["String"]["output"];
   Boolean: Scalars["Boolean"]["output"];
   AuthDevice: AuthDeviceMapper;
@@ -1123,6 +1138,7 @@ export type ResolversParentTypes = {
   MoneyTransfer: MoneyTransferMapper;
   Mutation: {};
   Party: PartyMapper;
+  PartyDayBreakdown: PartyDayBreakdown;
   PartyInput: PartyInput;
   Picture: PictureMapper;
   PictureInput: PictureInput;
@@ -1193,6 +1209,11 @@ export type AttendingResolvers<
     ContextType
   >;
   dates?: Resolver<Array<ResolversTypes["Date"]>, ParentType, ContextType>;
+  feedingDues?: Resolver<
+    Maybe<ResolversTypes["Float"]>,
+    ParentType,
+    ContextType
+  >;
   gamesPlayed?: Resolver<
     Array<ResolversTypes["Game"]>,
     ParentType,
@@ -1213,6 +1234,7 @@ export type AttendingResolvers<
     ParentType,
     ContextType
   >;
+  totalDues?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
   user?: Resolver<ResolversTypes["User"], ParentType, ContextType>;
   withPc?: Resolver<Maybe<ResolversTypes["Boolean"]>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -1941,7 +1963,13 @@ export type PartyResolvers<
     ParentType,
     ContextType
   >;
+  billableDaysCount?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
   costPerDay?: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
+  dayBreakdown?: Resolver<
+    Array<ResolversTypes["PartyDayBreakdown"]>,
+    ParentType,
+    ContextType
+  >;
   donations?: Resolver<
     Array<ResolversTypes["Donation"]>,
     ParentType,
@@ -1976,12 +2004,30 @@ export type PartyResolvers<
     ParentType,
     ContextType
   >;
+  rentalCostPerDay?: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
   rentalCosts?: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
   roomsAvailable?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
   seatPlan?: Resolver<ResolversTypes["SeatPlan"], ParentType, ContextType>;
   seatsAvailable?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
   startDate?: Resolver<ResolversTypes["Date"], ParentType, ContextType>;
   tentative?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PartyDayBreakdownResolvers<
+  ContextType = Context,
+  ParentType extends
+    ResolversParentTypes["PartyDayBreakdown"] = ResolversParentTypes["PartyDayBreakdown"],
+> = {
+  costPerParticipant?: Resolver<
+    ResolversTypes["Float"],
+    ParentType,
+    ContextType
+  >;
+  date?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  isBillable?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  participantsCount?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  rentalCost?: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -2286,6 +2332,7 @@ export type Resolvers<ContextType = Context> = {
   MoneyTransfer?: MoneyTransferResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Party?: PartyResolvers<ContextType>;
+  PartyDayBreakdown?: PartyDayBreakdownResolvers<ContextType>;
   Picture?: PictureResolvers<ContextType>;
   PictureMeta?: PictureMetaResolvers<ContextType>;
   PictureTag?: PictureTagResolvers<ContextType>;
