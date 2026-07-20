@@ -3,9 +3,7 @@ import { createGraphQLError } from "graphql-yoga";
 import type { MutationResolvers } from "./../../../types.generated";
 import { getBeerPongMatchOrThrow, propagateBeerPongWinner } from "../../match";
 
-export const updateBeerPongMatch: NonNullable<
-  MutationResolvers["updateBeerPongMatch"]
-> = async (_parent, { input }, ctx) => {
+export const updateBeerPongMatch: NonNullable<MutationResolvers['updateBeerPongMatch']> = async (_parent, { input }, ctx) => {
   ForbiddenError.from(ctx.ability).throwUnlessCan("update", "BeerPongMatch");
 
   const match = await getBeerPongMatchOrThrow(ctx, input.matchId);

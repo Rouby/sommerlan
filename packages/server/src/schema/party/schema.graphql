@@ -50,6 +50,26 @@ type Party @rbac {
   payday: Date
   costPerDay: Float!
   paidDues: Float
+  seatPlan: SeatPlan!
+}
+
+enum SeatSection {
+  ISLAND
+  MAIN
+}
+
+type SeatPlanSeat {
+  id: ID!
+  label: String!
+  row: Int!
+  col: Int!
+  section: SeatSection!
+}
+
+type SeatPlan {
+  seats: [SeatPlanSeat!]!
+  numRows: Int!
+  numCols: Int!
 }
 
 type Picture {

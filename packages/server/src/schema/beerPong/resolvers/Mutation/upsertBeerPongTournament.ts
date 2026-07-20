@@ -6,9 +6,7 @@ import {
   validateBeerPongTournament,
 } from "../../tournament";
 
-export const upsertBeerPongTournament: NonNullable<
-  MutationResolvers["upsertBeerPongTournament"]
-> = async (_parent, { input }, ctx) => {
+export const upsertBeerPongTournament: NonNullable<MutationResolvers['upsertBeerPongTournament']> = async (_parent, { input }, ctx) => {
   ForbiddenError.from(ctx.ability).throwUnlessCan(
     "update",
     "BeerPongTournament",
