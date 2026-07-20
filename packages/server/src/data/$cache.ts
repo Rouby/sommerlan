@@ -8,6 +8,12 @@ type Base = object;
 
 const deleteMarker = Symbol.for("delete");
 
+function parseRowValue(val: any) {
+  if (val === "FALSE") return false;
+  if (val === "TRUE") return true;
+  return JSON.parse(val);
+}
+
 const cache = new Map<string, Record<string, unknown>[]>();
 const patches = new Map<
   new () => Base,
@@ -151,7 +157,7 @@ export async function syncCache(clearCache = false) {
                   objectKeys.map((key) => [
                     key,
                     row[key]
-                      ? JSON.parse(row[key])
+                      ? parseRowValue(row[key])
                       : new cls()[key as keyof typeof cls],
                   ]),
                 )
@@ -286,11 +292,7 @@ async function fillCache<T extends Base>(cls: new () => T, sheetName: string) {
               objectKeys.map((key) => [
                 key,
                 row[key]
-                  ? row[key] === "FALSE"
-                    ? false
-                    : row[key] === "TRUE"
-                      ? true
-                      : JSON.parse(row[key])
+                  ? parseRowValue(row[key])
                   : new cls()[key as keyof typeof cls],
               ]),
             );

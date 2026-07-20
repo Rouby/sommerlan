@@ -52,24 +52,30 @@ type Party @rbac {
   paidDues: Float
   seatPlan: SeatPlan!
 }
-
-enum SeatSection {
-  ISLAND
-  MAIN
+enum SeatPlanElementType {
+  TABLE
+  ENTRANCE
+  EXIT
+  DOOR
+  COLUMN
+  FRIDGE
+  COUCH
+  WC
 }
 
-type SeatPlanSeat {
+type SeatPlanElement {
   id: ID!
-  label: String!
-  row: Int!
-  col: Int!
-  section: SeatSection!
+  type: SeatPlanElementType!
+  x: Float!
+  y: Float!
+  width: Float!
+  height: Float!
+  label: String
 }
-
 type SeatPlan {
-  seats: [SeatPlanSeat!]!
-  numRows: Int!
-  numCols: Int!
+  width: Float!
+  height: Float!
+  elements: [SeatPlanElement!]!
 }
 
 type Picture {

@@ -16,6 +16,9 @@ export const updateAttending: NonNullable<MutationResolvers['updateAttending']> 
 
   if (input.withPc !== undefined) {
     attending.withPc = input.withPc ?? null;
+    if (attending.withPc !== true) {
+      attending.seatNumber = "";
+    }
   }
 
   if (input.seatNumber !== undefined) {

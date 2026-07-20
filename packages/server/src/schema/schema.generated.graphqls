@@ -248,11 +248,19 @@ type Mutation {
   createBeerPongMatch(playerIds: [ID!]!): BeerPongMatch!
   createMoneyTransfer(input: CreateMoneyTransferInput!): MoneyTransfer!
   createPayPalOrder: ID!
-  createPurchase(description: String!, estimatedCost: Float!, title: String!): Purchase!
+  createPurchase(
+    description: String!
+    estimatedCost: Float!
+    title: String!
+  ): Purchase!
   deleteAuthDevice(id: ID!): AuthDevice!
   deleteBeerPongMatch(matchId: ID!): Boolean!
   denyRoom(attendingId: ID!): Attending
-  donate(amount: Float!, dedication: DonationDedication, incognito: Boolean): Donation!
+  donate(
+    amount: Float!
+    dedication: DonationDedication
+    incognito: Boolean
+  ): Donation!
   endBeerPongMatch(matchId: ID!, winnerTeamId: ID!): BeerPongMatch!
   generateBeerPongGroupStage(tournamentId: ID!): BeerPongTournament!
   generateBeerPongKnockoutStage(tournamentId: ID!): BeerPongTournament!
@@ -267,8 +275,16 @@ type Mutation {
   planEvent(input: EventInput!): Event!
   recindRoom(partyId: ID!): Attending
   refreshLogin(refreshToken: String!): AuthResponse!
-  register(email: String!, password: String, userName: String!): RegisterResponse!
-  registerPasskey(name: String!, response: JSON!, userId: String!): RegisterDeviceResponse!
+  register(
+    email: String!
+    password: String
+    userName: String!
+  ): RegisterResponse!
+  registerPasskey(
+    name: String!
+    response: JSON!
+    userId: String!
+  ): RegisterDeviceResponse!
   removeAttendance(partyId: ID!, userId: ID): Party!
   removeProfilePicture: User!
   requestRoom(partyId: ID!): Attending
@@ -282,7 +298,10 @@ type Mutation {
   updateAttending(input: UpdateAttendingInput!, partyId: ID!): Attending!
   updateAuthDevice(id: ID!, name: String!): AuthDevice!
   updateBeerPongMatch(input: UpdateBeerPongMatchInput!): BeerPongMatch!
-  updateBeerPongPlayerStats(input: BeerPongPlayerStatsInput!, matchId: ID!): BeerPongMatch!
+  updateBeerPongPlayerStats(
+    input: BeerPongPlayerStatsInput!
+    matchId: ID!
+  ): BeerPongMatch!
   updateGame(input: GameInput!): Game!
   updateLocation(latitude: Float!, longitude: Float!): User!
   updatePaidDues(attendingId: ID!, paidDues: Float!): Attending
@@ -290,7 +309,9 @@ type Mutation {
   updateProfile(input: ProfileInput!): User!
   updatePurchaseStatus(purchaseId: ID!, status: PurchaseStatus!): Purchase!
   updateRoles(id: ID!, roles: [Role!]!): User!
-  upsertBeerPongTournament(input: UpsertBeerPongTournamentInput!): BeerPongTournament!
+  upsertBeerPongTournament(
+    input: UpsertBeerPongTournamentInput!
+  ): BeerPongTournament!
   voteOnPurchase(purchaseId: ID!, vote: VoteValue!): Purchase!
 }
 
@@ -439,22 +460,30 @@ enum RoomStatus {
 }
 
 type SeatPlan {
-  numCols: Int!
-  numRows: Int!
-  seats: [SeatPlanSeat!]!
+  elements: [SeatPlanElement!]!
+  height: Float!
+  width: Float!
 }
 
-type SeatPlanSeat {
-  col: Int!
+type SeatPlanElement {
+  height: Float!
   id: ID!
-  label: String!
-  row: Int!
-  section: SeatSection!
+  label: String
+  type: SeatPlanElementType!
+  width: Float!
+  x: Float!
+  y: Float!
 }
 
-enum SeatSection {
-  ISLAND
-  MAIN
+enum SeatPlanElementType {
+  COLUMN
+  COUCH
+  DOOR
+  ENTRANCE
+  EXIT
+  FRIDGE
+  TABLE
+  WC
 }
 
 scalar Time
