@@ -8,9 +8,7 @@ import {
   getTournamentMatches,
 } from "../../tournament";
 
-export const generateBeerPongKnockoutStage: NonNullable<
-  MutationResolvers["generateBeerPongKnockoutStage"]
-> = async (_parent, { tournamentId }, ctx) => {
+export const generateBeerPongKnockoutStage: NonNullable<MutationResolvers['generateBeerPongKnockoutStage']> = async (_parent, { tournamentId }, ctx) => {
   ForbiddenError.from(ctx.ability).throwUnlessCan(
     "update",
     "BeerPongTournament",

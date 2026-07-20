@@ -15,6 +15,9 @@ import { UserAvatar } from "../../components";
 import { graphql } from "../../gql";
 import { userAtom } from "../../state";
 
+const SEAT_SIZE = 80;
+const SEAT_GAP = 8;
+
 export function PartySeatPlan() {
   const user = useAtomValue(userAtom)!;
 
@@ -23,9 +26,19 @@ export function PartySeatPlan() {
       query partySeatPlan {
         nextParty {
           id
-          seatsAvailable
           tentative
           registrationDeadline
+          seatPlan {
+            numRows
+            numCols
+            seats {
+              id
+              label
+              row
+              col
+              section
+            }
+          }
           attendings {
             id
             seatNumber
@@ -57,7 +70,7 @@ export function PartySeatPlan() {
 
   const { nextParty } = data;
 
-  if (!nextParty.seatsAvailable || nextParty.tentative) return null;
+  if (nextParty.tentative) return null;
 
   const myAttending = nextParty.attendings.find(
     (attending) => attending.user.id === user.id,
@@ -69,9 +82,7 @@ export function PartySeatPlan() {
     ? new Date() <= new Date(nextParty.registrationDeadline)
     : true;
 
-  const seats = Array.from({ length: nextParty.seatsAvailable }, (_, i) =>
-    String(i + 1),
-  );
+  const { seatPlan } = nextParty;
 
   const attendingBySeat = new Map(
     nextParty.attendings
@@ -81,99 +92,115 @@ export function PartySeatPlan() {
 
   const myCurrentSeat = myAttending.seatNumber || null;
 
-  function handleSeatClick(seatNumber: string) {
+  function handleSeatClick(seatId: string) {
     if (!registrationOpen || saving) return;
-
-    const newSeat = myCurrentSeat === seatNumber ? "" : seatNumber;
-
-    updateAttending({
-      partyId: nextParty.id,
-      input: { seatNumber: newSeat },
-    });
+    const newSeat = myCurrentSeat === seatId ? "" : seatId;
+    updateAttending({ partyId: nextParty.id, input: { seatNumber: newSeat } });
   }
+
+  const gridWidth =
+    seatPlan.numCols * SEAT_SIZE + (seatPlan.numCols - 1) * SEAT_GAP;
+  const gridHeight =
+    seatPlan.numRows * SEAT_SIZE + (seatPlan.numRows - 1) * SEAT_GAP;
 
   return (
     <Card withBorder mt="md" p="md" radius="md">
-      <Title order={4} mb="md">
+      <Title order={4} mb="xs">
         Sitzplan
       </Title>
       <Text size="sm" c="dimmed" mb="md">
         Wähle deinen Wunschplatz. Klicke auf einen freien Platz, um ihn zu
-        reservieren. Deine aktuelle Auswahl ist blau markiert.
+        reservieren. Dein Platz ist blau markiert.
       </Text>
-      <Box
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(80px, 1fr))",
-          gap: "var(--mantine-spacing-sm)",
-        }}
-      >
-        {seats.map((seatNumber) => {
-          const occupant = attendingBySeat.get(seatNumber);
-          const isMyseat = myCurrentSeat === seatNumber;
-          const isTaken = !!occupant && occupant.user.id !== user.id;
 
-          return (
-            <Tooltip
-              key={seatNumber}
-              label={
-                occupant
-                  ? `${occupant.user.displayName}${occupant.withPc === true ? " (mit PC)" : occupant.withPc === false ? " (ohne PC)" : ""}`
-                  : `Platz ${seatNumber} (frei)`
-              }
-              withArrow
-            >
-              <Card
-                withBorder
-                p="xs"
-                radius="sm"
-                style={{
-                  cursor:
-                    isTaken || (!registrationOpen && !isMyseat)
-                      ? "default"
-                      : "pointer",
-                  opacity: saving ? 0.6 : 1,
-                  backgroundColor: isMyseat
-                    ? "var(--mantine-color-blue-1)"
-                    : isTaken
-                      ? "var(--mantine-color-gray-1)"
-                      : undefined,
-                  borderColor: isMyseat
-                    ? "var(--mantine-color-blue-5)"
-                    : undefined,
-                }}
-                onClick={() => !isTaken && handleSeatClick(seatNumber)}
+      <Box style={{ overflowX: "auto" }}>
+        <Box
+          style={{
+            position: "relative",
+            width: gridWidth,
+            height: gridHeight,
+            margin: "0 auto",
+          }}
+        >
+          {seatPlan.seats.map((seat) => {
+            const left = seat.col * (SEAT_SIZE + SEAT_GAP);
+            const top = seat.row * (SEAT_SIZE + SEAT_GAP);
+            const occupant = attendingBySeat.get(seat.id);
+            const isMySeat = myCurrentSeat === seat.id;
+            const isTaken = !!occupant && occupant.user.id !== user.id;
+            const isIsland = seat.section === "ISLAND";
+
+            return (
+              <Tooltip
+                key={seat.id}
+                label={
+                  occupant
+                    ? `${occupant.user.displayName}${occupant.withPc === true ? " (mit PC)" : occupant.withPc === false ? " (ohne PC)" : ""}`
+                    : `Platz ${seat.label} (frei)`
+                }
+                withArrow
               >
-                <Stack align="center" gap={4}>
-                  <Text size="xs" fw="bold" c="dimmed">
-                    {seatNumber}
-                  </Text>
-                  {occupant ? (
-                    <>
-                      <UserAvatar user={occupant.user} size={32} />
-                      {occupant.withPc === true ? (
-                        <IconDeviceDesktop size={14} />
-                      ) : occupant.withPc === false ? (
-                        <IconUser size={14} />
-                      ) : null}
-                    </>
-                  ) : (
-                    <Box
-                      style={{
-                        width: 32,
-                        height: 32,
-                        borderRadius: "50%",
-                        border: "2px dashed var(--mantine-color-gray-4)",
-                      }}
-                    />
-                  )}
-                </Stack>
-              </Card>
-            </Tooltip>
-          );
-        })}
+                <Card
+                  withBorder
+                  p={4}
+                  radius="sm"
+                  style={{
+                    position: "absolute",
+                    left,
+                    top,
+                    width: SEAT_SIZE,
+                    height: SEAT_SIZE,
+                    cursor:
+                      isTaken || (!registrationOpen && !isMySeat)
+                        ? "default"
+                        : "pointer",
+                    opacity: saving ? 0.6 : 1,
+                    backgroundColor: isMySeat
+                      ? "var(--mantine-color-blue-1)"
+                      : isIsland
+                        ? "var(--mantine-color-violet-0)"
+                        : undefined,
+                    borderColor: isMySeat
+                      ? "var(--mantine-color-blue-5)"
+                      : isIsland
+                        ? "var(--mantine-color-violet-4)"
+                        : undefined,
+                    transition: "background-color 0.15s, border-color 0.15s",
+                  }}
+                  onClick={() => !isTaken && handleSeatClick(seat.id)}
+                >
+                  <Stack align="center" justify="center" gap={2} h="100%">
+                    <Text size="xs" fw="bold" c="dimmed" lh={1}>
+                      {seat.label}
+                    </Text>
+                    {occupant ? (
+                      <>
+                        <UserAvatar user={occupant.user} size={32} />
+                        {occupant.withPc === true ? (
+                          <IconDeviceDesktop size={14} />
+                        ) : occupant.withPc === false ? (
+                          <IconUser size={14} />
+                        ) : null}
+                      </>
+                    ) : (
+                      <Box
+                        style={{
+                          width: 32,
+                          height: 32,
+                          borderRadius: "50%",
+                          border: "2px dashed var(--mantine-color-gray-4)",
+                        }}
+                      />
+                    )}
+                  </Stack>
+                </Card>
+              </Tooltip>
+            );
+          })}
+        </Box>
       </Box>
-      <Group mt="md" gap="md">
+
+      <Group mt="md" gap="md" wrap="wrap">
         <Group gap="xs">
           <Box
             style={{
@@ -207,6 +234,18 @@ export function PartySeatPlan() {
             }}
           />
           <Text size="sm">Frei</Text>
+        </Group>
+        <Group gap="xs">
+          <Box
+            style={{
+              width: 16,
+              height: 16,
+              borderRadius: 4,
+              backgroundColor: "var(--mantine-color-violet-0)",
+              border: "2px solid var(--mantine-color-violet-4)",
+            }}
+          />
+          <Text size="sm">Insel</Text>
         </Group>
         <Badge leftSection={<IconDeviceDesktop size={12} />} color="blue" variant="light">
           Mit PC

@@ -1,21 +1,6 @@
 import * as dayjs from "dayjs";
 import type { AttendingResolvers } from "./../../types.generated";
-export const Attending: Pick<
-  AttendingResolvers,
-  | "applicationDate"
-  | "checkIn"
-  | "checkOut"
-  | "dates"
-  | "id"
-  | "notificationSent"
-  | "paidDues"
-  | "party"
-  | "rentDues"
-  | "room"
-  | "seatNumber"
-  | "withPc"
-  | "__isTypeOf"
-> = {
+export const Attending: Pick<AttendingResolvers, 'applicationDate'|'checkIn'|'checkOut'|'dates'|'id'|'notificationSent'|'paidDues'|'party'|'rentDues'|'room'|'seatNumber'|'withPc'|'__isTypeOf'> = {
   /* Implement Attending resolver logic here */
   party: async (parent, _arg, ctx) => {
     const party = await ctx.data.Party.findById(parent.partyId);
@@ -60,5 +45,5 @@ export const Attending: Pick<
   },
   seatNumber: (parent) => {
     return parent.seatNumber || null;
-  },
+  }
 };
