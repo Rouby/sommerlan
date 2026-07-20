@@ -6,11 +6,13 @@ import {
   Divider,
   Group,
   Indicator,
+  SegmentedControl,
   Skeleton,
   Switch,
   Text,
   Tooltip,
 } from "@mantine/core";
+import { IconDeviceDesktop, IconUser } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { useAtomValue } from "jotai";
 import { Fragment, useState } from "react";
@@ -38,6 +40,7 @@ export function PartyAttendings() {
             id
             dates
             room
+            withPc
             applicationDate
             user {
               id
@@ -81,6 +84,18 @@ export function PartyAttendings() {
     `),
   );
 
+  const [{ fetching: updatingAttending }, updateAttending] = useMutation(
+    graphql(`
+      mutation updateMyAttending($partyId: ID!, $input: UpdateAttendingInput!) {
+        updateAttending(partyId: $partyId, input: $input) {
+          id
+          withPc
+          seatNumber
+        }
+      }
+    `),
+  );
+
   const startDate = dayjs(data?.nextParty?.startDate, "YYYY-MM-DD").add(
     12,
     "hours",
@@ -114,6 +129,51 @@ export function PartyAttendings() {
           kann sich unter Umständen noch ändern.
         </Text>
       ) : null}
+      {myAttending && (
+        <Group mt="sm" mb="sm" align="center">
+          <Text fw="bold">Ich bringe einen PC mit:</Text>
+          <SegmentedControl
+            disabled={!applicationAllowed || updatingAttending}
+            value={
+              myAttending.withPc === true
+                ? "yes"
+                : myAttending.withPc === false
+                  ? "no"
+                  : ""
+            }
+            onChange={(value) => {
+              if (data?.nextParty) {
+                updateAttending({
+                  partyId: data.nextParty.id,
+                  input: {
+                    withPc: value === "yes" ? true : value === "no" ? false : null,
+                  },
+                });
+              }
+            }}
+            data={[
+              {
+                value: "yes",
+                label: (
+                  <Group gap="xs" wrap="nowrap">
+                    <IconDeviceDesktop size={16} />
+                    <span>Mit PC</span>
+                  </Group>
+                ),
+              },
+              {
+                value: "no",
+                label: (
+                  <Group gap="xs" wrap="nowrap">
+                    <IconUser size={16} />
+                    <span>Ohne PC</span>
+                  </Group>
+                ),
+              },
+            ]}
+          />
+        </Group>
+      )}
       <Group justify="flex-end">
         <Switch
           label="Zeige Teilnehmer als Namen"
@@ -242,6 +302,14 @@ export function PartyAttendings() {
                     >
                       {attendingsOnDate.length} /{" "}
                       {data?.nextParty.seatsAvailable} an diesem Tag da
+                    </Badge>
+                    <Badge color="blue" variant="light">
+                      <IconDeviceDesktop size={12} style={{ marginRight: 4, verticalAlign: "middle" }} />
+                      {attendingsOnDate.filter((att) => att.withPc === true).length} mit PC
+                    </Badge>
+                    <Badge color="gray" variant="light">
+                      <IconUser size={12} style={{ marginRight: 4, verticalAlign: "middle" }} />
+                      {attendingsOnDate.filter((att) => att.withPc === false).length} ohne PC
                     </Badge>
                   </Group>
                   <Divider mt="sm" />

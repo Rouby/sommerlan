@@ -30,6 +30,10 @@ export class Attending extends Base {
 
   public notificationSent = "";
 
+  public withPc: boolean | null = null;
+
+  public seatNumber = "";
+
   rentDues(costPerDay: number) {
     return Math.round((this.dates.length - 1) * costPerDay * 100) / 100;
   }

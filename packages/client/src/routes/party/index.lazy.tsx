@@ -8,6 +8,7 @@ import {
   PartyDonations,
   PartyLocation,
   PartyRooms,
+  PartySeatPlan,
 } from "../../features";
 
 export const Route = createLazyFileRoute("/party/")({
@@ -35,6 +36,8 @@ export const Route = createLazyFileRoute("/party/")({
         <Space h="md" />
 
         <PartyRooms />
+
+        <PartySeatPlan />
 
         <PartyAttendings />
 

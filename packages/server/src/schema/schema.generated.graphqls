@@ -17,7 +17,9 @@ type Attending {
   party: Party!
   rentDues: Float
   room: RoomStatus
+  seatNumber: String
   user: User!
+  withPc: Boolean
 }
 
 type AuthDevice {
@@ -293,6 +295,7 @@ type Mutation {
   setAttendance(dates: [Date!]!, partyId: ID!, userId: ID): Party!
   setGamesPlayed(gameIds: [ID!]!, partyId: ID!): Attending!
   syncCache(clear: Boolean): Boolean
+  updateAttending(input: UpdateAttendingInput!, partyId: ID!): Attending!
   updateAuthDevice(id: ID!, name: String!): AuthDevice!
   updateBeerPongMatch(input: UpdateBeerPongMatchInput!): BeerPongMatch!
   updateBeerPongPlayerStats(
@@ -456,6 +459,11 @@ enum RoomStatus {
 }
 
 scalar Time
+
+input UpdateAttendingInput {
+  seatNumber: String
+  withPc: Boolean
+}
 
 input UpdateBeerPongMatchInput {
   isFinished: Boolean
