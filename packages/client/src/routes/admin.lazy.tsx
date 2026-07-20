@@ -1,6 +1,7 @@
 import { Box, Container } from "@mantine/core";
 import {
   IconBeer,
+  IconCalendar,
   IconClipboardCheck,
   IconCoin,
   IconGoGame,
@@ -39,6 +40,11 @@ export const Route = createLazyFileRoute("/admin")({
             label="Cache"
             leftSection={<IconClipboardCheck size={18} />}
             to="/admin/cache"
+          />
+          <NavLink
+            label="Party"
+            leftSection={<IconCalendar size={18} />}
+            to="/admin/party"
           />
           <NavLink
             label="Bierpong"

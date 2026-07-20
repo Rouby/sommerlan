@@ -111,6 +111,11 @@ input PartyInput {
   location: String!
   locationWidgetSrc: String
   roomsAvailable: Int!
+  tentative: Boolean
+  rentalCosts: Float
+  feedingCosts: Float
+  registrationDeadline: Date
+  payday: Date
 }
 
 input PictureInput {

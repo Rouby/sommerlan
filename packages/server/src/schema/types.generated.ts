@@ -617,11 +617,16 @@ export type PartyattendingArgs = {
 
 export type PartyInput = {
   endDate: Scalars["Date"]["input"];
+  feedingCosts?: InputMaybe<Scalars["Float"]["input"]>;
   id?: InputMaybe<Scalars["ID"]["input"]>;
   location: Scalars["String"]["input"];
   locationWidgetSrc?: InputMaybe<Scalars["String"]["input"]>;
+  payday?: InputMaybe<Scalars["Date"]["input"]>;
+  registrationDeadline?: InputMaybe<Scalars["Date"]["input"]>;
+  rentalCosts?: InputMaybe<Scalars["Float"]["input"]>;
   roomsAvailable: Scalars["Int"]["input"];
   startDate: Scalars["Date"]["input"];
+  tentative?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type Picture = {

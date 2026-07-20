@@ -4375,6 +4375,36 @@ export const typeDefs = {
           },
           directives: [],
         },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "tentative" },
+          type: { kind: "NamedType", name: { kind: "Name", value: "Boolean" } },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "rentalCosts" },
+          type: { kind: "NamedType", name: { kind: "Name", value: "Float" } },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "feedingCosts" },
+          type: { kind: "NamedType", name: { kind: "Name", value: "Float" } },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "registrationDeadline" },
+          type: { kind: "NamedType", name: { kind: "Name", value: "Date" } },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "payday" },
+          type: { kind: "NamedType", name: { kind: "Name", value: "Date" } },
+          directives: [],
+        },
       ],
     },
     {

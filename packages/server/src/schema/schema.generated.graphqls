@@ -343,11 +343,16 @@ type Party {
 
 input PartyInput {
   endDate: Date!
+  feedingCosts: Float
   id: ID
   location: String!
   locationWidgetSrc: String
+  payday: Date
+  registrationDeadline: Date
+  rentalCosts: Float
   roomsAvailable: Int!
   startDate: Date!
+  tentative: Boolean
 }
 
 type Picture {
