@@ -15,7 +15,7 @@ export const updateAttending: NonNullable<MutationResolvers['updateAttending']> 
   ForbiddenError.from(ctx.ability).throwUnlessCan("update", attending);
 
   if (input.withPc !== undefined) {
-    attending.withPc = input.withPc ?? null;
+    attending.withPc = input.withPc ?? false;
     if (attending.withPc !== true) {
       attending.seatNumber = "";
     }
