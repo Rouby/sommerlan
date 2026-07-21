@@ -21,8 +21,6 @@ import { DatePickerInput, TimeInput } from "@mantine/dates";
 import { Dropzone, FileWithPath, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { RichTextEditor } from "@mantine/tiptap";
 import { IconCheck, IconPencil } from "@tabler/icons-react";
-import Highlight from "@tiptap/extension-highlight";
-import Placeholder from "@tiptap/extension-placeholder";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import dayjs from "dayjs";
