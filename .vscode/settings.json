@@ -1,6 +1,5 @@
 {
   "svg.preview.background": "transparent",
-  "typescript.tsdk": ".yarn/sdks/typescript/lib",
   "search.exclude": {
     "**/.yarn": true,
     "**/.pnp.*": true
@@ -10,5 +9,6 @@
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "playwright.env": {
     "NODE_OPTIONS": "-r /home/rouby/sommerlan/.pnp.cjs --experimental-loader /home/rouby/sommerlan/.pnp.loader.mjs"
-  }
+  },
+  "js/ts.tsdk.path": ".yarn/sdks/typescript/lib"
 }
