@@ -20,6 +20,7 @@ import { useMutation, useQuery } from "urql";
 import { Can, UserAvatar, UserMenu } from "../../components";
 import { graphql } from "../../gql";
 import { userAtom } from "../../state";
+import { PartyAttendanceHeatmap } from "./PartyAttendanceHeatmap";
 import classes from "./styles.module.css";
 
 export function PartyAttendings() {
@@ -151,6 +152,20 @@ export function PartyAttendings() {
           kann sich unter Umständen noch ändern.
         </Text>
       ) : null}
+      {data?.nextParty && (
+        <PartyAttendanceHeatmap
+          dates={dates}
+          seatsAvailable={data.nextParty.seatsAvailable}
+          roomsAvailable={data.nextParty.roomsAvailable}
+          attendings={data.nextParty.attendings}
+          onSelectDate={(dateStr) => {
+            const el = document.getElementById(`date-row-${dateStr}`);
+            if (el) {
+              el.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+          }}
+        />
+      )}
       {myAttending && (
         <Group mt="sm" mb="sm" align="center">
           <Text fw="bold">Ich bringe einen PC mit:</Text>
@@ -235,10 +250,15 @@ export function PartyAttendings() {
             );
             return (
               <Fragment key={date.toString()}>
-                <Text id={`date-label-${idx}`}>{date.format("ddd, L")}</Text>
+                <Text
+                  id={`date-row-${date.format("YYYY-MM-DD")}`}
+                  style={{ scrollMargin: "100px" }}
+                >
+                  {date.format("ddd, L")}
+                </Text>
 
                 <Checkbox
-                  aria-labelledby={`date-label-${idx}`}
+                  aria-labelledby={`date-row-${date.format("YYYY-MM-DD")}`}
                   value={date.format("YYYY-MM-DD")}
                   disabled={!applicationAllowed}
                 />

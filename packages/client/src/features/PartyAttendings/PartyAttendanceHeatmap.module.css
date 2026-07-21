@@ -1,0 +1,146 @@
+.heatmapCard {
+  overflow: hidden;
+}
+
+.statsGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mantine-spacing-sm);
+  margin-bottom: var(--mantine-spacing-md);
+}
+
+.statBadge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--mantine-radius-md);
+  background-color: var(--mantine-color-default);
+  border: 1px solid var(--mantine-color-default-border);
+  color: var(--mantine-color-default-color);
+}
+
+.tilesContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: var(--mantine-spacing-sm);
+}
+
+@media (max-width: 576px) {
+  .tilesContainer {
+    grid-template-columns: repeat(auto-fit, minmax(105px, 1fr));
+    gap: var(--mantine-spacing-xs);
+  }
+}
+
+.heatTile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
+  border-radius: var(--mantine-radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+  user-select: none;
+  position: relative;
+  min-height: 100px;
+}
+
+.heatTile:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--mantine-shadow-md);
+}
+
+/* Level 0: 0 participants */
+.heatLevel0 {
+  background-color: var(--mantine-color-gray-light);
+  color: var(--mantine-color-gray-light-color);
+  border-color: var(--mantine-color-gray-outline);
+}
+
+/* Level 1: Low (1 - 35% capacity) */
+.heatLevel1 {
+  background-color: var(--mantine-color-teal-light);
+  color: var(--mantine-color-teal-light-color);
+  border-color: var(--mantine-color-teal-light-hover);
+}
+
+/* Level 2: Moderate (36 - 65% capacity) */
+.heatLevel2 {
+  background-color: var(--mantine-color-blue-light);
+  color: var(--mantine-color-blue-light-color);
+  border-color: var(--mantine-color-blue-light-hover);
+}
+
+/* Level 3: High (66 - 89% capacity) */
+.heatLevel3 {
+  background-color: var(--mantine-color-grape-light);
+  color: var(--mantine-color-grape-light-color);
+  border-color: var(--mantine-color-grape-light-hover);
+}
+
+/* Level 4 / Peak: Highest attendance (>= 90% or max) */
+.heatLevelPeak {
+  background-color: var(--mantine-color-orange-light);
+  color: var(--mantine-color-orange-light-color);
+  border-color: var(--mantine-color-orange-filled);
+  box-shadow: 0 0 10px var(--mantine-color-orange-light);
+}
+
+.peakBadge {
+  position: absolute;
+  top: -8px;
+  right: -6px;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 10px;
+  background: var(--mantine-color-orange-filled);
+  color: var(--mantine-color-white);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  z-index: 2;
+}
+
+.tileDate {
+  font-size: var(--mantine-font-size-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: inherit;
+  opacity: 0.85;
+}
+
+.tileDayNumber {
+  font-size: var(--mantine-font-size-md);
+  font-weight: 800;
+  color: inherit;
+}
+
+.tileCount {
+  font-size: var(--mantine-font-size-sm);
+  font-weight: 700;
+  margin-top: 4px;
+  color: inherit;
+}
+
+.tileBarContainer {
+  width: 100%;
+  margin-top: 6px;
+}
+
+.tooltipContainer {
+  background-color: var(--mantine-color-body) !important;
+  color: var(--mantine-color-text) !important;
+  border: 1px solid var(--mantine-color-default-border) !important;
+  box-shadow: var(--mantine-shadow-lg) !important;
+  border-radius: var(--mantine-radius-md) !important;
+}
+
+.tooltipContent {
+  padding: var(--mantine-spacing-xs);
+}

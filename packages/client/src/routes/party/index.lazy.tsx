@@ -39,6 +39,8 @@ export const Route = createLazyFileRoute("/party/")({
 
         <PartySeatPlan />
 
+        <Space h="md" />
+        
         <PartyAttendings />
 
         <PartyLocation />
