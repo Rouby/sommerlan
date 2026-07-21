@@ -192,7 +192,16 @@ function AdminPartyPage() {
               label="Zeitraum"
               type="range"
               value={dates}
-              onChange={setDates}
+              onChange={(val: any) =>
+                setDates(
+                  val
+                    ? [
+                        val[0] ? new Date(val[0]) : null,
+                        val[1] ? new Date(val[1]) : null,
+                      ]
+                    : [null, null],
+                )
+              }
               required
               clearable
               disabled={mutationFetching}
@@ -255,7 +264,9 @@ function AdminPartyPage() {
               <DatePickerInput
                 label="Anmeldefrist"
                 value={registrationDeadline}
-                onChange={setRegistrationDeadline}
+                onChange={(val: any) =>
+                  setRegistrationDeadline(val ? new Date(val) : null)
+                }
                 clearable
                 disabled={mutationFetching}
               />
@@ -263,7 +274,7 @@ function AdminPartyPage() {
               <DatePickerInput
                 label="Zahltag"
                 value={payday}
-                onChange={setPayday}
+                onChange={(val: any) => setPayday(val ? new Date(val) : null)}
                 clearable
                 disabled={mutationFetching}
               />

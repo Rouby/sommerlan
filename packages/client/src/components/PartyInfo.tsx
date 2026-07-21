@@ -184,7 +184,7 @@ function ImageUpload({ partyId }: { partyId: string }) {
       React.RefObject<{
         file: FileWithPath;
         upload: (partyId: string) => Promise<void>;
-      }>
+      } | null>
     >,
   );
 
@@ -333,7 +333,7 @@ const ImageUploadProgress = forwardRef(function ImageUploadProgress(
               </ThemeIcon>
             </Center>
           ) : (
-            <Text ta="center" color="blue" w={700} size="xl">
+            <Text ta="center" c="blue" w={700} size="xl">
               {Math.floor(progress * 100)}%
             </Text>
           )

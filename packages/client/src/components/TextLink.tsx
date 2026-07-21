@@ -4,6 +4,6 @@ import { RefAttributes } from "react";
 
 export function TextLink(props: LinkProps & RefAttributes<HTMLAnchorElement>) {
   return (
-    <Text component={Link} variant="text" color="indigo" {...(props as any)} />
+    <Text component={Link} variant="text" c="indigo" {...(props as any)} />
   );
 }

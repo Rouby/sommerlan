@@ -109,7 +109,7 @@ export function PurchasesList() {
               ? "Abgeschlossene ausblenden"
               : `Abgeschlossene anzeigen (${completedPurchases.length})`}
           </Button>
-          <Collapse in={showCompleted}>
+          <Collapse expanded={showCompleted}>
             <Stack mt="md" gap="md">
               {completedPurchases.map((purchase) => (
                 <PurchaseCard key={purchase.id} purchase={purchase} />

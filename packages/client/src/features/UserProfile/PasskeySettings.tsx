@@ -155,7 +155,7 @@ function DeviceInfos({
               )}
             </Group>
             {(createdAt || lastUsedAt) && (
-              <Text color="dimmed">
+              <Text c="dimmed">
                 {createdAt ? (
                   <>
                     Erstellt am {formatDate(new Date(createdAt))}

@@ -1,6 +1,7 @@
-import { Carousel, Embla } from "@mantine/carousel";
+import { Carousel } from "@mantine/carousel";
 import { Image } from "@mantine/core";
 import { useInterval } from "@mantine/hooks";
+import type { UseEmblaCarouselType } from "embla-carousel-react";
 import { useState } from "react";
 import { useQuery } from "urql";
 import { graphql } from "../../gql";
@@ -23,11 +24,12 @@ export function GameCarousel() {
     `),
   });
 
-  const [embla, setEmbla] = useState<Embla>(null);
+  type EmblaApi = NonNullable<UseEmblaCarouselType[1]>;
+  const [embla, setEmbla] = useState<EmblaApi | null>(null);
 
   useInterval(
     () => {
-      embla.scrollNext();
+      embla?.scrollNext();
     },
     5000,
     { autoInvoke: true },
@@ -44,8 +46,7 @@ export function GameCarousel() {
       height={300}
       slideSize={{ base: "100%", sm: "50%", md: "33.333333%" }}
       slideGap={{ base: 0, sm: "md" }}
-      loop
-      align="center"
+      emblaOptions={{ loop: true, align: "center" }}
       getEmblaApi={setEmbla}
     >
       {data?.nextParty?.gamesPlayed.map((gamePlayed) => (

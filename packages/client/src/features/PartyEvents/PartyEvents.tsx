@@ -16,7 +16,6 @@ import {
   Stack,
   Text,
   Tooltip,
-  TypographyStylesProvider,
 } from "@mantine/core";
 import { DatePickerInput, TimeInput } from "@mantine/dates";
 import { Dropzone, FileWithPath, IMAGE_MIME_TYPE } from "@mantine/dropzone";
@@ -215,12 +214,12 @@ function EventCard({
           </ActionIcon>
         </Can>
       </Group>
-      <Text size="sm" color="dimmed">
+      <Text size="sm" c="dimmed">
         {event.date
           ? dayjs(event.date, "YYYY-MM-DD").format("LL")
           : "Datum noch unbekannt"}
       </Text>
-      <Text size="sm" color="dimmed">
+      <Text size="sm" c="dimmed">
         {event.startTime
           ? `${event.startTime}${event.endTime ? ` - ${event.endTime}` : ""}`
           : ""}
@@ -228,9 +227,9 @@ function EventCard({
 
       <Box style={{ flex: 1 }}>
         {event.description && (
-          <TypographyStylesProvider mt="sm">
+          <Box mt="sm">
             <div dangerouslySetInnerHTML={{ __html: event.description }} />
-          </TypographyStylesProvider>
+          </Box>
         )}
       </Box>
 
@@ -325,9 +324,7 @@ function CreateEventForm({
 }) {
   const editor = useEditor({
     extensions: [
-      StarterKit,
-      Highlight,
-      Placeholder.configure({ placeholder: "Beschreibungstext" }),
+      StarterKit.configure({}),
     ],
     content: defaultValues?.description ?? "",
   });
