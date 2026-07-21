@@ -73,3 +73,40 @@ test("should change an event", async ({ page, api }) => {
     "Initial Event Name",
   );
 });
+
+test("should plan a food event and display food event details", async ({ page, api }) => {
+  const user = await api.seed("User", {
+    displayName: "Erwin Beispiel",
+    name: "Erwin Beispiel",
+    email: "erwin@example.com",
+    roles: ["Trusted"],
+  });
+  await api.login("erwin@example.com");
+  await api.seed("Party", {
+    startDate: new Date(Date.now() + 7 * 86400000)
+      .toISOString()
+      .substring(0, 10),
+    endDate: new Date(Date.now() + 7 * 86400000).toISOString().substring(0, 10),
+  });
+
+  await page.goto("/events");
+
+  await page.getByText("Ein Event eintragen").click();
+
+  await page.getByText("Food-Event 🍕").click();
+
+  await page.getByPlaceholder("Event").fill("Pizza Party");
+
+  await page.locator('input[name="price"]').fill("4.50");
+
+  await page
+    .getByTestId("dropzone")
+    .locator("input")
+    .setInputFiles(path.join(__dirname, "avatar.png"));
+
+  await page.getByText("Event erstellen").click();
+
+  await expect(page.getByTestId("event")).toContainText("Pizza Party");
+  await expect(page.getByTestId("event")).toContainText("Food-Event");
+  await expect(page.getByTestId("event")).toContainText("4.50 €");
+});

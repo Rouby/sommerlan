@@ -176,24 +176,50 @@ type Event {
   date: Date
   description: String
   endTime: String
+  eventType: EventType!
   id: ID!
   image: String!
   name: String!
   organizer: User!
+  participantServings: [EventParticipant!]!
   participants: [User!]!
   party: Party!
+  price: Float
+  pricingMode: EventPricingMode
+  servingsUnit: String
   startTime: String
+  totalServings: Int!
 }
 
 input EventInput {
   date: Date
   description: String
   endTime: String
+  eventType: EventType
   id: ID
   image: File
   name: String!
   partyId: ID!
+  price: Float
+  pricingMode: EventPricingMode
+  servingsUnit: String
   startTime: String
+}
+
+type EventParticipant {
+  servings: Int!
+  user: User!
+}
+
+enum EventPricingMode {
+  FLAT
+  PARTY_DONATION
+  PER_SERVING
+}
+
+enum EventType {
+  FOOD
+  STANDARD
 }
 
 scalar File
@@ -273,7 +299,7 @@ type Mutation {
   loginMagicLink(magicLinkId: String!): AuthResponse!
   loginPasskey(response: JSON!): LoginResponse!
   loginPassword(email: String!, password: String!): AuthResponse!
-  participateInEvent(id: ID!, userId: ID): Event!
+  participateInEvent(id: ID!, servings: Int, userId: ID): Event!
   planEvent(input: EventInput!): Event!
   recindRoom(partyId: ID!): Attending
   refreshLogin(refreshToken: String!): AuthResponse!
@@ -304,6 +330,7 @@ type Mutation {
     input: BeerPongPlayerStatsInput!
     matchId: ID!
   ): BeerPongMatch!
+  updateEventServings(id: ID!, servings: Int!, userId: ID): Event!
   updateGame(input: GameInput!): Game!
   updateLocation(latitude: Float!, longitude: Float!): User!
   updatePaidDues(attendingId: ID!, paidDues: Float!): Attending

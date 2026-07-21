@@ -55,6 +55,7 @@ import { updateAttending as Mutation_updateAttending } from "./party/resolvers/M
 import { updateAuthDevice as Mutation_updateAuthDevice } from "./user/resolvers/Mutation/updateAuthDevice";
 import { updateBeerPongMatch as Mutation_updateBeerPongMatch } from "./beerPong/resolvers/Mutation/updateBeerPongMatch";
 import { updateBeerPongPlayerStats as Mutation_updateBeerPongPlayerStats } from "./beerPong/resolvers/Mutation/updateBeerPongPlayerStats";
+import { updateEventServings as Mutation_updateEventServings } from "./events/resolvers/Mutation/updateEventServings";
 import { updateGame as Mutation_updateGame } from "./game/resolvers/Mutation/updateGame";
 import { updateLocation as Mutation_updateLocation } from "./overwatch/resolvers/Mutation/updateLocation";
 import { updatePaidDues as Mutation_updatePaidDues } from "./party/resolvers/Mutation/updatePaidDues";
@@ -83,6 +84,7 @@ import { CacheInfo } from "./admin/resolvers/CacheInfo";
 import { CachePatch } from "./admin/resolvers/CachePatch";
 import { Donation } from "./donation/resolvers/Donation";
 import { Event } from "./events/resolvers/Event";
+import { EventParticipant } from "./events/resolvers/EventParticipant";
 import { Game } from "./game/resolvers/Game";
 import { GameOnParty } from "./game/resolvers/GameOnParty";
 import { Location } from "./overwatch/resolvers/Location";
@@ -173,6 +175,7 @@ export const resolvers: Resolvers = {
     updateAuthDevice: Mutation_updateAuthDevice,
     updateBeerPongMatch: Mutation_updateBeerPongMatch,
     updateBeerPongPlayerStats: Mutation_updateBeerPongPlayerStats,
+    updateEventServings: Mutation_updateEventServings,
     updateGame: Mutation_updateGame,
     updateLocation: Mutation_updateLocation,
     updatePaidDues: Mutation_updatePaidDues,
@@ -201,6 +204,7 @@ export const resolvers: Resolvers = {
   CachePatch: CachePatch,
   Donation: Donation,
   Event: Event,
+  EventParticipant: EventParticipant,
   Game: Game,
   GameOnParty: GameOnParty,
   Location: Location,

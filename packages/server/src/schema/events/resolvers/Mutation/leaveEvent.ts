@@ -24,6 +24,9 @@ export const leaveEvent: NonNullable<MutationResolvers['leaveEvent']> = async (
     event.participantIds = event.participantIds.filter(
       (id) => id !== userIdToUse,
     );
+    if (event.participantServings) {
+      delete event.participantServings[userIdToUse];
+    }
 
     await event.save();
   }

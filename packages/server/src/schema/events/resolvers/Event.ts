@@ -16,4 +16,20 @@ export const Event: EventResolvers = {
   party: (parent, _, ctx) => {
     return ctx.data.Party.findByIdOrThrow(parent.partyId);
   },
+  eventType: (parent) => parent.eventType ?? "STANDARD",
+  pricingMode: (parent) => parent.pricingMode ?? null,
+  price: (parent) => (parent.price != null ? Number(parent.price) : null),
+  servingsUnit: (parent) => parent.servingsUnit ?? "Portionen",
+  participantServings: async (parent, _, ctx) => {
+    const users = await ctx.data.User.filterByIds(parent.participantIds);
+    return users.map((user) => ({
+      user,
+      servings: parent.participantServings?.[user.id] ?? 1,
+    }));
+  },
+  totalServings: (parent) => {
+    return parent.participantIds.reduce((sum, userId) => {
+      return sum + (parent.participantServings?.[userId] ?? 1);
+    }, 0);
+  },
 };

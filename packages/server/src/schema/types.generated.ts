@@ -245,25 +245,45 @@ export type Event = {
   date?: Maybe<Scalars["Date"]["output"]>;
   description?: Maybe<Scalars["String"]["output"]>;
   endTime?: Maybe<Scalars["String"]["output"]>;
+  eventType: EventType;
   id: Scalars["ID"]["output"];
   image: Scalars["String"]["output"];
   name: Scalars["String"]["output"];
   organizer: User;
+  participantServings: Array<EventParticipant>;
   participants: Array<User>;
   party: Party;
+  price?: Maybe<Scalars["Float"]["output"]>;
+  pricingMode?: Maybe<EventPricingMode>;
+  servingsUnit?: Maybe<Scalars["String"]["output"]>;
   startTime?: Maybe<Scalars["String"]["output"]>;
+  totalServings: Scalars["Int"]["output"];
 };
 
 export type EventInput = {
   date?: InputMaybe<Scalars["Date"]["input"]>;
   description?: InputMaybe<Scalars["String"]["input"]>;
   endTime?: InputMaybe<Scalars["String"]["input"]>;
+  eventType?: InputMaybe<EventType>;
   id?: InputMaybe<Scalars["ID"]["input"]>;
   image?: InputMaybe<Scalars["File"]["input"]>;
   name: Scalars["String"]["input"];
   partyId: Scalars["ID"]["input"];
+  price?: InputMaybe<Scalars["Float"]["input"]>;
+  pricingMode?: InputMaybe<EventPricingMode>;
+  servingsUnit?: InputMaybe<Scalars["String"]["input"]>;
   startTime?: InputMaybe<Scalars["String"]["input"]>;
 };
+
+export type EventParticipant = {
+  __typename?: "EventParticipant";
+  servings: Scalars["Int"]["output"];
+  user: User;
+};
+
+export type EventPricingMode = "FLAT" | "PARTY_DONATION" | "PER_SERVING";
+
+export type EventType = "FOOD" | "STANDARD";
 
 export type Game = {
   __typename?: "Game";
@@ -354,6 +374,7 @@ export type Mutation = {
   updateAuthDevice: AuthDevice;
   updateBeerPongMatch: BeerPongMatch;
   updateBeerPongPlayerStats: BeerPongMatch;
+  updateEventServings: Event;
   updateGame: Game;
   updateLocation: User;
   updatePaidDues?: Maybe<Attending>;
@@ -463,6 +484,7 @@ export type MutationloginPasswordArgs = {
 
 export type MutationparticipateInEventArgs = {
   id: Scalars["ID"]["input"];
+  servings?: InputMaybe<Scalars["Int"]["input"]>;
   userId?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
@@ -543,6 +565,12 @@ export type MutationupdateBeerPongMatchArgs = {
 export type MutationupdateBeerPongPlayerStatsArgs = {
   input: BeerPongPlayerStatsInput;
   matchId: Scalars["ID"]["input"];
+};
+
+export type MutationupdateEventServingsArgs = {
+  id: Scalars["ID"]["input"];
+  servings: Scalars["Int"]["input"];
+  userId?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
 export type MutationupdateGameArgs = {
@@ -993,6 +1021,13 @@ export type ResolversTypes = {
   DonationDedication: ResolverTypeWrapper<"RENT" | "WARCHEST">;
   Event: ResolverTypeWrapper<EventMapper>;
   EventInput: EventInput;
+  EventParticipant: ResolverTypeWrapper<
+    Omit<EventParticipant, "user"> & { user: ResolversTypes["User"] }
+  >;
+  EventPricingMode: ResolverTypeWrapper<
+    "PER_SERVING" | "FLAT" | "PARTY_DONATION"
+  >;
+  EventType: ResolverTypeWrapper<"STANDARD" | "FOOD">;
   File: ResolverTypeWrapper<Scalars["File"]["output"]>;
   Game: ResolverTypeWrapper<GameMapper>;
   GameInput: GameInput;
@@ -1123,6 +1158,9 @@ export type ResolversParentTypes = {
   Donation: DonationMapper;
   Event: EventMapper;
   EventInput: EventInput;
+  EventParticipant: Omit<EventParticipant, "user"> & {
+    user: ResolversParentTypes["User"];
+  };
   File: Scalars["File"]["output"];
   Game: GameMapper;
   GameInput: GameInput;
@@ -1532,23 +1570,61 @@ export type EventResolvers<
     ContextType
   >;
   endTime?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  eventType?: Resolver<ResolversTypes["EventType"], ParentType, ContextType>;
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   image?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   organizer?: Resolver<ResolversTypes["User"], ParentType, ContextType>;
+  participantServings?: Resolver<
+    Array<ResolversTypes["EventParticipant"]>,
+    ParentType,
+    ContextType
+  >;
   participants?: Resolver<
     Array<ResolversTypes["User"]>,
     ParentType,
     ContextType
   >;
   party?: Resolver<ResolversTypes["Party"], ParentType, ContextType>;
+  price?: Resolver<Maybe<ResolversTypes["Float"]>, ParentType, ContextType>;
+  pricingMode?: Resolver<
+    Maybe<ResolversTypes["EventPricingMode"]>,
+    ParentType,
+    ContextType
+  >;
+  servingsUnit?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
   startTime?: Resolver<
     Maybe<ResolversTypes["String"]>,
     ParentType,
     ContextType
   >;
+  totalServings?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
+
+export type EventParticipantResolvers<
+  ContextType = Context,
+  ParentType extends
+    ResolversParentTypes["EventParticipant"] = ResolversParentTypes["EventParticipant"],
+> = {
+  servings?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  user?: Resolver<ResolversTypes["User"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type EventPricingModeResolvers = EnumResolverSignature<
+  { FLAT?: any; PARTY_DONATION?: any; PER_SERVING?: any },
+  ResolversTypes["EventPricingMode"]
+>;
+
+export type EventTypeResolvers = EnumResolverSignature<
+  { FOOD?: any; STANDARD?: any },
+  ResolversTypes["EventType"]
+>;
 
 export interface FileScalarConfig
   extends GraphQLScalarTypeConfig<ResolversTypes["File"], any> {
@@ -1890,6 +1966,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationupdateBeerPongPlayerStatsArgs, "input" | "matchId">
+  >;
+  updateEventServings?: Resolver<
+    ResolversTypes["Event"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationupdateEventServingsArgs, "id" | "servings">
   >;
   updateGame?: Resolver<
     ResolversTypes["Game"],
@@ -2322,6 +2404,9 @@ export type Resolvers<ContextType = Context> = {
   Donation?: DonationResolvers<ContextType>;
   DonationDedication?: DonationDedicationResolvers;
   Event?: EventResolvers<ContextType>;
+  EventParticipant?: EventParticipantResolvers<ContextType>;
+  EventPricingMode?: EventPricingModeResolvers;
+  EventType?: EventTypeResolvers;
   File?: GraphQLScalarType;
   Game?: GameResolvers<ContextType>;
   GameOnParty?: GameOnPartyResolvers<ContextType>;

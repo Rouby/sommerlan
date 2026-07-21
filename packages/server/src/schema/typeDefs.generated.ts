@@ -585,6 +585,53 @@ export const typeDefs = {
               type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
               directives: [],
             },
+            {
+              kind: "InputValueDefinition",
+              name: { kind: "Name", value: "servings" },
+              type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
+              directives: [],
+            },
+          ],
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Event" } },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "updateEventServings" },
+          arguments: [
+            {
+              kind: "InputValueDefinition",
+              name: { kind: "Name", value: "id" },
+              type: {
+                kind: "NonNullType",
+                type: {
+                  kind: "NamedType",
+                  name: { kind: "Name", value: "ID" },
+                },
+              },
+              directives: [],
+            },
+            {
+              kind: "InputValueDefinition",
+              name: { kind: "Name", value: "servings" },
+              type: {
+                kind: "NonNullType",
+                type: {
+                  kind: "NamedType",
+                  name: { kind: "Name", value: "Int" },
+                },
+              },
+              directives: [],
+            },
+            {
+              kind: "InputValueDefinition",
+              name: { kind: "Name", value: "userId" },
+              type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
+              directives: [],
+            },
           ],
           type: {
             kind: "NonNullType",
@@ -3214,6 +3261,73 @@ export const typeDefs = {
       ],
     },
     {
+      kind: "EnumTypeDefinition",
+      name: { kind: "Name", value: "EventType" },
+      directives: [],
+      values: [
+        {
+          kind: "EnumValueDefinition",
+          name: { kind: "Name", value: "STANDARD" },
+          directives: [],
+        },
+        {
+          kind: "EnumValueDefinition",
+          name: { kind: "Name", value: "FOOD" },
+          directives: [],
+        },
+      ],
+    },
+    {
+      kind: "EnumTypeDefinition",
+      name: { kind: "Name", value: "EventPricingMode" },
+      directives: [],
+      values: [
+        {
+          kind: "EnumValueDefinition",
+          name: { kind: "Name", value: "PER_SERVING" },
+          directives: [],
+        },
+        {
+          kind: "EnumValueDefinition",
+          name: { kind: "Name", value: "FLAT" },
+          directives: [],
+        },
+        {
+          kind: "EnumValueDefinition",
+          name: { kind: "Name", value: "PARTY_DONATION" },
+          directives: [],
+        },
+      ],
+    },
+    {
+      kind: "ObjectTypeDefinition",
+      name: { kind: "Name", value: "EventParticipant" },
+      interfaces: [],
+      directives: [],
+      fields: [
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "user" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "User" } },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "servings" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
+          },
+          directives: [],
+        },
+      ],
+    },
+    {
       kind: "ObjectTypeDefinition",
       name: { kind: "Name", value: "Event" },
       interfaces: [],
@@ -3322,6 +3436,72 @@ export const typeDefs = {
           },
           directives: [],
         },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "eventType" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "EventType" },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "pricingMode" },
+          arguments: [],
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "EventPricingMode" },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "price" },
+          arguments: [],
+          type: { kind: "NamedType", name: { kind: "Name", value: "Float" } },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "servingsUnit" },
+          arguments: [],
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "participantServings" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "ListType",
+              type: {
+                kind: "NonNullType",
+                type: {
+                  kind: "NamedType",
+                  name: { kind: "Name", value: "EventParticipant" },
+                },
+              },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "totalServings" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
+          },
+          directives: [],
+        },
       ],
     },
     {
@@ -3384,6 +3564,36 @@ export const typeDefs = {
           kind: "InputValueDefinition",
           name: { kind: "Name", value: "image" },
           type: { kind: "NamedType", name: { kind: "Name", value: "File" } },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "eventType" },
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "EventType" },
+          },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "pricingMode" },
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "EventPricingMode" },
+          },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "price" },
+          type: { kind: "NamedType", name: { kind: "Name", value: "Float" } },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "servingsUnit" },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
           directives: [],
         },
       ],

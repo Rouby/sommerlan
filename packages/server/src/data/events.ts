@@ -29,6 +29,16 @@ export class Event extends Base {
 
   public imageUrl = "";
 
+  public eventType: "STANDARD" | "FOOD" = "STANDARD";
+
+  public pricingMode?: "PER_SERVING" | "FLAT" | "PARTY_DONATION";
+
+  public price?: number;
+
+  public servingsUnit?: string;
+
+  public participantServings: Record<string, number> = {};
+
   constructor(props?: Values<Event>) {
     super();
     if (props) Object.assign(this, props);

@@ -1,6 +1,23 @@
+enum EventType {
+  STANDARD
+  FOOD
+}
+
+enum EventPricingMode {
+  PER_SERVING
+  FLAT
+  PARTY_DONATION
+}
+
+type EventParticipant {
+  user: User!
+  servings: Int!
+}
+
 extend type Mutation {
   planEvent(input: EventInput!): Event!
-  participateInEvent(id: ID!, userId: ID): Event!
+  participateInEvent(id: ID!, userId: ID, servings: Int): Event!
+  updateEventServings(id: ID!, servings: Int!, userId: ID): Event!
   leaveEvent(id: ID!, userId: ID): Event!
 }
 
@@ -19,6 +36,12 @@ type Event {
   participants: [User!]!
   description: String
   image: String!
+  eventType: EventType!
+  pricingMode: EventPricingMode
+  price: Float
+  servingsUnit: String
+  participantServings: [EventParticipant!]!
+  totalServings: Int!
 }
 
 input EventInput {
@@ -30,4 +53,9 @@ input EventInput {
   endTime: String
   description: String
   image: File
+  eventType: EventType
+  pricingMode: EventPricingMode
+  price: Float
+  servingsUnit: String
 }
+
