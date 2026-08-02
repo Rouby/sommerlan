@@ -625,6 +625,8 @@ export type Party = {
   endDate: Scalars["Date"]["output"];
   events: Array<Event>;
   feedingCosts: Scalars["Float"]["output"];
+  finalCostPerDay?: Maybe<Scalars["Float"]["output"]>;
+  finalFeedingCostPerDay?: Maybe<Scalars["Float"]["output"]>;
   gamesPlayed: Array<GameOnParty>;
   id: Scalars["ID"]["output"];
   latitude: Scalars["Float"]["output"];
@@ -660,6 +662,8 @@ export type PartyDayBreakdown = {
 export type PartyInput = {
   endDate: Scalars["Date"]["input"];
   feedingCosts?: InputMaybe<Scalars["Float"]["input"]>;
+  finalCostPerDay?: InputMaybe<Scalars["Float"]["input"]>;
+  finalFeedingCostPerDay?: InputMaybe<Scalars["Float"]["input"]>;
   id?: InputMaybe<Scalars["ID"]["input"]>;
   location: Scalars["String"]["input"];
   locationWidgetSrc?: InputMaybe<Scalars["String"]["input"]>;
@@ -2060,6 +2064,16 @@ export type PartyResolvers<
   endDate?: Resolver<ResolversTypes["Date"], ParentType, ContextType>;
   events?: Resolver<Array<ResolversTypes["Event"]>, ParentType, ContextType>;
   feedingCosts?: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
+  finalCostPerDay?: Resolver<
+    Maybe<ResolversTypes["Float"]>,
+    ParentType,
+    ContextType
+  >;
+  finalFeedingCostPerDay?: Resolver<
+    Maybe<ResolversTypes["Float"]>,
+    ParentType,
+    ContextType
+  >;
   gamesPlayed?: Resolver<
     Array<ResolversTypes["GameOnParty"]>,
     ParentType,

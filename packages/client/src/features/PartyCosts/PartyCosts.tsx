@@ -28,6 +28,8 @@ export function PartyCosts() {
           tentative
           rentalCosts
           feedingCosts
+          finalCostPerDay
+          finalFeedingCostPerDay
           paidDues
           payday
           rentalCostPerDay
@@ -74,6 +76,8 @@ export function PartyCosts() {
 
   const party = data.nextParty;
 
+  const isLocked = Boolean(party.finalCostPerDay && party.finalFeedingCostPerDay);
+
   const donationsForRent = party.donations
     .filter((donation) => donation.dedication === DonationDedication.Rent)
     .reduce((acc, donation) => acc + donation.amount, 0);
@@ -110,9 +114,15 @@ export function PartyCosts() {
         <Card.Section withBorder inheritPadding py="xs">
           <Group justify="space-between">
             <Text fw="bold">Kostenübersicht</Text>
-            <Badge color="blue" variant="light">
-              Prognose
-            </Badge>
+            {isLocked ? (
+              <Badge color="green" variant="light" leftSection={<IconCheck size="12" />}>
+                Final (Fixiert)
+              </Badge>
+            ) : (
+              <Badge color="orange" variant="light" leftSection={<IconInfoCircle size="12" />}>
+                Prognose (Vorläufig)
+              </Badge>
+            )}
           </Group>
         </Card.Section>
 
@@ -282,10 +292,13 @@ export function PartyCosts() {
             {formatDate(new Date(party.payday))}.
           </Text>
         )
-      ) : (
+      ) : isLocked ? (
         <Text size="xs" c="dimmed" ta="center">
-          Die Kosten sind Prognosen, basierend auf der aktuellen Anzahl an
-          angemeldeten Personen & Tagen. Sie können sich bis zur Festlegung ändern.
+          Die Beträge sind final von der Admin-Leitung festgelegt.
+        </Text>
+      ) : (
+        <Text size="xs" c="orange" ta="center" fw="bold">
+          Hinweis: Alle angezeigten Geldbeträge sind vorläufige Prognosen und nicht final fixiert, bis sie in den Admin-Einstellungen festgelegt werden.
         </Text>
       )}
 

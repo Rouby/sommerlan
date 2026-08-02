@@ -26,6 +26,8 @@ function AdminPartyPage() {
           tentative
           rentalCosts
           feedingCosts
+          finalCostPerDay
+          finalFeedingCostPerDay
           registrationDeadline
           payday
         }
@@ -39,6 +41,8 @@ function AdminPartyPage() {
           tentative
           rentalCosts
           feedingCosts
+          finalCostPerDay
+          finalFeedingCostPerDay
           registrationDeadline
           payday
         }
@@ -59,6 +63,8 @@ function AdminPartyPage() {
           tentative
           rentalCosts
           feedingCosts
+          finalCostPerDay
+          finalFeedingCostPerDay
           registrationDeadline
           payday
         }
@@ -74,6 +80,8 @@ function AdminPartyPage() {
   const [tentative, setTentative] = useState(false);
   const [rentalCosts, setRentalCosts] = useState<number>(0);
   const [feedingCosts, setFeedingCosts] = useState<number>(0);
+  const [finalCostPerDay, setFinalCostPerDay] = useState<number | null>(null);
+  const [finalFeedingCostPerDay, setFinalFeedingCostPerDay] = useState<number | null>(null);
   const [registrationDeadline, setRegistrationDeadline] = useState<Date | null>(null);
   const [payday, setPayday] = useState<Date | null>(null);
 
@@ -91,6 +99,8 @@ function AdminPartyPage() {
         setTentative(p.tentative ?? false);
         setRentalCosts(p.rentalCosts ?? 0);
         setFeedingCosts(p.feedingCosts ?? 0);
+        setFinalCostPerDay(p.finalCostPerDay ?? null);
+        setFinalFeedingCostPerDay(p.finalFeedingCostPerDay ?? null);
         setRegistrationDeadline(
           p.registrationDeadline ? dayjs(p.registrationDeadline).toDate() : null,
         );
@@ -145,6 +155,8 @@ function AdminPartyPage() {
       tentative,
       rentalCosts,
       feedingCosts,
+      finalCostPerDay: finalCostPerDay !== null && finalCostPerDay !== undefined && !isNaN(finalCostPerDay) ? finalCostPerDay : null,
+      finalFeedingCostPerDay: finalFeedingCostPerDay !== null && finalFeedingCostPerDay !== undefined && !isNaN(finalFeedingCostPerDay) ? finalFeedingCostPerDay : null,
       registrationDeadline: registrationDeadline
         ? dayjs(registrationDeadline).format("YYYY-MM-DD")
         : null,
@@ -254,6 +266,36 @@ function AdminPartyPage() {
                 label="Verpflegungskosten (€)"
                 value={feedingCosts}
                 onChange={(val) => setFeedingCosts(Number(val))}
+                min={0}
+                decimalScale={2}
+                disabled={mutationFetching}
+              />
+            </Group>
+
+            <Group grow>
+              <NumberInput
+                label="Finaler Mietpreis pro Tag & Person (€)"
+                description="Sperrt den Mietpreis pro Tag ein"
+                value={finalCostPerDay ?? ""}
+                onChange={(val) =>
+                  setFinalCostPerDay(
+                    val === "" || val === undefined ? null : Number(val),
+                  )
+                }
+                min={0}
+                decimalScale={2}
+                disabled={mutationFetching}
+              />
+
+              <NumberInput
+                label="Finaler Verpflegungspreis pro Tag & Person (€)"
+                description="Sperrt den Verpflegungspreis pro Tag ein"
+                value={finalFeedingCostPerDay ?? ""}
+                onChange={(val) =>
+                  setFinalFeedingCostPerDay(
+                    val === "" || val === undefined ? null : Number(val),
+                  )
+                }
                 min={0}
                 decimalScale={2}
                 disabled={mutationFetching}

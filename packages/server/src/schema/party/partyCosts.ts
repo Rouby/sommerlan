@@ -92,9 +92,16 @@ export function calculatePartyCosts(
   for (const attending of attendings) {
     // Rent dues: sum of dayBreakdown costPerParticipant for each billable day they attend
     let rentDues = 0;
-    for (const day of dayBreakdown) {
-      if (day.isBillable && attending.dates.includes(day.date)) {
-        rentDues += day.costPerParticipant;
+    if (party.finalCostPerDay) {
+      const userBillableDays = attendingBillableDays.find(
+        (item) => item.attendingId === attending.id,
+      )?.count ?? 0;
+      rentDues = party.finalCostPerDay * userBillableDays;
+    } else {
+      for (const day of dayBreakdown) {
+        if (day.isBillable && attending.dates.includes(day.date)) {
+          rentDues += day.costPerParticipant;
+        }
       }
     }
 
@@ -103,11 +110,16 @@ export function calculatePartyCosts(
       (item) => item.attendingId === attending.id,
     )?.count ?? 0;
 
-    const feedingDues =
-      totalBillableDaysAttendedByAll > 0
-        ? (party.feedingCosts * userBillableDays) /
+    let feedingDues = 0;
+    if (party.finalFeedingCostPerDay) {
+      feedingDues = party.finalFeedingCostPerDay * userBillableDays;
+    } else {
+      feedingDues =
+        totalBillableDaysAttendedByAll > 0
+          ? (party.feedingCosts * userBillableDays) /
           totalBillableDaysAttendedByAll
-        : 0;
+          : 0;
+    }
 
     // Donations
     const userDonations = donations.filter((d) => d.userId === attending.userId);

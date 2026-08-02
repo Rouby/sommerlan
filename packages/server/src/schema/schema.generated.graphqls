@@ -354,6 +354,8 @@ type Party {
   endDate: Date!
   events: [Event!]!
   feedingCosts: Float!
+  finalCostPerDay: Float
+  finalFeedingCostPerDay: Float
   gamesPlayed: [GameOnParty!]!
   id: ID!
   latitude: Float!
@@ -384,6 +386,8 @@ type PartyDayBreakdown {
 input PartyInput {
   endDate: Date!
   feedingCosts: Float
+  finalCostPerDay: Float
+  finalFeedingCostPerDay: Float
   id: ID
   location: String!
   locationWidgetSrc: String

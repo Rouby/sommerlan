@@ -50,6 +50,8 @@ type Party @rbac {
   payday: Date
   costPerDay: Float!
   rentalCostPerDay: Float!
+  finalCostPerDay: Float
+  finalFeedingCostPerDay: Float
   billableDaysCount: Int!
   dayBreakdown: [PartyDayBreakdown!]!
   paidDues: Float
@@ -125,6 +127,8 @@ input PartyInput {
   tentative: Boolean
   rentalCosts: Float
   feedingCosts: Float
+  finalCostPerDay: Float
+  finalFeedingCostPerDay: Float
   registrationDeadline: Date
   payday: Date
 }

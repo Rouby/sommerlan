@@ -215,6 +215,8 @@ export const Party: Pick<
   | "dayBreakdown"
   | "endDate"
   | "feedingCosts"
+  | "finalCostPerDay"
+  | "finalFeedingCostPerDay"
   | "id"
   | "latitude"
   | "location"
@@ -285,5 +287,11 @@ export const Party: Pick<
     const donations = await ctx.data.Donation.filterByPartyId(parent.id);
     const costs = calculatePartyCosts(parent, attendings, donations);
     return costs.rentalCostPerDay;
+  },
+  finalCostPerDay: (parent) => {
+    return parent.finalCostPerDay ? parent.finalCostPerDay : null;
+  },
+  finalFeedingCostPerDay: (parent) => {
+    return parent.finalFeedingCostPerDay ? parent.finalFeedingCostPerDay : null;
   },
 };

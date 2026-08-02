@@ -3115,6 +3115,20 @@ export const typeDefs = {
         },
         {
           kind: "FieldDefinition",
+          name: { kind: "Name", value: "finalCostPerDay" },
+          arguments: [],
+          type: { kind: "NamedType", name: { kind: "Name", value: "Float" } },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "finalFeedingCostPerDay" },
+          arguments: [],
+          type: { kind: "NamedType", name: { kind: "Name", value: "Float" } },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
           name: { kind: "Name", value: "billableDaysCount" },
           arguments: [],
           type: {
@@ -4717,6 +4731,18 @@ export const typeDefs = {
         {
           kind: "InputValueDefinition",
           name: { kind: "Name", value: "feedingCosts" },
+          type: { kind: "NamedType", name: { kind: "Name", value: "Float" } },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "finalCostPerDay" },
+          type: { kind: "NamedType", name: { kind: "Name", value: "Float" } },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "finalFeedingCostPerDay" },
           type: { kind: "NamedType", name: { kind: "Name", value: "Float" } },
           directives: [],
         },

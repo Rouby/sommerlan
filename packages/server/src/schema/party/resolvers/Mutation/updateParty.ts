@@ -37,6 +37,15 @@ export const updateParty: NonNullable<MutationResolvers['updateParty']> = async 
   if (input.feedingCosts !== undefined && input.feedingCosts !== null) {
     party.feedingCosts = input.feedingCosts;
   }
+  if (input.finalCostPerDay !== undefined && input.finalCostPerDay !== null) {
+    party.finalCostPerDay = input.finalCostPerDay;
+  }
+  if (
+    input.finalFeedingCostPerDay !== undefined &&
+    input.finalFeedingCostPerDay !== null
+  ) {
+    party.finalFeedingCostPerDay = input.finalFeedingCostPerDay;
+  }
   if (input.registrationDeadline !== undefined) {
     party.registrationDeadline = input.registrationDeadline
       ? dayjs(input.registrationDeadline).format("YYYY-MM-DD")
