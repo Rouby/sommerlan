@@ -50,5 +50,18 @@ export const updateParty: NonNullable<MutationResolvers['updateParty']> = async 
 
   await party.save();
 
+  if (party.startDate && party.endDate) {
+    const attendings = await ctx.data.Attending.filterByPartyId(party.id);
+    for (const attending of attendings) {
+      const validDates = attending.dates.filter(
+        (date) => date >= party.startDate && date <= party.endDate,
+      );
+      if (validDates.length !== attending.dates.length) {
+        attending.dates = validDates;
+        await attending.save();
+      }
+    }
+  }
+
   return party;
 };
